@@ -20,7 +20,6 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-**/.xcode.env.local
 
 # Android/IntelliJ
 #
@@ -31,9 +30,7 @@ local.properties
 *.iml
 *.hprof
 .cxx/
-*.keystore
-!debug.keystore
-
+.yarn
 # node.js
 #
 node_modules/
