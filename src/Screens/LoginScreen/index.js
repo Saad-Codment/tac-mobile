@@ -91,6 +91,7 @@ const LoginScreen = ({navigation}) => {
             <View style={styles.checkContainer}>
               <Touchable style={styles.checkContainer} onPress={handleClick}>
                 <Image
+                  tintColor={Colors.primaryColor}
                   source={check ? tickfill : tickemp}
                   style={{
                     resizeMode: 'contain',

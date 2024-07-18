@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
   },
   loginTop: {
     alignItems: 'flex-start',
-    marginTop: hp('3'),
+    marginTop: hp('10'),
     marginBottom: hp('2'),
     paddingHorizontal: wp('1.5'),
   },
@@ -55,9 +55,10 @@ export const styles = StyleSheet.create({
     // marginBottom: hp('1'),
   },
   logInMain: {
-    // paddingHorizontal: wp('3.5'),
+    paddingHorizontal: wp('3.5'),
     justifyContent: 'center',
-    position: 'relative'
+    position: 'relative',
+    paddingBottom: hp('2'),
   },
   buttonStyle: {
     // marginTop: hp('3'),
@@ -65,7 +66,7 @@ export const styles = StyleSheet.create({
   lockstyle: {
     flex: 0.5,
   },
-  
+
   userIconStyle: {
     flex: 2,
   },
@@ -85,9 +86,9 @@ export const styles = StyleSheet.create({
     marginRight: wp('4'),
   },
   signUpText: {
-    color: Colors.themeOrg,
+    color: Colors.primaryColor,
     fontSize: hp('2'),
-    fontWeight: '600'
+    fontWeight: '600',
   },
   lastNameSt: {
     // position: 'absolute',

@@ -28,6 +28,7 @@ import {
   locksetting,
   sms,
   user,
+  signupBg,
 } from '../../Assets';
 import {InputComponent} from '../../Components/InputComponent';
 import {Controller} from 'react-hook-form';
@@ -52,7 +53,7 @@ const RegisterScreen = ({navigation}) => {
     policy,
   } = useRegister(navigation);
   return (
-    <ImageBackground source={LoginBg} style={styles.ImgBg}>
+    <ImageBackground source={signupBg} style={styles.ImgBg}>
       <KeyBoardWrapper
         styles={styles.logInMain}
         showsVerticalScrollIndicator={false}>

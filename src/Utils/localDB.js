@@ -67,22 +67,24 @@ import {
 export const onBoardingData = [
   {
     id: 0,
-    heading: 'Rail Track Alert!',
-    description: 'Your safety companion near railtracks.',
+    heading: 'Variationen\nder Passages',
+    description:
+      'Salungat sa kaalaman ng marami, ang\nLorem Ipsum ay hindi puro.',
     image: splashOne,
     splashImage: splashMarine,
   },
   {
     id: 1,
-    heading: 'Stay Safe Around Railtracks!',
-    description: 'Safety tips for your journey.',
+    heading: 'Standardteil genutzt richtigen',
+    description:
+      'Salungat sa kaalaman ng marami, ang Lorem Ipsum ay hindi puro.',
     image: splashTwo,
     splashImage: splashLand,
   },
   {
     id: 2,
-    heading: `Let's Get Started!`,
-    description: `You're near a railtrack.`,
+    heading: `Get Started`,
+    description: `Wanna be a part of TAC society?`,
     image: splashThree,
     splashImage: splashIndustrial,
   },

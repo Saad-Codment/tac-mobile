@@ -1,86 +1,8 @@
 import {Dimensions, StyleSheet} from 'react-native';
 import {hp, wp} from '../../Config/responsive';
-import {Colors} from '../../Theme/Variables';
+import {Colors, FontSize} from '../../Theme/Variables';
 
 export const styles = StyleSheet.create({
-  // appHeadingView: {
-  //   flexDirection: 'row',
-  //   width: wp('55'),
-  //   justifyContent: 'space-between',
-  // },
-  // redColorText: {color: Colors.red, fontSize: hp('4'), fontWeight: 'bold'},
-  // dotList: {
-  //   flexDirection: 'row',
-  //   width: wp('18'),
-  //   height: hp('3'),
-  //   justifyContent: 'space-between',
-
-  //   // marginTop: hp('/2'),
-  // },
-  // getStart: {
-  //   width: wp('15'),
-  //   // justifyContent: 'center',
-  //   // alignItems: 'center',
-  //   // height: hp('6.5'),
-  //   // borderRadius: 60,
-  //   // marginTop: hp('3'),
-  //   // marginBottom: hp('5'),
-  //   alignSelf: 'center',
-  //   borderWidth: 0,
-  //   backgroundColor: 'transparent',
-  // },
-  // centerMainView: {
-  //   width: wp('100'),
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   alignSelf: 'center',
-  //   textAlign: 'center',
-  // },
-  // centerHeading: {
-  //   fontSize: hp('4'),
-  //   fontWeight: '600',
-  //   color: 'red',
-  //   textAlign: 'center',
-  //   marginTop: hp('58.5'),
-  //   paddingHorizontal: wp('13'),
-  // },
-  // descStyle: {
-  //   textAlign: 'center',
-  //   marginTop: hp('1'),
-  //   fontSize: hp('2.1'),
-  //   paddingHorizontal: wp('16'),
-  //   marginTop: hp('2'),
-  //   marginBottom: hp('5'),
-  // },
-  // centerDes: {
-  //   fontSize: hp('2'),
-  //   color: Colors.gray,
-  //   width: wp('93'),
-  //   textAlign: 'center',
-  // },
-  // dot: (currentIndex, index) => ({
-  //   borderRadius: Math.round(
-  //     Dimensions.get('window').width + Dimensions.get('window').height,
-  //   ),
-  //   height: Dimensions.get('window').width * 0.03,
-  //   width:
-  //     currentIndex == index
-  //       ? Dimensions.get('window').width * 0.06
-  //       : Dimensions.get('window').width * 0.03,
-  //   backgroundColor: currentIndex == index ? '#212759' : Colors.white,
-  //   borderWidth: currentIndex == index ? 0 : 1,
-  // }),
-  // bannerImg: {
-  //   height: hp('100'),
-  //   width: wp('100'),
-  //   // backgroundColor: 'red',
-  // },
-  // arrStyle: {
-  //   width: wp('100'),
-  //   height: hp('6'),
-  // },
-
-  // ----
   dotList: {
     flexDirection: 'row',
     width: wp('25'),
@@ -88,24 +10,23 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    // marginTop: hp('0'),
   },
   bottomContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    paddingRight: wp('3'),
-    marginHorizontal: wp('4'),
+    paddingHorizontal: wp('4'),
     position: 'absolute',
-    bottom: hp('3'),
+    bottom: hp('0'),
     zIndex: 2,
+    backgroundColor: Colors.backgroundTheme,
+    padding: 10,
   },
   centerMainView: {
     width: wp('100'),
-    alignItems: 'center',
+    alignItems: 'left',
     paddingHorizontal: wp('4'),
-    marginTop: hp('0'),
   },
   centerHeading: {
     fontSize: hp('4.4'),
@@ -133,9 +54,10 @@ export const styles = StyleSheet.create({
       currentIndex == index
         ? Dimensions.get('window').width * 0.09
         : Dimensions.get('window').width * 0.04,
-    backgroundColor: currentIndex == index ? Colors.themeOrg : 'transparent',
+    backgroundColor:
+      currentIndex == index ? Colors.primaryColor : 'transparent',
     borderWidth: currentIndex == index ? 1 : 1,
-    borderColor: currentIndex == index ? Colors.themeOrg : Colors.white,
+    borderColor: currentIndex == index ? Colors.primaryColor : Colors.white,
   }),
   bannerImg: {
     flex: 1,
@@ -144,7 +66,7 @@ export const styles = StyleSheet.create({
     // height: hp('95'),
     width: wp('100'),
     // aspectRatio: 1,
-    paddingBottom: hp('20')
+    paddingBottom: hp('15'),
   },
   btnArrow: {
     display: 'flex',
@@ -152,10 +74,10 @@ export const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: wp('25'),
-    backgroundColor: Colors.themeOrg,
+    backgroundColor: Colors.primaryColor,
     borderRadius: 25,
     paddingHorizontal: wp('4'),
+    marginBottom: hp('5'),
   },
   arrowText: {
     // fontFamily: fontFamily.medium,
@@ -165,18 +87,15 @@ export const styles = StyleSheet.create({
     lineHeight: 16,
   },
   hdStyle: {
-    fontSize: hp('3.5'),
+    fontSize: FontSize.scale40,
     fontWeight: '700',
-    marginVertical: hp('2'),
+    marginVertical: hp('1'),
     color: Colors.white,
-    textAlign: 'center'
   },
   descStyle: {
-    textAlign: 'center',
-    fontSize: hp('1.8'),
+    fontSize: FontSize.scale16,
     lineHeight: 20,
-    paddingHorizontal: wp('4'),
-    color: Colors.white
+    color: Colors.textGray,
   },
   splashImg: {
     width: wp('60'),

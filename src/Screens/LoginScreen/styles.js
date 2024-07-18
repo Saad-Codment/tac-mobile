@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   },
   loginTop: {
     alignItems: 'flex-start',
-    marginTop: hp('3'),
+    marginTop: hp('20'),
     marginBottom: hp('2'),
     paddingHorizontal: wp('1.5'),
   },
@@ -138,7 +138,7 @@ export const styles = StyleSheet.create({
     marginRight: wp('4'),
   },
   signUpText: {
-    color: Colors.themeOrg,
+    color: Colors.primaryColor,
     fontSize: hp('2'),
     fontWeight: '600',
   },

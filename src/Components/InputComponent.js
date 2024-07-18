@@ -42,6 +42,7 @@ export const InputComponent = ({
           <View style={{...styles.textfield, ...viewStyle}}>
             {isImage && (
               <Image
+                tintColor={Colors.primaryColor}
                 source={isImage}
                 style={{
                   resizeMode: 'contain',

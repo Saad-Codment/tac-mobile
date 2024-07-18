@@ -8,13 +8,13 @@ import {
   ImageBackground,
 } from 'react-native';
 import useOnboardScreen from './useOnboardScreen';
-import {styles} from './styles';
 import {keyExtractor} from '../../Utils';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
 import ThemeButton from '../../Components/ThemeButton';
 import {Touchable} from '../../Components/Touchable';
 import {arrow} from '../../Assets';
+import {styles} from './styles';
 
 const OnboardScreen = ({navigation}) => {
   const {onBoardingData, currentIndex, onSnapToItem, goNext, flatListRef} =
@@ -24,7 +24,11 @@ const OnboardScreen = ({navigation}) => {
       return (
         <ImageBackground style={styles.bannerImg} source={item?.image}>
           <View style={styles.centerMainView}>
-            <TextComponent text={item?.heading} styles={styles.hdStyle} />
+            <TextComponent
+              numberOfLines={2}
+              text={item?.heading}
+              styles={styles.hdStyle}
+            />
             <TextComponent text={item?.description} styles={styles.descStyle} />
           </View>
         </ImageBackground>
@@ -73,7 +77,6 @@ const OnboardScreen = ({navigation}) => {
         />
 
         <Touchable style={styles.btnArrow} onPress={goNext}>
-          <TextComponent text={'Next'} styles={styles.arrowText} />
           <Image source={arrow} resizeMode="contain" style={{width: wp('5')}} />
         </Touchable>
       </View>
