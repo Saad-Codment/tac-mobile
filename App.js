@@ -1,9 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, ImageBackground, LogBox} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  LogBox,
+  Image,
+} from 'react-native';
 import MainNavigator from './src/navigation/MainNavigator';
-import {logoScreen} from './src/Assets';
+import {logoScreen, splash} from './src/Assets';
 import Overlay from './src/Components/Overlay';
 import useReduxStore from './src/Hooks/UseReduxStore';
+import {hp, wp} from './src/Config/responsive';
 
 const App = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -37,9 +45,9 @@ const App = () => {
   }, []);
 
   let Splash_Screen = (
-    <ImageBackground
-      source={logoScreen}
-      style={styles.SplashScreen_RootView}></ImageBackground>
+    <View style={styles.SplashScreen_RootView}>
+      <Image source={splash} style={styles.image}></Image>
+    </View>
   );
 
   return (
@@ -54,11 +62,17 @@ const App = () => {
 const styles = StyleSheet.create({
   SplashScreen_RootView: {
     justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
     position: 'absolute',
     width: '100%',
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: 'black',
+  },
+  image: {
+    width: wp('35'),
+    resizeMode: 'contain',
+    height: hp('35'),
   },
 });
 

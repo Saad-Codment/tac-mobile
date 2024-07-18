@@ -1,6 +1,7 @@
 //  Images
 
 export {default as logoScreen} from './Images/logo-screen.png';
+export {default as splash} from './Images/splash.png';
 export {default as splashOne} from './Images/splashOne.png';
 export {default as splashTwo} from './Images/splashTwo.png';
 export {default as splashThree} from './Images/splashThree.png';
