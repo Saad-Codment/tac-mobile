@@ -1,12 +1,27 @@
-# Resolve react_native_pods.rb with node to allow for hoisting
-require Pod::Executable.execute_command('node', ['-p',
-  'require.resolve(
-    "react-native/scripts/react_native_pods.rb",
-    {paths: [process.argv[1]]},
-  )', __dir__]).strip
+def node_require(script)
+  # Resolve script with node to allow for hoisting
+  require Pod::Executable.execute_command('node', ['-p',
+    "require.resolve(
+      '#{script}',
+      {paths: [process.argv[1]]},
+    )", __dir__]).strip
+end
 
-platform :ios, min_ios_version_supported
+node_require('react-native/scripts/react_native_pods.rb')
+node_require('react-native-permissions/scripts/setup.rb')
+require_relative '../node_modules/react-native-permissions/scripts/setup'
+platform :ios, 13.4
 prepare_react_native_project!
+
+
+setup_permissions([
+  'LocationAccuracy',
+  'LocationAlways',
+  'LocationWhenInUse',
+])
+
+# flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
+
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
@@ -20,8 +35,27 @@ target 'tac' do
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
+
+    :hermes_enabled => false,
+    # :flipper_configuration => flipper_config,
+
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+
+  # pod install
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'GoogleMaps'
+  pod 'GooglePlaces'
+  pod 'react-native-google-maps', :path => rn_maps_path
+  pod 'GoogleMaps'  # Uncomment this line if you want to support GoogleMaps on iOS
+  pod 'Google-Maps-iOS-Utils' # Uncomment this line if you want to support GoogleMaps on iOS
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'GTMSessionFetcher', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  permissions_path = '../node_modules/react-native-permissions/ios'
 
   target 'tacTests' do
     inherit! :complete
