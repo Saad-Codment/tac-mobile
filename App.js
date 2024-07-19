@@ -50,6 +50,12 @@ const App = () => {
     </View>
   );
 
+  // let Splash_Screen = (
+  //   <ImageBackground
+  //     source={splash2}
+  //     style={styles.SplashScreen_RootView}></ImageBackground>
+  // );
+
   return (
     <>
       {isVisible === true ? Splash_Screen : <MainNavigator />}
