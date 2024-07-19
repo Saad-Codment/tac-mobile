@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 import MainNavigator from './src/navigation/MainNavigator';
-import {logoScreen, splash} from './src/Assets';
+import {logoScreen, splash, splash2} from './src/Assets';
 import Overlay from './src/Components/Overlay';
 import useReduxStore from './src/Hooks/UseReduxStore';
 import {hp, wp} from './src/Config/responsive';
@@ -44,10 +44,16 @@ const App = () => {
     }, time());
   }, []);
 
+  // let Splash_Screen = (
+  //   <View style={styles.SplashScreen_RootView}>
+  //     <Image source={splash} style={styles.image}></Image>
+  //   </View>
+  // );
+
   let Splash_Screen = (
-    <View style={styles.SplashScreen_RootView}>
-      <Image source={splash} style={styles.image}></Image>
-    </View>
+    <ImageBackground
+      source={splash2}
+      style={styles.SplashScreen_RootView}></ImageBackground>
   );
 
   return (
