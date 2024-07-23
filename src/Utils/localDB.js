@@ -62,6 +62,9 @@ import {
   trainingPDFIcon,
   videoThumb,
   water,
+  male,
+  female,
+  others,
 } from '../Assets';
 
 export const onBoardingData = [
@@ -446,3 +449,21 @@ export const kitImages = {
   1: Sample,
   2: Demo,
 };
+
+export const step5 = [
+  {
+    id: 1,
+    image: male,
+    title: 'Male',
+  },
+  {
+    id: 2,
+    image: female,
+    title: 'Female',
+  },
+  {
+    id: 3,
+    image: others,
+    title: 'Other',
+  },
+];

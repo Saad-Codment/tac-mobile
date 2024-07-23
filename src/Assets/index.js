@@ -6,6 +6,9 @@ export {default as splash2} from './Images/splash2.png';
 export {default as splashOne} from './Images/splashOne.png';
 export {default as splashTwo} from './Images/splashTwo.png';
 export {default as splashThree} from './Images/splashThree.png';
+export {default as stepBg} from './Images/stepBg.png';
+export {default as horse} from './Images/horse.png';
+
 export {default as LoginBg} from './Images/loginBg.png';
 export {default as signupBg} from './Images/signupBg.png';
 export {default as blackImg} from './Images/blackImg.png';

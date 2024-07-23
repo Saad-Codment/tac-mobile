@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   textfield: {
     width: '100%',
     borderWidth: 0.5,
-    borderRadius: 10,
+    borderRadius: 50,
     height: hp('7'),
     // borderRadius: 15,
     marginVertical: hp('1'),
