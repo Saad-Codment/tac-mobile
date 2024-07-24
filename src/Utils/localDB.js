@@ -450,7 +450,7 @@ export const kitImages = {
   2: Demo,
 };
 
-export const step5 = [
+export const step2 = [
   {
     id: 1,
     image: male,
@@ -465,5 +465,17 @@ export const step5 = [
     id: 3,
     image: others,
     title: 'Other',
+  },
+];
+export const step3 = [
+  {
+    id: 1,
+    // image: male,
+    title: 'Yes, I’ve',
+  },
+  {
+    id: 2,
+    // image: female,
+    title: 'No',
   },
 ];

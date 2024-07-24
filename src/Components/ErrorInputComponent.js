@@ -346,7 +346,7 @@ export default function ErrorInputComponent({
           <View style={styles.container1}>
             {/* {renderLabel()} */}
             <Dropdown
-              style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
+              style={[styles.dropdown, isFocus && {borderColor: 'black'}]}
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
@@ -357,7 +357,7 @@ export default function ErrorInputComponent({
               labelField="label"
               valueField="value"
               itemTextStyle={{
-                color: Colors.primaryColor,
+                color: Colors.black,
               }}
               placeholder={!isFocus ? dropDownPlaceholder : '...'}
               searchPlaceholder="Search..."
@@ -468,8 +468,7 @@ export default function ErrorInputComponent({
 
 const styles = StyleSheet.create({
   container1: {
-    backgroundColor: 'white',
-    marginTop: hp('1.5'),
+    marginTop: hp('-2'),
   },
   dropDownContainer: {
     backgroundColor: 'white',
@@ -477,14 +476,15 @@ const styles = StyleSheet.create({
     width: wp('45'),
   },
   dropdown: {
-    height: hp('4.8'),
-    borderWidth: 0.5,
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    borderBottomColor: Colors.primaryColor,
-    borderTopColor: Colors.primaryColor,
-    borderLeftColor: Colors.primaryColor,
-    borderRightColor: Colors.primaryColor,
+    overflow: 'hidden',
+    height: hp('6'),
+    borderWidth: 1,
+    borderRadius: 50,
+    paddingHorizontal: 20,
+    borderBottomColor: Colors.textGray,
+    borderTopColor: Colors.textGray,
+    borderLeftColor: Colors.textGray,
+    borderRightColor: Colors.textGray,
   },
   icon: {
     marginRight: 5,
@@ -503,28 +503,22 @@ const styles = StyleSheet.create({
   placeholderStyle: {
     fontSize: FontSize.scale12,
     fontWeight: '500',
-    color: Colors.themeGray,
+    color: Colors.textGray,
   },
   selectedTextStyle: {
-    fontSize: 16,
-    color: Colors.primaryColor,
+    fontSize: FontSize.scale16,
+    color: Colors.black,
   },
   iconStyle: {
     width: 20,
     height: 20,
   },
   inputSearchStyle: {
-    height: 40,
+    // height: 40,
     fontSize: 16,
-    color: Colors.primaryColor,
+    color: Colors.black,
   },
 
-  // container: {
-  //   width: wp('100'),
-  //   padding: 20,
-  //   justifyContent: 'center',
-  //   backgroundColor: 'white',
-  // },
   text: {
     fontSize: FontSize.scale15,
     fontWeight: '700',

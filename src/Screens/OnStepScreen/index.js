@@ -2,39 +2,54 @@ import {
   Dimensions,
   Image,
   ImageBackground,
+  Keyboard,
   Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import useOnStepScreen from './useOnStepScreen';
 import {styles} from './styles';
-import {horse, stepBg} from '../../Assets';
-import {hp} from '../../Config/responsive';
+import {arrowrightblack, horse, stepBg} from '../../Assets';
+import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
 import ThemeButton from '../../Components/ThemeButton';
 import {Picker} from '@react-native-picker/picker';
 import ErrorInputComponent from '../../Components/ErrorInputComponent';
-import {step5} from '../../Utils/localDB';
+import {step2, step3, step5} from '../../Utils/localDB';
 
 const OnStepScreen = ({navigation}) => {
-  const {step, setStep, onBoardData, setOnboardData, age, setAge, ageRange} =
-    useOnStepScreen(navigation);
+  const {
+    step,
+    onBoardData,
+    setOnboardData,
+    age,
+    ageRange,
+    onSelectValue,
+    sport,
+    sports,
+    association,
+    SetAssociation,
+    associations,
+    handlePreviousStep,
+    handleNextStep,
+    transport,
+  } = useOnStepScreen(navigation);
 
   const renderSteps = {
     1: () => {
       return (
         <>
           <TextComponent text={'What is your age ?'} styles={styles.tagline} />
-          <TextComponent text={'Age Range'} styles={styles.titleStep4} />
           <View style={styles.agePicker}>
             <ErrorInputComponent
               dropDownData={ageRange}
               dropDownPlaceholder={'Select your Age'}
               // text={'Rating  '}
               preferenceVal={age}
-              setPreferenceVal={setAge}
+              setPreferenceVal={val => onSelectValue('age', val)}
               dividerBool
               dividerLineBool
             />
@@ -47,7 +62,7 @@ const OnStepScreen = ({navigation}) => {
         <View>
           <TextComponent text={'Describe yourself ?'} styles={styles.tagline} />
           <View style={styles.content}>
-            {step5.map((item, index) => (
+            {step2.map((item, index) => (
               <Pressable
                 style={styles.gender(
                   Boolean(onBoardData?.gender == item.title),
@@ -56,17 +71,15 @@ const OnStepScreen = ({navigation}) => {
                 onPress={() => onSelectValue('gender', item.title)}>
                 <Image
                   source={item?.image}
-                  // style={styles
-                  //   .catImage
-                  //   // Boolean(onBoardData?.gender == item.title),
-                  //   ()}
+                  style={styles.catImage(
+                    Boolean(onBoardData?.gender == item.title),
+                  )}
                 />
                 <TextComponent
                   text={item?.title}
-                  // styles={styles
-                  //   .genderTitle
-                  //   // Boolean(onBoardData?.gender == item.title),
-                  //   ()}
+                  styles={styles.genderTitle(
+                    Boolean(onBoardData?.gender == item.title),
+                  )}
                 />
               </Pressable>
             ))}
@@ -78,10 +91,31 @@ const OnStepScreen = ({navigation}) => {
       return (
         <View>
           <TextComponent
+            numberOfLines={2}
             text={'Do you have transport availability'}
             styles={styles.tagline}
           />
-          <TextComponent text={'Age Range'} styles={styles.titleStep4} />
+          {step3.map((item, index) => (
+            <Pressable
+              style={styles.gender(
+                Boolean(onBoardData?.transport == item.title),
+              )}
+              key={item?.id}
+              onPress={() => onSelectValue('transport', item.title)}>
+              <Image
+                source={item?.image}
+                style={styles.catImage(
+                  Boolean(onBoardData?.gender == item.title),
+                )}
+              />
+              <TextComponent
+                text={item?.title}
+                styles={styles.genderTitle(
+                  Boolean(onBoardData?.gender == item.title),
+                )}
+              />
+            </Pressable>
+          ))}
         </View>
       );
     },
@@ -92,7 +126,17 @@ const OnStepScreen = ({navigation}) => {
             text={'What type of sports you’re interested in'}
             styles={styles.tagline}
           />
-          <TextComponent text={'Age Range'} styles={styles.titleStep4} />
+          <View style={styles.agePicker}>
+            <ErrorInputComponent
+              dropDownData={sports}
+              dropDownPlaceholder={'your interested sports'}
+              // text={'Rating  '}
+              preferenceVal={sport}
+              setPreferenceVal={val => onSelectValue('sport', val)}
+              dividerBool
+              dividerLineBool
+            />
+          </View>
         </View>
       );
     },
@@ -103,7 +147,17 @@ const OnStepScreen = ({navigation}) => {
             text={'Any association you’re align with?'}
             styles={styles.tagline}
           />
-          <TextComponent text={'Gender'} styles={styles.titleStep4} />
+          <View style={styles.agePicker}>
+            <ErrorInputComponent
+              dropDownData={associations}
+              dropDownPlaceholder={'Association you’re part of'}
+              // text={'Rating  '}
+              preferenceVal={association}
+              setPreferenceVal={val => onSelectValue('association', val)}
+              dividerBool
+              dividerLineBool
+            />
+          </View>
         </View>
       );
     },
@@ -154,6 +208,29 @@ const OnStepScreen = ({navigation}) => {
     });
   };
 
+  // -----------buttons ---------
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
     <>
       <ImageBackground source={stepBg} style={styles.container}>
@@ -169,13 +246,52 @@ const OnStepScreen = ({navigation}) => {
         <View style={styles.mainContent}>{renderStepContent()}</View>
         {/* <Text onPress={() => setStep(step + 1)}>NEsdasxt</Text> */}
       </ImageBackground>
-      <View style={styles.buttonContainer}>
+      <View
+        style={{
+          marginLeft: wp(step === 1 ? '0' : '5'),
+          width: wp(step === 1 ? '100' : '50'),
+          ...styles.buttonContainer,
+        }}>
+        {step === 1 ? null : (
+          <ThemeButton
+            onPress={handlePreviousStep}
+            title={'Previous'}
+            textStyle={{...styles.themeButton}}
+          />
+        )}
         <ThemeButton
-          onPress={() => setStep(step + 1)}
-          title={'Continue'}
-          textStyle={styles.themeButton}
+          onPress={() => handleNextStep[step]()}
+          title={step === 5 ? 'Submit' : 'Continue'}
+          textStyle={{...styles.themeButton}}
         />
       </View>
+      {/* {!isKeyboardVisible && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            disabled={Boolean(step == 1)}
+            style={[styles.button, styles.previousButton(Boolean(step == 1))]}
+            onPress={handlePreviousStep}>
+            <Text
+              style={{
+                ...styles.buttonText,
+                display: Boolean(step == 1) ? 'none' : 'flex',
+              }}>
+              Previous
+            </Text>
+          </TouchableOpacity> */}
+
+      {/* <TouchableOpacity
+            style={[styles.button, styles.nextButton]}
+            onPress={() => handleNextStep()}>
+            <Text style={styles.buttonText}>
+              {step == 6 ? 'Submit' : 'Next'}
+            </Text>
+            {step == 6 ? null : (
+              <Image source={arrowrightblack} style={styles.arrRight} />
+            )}
+          </TouchableOpacity> */}
+      {/* </View> */}
+      {/* )} */}
     </>
   );
 };

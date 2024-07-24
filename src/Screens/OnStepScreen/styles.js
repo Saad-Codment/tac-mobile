@@ -1,4 +1,4 @@
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions, Platform, StyleSheet} from 'react-native';
 import {hp, wp} from '../../Config/responsive';
 import {Colors, FontSize} from '../../Theme/Variables';
 
@@ -61,21 +61,20 @@ export const styles = StyleSheet.create({
   },
   tagline: {
     color: Colors.black,
-    paddingTop: hp('30'),
-    // paddingHorizontal: wp('8'),
+    paddingTop: hp(Platform.OS === 'android' ? '35' : '30'),
+    paddingBottom: hp('3'),
     textAlign: 'center',
-    marginBottom: hp('3'),
     fontSize: FontSize.scale30,
     fontWeight: 700,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: wp('100'),
     paddingHorizontal: wp('5'),
     position: 'absolute',
     bottom: 50,
   },
+
   pickerStyle: {
     width: wp('90'),
     height: hp('6.2'),
@@ -95,28 +94,37 @@ export const styles = StyleSheet.create({
   gender: selectedGender => ({
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: selectedGender ? Colors.themeGreen : '#525252',
-    borderRadius: 20,
+    borderColor: selectedGender ? Colors.black : 'rgba(150, 150, 150, 1)',
+    borderRadius: 50,
     width: wp('92'),
     paddingHorizontal: wp('4'),
     paddingVertical: hp('2'),
     alignItems: 'center',
     marginBottom: hp('3.5'),
-    backgroundColor: selectedGender ? Colors.themeGreen : 'transparent',
+    backgroundColor: selectedGender ? Colors.black : 'transparent',
   }),
   genderTitle: selectedGender => ({
-    fontSize: hp('2.2'),
-    color: selectedGender ? 'white' : '#525252',
+    fontWeight: '400',
+    fontSize: FontSize.scale16,
+    color: selectedGender ? Colors.white : 'rgba(150, 150, 150, 1)',
   }),
   catImage: selectedGender => ({
-    width: wp('12'),
-    height: hp('6'),
+    width: wp('7'),
+    height: hp('3'),
     resizeMode: 'contain',
     alignSelf: 'center',
-    tintColor: selectedGender ? 'white' : null,
-    marginRight: wp('6'),
+    tintColor: selectedGender ? 'white' : 'rgba(150, 150, 150, 1)',
+    marginRight: wp('3'),
   }),
   content: {
     marginBottom: hp('2'),
+  },
+  previousButton: isStart => ({
+    backgroundColor: isStart ? 'transparent' : Colors.primaryColor,
+
+    // display: isStart ? 'none' : 'flex',
+  }),
+  nextButton: {
+    backgroundColor: Colors.primaryColor,
   },
 });

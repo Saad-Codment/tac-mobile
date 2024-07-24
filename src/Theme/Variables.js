@@ -28,9 +28,13 @@ const FontSize = {
   scale20: Math.round(width / 21.5),
   scale21: Math.round(width / 20),
   scale22: Math.round(width / 19.5),
+  scale23: Math.round(width / 19),
   scale24: Math.round(width / 18),
+  scale25: Math.round(width / 17.5),
   scale26: Math.round(width / 16.5),
+  scale27: Math.round(width / 16),
   scale28: Math.round(width / 15.5),
+  scale29: Math.round(width / 15),
   scale30: Math.round(width / 14.5),
   scale31: Math.round(width / 14),
   scale32: Math.round(width / 13.5),
@@ -52,14 +56,6 @@ const FontSize = {
   scale48: Math.round(width / 5.5),
   scale49: Math.round(width / 5),
   scale50: Math.round(width / 4.5),
-  small: 8,
-  medium: 10,
-  regular: 12,
-  default: 14,
-  large: 16,
-  xlarge: 18,
-  xxlarge: 20,
-  xxxlarge: 22,
 };
 
 const Sizes = {

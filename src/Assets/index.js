@@ -8,6 +8,10 @@ export {default as splashTwo} from './Images/splashTwo.png';
 export {default as splashThree} from './Images/splashThree.png';
 export {default as stepBg} from './Images/stepBg.png';
 export {default as horse} from './Images/horse.png';
+export {default as male} from './Icons/male.png';
+export {default as female} from './Icons/female.png';
+export {default as others} from './Icons/others.png';
+export {default as medalstar} from './Icons/medalstar.png';
 
 export {default as LoginBg} from './Images/loginBg.png';
 export {default as signupBg} from './Images/signupBg.png';

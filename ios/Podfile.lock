@@ -1134,6 +1134,27 @@ PODS:
     - React-Core
   - react-native-orientation-locker (1.7.0):
     - React-Core
+  - react-native-pager-view (6.3.3):
+    - DoubleConversion
+    - glog
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-safe-area-context (4.10.8):
     - React-Core
   - React-nativeconfig (0.74.3)
@@ -1490,6 +1511,7 @@ DEPENDENCIES:
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -1630,6 +1652,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-orientation-locker:
     :path: "../node_modules/react-native-orientation-locker"
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-nativeconfig:
@@ -1764,6 +1788,7 @@ SPEC CHECKSUMS:
   react-native-google-maps: 1bcc1f9f13f798fcf230db7fe476f3566d0bc0a3
   react-native-maps: 72a8a903f8a1b53e2c777ba79102078ab502e0bf
   react-native-orientation-locker: 5819fd23ca89cbac0d736fb4314745f62716d517
+  react-native-pager-view: d305f9d5babd7c8debf75242cc573e2f0c141960
   react-native-safe-area-context: b7daa1a8df36095a032dff095a1ea8963cb48371
   React-nativeconfig: fa5de9d8f4dbd5917358f8ad3ad1e08762f01dcb
   React-NativeModulesApple: a6c18ebe96428589977f43c41a2c811b27bbd9cc

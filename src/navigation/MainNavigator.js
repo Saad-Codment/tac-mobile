@@ -35,6 +35,10 @@ function MainNavigator() {
         {!isLogin && (
           <>
             <Stack.Screen
+              name="SubscribeScreen"
+              component={Screens.SubscribeScreen}
+            />
+            <Stack.Screen
               name="OnStepScreen"
               component={Screens.OnStepScreen}
             />
