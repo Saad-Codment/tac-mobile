@@ -1,4 +1,4 @@
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, Platform} from 'react-native';
 import React from 'react';
 import useSubscribeScreen from './useSubscribeScreen';
 import {styles} from './styles';
@@ -6,7 +6,8 @@ import {TextComponent} from '../../Components/TextComponent';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Colors, FontSize} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
-import {medalstar} from '../../Assets';
+import {medalstar, tickCircle} from '../../Assets';
+import ThemeButton from '../../Components/ThemeButton';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -37,8 +38,8 @@ const SubscribeScreen = ({navigation}) => {
           tabBarAllowFontScaling: true,
           tabBarIndicatorStyle: {
             backgroundColor: Colors.white,
-            height: hp('5'),
-
+            height: hp(Platform.OS === 'android' ? '6' : '5'),
+            alignSelf: 'center',
             borderRadius: 50,
             shadowColor: '#000',
             shadowOffset: {
@@ -58,7 +59,7 @@ const SubscribeScreen = ({navigation}) => {
             textTransform: 'none',
           },
           tabBarStyle: {
-            marginTop: hp('3'), // Adjust top margin as needed
+            // marginTop: hp('3'), // Adjust top margin as needed
             marginHorizontal: wp('3'), // Adjust horizontal margin as needed
             backgroundColor: 'rgba(246, 246, 246, 1)', // Change background color if needed
             // borderTopLeftRadius: 10,
@@ -84,17 +85,71 @@ const SubscribeScreen = ({navigation}) => {
 export default SubscribeScreen;
 
 const Monthly = () => {
+  const TickCircle = ({text, tintColor, TextColor}) => {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingLeft: wp('3'),
+          paddingTop: hp('1'),
+        }}>
+        <Image
+          tintColor={tintColor}
+          source={tickCircle}
+          style={styles.tickCircle}
+        />
+
+        <TextComponent
+          text={text}
+          styles={{
+            color: TextColor ? Colors.textGray : Colors.backgroundTheme,
+            ...styles.packText,
+          }}
+        />
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
-      <View style={styles.midCont}>
-        <View style={styles.innerCont}>
-          <Image source={medalstar} style={styles.icon} />
-          <View>
-            <Text style={styles.subsDes} numberOfLines={2}>
-              Monthly /<Text style={styles.boldText}> $25</Text>
-            </Text>
-            <Text>Monthly</Text>
+      <View style={styles.upperCont}>
+        <View style={styles.midCont}>
+          <View style={styles.innerCont}>
+            <Image source={medalstar} style={styles.icon} />
+            <View style={{marginLeft: wp('2')}}>
+              <Text style={styles.monthlyText} numberOfLines={2}>
+                Monthly /<Text style={styles.monthlyTextBold}> $25</Text>
+              </Text>
+              <TextComponent
+                styles={styles.textDes}
+                text={'Salungat sa kaalaman ng marami.'}
+              />
+            </View>
           </View>
+        </View>
+        <View style={{marginTop: hp('2')}}>
+          <TickCircle text={'All location'} />
+          <TickCircle text={'No ads'} />
+          <TickCircle text={'Companionship'} />
+          <TickCircle text={'Transportation'} />
+          <TickCircle
+            tintColor={Colors.textGray}
+            TextColor
+            text={'Competition'}
+          />
+          <TickCircle
+            tintColor={Colors.textGray}
+            TextColor
+            text={'Socialization'}
+          />
+          <TickCircle
+            tintColor={Colors.textGray}
+            TextColor
+            text={'World from Horseback'}
+          />
+        </View>
+        <View style={styles.buyCont}>
+          <ThemeButton title={'Buy Plan'} textStyle={styles.buyPlan} />
         </View>
       </View>
     </View>
@@ -102,9 +157,61 @@ const Monthly = () => {
 };
 
 const Yearly = () => {
+  const TickCircle = ({text, tintColor, TextColor}) => {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingLeft: wp('3'),
+          paddingTop: hp('1'),
+        }}>
+        <Image
+          tintColor={tintColor}
+          source={tickCircle}
+          style={styles.tickCircle}
+        />
+
+        <TextComponent
+          text={text}
+          styles={{
+            color: TextColor ? Colors.textGray : Colors.backgroundTheme,
+            ...styles.packText,
+          }}
+        />
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
-      <Text>Yearly</Text>
+      <View style={styles.upperCont}>
+        <View style={styles.midCont}>
+          <View style={styles.innerCont}>
+            <Image source={medalstar} style={styles.icon} />
+            <View style={{marginLeft: wp('2')}}>
+              <Text style={styles.monthlyText} numberOfLines={2}>
+                Yearly /<Text style={styles.monthlyTextBold}> $250</Text>
+              </Text>
+              <TextComponent
+                styles={styles.textDes}
+                text={'Salungat sa kaalaman ng marami.'}
+              />
+            </View>
+          </View>
+        </View>
+        <View style={{marginTop: hp('2')}}>
+          <TickCircle text={'All location'} />
+          <TickCircle text={'No ads'} />
+          <TickCircle text={'Companionship'} />
+          <TickCircle text={'Transportation'} />
+          <TickCircle text={'Competition'} />
+          <TickCircle text={'Socialization'} />
+          <TickCircle text={'World from Horseback'} />
+        </View>
+        <View style={styles.buyCont}>
+          <ThemeButton title={'Buy Plan'} textStyle={styles.buyPlan} />
+        </View>
+      </View>
     </View>
   );
 };
