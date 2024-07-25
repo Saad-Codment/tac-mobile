@@ -84,7 +84,7 @@ const SubscribeScreen = ({navigation}) => {
 
 export default SubscribeScreen;
 
-const Monthly = () => {
+const Monthly = ({navigation}) => {
   const TickCircle = ({text, tintColor, TextColor}) => {
     return (
       <View
@@ -149,14 +149,18 @@ const Monthly = () => {
           />
         </View>
         <View style={styles.buyCont}>
-          <ThemeButton title={'Buy Plan'} textStyle={styles.buyPlan} />
+          <ThemeButton
+            onPress={() => navigation.navigate('HomeScreen')}
+            title={'Buy Plan'}
+            textStyle={styles.buyPlan}
+          />
         </View>
       </View>
     </View>
   );
 };
 
-const Yearly = () => {
+const Yearly = ({navigation}) => {
   const TickCircle = ({text, tintColor, TextColor}) => {
     return (
       <View
@@ -209,7 +213,11 @@ const Yearly = () => {
           <TickCircle text={'World from Horseback'} />
         </View>
         <View style={styles.buyCont}>
-          <ThemeButton title={'Buy Plan'} textStyle={styles.buyPlan} />
+          <ThemeButton
+            onPress={() => navigation.navigate('MybottomTabs')}
+            title={'Buy Plan'}
+            textStyle={styles.buyPlan}
+          />
         </View>
       </View>
     </View>

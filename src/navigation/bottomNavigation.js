@@ -16,6 +16,9 @@ import {
   setting,
   bell,
   sosImage,
+  heart,
+  addcircle,
+  messages,
 } from '../Assets';
 import {types} from '../Redux/types';
 import useReduxStore from '../Hooks/UseReduxStore';
@@ -27,7 +30,11 @@ const tabarComponent = (activeImage, unActiveImage, ImageStyle) => {
     tabBarIcon: ({focused}) => (
       <View style={styles.tabarView}>
         <Image
-          style={{...styles.imgstyle, ...ImageStyle}}
+          style={{
+            ...styles.imgstyle,
+            ...ImageStyle,
+            tintColor: focused ? Colors.primaryColor : Colors.backgroundTheme,
+          }}
           source={focused ? activeImage : unActiveImage}
         />
       </View>
@@ -66,7 +73,7 @@ function MybottomTabs() {
           shadowOpacity: 0,
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
-          height: hp('9'),
+          height: hp('10'),
           paddingBottom: hp('0'),
           // bottom: Platform.OS == 'ios' ? hp('1.7') : hp('1.5'),
           width: wp('100'),
@@ -81,12 +88,32 @@ function MybottomTabs() {
         options={tabarComponent(home1, home)}
         component={Screens.HomeScreen}
       />
+      <Tab.Screen
+        name="HomeScreen1"
+        options={tabarComponent(heart, heart)}
+        component={Screens.HomeScreen}
+      />
+      <Tab.Screen
+        name="HomeScreen2"
+        options={tabarComponent(addcircle, addcircle)}
+        component={Screens.HomeScreen}
+      />
+      <Tab.Screen
+        name="HomeScreen4"
+        options={tabarComponent(messages, messages)}
+        component={Screens.HomeScreen}
+      />
+      <Tab.Screen
+        name="SettingScreen"
+        options={tabarComponent(setting1, setting)}
+        component={Screens.SettingScreen}
+      />
       {/* <Tab.Screen
         name="FavourateScreen"
         options={tabarComponent(message, message1)}
         component={Screens.HomeScreen}
       /> */}
-      <Tab.Screen
+      {/* <Tab.Screen
         name="SOSScreen"
         AMPMLayout
         options={tabarComponent(
@@ -104,17 +131,17 @@ function MybottomTabs() {
           }),
         )}
         component={Screens.SOSScreen}
-      />
+      /> */}
       {/* <Tab.Screen
         name="ChatScreen"
         options={tabarComponent(notification, notification1)}
         component={Screens.SeetingScreen}
       /> */}
-      <Tab.Screen
+      {/* <Tab.Screen
         name="SettingScreen"
         options={tabarComponent(setting1, setting)}
         component={Screens.SeetingScreen}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }

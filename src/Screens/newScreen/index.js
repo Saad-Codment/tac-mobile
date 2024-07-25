@@ -1,14 +1,14 @@
 import {View, Text} from 'react-native';
 import React from 'react';
-import useNewScreen from './useNewScreen';
+import useHomeScreen from './useHomeScreen';
 
-const newScreen = ({navigation}) => {
-  const {} = useNewScreen(navigation);
+const HomeScreen = ({navigation}) => {
+  const {} = useHomeScreen(navigation);
   return (
     <View>
-      <Text>newScreen</Text>
+      <Text>HomeScreen</Text>
     </View>
   );
 };
 
-export default newScreen;
+export default HomeScreen;

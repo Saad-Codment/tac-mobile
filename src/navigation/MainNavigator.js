@@ -47,6 +47,9 @@ function MainNavigator() {
               name="RegisterScreen"
               component={Screens.RegisterScreen}
             />
+            <Stack.Screen name="HomeScreen" component={Screens.HomeScreen} />
+
+            <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
 
             {/* <Stack.Screen
               name="ForgetPasswordScreen"

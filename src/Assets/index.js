@@ -13,6 +13,9 @@ export {default as female} from './Icons/female.png';
 export {default as others} from './Icons/others.png';
 export {default as medalstar} from './Icons/medalstar.png';
 export {default as tickCircle} from './Icons/tickCircle.png';
+export {default as heart} from './Icons/heart.png';
+export {default as addcircle} from './Icons/addcircle.png';
+export {default as messages} from './Icons/messages.png';
 
 export {default as LoginBg} from './Images/loginBg.png';
 export {default as signupBg} from './Images/signupBg.png';
@@ -72,9 +75,6 @@ export {default as notification1} from './Icons/notification1.png';
 export {default as home1} from './Icons/home1.png';
 export {default as home} from './Icons/home.png';
 export {default as profile2} from './Icons/profile2.png';
-export {default as message} from './Icons/message.png';
-export {default as message1} from './Icons/message1.png';
-export {default as sosImage} from './Icons/sosImage.png';
 
 export {default as setting} from './Icons/setting.png';
 export {default as setting1} from './Icons/setting1.png';
