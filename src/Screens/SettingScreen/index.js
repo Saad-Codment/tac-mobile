@@ -16,6 +16,9 @@ import {
   logout,
   trashIcon,
   trash,
+  about,
+  privacy,
+  terms,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
@@ -28,6 +31,7 @@ import useSettingScreen from './useSettingScreen';
 import {IconBtn} from '../../Components/IconBtn';
 import {styles} from './styles';
 import {medalstar} from '../../Assets';
+import {Colors} from '../../Theme/Variables';
 
 const SettingScreen = ({navigation}) => {
   const {
@@ -70,7 +74,10 @@ const SettingScreen = ({navigation}) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         scrollEnabled
-        contentContainerStyle={{paddingBottom: hp('70')}}>
+        contentContainerStyle={{
+          // paddingBottom: hp('70'),
+          backgroundColor: 'background: rgba(255, 255, 255, 0.7)',
+        }}>
         <TextComponent text={'Plans'} styles={styles.plan} />
         <View style={styles.mainBtn}>
           <FlatList
@@ -103,18 +110,18 @@ const SettingScreen = ({navigation}) => {
 
         <View style={styles.mainBtn}>
           <IconBtn
-            icon={passGreen}
+            icon={about}
             btnText={'About TAC'}
             onpress={() => navigation.navigate('ChangePasswordScreen')}
           />
           <IconBtn
-            icon={passGreen}
+            icon={privacy}
             btnText={'Privacy Policy'}
             onpress={() => navigation.navigate('ChangePasswordScreen')}
           />
           <IconBtn
             rightIos
-            icon={passGreen}
+            icon={terms}
             btnText={'Terms and Conditions'}
             onpress={() => navigation.navigate('ChangePasswordScreen')}
             extraStyle={styles.lastItem}

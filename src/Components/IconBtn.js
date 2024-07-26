@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     borderColor: Colors.lightBorder,
-    paddingVertical: hp('2'),
+    paddingVertical: hp('3'),
     borderBottomWidth: 0.3,
   },
   iconGreen: {

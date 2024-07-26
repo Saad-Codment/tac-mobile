@@ -55,7 +55,8 @@ export const styles = StyleSheet.create({
     marginBottom: hp('2'),
   },
   mainBtn: {
-    backgroundColor: '#fcf8e9',
+    backgroundColor: Colors.white,
+
     marginHorizontal: wp('4'),
     paddingHorizontal: wp('4'),
     paddingVertical: hp('1'),
@@ -111,6 +112,6 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.black,
     marginLeft: wp('4'),
-    marginTop: hp('2'),
+    marginTop: hp('4'),
   },
 });
