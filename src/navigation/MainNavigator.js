@@ -35,6 +35,11 @@ function MainNavigator() {
         {!isLogin && (
           <>
             <Stack.Screen
+              name="SettingScreen"
+              options={'SettingScreen'}
+              component={Screens.SettingScreen}
+            />
+            <Stack.Screen
               name="SubscribeScreen"
               component={Screens.SubscribeScreen}
             />

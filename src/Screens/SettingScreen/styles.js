@@ -1,16 +1,15 @@
 import {Dimensions, Platform, StyleSheet} from 'react-native';
 import {hp, wp} from '../../Config/responsive';
-import {Colors} from '../../Theme/Variables';
+import {Colors, FontSize} from '../../Theme/Variables';
 
 export const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
   },
   header: {
-    backgroundColor: Colors.primaryColor,
-    paddingBottom: hp('12'),
-    borderBottomRightRadius: 35,
-    borderBottomLeftRadius: 35,
+    backgroundColor: Colors.backgroundTheme,
+    paddingBottom: hp('1'),
+
     paddingTop: Platform.OS == 'ios' ? hp('5') : 0,
   },
   topHd: {
@@ -92,7 +91,7 @@ export const styles = StyleSheet.create({
     marginRight: wp('2'),
   },
   arrowRight: {
-    width: wp('5'),
+    width: wp('2'),
     resizeMode: 'contain',
     height: hp('2.4'),
   },
@@ -106,5 +105,12 @@ export const styles = StyleSheet.create({
   },
   bottomSpace: {
     marginBottom: hp('3'),
+  },
+  plan: {
+    fontSize: FontSize.scale16,
+    fontWeight: '600',
+    color: Colors.black,
+    marginLeft: wp('4'),
+    marginTop: hp('2'),
   },
 });

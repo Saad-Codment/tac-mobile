@@ -16,6 +16,10 @@ export {default as tickCircle} from './Icons/tickCircle.png';
 export {default as heart} from './Icons/heart.png';
 export {default as addcircle} from './Icons/addcircle.png';
 export {default as messages} from './Icons/messages.png';
+export {default as arrLeft} from './Icons/arrow-left.png';
+export {default as arrRight} from './Icons/arrow-right.png';
+export {default as rightIos} from './Icons/rightIos.png';
+export {default as trash} from './Icons/trash.png';
 
 export {default as LoginBg} from './Images/loginBg.png';
 export {default as signupBg} from './Images/signupBg.png';

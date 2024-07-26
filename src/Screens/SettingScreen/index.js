@@ -2,6 +2,7 @@ import {
   FlatList,
   Image,
   ImageBackground,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,15 +10,12 @@ import {
 } from 'react-native';
 import React, {memo, useCallback, useState} from 'react';
 import {
-  arrLeft,
   goalGreen,
-  logOut,
-  logoutGreen,
   passGreen,
-  profile,
-  stepBg,
+  rightIos,
+  logout,
+  trashIcon,
   trash,
-  trashRed,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
@@ -26,9 +24,10 @@ import {profileData, settingData} from '../../Utils/localDB';
 import {keyExtractor} from '../../Utils';
 import {hp} from '../../Config/responsive';
 import useSettingScreen from './useSettingScreen';
-import {imageUrl} from '../../Utils/Urls';
+
 import {IconBtn} from '../../Components/IconBtn';
 import {styles} from './styles';
+import {medalstar} from '../../Assets';
 
 const SettingScreen = ({navigation}) => {
   const {
@@ -43,110 +42,108 @@ const SettingScreen = ({navigation}) => {
 
   const renderItem = useCallback(({item, index, data}) => {
     return (
-      <Touchable
-        onPress={() => item?.onpress(navigation.navigate, item?.screenName)}
-        style={styles.listBtn}>
-        <Image source={item?.icon} style={styles.iconGreen} />
-        <View
-          style={[
-            styles.listInner,
-            index === data.length - 1 && styles.lastItem,
-          ]}>
-          <TextComponent text={item?.name} styles={styles.title} />
-          <Image source={arrLeft} style={styles.arrowRight} />
-        </View>
-      </Touchable>
+      <>
+        <Pressable
+          onPress={() => item?.onpress(navigation.navigate, item?.screenName)}
+          style={styles.listBtn}>
+          <Image source={item?.icon} style={styles.iconGreen} />
+          <View
+            style={[
+              styles.listInner,
+              index === data.length - 1 && styles.lastItem,
+            ]}>
+            <TextComponent text={item?.name} styles={styles.title} />
+            <Image source={rightIos} style={styles.arrowRight} />
+          </View>
+        </Pressable>
+      </>
     );
   });
 
   return (
-    <ImageBackground source={stepBg} style={styles.container}>
-      <View showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <TextComponent text={'Settings'} styles={styles.topHd} />
+    // <ImageBackground source={stepBg} style={styles.container}>
+    <View showsVerticalScrollIndicator={false}>
+      <View style={styles.header}>
+        <TextComponent text={'Settings'} styles={styles.topHd} />
+      </View>
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        scrollEnabled
+        contentContainerStyle={{paddingBottom: hp('70')}}>
+        <TextComponent text={'Plans'} styles={styles.plan} />
+        <View style={styles.mainBtn}>
+          <FlatList
+            data={[
+              {
+                icon: medalstar,
+                name: 'Subscription',
+                onpress: (navigate, route) => navigate(route),
+                screenName: 'SubscribeScreen',
+              },
+            ]}
+            scrollEnabled={false}
+            keyExtractor={keyExtractor}
+            renderItem={props =>
+              renderItem({
+                ...props,
+                data: [
+                  {
+                    icon: goalGreen,
+                    name: 'Edit Profile',
+                    onpress: (navigate, route) => navigate(route),
+                    screenName: 'EditProfileScreen',
+                  },
+                ],
+              })
+            }
+          />
         </View>
-        {/* <CircleImage /> */}
-        <BlurImage
-          blurhash={'LKK1wP_3yYIU4.jsWrt7_NRjMdt7'}
-          // radius={75}
-          isURI={true}
-          styles={styles.ProfileImage}
-          blurStyle={styles.blurMain}
-          uri={imageUrl(userData?.profile_image)}
-        />
-        <TextComponent
-          text={userData?.first_name + ' ' + userData?.last_name}
-          styles={styles.name}
-        />
-        <TextComponent text={userData?.email} styles={styles.email} />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          scrollEnabled
-          contentContainerStyle={{paddingBottom: hp('70')}}>
-          <View style={styles.mainBtn}>
-            <FlatList
-              data={[
-                {
-                  icon: goalGreen,
-                  name: 'Edit Profile',
-                  onpress: (navigate, route) => navigate(route),
-                  screenName: 'EditProfileScreen',
-                },
-              ]}
-              scrollEnabled={false}
-              keyExtractor={keyExtractor}
-              renderItem={props =>
-                renderItem({
-                  ...props,
-                  data: [
-                    {
-                      icon: goalGreen,
-                      name: 'Edit Profile',
-                      onpress: (navigate, route) => navigate(route),
-                      screenName: 'EditProfileScreen',
-                    },
-                  ],
-                })
-              }
-            />
-          </View>
-          <View style={styles.mainBtn}>
-            <FlatList
-              data={settingData}
-              scrollEnabled={false}
-              keyExtractor={keyExtractor}
-              renderItem={props => renderItem({...props, data: settingData})}
-            />
-          </View>
-          <View style={styles.mainBtn}>
-            <IconBtn
-              icon={passGreen}
-              btnText={'Change Password'}
-              changeText={'Change'}
-              onpress={() => navigation.navigate('ChangePasswordScreen')}
-            />
-            <FlatList
-              data={profileData}
-              keyExtractor={keyExtractor}
-              scrollEnabled={false}
-              renderItem={props => renderItem({...props, data: profileData})}
-            />
-          </View>
-          <View style={{...styles.mainBtn, ...styles.bottomSpace}}>
-            <IconBtn
-              icon={logoutGreen}
-              btnText={'Log Out'}
-              onpress={() => toggleAlert('logoutAlert')}
-            />
-            <IconBtn
-              icon={trash}
-              btnText={'Deactivate Account'}
-              extraStyle={styles.lastItem}
-              onpress={() => toggleAlert('deleteAlert')}
-            />
-          </View>
-        </ScrollView>
-        <SettingModal
+        <TextComponent text={'General'} styles={styles.plan} />
+
+        <View style={styles.mainBtn}>
+          <IconBtn
+            icon={passGreen}
+            btnText={'About TAC'}
+            onpress={() => navigation.navigate('ChangePasswordScreen')}
+          />
+          <IconBtn
+            icon={passGreen}
+            btnText={'Privacy Policy'}
+            onpress={() => navigation.navigate('ChangePasswordScreen')}
+          />
+          <IconBtn
+            rightIos
+            icon={passGreen}
+            btnText={'Terms and Conditions'}
+            onpress={() => navigation.navigate('ChangePasswordScreen')}
+            extraStyle={styles.lastItem}
+          />
+          {/* <FlatList
+            data={profileData}
+            keyExtractor={keyExtractor}
+            scrollEnabled={false}
+            renderItem={props => renderItem({...props, data: profileData})}
+          /> */}
+        </View>
+        <TextComponent text={'Deactivation'} styles={styles.plan} />
+
+        <View style={{...styles.mainBtn, ...styles.bottomSpace}}>
+          <IconBtn
+            icon={logout}
+            btnText={'Log Out'}
+            onpress={() => toggleAlert('logoutAlert')}
+          />
+          <IconBtn
+            borderLine
+            icon={trash}
+            btnText={'Deactivate Account'}
+            extraStyle={styles.lastItem}
+            onpress={() => toggleAlert('deleteAlert')}
+          />
+        </View>
+      </ScrollView>
+      {/* <SettingModal
           icon={logOut}
           isVisible={
             (deleteAlert == true && deleteAlert) ||
@@ -177,9 +174,9 @@ const SettingScreen = ({navigation}) => {
               (logoutAlert && 'logoutAlert') || (deleteAlert && 'deleteAlert'),
             );
           }}
-        />
-      </View>
-    </ImageBackground>
+        /> */}
+    </View>
+    // </ImageBackground>
   );
 };
 
