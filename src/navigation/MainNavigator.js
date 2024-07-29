@@ -34,6 +34,8 @@ function MainNavigator() {
         )}
         {!isLogin && (
           <>
+            <Stack.Screen name="HomeScreen" component={Screens.HomeScreen} />
+
             <Stack.Screen
               name="SettingScreen"
               options={'SettingScreen'}
@@ -52,7 +54,6 @@ function MainNavigator() {
               name="RegisterScreen"
               component={Screens.RegisterScreen}
             />
-            <Stack.Screen name="HomeScreen" component={Screens.HomeScreen} />
 
             <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
 

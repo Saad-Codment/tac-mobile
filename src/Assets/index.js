@@ -28,19 +28,6 @@ export {default as addNewBtn} from './Images/addNewBtn.png';
 export {default as divider} from './Images/divider.png';
 export {default as blurImg} from './Images/blurImg.png';
 
-// weatherImages
-
-export {default as parCloud} from './Images/parCloud.png';
-export {default as mist} from './Images/mist.png';
-export {default as rain} from './Images/rain.png';
-export {default as snow} from './Images/snow.png';
-export {default as thunderstorm} from './Images/thunderstorm.png';
-export {default as brokenClouds} from './Images/brokenClouds.png';
-export {default as scatteredClouds} from './Images/brokenClouds.png';
-// export {default as parCloud} from './Images/parCloud.png';
-export {default as clearSkyD} from './Images/clearSkyD.png';
-export {default as clearSkyN} from './Images/clearSkyN.png';
-export {default as fewClouds} from './Images/clearSkyN.png';
 //  Icons
 
 export {default as eye} from './Icons/eye.png';
@@ -74,8 +61,8 @@ export {default as icon4} from './Icons/icon4.png';
 export {default as icon5} from './Icons/icon5.png';
 export {default as icon6} from './Icons/icon6.png';
 export {default as profile1} from './Icons/profile1.png';
-export {default as notification} from './Icons/notification.png';
-export {default as notification1} from './Icons/notification1.png';
+
+export {default as notificationWhite} from './Icons/notificationWhite.png';
 export {default as home1} from './Icons/home1.png';
 export {default as home} from './Icons/home.png';
 export {default as profile2} from './Icons/profile2.png';
@@ -106,3 +93,7 @@ export {default as arrowLeft} from './Icons/arrow-left.png';
 export {default as apple} from './Icons/appleImage.png';
 export {default as google} from './Icons/googleImage.png';
 export {default as facebook} from './Icons/facebookImage.png';
+
+// Lotties files
+
+export {default as handShakeLottie} from './Lotties/Hand.json';
