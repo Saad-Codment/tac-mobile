@@ -20,6 +20,10 @@ export {default as arrLeft} from './Icons/arrow-left.png';
 export {default as arrRight} from './Icons/arrow-right.png';
 export {default as rightIos} from './Icons/rightIos.png';
 export {default as trash} from './Icons/trash.png';
+export {default as searchsetting} from './Icons/searchsetting.png';
+export {default as calender} from './Icons/calender.png';
+export {default as clock} from './Icons/clock.png';
+export {default as location} from './Icons/location.png';
 
 export {default as LoginBg} from './Images/loginBg.png';
 export {default as signupBg} from './Images/signupBg.png';

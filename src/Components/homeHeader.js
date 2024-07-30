@@ -25,7 +25,11 @@ const HomeHeader = ({text}) => {
     <View style={styles.headerView}>
       <View style={styles.firstView}>
         <View
-          style={{flexDirection: 'row', alignItems: 'center', width: wp('70')}}>
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: wp('70'),
+          }}>
           <CircleImage
             uri={
               'https://images.pexels.com/photos/1898555/pexels-photo-1898555.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
@@ -35,6 +39,7 @@ const HomeHeader = ({text}) => {
               alignSelf: 'center',
               marginTop: hp('2.5'),
               marginRight: hp('1'),
+              borderRadius: 50,
             }}
           />
           <View>
@@ -84,6 +89,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.backgroundTheme,
     width: wp('100'),
     paddingTop: hp('2'),
+    zIndex: 0,
+    position: 'absolute',
   },
   firstView: {
     flexDirection: 'row',

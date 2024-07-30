@@ -1,24 +1,139 @@
-import {View, Text, ScrollView, Image, TextInput} from 'react-native';
-import React from 'react';
+import {View, Text, ScrollView, Image, TextInput, FlatList} from 'react-native';
+import React, {useCallback} from 'react';
 import useHomeScreen from './useHomeScreen';
 import HomeHeader from '../../Components/homeHeader';
 import {TextComponent} from '../../Components/TextComponent';
 import {styles} from './styles';
-import {searchIcon} from '../../Assets';
+import {
+  calender,
+  clock,
+  heart,
+  location,
+  lock,
+  searchIcon,
+  searchsetting,
+} from '../../Assets';
 import {Colors} from '../../Theme/Variables';
+import {hp, wp} from '../../Config/responsive';
+import ThemeButton from '../../Components/ThemeButton';
 
 const HomeScreen = ({navigation}) => {
-  const {} = useHomeScreen(navigation);
+  const {search, setSearch} = useHomeScreen(navigation);
+
+  const renderItem = useCallback(({item}) => {
+    return (
+      <>
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Image source={{uri: item.userImage}} style={styles.userImage} />
+            <View>
+              <Text style={styles.userName}>{item.userName}</Text>
+              <Text style={styles.eventTitle}>
+                {item.eventTitle + ' '}
+                <Text style={styles.eventCategory}>{item.eventCategory}</Text>
+              </Text>
+            </View>
+          </View>
+          <View style={styles.eventDetails}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                flexDirection: 'row',
+              }}>
+              <Image source={calender} style={styles.icon} />
+              <Text style={styles.eventDate}>{item.eventDate}</Text>
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                flexDirection: 'row',
+              }}>
+              <Image source={clock} style={styles.icon} />
+
+              <Text style={styles.eventTime}>{item.eventTime}</Text>
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                flexDirection: 'row',
+              }}>
+              <Image source={location} style={styles.icon} />
+
+              <Text style={styles.eventLocation}>{item.eventLocation}</Text>
+            </View>
+          </View>
+          <View style={styles.cardFooter}>
+            <View
+              style={{
+                flexDirection: 'row',
+                width: wp('25'),
+                alignItems: 'center',
+              }}>
+              <Image
+                tintColor={Colors.primaryColor}
+                source={heart}
+                style={styles.icon}
+              />
+              <Text style={styles.association}>likes</Text>
+            </View>
+
+            <Text style={styles.association}>{item.association}</Text>
+            <View style={styles.dot} />
+            <Text style={styles.circuits}>{item.circuits}</Text>
+          </View>
+          <Image
+            tintColor={Colors.textGray}
+            source={lock}
+            style={styles.lock}
+          />
+        </View>
+      </>
+    );
+  }, []);
+  const renderItemAddFriend = useCallback(({item}) => {
+    return (
+      <>
+        <View style={styles.friendCard}>
+          <Image
+            source={{uri: item.userImage}}
+            style={styles.friendUserImage}
+          />
+          <Text style={styles.friendUserName}>{item.userName}</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TextComponent styles={styles.mutual} text={'32 Mutual friends'} />
+          </View>
+          <View style={styles.friendCardFooter}>
+            <ThemeButton
+              style={{
+                borderRadius: 15,
+                height: hp('5'),
+                backgroundColor: Colors.backgroundTheme,
+              }}
+              title={'Add Friend'}
+            />
+            <ThemeButton
+              style={{
+                borderRadius: 10,
+                height: hp('5'),
+                backgroundColor: 'transparent',
+              }}
+              textStyle={{color: Colors.textGray}}
+              title={'Remove'}
+            />
+          </View>
+        </View>
+      </>
+    );
+  }, []);
   return (
     <View>
-      <HomeHeader style={{flex: 1, zIndex: 0}} text={'Hello Sheila'} />
+      <HomeHeader text={'Hello Sheila'} />
       <View
         style={{
-          // flex: 1,
-          position: 'absolute',
-          zIndex: 99999,
-          top: 170,
-          left: 50,
+          top: hp('24'),
         }}>
         <View style={styles.searchComponent}>
           <Image
@@ -29,17 +144,252 @@ const HomeScreen = ({navigation}) => {
           />
           <View style={styles.textInputContainer}>
             <TextInput
-              onSubmitEditing={() => searchPropertyFunction(text)}
+              onSubmitEditing={() => searchPropertyFunction(search)}
               // onSubmitEditing={() => mutateAsync({keyword: text})}
               selectionColor={Colors.textGray}
               style={styles.searchTextStyle}
-              // onChangeText={onChangeText}
-              // value={text}
+              onChangeText={setSearch}
+              value={search}
               placeholderTextColor={Colors.textGray}
               placeholder={'Search available jobs here...'}
             />
           </View>
+
+          <Image
+            tintColor={Colors.primaryColor}
+            resizeMode="contain"
+            source={searchsetting}
+            style={styles.searchsetting}
+          />
         </View>
+        <ScrollView
+          bounces={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            marginTop: hp('2'),
+            paddingBottom: hp('30'),
+          }}>
+          {/* The paddingTop ensures content is visible below the fixed search bar */}
+          {/* {Array(50)
+            .fill(null)
+            .map((_, index) => (
+              <Image
+                key={index}
+                tintColor={Colors.primaryColor}
+                resizeMode="contain"
+                source={searchsetting}
+                style={styles.searchsetting}
+              />
+            ))} */}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              padding: 15,
+              alignItems: 'center',
+            }}>
+            <TextComponent
+              styles={{color: Colors.white, ...styles.upcoming}}
+              text={'Upcoming Events'}
+            />
+            <TextComponent
+              styles={{color: Colors.white, ...styles.viewall}}
+              text={'View All'}
+            />
+          </View>
+          <FlatList
+            data={[
+              {
+                id: '1',
+                userImage: 'https://via.placeholder.com/50',
+                userName: 'Me',
+                eventTitle: 'Unity league.',
+                eventCategory: 'Bull Riding',
+                eventDate: 'Mon. Nov 27 - 2023',
+                eventTime: '18:00 - 23:00 P.M.',
+                eventLocation: 'Catherine St French Prairie Gardens.',
+                likes: '123',
+                association: 'Association',
+                circuits: 'Circuits',
+              },
+              {
+                id: '2',
+                userImage: 'https://via.placeholder.com/50',
+                userName: 'Me',
+                eventTitle: 'Unity league',
+                eventCategory: 'Bull Riding',
+                eventDate: 'Mon. Nov 27 - 2023',
+                eventTime: '18:00 - 23:00 P.M.',
+                eventLocation: 'Catherine St French Prairie Gardens.',
+                likes: '123',
+                association: 'Association',
+                circuits: 'Circuits',
+              },
+              // Add more items here
+            ]}
+            renderItem={renderItem}
+            horizontal // Enable horizontal scrolling
+            keyExtractor={item => item.toString()}
+            showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
+            contentContainerStyle={{paddingHorizontal: 10}} // Padding around the list
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              padding: 15,
+              alignItems: 'center',
+            }}>
+            <TextComponent
+              styles={{color: Colors.black, ...styles.upcoming}}
+              text={'Friend’s Events'}
+            />
+            <TextComponent
+              styles={{color: Colors.black, ...styles.viewall}}
+              text={'View All'}
+            />
+          </View>
+          <FlatList
+            data={[
+              {
+                id: '1',
+                userImage: 'https://via.placeholder.com/50',
+                userName: 'Me',
+                eventTitle: 'Unity league.',
+                eventCategory: 'Bull Riding',
+                eventDate: 'Mon. Nov 27 - 2023',
+                eventTime: '18:00 - 23:00 P.M.',
+                eventLocation: 'Catherine St French Prairie Gardens.',
+                likes: '123',
+                association: 'Association',
+                circuits: 'Circuits',
+              },
+              {
+                id: '2',
+                userImage: 'https://via.placeholder.com/50',
+                userName: 'Me',
+                eventTitle: 'Unity league',
+                eventCategory: 'Bull Riding',
+                eventDate: 'Mon. Nov 27 - 2023',
+                eventTime: '18:00 - 23:00 P.M.',
+                eventLocation: 'Catherine St French Prairie Gardens.',
+                likes: '123',
+                association: 'Association',
+                circuits: 'Circuits',
+              },
+              // Add more items here
+            ]}
+            renderItem={renderItem}
+            horizontal // Enable horizontal scrolling
+            keyExtractor={item => item.toString()}
+            showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
+            contentContainerStyle={{paddingHorizontal: 10}} // Padding around the list
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              padding: 15,
+              alignItems: 'center',
+            }}>
+            <TextComponent
+              styles={{color: Colors.black, ...styles.upcoming}}
+              text={'Suggested Events'}
+            />
+            <TextComponent
+              styles={{color: Colors.black, ...styles.viewall}}
+              text={'View All'}
+            />
+          </View>
+          <FlatList
+            data={[
+              {
+                id: '1',
+                userImage: 'https://via.placeholder.com/50',
+                userName: 'Me',
+                eventTitle: 'Unity league.',
+                eventCategory: 'Bull Riding',
+                eventDate: 'Mon. Nov 27 - 2023',
+                eventTime: '18:00 - 23:00 P.M.',
+                eventLocation: 'Catherine St French Prairie Gardens.',
+                likes: '123',
+                association: 'Association',
+                circuits: 'Circuits',
+              },
+              {
+                id: '2',
+                userImage: 'https://via.placeholder.com/50',
+                userName: 'Me',
+                eventTitle: 'Unity league',
+                eventCategory: 'Bull Riding',
+                eventDate: 'Mon. Nov 27 - 2023',
+                eventTime: '18:00 - 23:00 P.M.',
+                eventLocation: 'Catherine St French Prairie Gardens.',
+                likes: '123',
+                association: 'Association',
+                circuits: 'Circuits',
+              },
+              // Add more items here
+            ]}
+            renderItem={renderItem}
+            horizontal // Enable horizontal scrolling
+            keyExtractor={item => item.toString()}
+            showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
+            contentContainerStyle={{paddingHorizontal: 10}} // Padding around the list
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              padding: 15,
+              alignItems: 'center',
+            }}>
+            <TextComponent
+              styles={{color: Colors.black, ...styles.upcoming}}
+              text={'Add Friends'}
+            />
+            <TextComponent
+              styles={{color: Colors.black, ...styles.viewall}}
+              text={'View All'}
+            />
+          </View>
+          <FlatList
+            data={[
+              {
+                id: '1',
+                userImage: 'https://via.placeholder.com/50',
+                userName: 'Ricky Jonathan',
+                eventTitle: 'Unity league.',
+                eventCategory: 'Bull Riding',
+                eventDate: 'Mon. Nov 27 - 2023',
+                eventTime: '18:00 - 23:00 P.M.',
+                eventLocation: 'Catherine St French Prairie Gardens.',
+                likes: '123',
+                association: 'Association',
+                circuits: 'Circuits',
+              },
+              {
+                id: '2',
+                userImage: 'https://via.placeholder.com/50',
+                userName: 'Ricky Jonathan',
+                eventTitle: 'Unity league',
+                eventCategory: 'Bull Riding',
+                eventDate: 'Mon. Nov 27 - 2023',
+                eventTime: '18:00 - 23:00 P.M.',
+                eventLocation: 'Catherine St French Prairie Gardens.',
+                likes: '123',
+                association: 'Association',
+                circuits: 'Circuits',
+              },
+              // Add more items here
+            ]}
+            renderItem={renderItemAddFriend}
+            horizontal // Enable horizontal scrolling
+            keyExtractor={item => item.toString()}
+            showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
+            contentContainerStyle={{paddingHorizontal: 10}} // Padding around the list
+          />
+        </ScrollView>
       </View>
     </View>
   );

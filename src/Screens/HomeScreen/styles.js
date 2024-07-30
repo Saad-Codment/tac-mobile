@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {hp, wp} from '../../Config/responsive';
 import {Colors, FontSize} from '../../Theme/Variables';
 
@@ -7,14 +7,14 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   searchComponent: {
-    marginTop: hp('-3'),
+    marginTop: hp('-8'),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: Colors.backgroundTheme,
     borderRadius: 10,
     padding: 10,
-    // marginHorizontal: wp('3'),
+    marginHorizontal: wp('4'),
     height: hp('7'),
     borderColor: Colors.textGray,
     borderWidth: wp('0.2'),
@@ -22,11 +22,16 @@ export const styles = StyleSheet.create({
   searchStyle: {
     resizeMode: 'contain',
     width: wp('4'),
-    marginRight: wp('1'),
+  },
+  searchsetting: {
+    resizeMode: 'contain',
+    width: wp('8'),
+    height: hp('5'),
+    // marginRight: wp('1'),
   },
   textInputContainer: {
     alignItems: 'flex-start',
-    width: wp('70'),
+    width: wp('75'),
     justifyContent: 'center',
     height: hp('7'),
   },
@@ -37,5 +42,187 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '700',
     textTransform: 'capitalize',
+  },
+
+  searchTextStyle: {
+    fontSize: FontSize.scale15,
+    fontWeight: '500',
+    color: Colors.textGray,
+    alignSelf: 'flex-start',
+    height: hp('5'),
+    width: wp('64'),
+  },
+  upcoming: {
+    fontSize: FontSize.scale16,
+    fontWeight: '600',
+    color: Colors.white,
+  },
+  viewall: {
+    fontSize: FontSize.scale12,
+    fontWeight: '400',
+  },
+  upcoming: {
+    fontSize: FontSize.scale16,
+    fontWeight: '600',
+  },
+  viewall: {
+    fontSize: FontSize.scale12,
+    fontWeight: '400',
+  },
+  upcomingHeader: {
+    borderRadius: 10,
+    backgroundColor: 'red',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    margin: 10,
+    width: wp('80%'),
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: {width: 0, height: 2},
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  friendCard: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    margin: 10,
+    width: wp('50%'),
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: {width: 0, height: 2},
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  userImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  friendUserImage: {
+    borderRadius: Math.round(
+      Dimensions.get('window').width + Dimensions.get('window').height,
+    ),
+    width: Dimensions.get('window').width * 0.15,
+    height: Dimensions.get('window').width * 0.15,
+    marginRight: 10,
+    alignSelf: 'center',
+  },
+  icon: {
+    width: wp('5'),
+    height: hp('4'),
+    marginRight: 5,
+    resizeMode: 'contain',
+  },
+  lock: {
+    position: 'absolute',
+    right: wp('1'),
+    top: hp('1'),
+    width: wp('10'),
+    height: hp('5'),
+    marginRight: 5,
+    resizeMode: 'contain',
+  },
+  userName: {
+    fontSize: FontSize.scale14,
+    fontWeight: '400',
+    color: Colors.textGray,
+  },
+  friendUserName: {
+    fontSize: FontSize.scale18,
+    fontWeight: '600',
+    color: Colors.black,
+    textAlign: 'center',
+    marginTop: hp('2'),
+  },
+  eventTitle: {
+    fontSize: FontSize.scale20,
+    fontWeight: '600',
+    color: Colors.black,
+    alignSelf: 'center',
+  },
+  eventCategory: {
+    fontSize: FontSize.scale14,
+    fontWeight: '400',
+    color: Colors.primaryColor,
+    alignSelf: 'center',
+  },
+  eventDetails: {
+    marginBottom: 10,
+  },
+  eventDate: {
+    fontSize: FontSize.scale14,
+    color: Colors.textGray,
+  },
+  eventTime: {
+    fontSize: FontSize.scale14,
+    color: Colors.textGray,
+  },
+  eventLocation: {
+    fontSize: FontSize.scale14,
+    color: Colors.textGray,
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    paddingTop: 10,
+    alignItems: 'center',
+  },
+  friendCardFooter: {
+    justifyContent: 'space-between',
+    borderTopColor: '#eee',
+    paddingTop: 10,
+    alignItems: 'center',
+  },
+  likes: {
+    fontSize: FontSize.scale14,
+    color: Colors.textGray,
+  },
+  association: {
+    fontSize: FontSize.scale14,
+    color: Colors.textGray,
+  },
+  circuits: {
+    fontSize: FontSize.scale14,
+    color: Colors.textGray,
+    marginLeft: wp('-10'),
+  },
+  dot: {
+    borderRadius: 50,
+    width: wp('1.2'),
+    height: hp('0.6'),
+    backgroundColor: Colors.textGray,
+    marginLeft: wp('-10'),
+  },
+  mutual: {
+    fontSize: FontSize.scale12,
+    fontWeight: '400',
+    color: Colors.black,
+    alignSelf: 'center',
   },
 });
