@@ -1,4 +1,12 @@
-import {View, Text, ScrollView, Image, TextInput, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  TextInput,
+  FlatList,
+  Platform,
+} from 'react-native';
 import React, {useCallback} from 'react';
 import useHomeScreen from './useHomeScreen';
 import HomeHeader from '../../Components/homeHeader';
@@ -16,6 +24,7 @@ import {
 import {Colors} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
 import ThemeButton from '../../Components/ThemeButton';
+import MutualFriends from '../../Components/MutualFriendsComponent';
 
 const HomeScreen = ({navigation}) => {
   const {search, setSearch} = useHomeScreen(navigation);
@@ -23,11 +32,19 @@ const HomeScreen = ({navigation}) => {
   const renderItem = useCallback(({item}) => {
     return (
       <>
-        <View style={styles.card}>
+        <View
+          style={{
+            backgroundColor: item?.friendEvent
+              ? 'rgba(255, 238, 207, 1)'
+              : 'white',
+            ...styles.card,
+          }}>
           <View style={styles.cardHeader}>
             <Image source={{uri: item.userImage}} style={styles.userImage} />
             <View>
-              <Text style={styles.userName}>{item.userName}</Text>
+              <Text numberOfLines={2} style={styles.userName}>
+                {item.userName}
+              </Text>
               <Text style={styles.eventTitle}>
                 {item.eventTitle + ' '}
                 <Text style={styles.eventCategory}>{item.eventCategory}</Text>
@@ -77,18 +94,20 @@ const HomeScreen = ({navigation}) => {
                 source={heart}
                 style={styles.icon}
               />
-              <Text style={styles.association}>likes</Text>
+              <Text style={styles.association}>123 likes</Text>
             </View>
 
             <Text style={styles.association}>{item.association}</Text>
             <View style={styles.dot} />
             <Text style={styles.circuits}>{item.circuits}</Text>
           </View>
-          <Image
-            tintColor={Colors.textGray}
-            source={lock}
-            style={styles.lock}
-          />
+          {item?.lock && (
+            <Image
+              tintColor={Colors.textGray}
+              source={lock}
+              style={styles.lock}
+            />
+          )}
         </View>
       </>
     );
@@ -102,8 +121,14 @@ const HomeScreen = ({navigation}) => {
             style={styles.friendUserImage}
           />
           <Text style={styles.friendUserName}>{item.userName}</Text>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <TextComponent styles={styles.mutual} text={'32 Mutual friends'} />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <MutualFriends />
+            {/* <TextComponent styles={styles.mutual} text={'32 Mutual friends'} /> */}
           </View>
           <View style={styles.friendCardFooter}>
             <ThemeButton
@@ -133,7 +158,7 @@ const HomeScreen = ({navigation}) => {
       <HomeHeader text={'Hello Sheila'} />
       <View
         style={{
-          top: hp('24'),
+          top: hp(Platform.OS === 'android' ? '23' : '26'),
         }}>
         <View style={styles.searchComponent}>
           <Image
@@ -163,6 +188,7 @@ const HomeScreen = ({navigation}) => {
           />
         </View>
         <ScrollView
+          showsVerticalScrollIndicator={false}
           bounces={false}
           contentContainerStyle={{
             flexGrow: 1,
@@ -201,7 +227,7 @@ const HomeScreen = ({navigation}) => {
             data={[
               {
                 id: '1',
-                userImage: 'https://via.placeholder.com/50',
+                userImage: 'https://picsum.photos/200',
                 userName: 'Me',
                 eventTitle: 'Unity league.',
                 eventCategory: 'Bull Riding',
@@ -211,10 +237,11 @@ const HomeScreen = ({navigation}) => {
                 likes: '123',
                 association: 'Association',
                 circuits: 'Circuits',
+                lock: true,
               },
               {
                 id: '2',
-                userImage: 'https://via.placeholder.com/50',
+                userImage: 'https://picsum.photos/200',
                 userName: 'Me',
                 eventTitle: 'Unity league',
                 eventCategory: 'Bull Riding',
@@ -224,6 +251,7 @@ const HomeScreen = ({navigation}) => {
                 likes: '123',
                 association: 'Association',
                 circuits: 'Circuits',
+                lock: true,
               },
               // Add more items here
             ]}
@@ -253,29 +281,31 @@ const HomeScreen = ({navigation}) => {
             data={[
               {
                 id: '1',
-                userImage: 'https://via.placeholder.com/50',
-                userName: 'Me',
-                eventTitle: 'Unity league.',
-                eventCategory: 'Bull Riding',
+                userImage: 'https://picsum.photos/200',
+                userName: 'James Dean',
+                eventTitle: 'Berbury Hawks',
+                eventCategory: 'Team Roping',
                 eventDate: 'Mon. Nov 27 - 2023',
                 eventTime: '18:00 - 23:00 P.M.',
                 eventLocation: 'Catherine St French Prairie Gardens.',
                 likes: '123',
                 association: 'Association',
                 circuits: 'Circuits',
+                friendEvent: true,
               },
               {
                 id: '2',
-                userImage: 'https://via.placeholder.com/50',
-                userName: 'Me',
-                eventTitle: 'Unity league',
-                eventCategory: 'Bull Riding',
+                userImage: 'https://picsum.photos/200',
+                userName: 'James Dean',
+                eventTitle: 'Berbury Hawks',
+                eventCategory: 'Team Roping',
                 eventDate: 'Mon. Nov 27 - 2023',
                 eventTime: '18:00 - 23:00 P.M.',
                 eventLocation: 'Catherine St French Prairie Gardens.',
                 likes: '123',
                 association: 'Association',
                 circuits: 'Circuits',
+                friendEvent: true,
               },
               // Add more items here
             ]}
@@ -305,10 +335,10 @@ const HomeScreen = ({navigation}) => {
             data={[
               {
                 id: '1',
-                userImage: 'https://via.placeholder.com/50',
-                userName: 'Me',
-                eventTitle: 'Unity league.',
-                eventCategory: 'Bull Riding',
+                userImage: 'https://picsum.photos/200',
+                userName: 'System suggested',
+                eventTitle: 'Empire Batteries, Incorporation.',
+                eventCategory: 'Barrel Racing',
                 eventDate: 'Mon. Nov 27 - 2023',
                 eventTime: '18:00 - 23:00 P.M.',
                 eventLocation: 'Catherine St French Prairie Gardens.',
@@ -318,7 +348,7 @@ const HomeScreen = ({navigation}) => {
               },
               {
                 id: '2',
-                userImage: 'https://via.placeholder.com/50',
+                userImage: 'https://picsum.photos/200',
                 userName: 'Me',
                 eventTitle: 'Unity league',
                 eventCategory: 'Bull Riding',
@@ -357,7 +387,7 @@ const HomeScreen = ({navigation}) => {
             data={[
               {
                 id: '1',
-                userImage: 'https://via.placeholder.com/50',
+                userImage: 'https://picsum.photos/200',
                 userName: 'Ricky Jonathan',
                 eventTitle: 'Unity league.',
                 eventCategory: 'Bull Riding',
@@ -370,7 +400,7 @@ const HomeScreen = ({navigation}) => {
               },
               {
                 id: '2',
-                userImage: 'https://via.placeholder.com/50',
+                userImage: 'https://picsum.photos/200',
                 userName: 'Ricky Jonathan',
                 eventTitle: 'Unity league',
                 eventCategory: 'Bull Riding',

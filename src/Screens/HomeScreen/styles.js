@@ -22,16 +22,16 @@ export const styles = StyleSheet.create({
   searchStyle: {
     resizeMode: 'contain',
     width: wp('4'),
+    marginRight: wp('1'),
   },
   searchsetting: {
     resizeMode: 'contain',
     width: wp('8'),
     height: hp('5'),
-    // marginRight: wp('1'),
   },
   textInputContainer: {
     alignItems: 'flex-start',
-    width: wp('75'),
+    width: wp('70'),
     justifyContent: 'center',
     height: hp('7'),
   },
@@ -74,7 +74,6 @@ export const styles = StyleSheet.create({
     backgroundColor: 'red',
   },
   card: {
-    backgroundColor: '#fff',
     borderRadius: 10,
     padding: 15,
     margin: 10,
@@ -163,12 +162,14 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.black,
     alignSelf: 'center',
+    width: wp('55'),
   },
   eventCategory: {
     fontSize: FontSize.scale14,
     fontWeight: '400',
     color: Colors.primaryColor,
     alignSelf: 'center',
+    width: wp('45'),
   },
   eventDetails: {
     marginBottom: 10,

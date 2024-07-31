@@ -37,9 +37,14 @@ const HomeHeader = ({text}) => {
             IsUri={false}
             styles={{
               alignSelf: 'center',
-              marginTop: hp('2.5'),
+              marginTop: hp('3.5'),
               marginRight: hp('1'),
-              borderRadius: 50,
+              borderRadius: Math.round(
+                Dimensions.get('window').width +
+                  Dimensions.get('window').height,
+              ),
+              width: Dimensions.get('window').width * 0.16,
+              height: Dimensions.get('window').width * 0.16,
             }}
           />
           <View>
