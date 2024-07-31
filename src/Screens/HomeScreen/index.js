@@ -7,7 +7,7 @@ import {
   FlatList,
   Platform,
 } from 'react-native';
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import useHomeScreen from './useHomeScreen';
 import HomeHeader from '../../Components/homeHeader';
 import {TextComponent} from '../../Components/TextComponent';
@@ -27,8 +27,13 @@ import ThemeButton from '../../Components/ThemeButton';
 import MutualFriends from '../../Components/MutualFriendsComponent';
 
 const HomeScreen = ({navigation}) => {
-  const {search, setSearch} = useHomeScreen(navigation);
+  const {search, setSearch, ref} = useHomeScreen(navigation);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
+  const handleScroll = event => {
+    const position = event.nativeEvent.contentOffset.y;
+    setScrollPosition(position);
+  };
   const renderItem = useCallback(({item}) => {
     return (
       <>
@@ -188,6 +193,8 @@ const HomeScreen = ({navigation}) => {
           />
         </View>
         <ScrollView
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
           bounces={false}
           contentContainerStyle={{
@@ -195,18 +202,6 @@ const HomeScreen = ({navigation}) => {
             marginTop: hp('2'),
             paddingBottom: hp('30'),
           }}>
-          {/* The paddingTop ensures content is visible below the fixed search bar */}
-          {/* {Array(50)
-            .fill(null)
-            .map((_, index) => (
-              <Image
-                key={index}
-                tintColor={Colors.primaryColor}
-                resizeMode="contain"
-                source={searchsetting}
-                style={styles.searchsetting}
-              />
-            ))} */}
           <View
             style={{
               flexDirection: 'row',
@@ -269,11 +264,18 @@ const HomeScreen = ({navigation}) => {
               alignItems: 'center',
             }}>
             <TextComponent
-              styles={{color: Colors.black, ...styles.upcoming}}
+              styles={{
+                color: scrollPosition > 220 ? Colors.white : Colors.black,
+                ...styles.upcoming,
+              }}
+              // styles={{color: Colors.black, ...styles.upcoming}}
               text={'Friend’s Events'}
             />
             <TextComponent
-              styles={{color: Colors.black, ...styles.viewall}}
+              styles={{
+                color: scrollPosition > 220 ? Colors.white : Colors.black,
+                ...styles.viewall,
+              }}
               text={'View All'}
             />
           </View>
@@ -323,11 +325,17 @@ const HomeScreen = ({navigation}) => {
               alignItems: 'center',
             }}>
             <TextComponent
-              styles={{color: Colors.black, ...styles.upcoming}}
+              styles={{
+                color: scrollPosition > 550 ? Colors.white : Colors.black,
+                ...styles.upcoming,
+              }}
               text={'Suggested Events'}
             />
             <TextComponent
-              styles={{color: Colors.black, ...styles.viewall}}
+              styles={{
+                color: scrollPosition > 550 ? Colors.white : Colors.black,
+                ...styles.viewall,
+              }}
               text={'View All'}
             />
           </View>

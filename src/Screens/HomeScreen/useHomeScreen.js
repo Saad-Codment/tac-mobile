@@ -1,10 +1,11 @@
-import {useCallback, useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {TextComponent} from '../../Components/TextComponent';
 
 const HomeScreen = ({navigate}) => {
-  const {search, setSearch} = useState('');
+  const [search, setSearch] = useState('');
+  const ref = useRef('');
 
-  return {search, setSearch};
+  return {search, setSearch, ref};
 };
 
 export default HomeScreen;

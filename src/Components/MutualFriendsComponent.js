@@ -13,7 +13,7 @@ const MutualFriends = () => {
           rounded
           size={25}
           source={{
-            uri: 'https://picsum.photos/200',
+            uri: ' ',
           }}
           containerStyle={styles.avatar}
         />
