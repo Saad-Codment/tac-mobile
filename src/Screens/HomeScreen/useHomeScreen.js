@@ -3,9 +3,8 @@ import {TextComponent} from '../../Components/TextComponent';
 
 const HomeScreen = ({navigate}) => {
   const [search, setSearch] = useState('');
-  const ref = useRef('');
 
-  return {search, setSearch, ref};
+  return {search, setSearch};
 };
 
 export default HomeScreen;

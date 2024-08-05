@@ -19,6 +19,7 @@ import {
   about,
   privacy,
   terms,
+  profile,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
@@ -109,6 +110,11 @@ const SettingScreen = ({navigation}) => {
         <TextComponent text={'General'} styles={styles.plan} />
 
         <View style={styles.mainBtn}>
+          <IconBtn
+            icon={profile}
+            btnText={'Edit Profile'}
+            onpress={() => navigation.navigate('EditProfileScreen')}
+          />
           <IconBtn
             icon={about}
             btnText={'About TAC'}

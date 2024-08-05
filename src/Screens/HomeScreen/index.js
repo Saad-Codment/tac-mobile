@@ -27,7 +27,7 @@ import ThemeButton from '../../Components/ThemeButton';
 import MutualFriends from '../../Components/MutualFriendsComponent';
 
 const HomeScreen = ({navigation}) => {
-  const {search, setSearch, ref} = useHomeScreen(navigation);
+  const {search, setSearch} = useHomeScreen(navigation);
   const [scrollPosition, setScrollPosition] = useState(0);
 
   const handleScroll = event => {

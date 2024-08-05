@@ -34,13 +34,17 @@ function MainNavigator() {
         )}
         {!isLogin && (
           <>
-            <Stack.Screen name="HomeScreen" component={Screens.HomeScreen} />
-
             <Stack.Screen
               name="SettingScreen"
               options={'SettingScreen'}
               component={Screens.SettingScreen}
             />
+            <Stack.Screen
+              name="EditProfileScreen"
+              options={'EditProfileScreen'}
+              component={Screens.EditProfileScreen}
+            />
+            <Stack.Screen name="HomeScreen" component={Screens.HomeScreen} />
             <Stack.Screen
               name="SubscribeScreen"
               component={Screens.SubscribeScreen}
