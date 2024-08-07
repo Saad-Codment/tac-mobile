@@ -24,6 +24,12 @@ export {default as searchsetting} from './Icons/searchsetting.png';
 export {default as calender} from './Icons/calender.png';
 export {default as clock} from './Icons/clock.png';
 export {default as location} from './Icons/location.png';
+export {default as refresh} from './Icons/refresh.png';
+export {default as flag} from './Icons/flag.png';
+export {default as clockrewind} from './Icons/clock-rewind.png';
+export {default as people} from './Icons/people.png';
+export {default as buliding} from './Icons/buliding.png';
+export {default as upload} from './Icons/upload.png';
 
 export {default as LoginBg} from './Images/loginBg.png';
 export {default as signupBg} from './Images/signupBg.png';

@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: wp('7'),
     marginRight: wp('1'),
-    // backgroundColor: 'green'
+    // backgroundColor: 'green',
   },
   HeaderCenter: {
     // flex: 1,
@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     flex: 0.5,
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    backgroundColor: 'red',
   },
 });

@@ -40,6 +40,16 @@ function MainNavigator() {
               component={Screens.SettingScreen}
             />
             <Stack.Screen
+              name="HistoryScreen"
+              options={'HistoryScreen'}
+              component={Screens.HistoryScreen}
+            />
+            <Stack.Screen
+              name="FriendLists"
+              options={'FriendLists'}
+              component={Screens.FriendLists}
+            />
+            <Stack.Screen
               name="EditProfileScreen"
               options={'EditProfileScreen'}
               component={Screens.EditProfileScreen}

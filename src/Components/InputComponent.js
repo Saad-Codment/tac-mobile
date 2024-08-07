@@ -5,6 +5,7 @@ import {Colors} from '../Theme/Variables';
 import {Touchable} from './Touchable';
 import {hp, wp} from '../Config/responsive';
 import {eye, eyeOff} from '../Assets';
+import {TextComponent} from './TextComponent';
 
 export const InputComponent = ({
   minLength,
@@ -27,6 +28,8 @@ export const InputComponent = ({
   inputIconStyle,
   inputLines,
   multiline,
+  rightText,
+  placeholderTextColor,
 }) => {
   const [show, setShow] = useState(!isSecure);
   const handleClick = () => setShow(!show);
@@ -66,7 +69,7 @@ export const InputComponent = ({
                 style: {...styles.input(isSecure), ...textStyle},
                 secureTextEntry: !show,
                 onChangeText: onChange,
-                placeholderTextColor: Colors.white,
+                placeholderTextColor: placeholderTextColor ?? Colors.white,
                 fontSize: hp('1.8'),
                 autoCapitalize,
                 autoCorrect: false,
@@ -84,6 +87,12 @@ export const InputComponent = ({
                   }}
                 />
               </Touchable>
+            )}
+            {rightText && (
+              <TextComponent
+                text={'edit'}
+                styles={{color: Colors.textGray, paddingRight: wp('2')}}
+              />
             )}
           </View>
         )}

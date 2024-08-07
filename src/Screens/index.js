@@ -6,3 +6,5 @@ export {default as SubscribeScreen} from './SubscribeScreen';
 export {default as HomeScreen} from './HomeScreen';
 export {default as SettingScreen} from './SettingScreen';
 export {default as EditProfileScreen} from './EditProfileScreen';
+export {default as HistoryScreen} from './HistoryScreen';
+export {default as FriendLists} from './FriendLists';
