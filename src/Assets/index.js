@@ -30,6 +30,7 @@ export {default as clockrewind} from './Icons/clock-rewind.png';
 export {default as people} from './Icons/people.png';
 export {default as buliding} from './Icons/buliding.png';
 export {default as upload} from './Icons/upload.png';
+export {default as chat} from './Icons/chat.png';
 
 export {default as LoginBg} from './Images/loginBg.png';
 export {default as signupBg} from './Images/signupBg.png';

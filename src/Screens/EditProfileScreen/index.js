@@ -39,6 +39,10 @@ const EditProfileScreen = ({navigation}) => {
     setModalVisible1,
     evetTypeList,
     associationList,
+    assocType,
+    setAssocType,
+    eventType,
+    setEventType,
   } = useEditProfileScreen(navigation);
 
   const [modalsVisible, setModalsVisible] = useState({});
@@ -77,6 +81,8 @@ const EditProfileScreen = ({navigation}) => {
       onpress: () => toggleModal(0),
       rightText: 'Change',
       dropDownPlaceholder: 'Select your Age',
+      state: age,
+      setState: setAge,
     },
     {
       icon: flag,
@@ -95,6 +101,9 @@ const EditProfileScreen = ({navigation}) => {
 
       onpress: () => toggleModal(2),
       dropDownPlaceholder: 'Select your Event',
+      state: eventType,
+
+      setState: setEventType,
     },
     {
       icon: buliding,
@@ -106,6 +115,9 @@ const EditProfileScreen = ({navigation}) => {
 
       onpress: () => toggleModal(3),
       dropDownPlaceholder: 'Select your Association',
+      state: assocType,
+
+      setState: setAssocType,
     },
     {
       icon: clockrewind,

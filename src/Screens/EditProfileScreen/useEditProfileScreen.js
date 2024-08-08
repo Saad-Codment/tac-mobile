@@ -14,6 +14,7 @@ const EditProfileScreen = ({navigate}) => {
   });
 
   const [eventType, setEventType] = useState('');
+  const [assocType, setAssocType] = useState('');
   const evetTypeList = [
     {label: 'Horse Riding', value: 'horseriding'},
     {label: 'Horse Riding', value: 'horseriding'},
@@ -45,6 +46,8 @@ const EditProfileScreen = ({navigate}) => {
     setEventType,
     evetTypeList,
     associationList,
+    assocType,
+    setAssocType,
   };
 };
 

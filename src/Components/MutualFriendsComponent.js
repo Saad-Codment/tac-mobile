@@ -5,34 +5,34 @@ import {FontSize} from '../Theme/Variables';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {wp} from '../Config/responsive';
 
-const MutualFriends = () => {
+const MutualFriends = ({size, uri, text}) => {
   return (
     <View style={styles.container}>
       <View style={styles.avatars}>
         <Avatar
           rounded
-          size={25}
+          size={size ?? 25}
           source={{
-            uri: ' ',
+            uri: uri,
           }}
           containerStyle={styles.avatar}
         />
         <Avatar
           rounded
-          size={25}
+          size={size ?? 25}
           source={{
-            uri: 'https://picsum.photos/200',
+            uri: uri,
           }}
           containerStyle={styles.avatar}
         />
         <Avatar
           rounded
-          size={25}
-          source={{uri: 'https://picsum.photos/200'}}
+          size={size ?? 25}
+          source={{uri: uri}}
           containerStyle={styles.avatar}
         />
       </View>
-      <Text style={styles.text}>32 Mutual Friends</Text>
+      <Text style={styles.text}>{text}</Text>
     </View>
   );
 };
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   avatar: {
-    marginLeft: -18, // To create the overlapping effect
+    marginLeft: -12, // To create the overlapping effect
   },
   text: {
     fontSize: FontSize.scale12,
