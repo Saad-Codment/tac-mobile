@@ -15,7 +15,7 @@ export {default as medalstar} from './Icons/medalstar.png';
 export {default as tickCircle} from './Icons/tickCircle.png';
 export {default as heart} from './Icons/heart.png';
 export {default as addcircle} from './Icons/addcircle.png';
-export {default as messages} from './Icons/messages.png';
+// export {default as messages} from './Icons/messages.png';
 export {default as arrLeft} from './Icons/arrow-left.png';
 export {default as arrRight} from './Icons/arrow-right.png';
 export {default as rightIos} from './Icons/rightIos.png';
@@ -60,6 +60,8 @@ export {default as closeIcon} from './Icons/close.png';
 export {default as trashIcon} from './Icons/trashIcon.png';
 export {default as editIcon} from './Icons/editIcon.png';
 export {default as contact} from './Icons/contact.png';
+export {default as galleryYellow} from './Icons/galleryYellow.png';
+export {default as editYellow} from './Icons/editYellow.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';

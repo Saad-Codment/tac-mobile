@@ -3,6 +3,7 @@ const {width, height} = Dimensions.get('window');
 
 const Colors = {
   primaryColor: 'rgba(203, 149, 49, 1)',
+  secondryColor: 'rgba(255, 238, 207, 1)',
   black: '#000000',
   white: '#ffffff',
   gray: 'rgba(45, 45, 45, 0.5)',

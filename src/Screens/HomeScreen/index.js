@@ -15,6 +15,8 @@ import {styles} from './styles';
 import {
   calender,
   clock,
+  editYellow,
+  galleryYellow,
   heart,
   location,
   lock,
@@ -25,6 +27,7 @@ import {Colors} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
 import ThemeButton from '../../Components/ThemeButton';
 import MutualFriends from '../../Components/MutualFriendsComponent';
+import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
 
 const HomeScreen = ({navigation}) => {
   const {search, setSearch} = useHomeScreen(navigation);
@@ -34,89 +37,94 @@ const HomeScreen = ({navigation}) => {
     const position = event.nativeEvent.contentOffset.y;
     setScrollPosition(position);
   };
+
   const renderItem = useCallback(({item}) => {
-    return (
-      <>
-        <View
-          style={{
-            backgroundColor: item?.friendEvent
-              ? 'rgba(255, 238, 207, 1)'
-              : 'white',
-            ...styles.card,
-          }}>
-          <View style={styles.cardHeader}>
-            <Image source={{uri: item.userImage}} style={styles.userImage} />
-            <View>
-              <Text numberOfLines={2} style={styles.userName}>
-                {item.userName}
-              </Text>
-              <Text style={styles.eventTitle}>
-                {item.eventTitle + ' '}
-                <Text style={styles.eventCategory}>{item.eventCategory}</Text>
-              </Text>
-            </View>
-          </View>
-          <View style={styles.eventDetails}>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                flexDirection: 'row',
-              }}>
-              <Image source={calender} style={styles.icon} />
-              <Text style={styles.eventDate}>{item.eventDate}</Text>
-            </View>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                flexDirection: 'row',
-              }}>
-              <Image source={clock} style={styles.icon} />
-
-              <Text style={styles.eventTime}>{item.eventTime}</Text>
-            </View>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                flexDirection: 'row',
-              }}>
-              <Image source={location} style={styles.icon} />
-
-              <Text style={styles.eventLocation}>{item.eventLocation}</Text>
-            </View>
-          </View>
-          <View style={styles.cardFooter}>
-            <View
-              style={{
-                flexDirection: 'row',
-                width: wp('25'),
-                alignItems: 'center',
-              }}>
-              <Image
-                tintColor={Colors.primaryColor}
-                source={heart}
-                style={styles.icon}
-              />
-              <Text style={styles.association}>123 likes</Text>
-            </View>
-
-            <Text style={styles.association}>{item.association}</Text>
-            <View style={styles.dot} />
-            <Text style={styles.circuits}>{item.circuits}</Text>
-          </View>
-          {item?.lock && (
-            <Image
-              tintColor={Colors.textGray}
-              source={lock}
-              style={styles.lock}
-            />
-          )}
-        </View>
-      </>
-    );
+    return <UpcomingEventsComp />;
   }, []);
+  // const renderItem = useCallback(({item}) => {
+  //   return (
+  //     <>
+  //       <View
+  //         style={{
+  //           backgroundColor: item?.friendEvent
+  //             ? 'rgba(255, 238, 207, 1)'
+  //             : 'white',
+  //           ...styles.card,
+  //         }}>
+  //         <View style={styles.cardHeader}>
+  //           <Image source={{uri: item.userImage}} style={styles.userImage} />
+  //           <View>
+  //             <Text numberOfLines={2} style={styles.userName}>
+  //               {item.userName}
+  //             </Text>
+  //             <Text style={styles.eventTitle}>
+  //               {item.eventTitle + ' '}
+  //               <Text style={styles.eventCategory}>{item.eventCategory}</Text>
+  //             </Text>
+  //           </View>
+  //         </View>
+  //         <View style={styles.eventDetails}>
+  //           <View
+  //             style={{
+  //               alignItems: 'center',
+  //               justifyContent: 'flex-start',
+  //               flexDirection: 'row',
+  //             }}>
+  //             <Image source={calender} style={styles.icon} />
+  //             <Text style={styles.eventDate}>{item.eventDate}</Text>
+  //           </View>
+  //           <View
+  //             style={{
+  //               alignItems: 'center',
+  //               justifyContent: 'flex-start',
+  //               flexDirection: 'row',
+  //             }}>
+  //             <Image source={clock} style={styles.icon} />
+
+  //             <Text style={styles.eventTime}>{item.eventTime}</Text>
+  //           </View>
+  //           <View
+  //             style={{
+  //               alignItems: 'center',
+  //               justifyContent: 'flex-start',
+  //               flexDirection: 'row',
+  //             }}>
+  //             <Image source={location} style={styles.icon} />
+
+  //             <Text style={styles.eventLocation}>{item.eventLocation}</Text>
+  //           </View>
+  //         </View>
+  //         <View style={styles.cardFooter}>
+  //           <View
+  //             style={{
+  //               flexDirection: 'row',
+  //               width: wp('25'),
+  //               alignItems: 'center',
+  //             }}>
+  //             <Image
+  //               tintColor={Colors.primaryColor}
+  //               source={heart}
+  //               style={styles.icon}
+  //             />
+  //             <Text style={styles.association}>123 likes</Text>
+  //           </View>
+
+  //           <Text style={styles.association}>{item.association}</Text>
+  //           <View style={styles.dot} />
+  //           <Text style={styles.circuits}>{item.circuits}</Text>
+  //         </View>
+  //         {item?.lock && (
+  //           <Image
+  //             tintColor={Colors.textGray}
+  //             source={lock}
+  //             style={styles.lock}
+  //           />
+  //         )}
+  //       </View>
+  //     </>
+  //   );
+  // }, []);
+
   const renderItemAddFriend = useCallback(({item}) => {
     return (
       <>
@@ -158,6 +166,7 @@ const HomeScreen = ({navigation}) => {
       </>
     );
   }, []);
+
   return (
     <View>
       <HomeHeader text={'Hello Sheila'} />
@@ -166,30 +175,18 @@ const HomeScreen = ({navigation}) => {
           top: hp(Platform.OS === 'android' ? '23' : '26'),
         }}>
         <View style={styles.searchComponent}>
-          <Image
-            tintColor={Colors.textGray}
-            resizeMode="contain"
-            source={searchIcon}
-            style={styles.searchStyle}
+          <ThemeButton
+            title={'Post Picture'}
+            image={galleryYellow}
+            style={styles.upperBtn}
+            imageStyle={{width: wp('7')}}
           />
-          <View style={styles.textInputContainer}>
-            <TextInput
-              onSubmitEditing={() => searchPropertyFunction(search)}
-              // onSubmitEditing={() => mutateAsync({keyword: text})}
-              selectionColor={Colors.textGray}
-              style={styles.searchTextStyle}
-              onChangeText={setSearch}
-              value={search}
-              placeholderTextColor={Colors.textGray}
-              placeholder={'Search available jobs here...'}
-            />
-          </View>
-
-          <Image
-            tintColor={Colors.primaryColor}
-            resizeMode="contain"
-            source={searchsetting}
-            style={styles.searchsetting}
+          <ThemeButton
+            title={'Write something'}
+            image={editYellow}
+            style={styles.upperBtn}
+            imageStyle={styles.imgStyle}
+            textStyle={{marginLeft: wp('0.2')}}
           />
         </View>
         <ScrollView
@@ -197,18 +194,8 @@ const HomeScreen = ({navigation}) => {
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
           bounces={false}
-          contentContainerStyle={{
-            flexGrow: 1,
-            marginTop: hp('2'),
-            paddingBottom: hp('30'),
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              padding: 15,
-              alignItems: 'center',
-            }}>
+          contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.innerView}>
             <TextComponent
               styles={{color: Colors.white, ...styles.upcoming}}
               text={'Upcoming Events'}
@@ -234,20 +221,7 @@ const HomeScreen = ({navigation}) => {
                 circuits: 'Circuits',
                 lock: true,
               },
-              {
-                id: '2',
-                userImage: 'https://picsum.photos/200',
-                userName: 'Me',
-                eventTitle: 'Unity league',
-                eventCategory: 'Bull Riding',
-                eventDate: 'Mon. Nov 27 - 2023',
-                eventTime: '18:00 - 23:00 P.M.',
-                eventLocation: 'Catherine St French Prairie Gardens.',
-                likes: '123',
-                association: 'Association',
-                circuits: 'Circuits',
-                lock: true,
-              },
+
               // Add more items here
             ]}
             renderItem={renderItem}
@@ -256,19 +230,12 @@ const HomeScreen = ({navigation}) => {
             showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
             contentContainerStyle={{paddingHorizontal: 10}} // Padding around the list
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              padding: 15,
-              alignItems: 'center',
-            }}>
+          <View style={styles.innerView}>
             <TextComponent
               styles={{
                 color: scrollPosition > 220 ? Colors.white : Colors.black,
                 ...styles.upcoming,
               }}
-              // styles={{color: Colors.black, ...styles.upcoming}}
               text={'Friend’s Events'}
             />
             <TextComponent
@@ -317,13 +284,7 @@ const HomeScreen = ({navigation}) => {
             showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
             contentContainerStyle={{paddingHorizontal: 10}} // Padding around the list
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              padding: 15,
-              alignItems: 'center',
-            }}>
+          <View style={styles.innerView}>
             <TextComponent
               styles={{
                 color: scrollPosition > 550 ? Colors.white : Colors.black,
@@ -375,13 +336,7 @@ const HomeScreen = ({navigation}) => {
             showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
             contentContainerStyle={{paddingHorizontal: 10}} // Padding around the list
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              padding: 15,
-              alignItems: 'center',
-            }}>
+          <View style={styles.innerView}>
             <TextComponent
               styles={{color: Colors.black, ...styles.upcoming}}
               text={'Add Friends'}

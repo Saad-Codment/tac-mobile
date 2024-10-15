@@ -34,6 +34,14 @@ function MainNavigator() {
         )}
         {!isLogin && (
           <>
+            <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
+
+            <Stack.Screen name="HomeScreen" component={Screens.HomeScreen} />
+            <Stack.Screen name="LoginScreen" component={Screens.LoginScreen} />
+            <Stack.Screen
+              name="RegisterScreen"
+              component={Screens.RegisterScreen}
+            />
             <Stack.Screen
               name="SettingScreen"
               options={'SettingScreen'}
@@ -54,7 +62,6 @@ function MainNavigator() {
               options={'EditProfileScreen'}
               component={Screens.EditProfileScreen}
             />
-            <Stack.Screen name="HomeScreen" component={Screens.HomeScreen} />
             <Stack.Screen
               name="SubscribeScreen"
               component={Screens.SubscribeScreen}
@@ -63,13 +70,6 @@ function MainNavigator() {
               name="OnStepScreen"
               component={Screens.OnStepScreen}
             />
-            <Stack.Screen name="LoginScreen" component={Screens.LoginScreen} />
-            <Stack.Screen
-              name="RegisterScreen"
-              component={Screens.RegisterScreen}
-            />
-
-            <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
 
             {/* <Stack.Screen
               name="ForgetPasswordScreen"
