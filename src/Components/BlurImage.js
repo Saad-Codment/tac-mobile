@@ -14,7 +14,7 @@ const BlurImage = ({styles, uri, blurhash, radius, children, isURI}) => {
       style={{
         position: 'relative',
         overflow: 'hidden',
-        borderRadius: radius || 10,
+        borderRadius: radius ?? 10,
       }}>
       <FastImage
         style={[styles, {zIndex: -1, position: 'relative'}]}

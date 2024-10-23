@@ -28,6 +28,7 @@ import {hp, wp} from '../../Config/responsive';
 import ThemeButton from '../../Components/ThemeButton';
 import MutualFriends from '../../Components/MutualFriendsComponent';
 import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
+import FriendEventsComp from '../../Components/FriendEventsComp';
 
 const HomeScreen = ({navigation}) => {
   const {search, setSearch} = useHomeScreen(navigation);
@@ -40,6 +41,10 @@ const HomeScreen = ({navigation}) => {
 
   const renderItem = useCallback(({item}) => {
     return <UpcomingEventsComp />;
+  }, []);
+
+  const friendEvents = useCallback(({item}) => {
+    return <FriendEventsComp />;
   }, []);
   // const renderItem = useCallback(({item}) => {
   //   return (
@@ -278,7 +283,7 @@ const HomeScreen = ({navigation}) => {
               },
               // Add more items here
             ]}
-            renderItem={renderItem}
+            renderItem={friendEvents}
             horizontal // Enable horizontal scrolling
             keyExtractor={item => item.toString()}
             showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator

@@ -10,13 +10,20 @@ export const TextComponent = ({
   numberOfLines,
   fade,
   isWhite,
+  isThemeColor,
 }) => {
   return (
     <Text
       onPress={onPress}
       numberOfLines={numberOfLines}
       style={{
-        color: fade ? Colors.grayFaded : isWhite ? Colors.white : Colors.black,
+        color: fade
+          ? Colors.grayFaded
+          : isWhite
+          ? Colors.white
+          : isThemeColor
+          ? Colors.yellowTextColor
+          : Colors.black,
         fontSize: hp('2'),
         ...styles,
       }}>

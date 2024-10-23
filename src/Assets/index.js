@@ -62,6 +62,10 @@ export {default as editIcon} from './Icons/editIcon.png';
 export {default as contact} from './Icons/contact.png';
 export {default as galleryYellow} from './Icons/galleryYellow.png';
 export {default as editYellow} from './Icons/editYellow.png';
+export {default as calendar} from './Icons/calendar.png';
+export {default as dollarCircle} from './Icons/dollarCircle.png';
+export {default as timeCircle} from './Icons/timeCircle.png';
+export {default as msgCircle} from './Icons/msgCircle.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';
@@ -79,6 +83,11 @@ export {default as notificationWhite} from './Icons/notificationWhite.png';
 export {default as home1} from './Icons/home1.png';
 export {default as home} from './Icons/home.png';
 export {default as profile2} from './Icons/profile2.png';
+export {default as blackLock} from './Icons/blackLock.png';
+export {default as locationGray} from './Icons/locationGray.png';
+export {default as heartTheme} from './Icons/heartTheme.png';
+export {default as shareTheme} from './Icons/shareTheme.png';
+export {default as infoCircle} from './Icons/infoCircle.png';
 
 export {default as setting} from './Icons/setting.png';
 export {default as setting1} from './Icons/setting1.png';

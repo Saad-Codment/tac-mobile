@@ -8,12 +8,14 @@ const Colors = {
   white: '#ffffff',
   gray: 'rgba(45, 45, 45, 0.5)',
   grayBorder: '#D9D9D9',
-  lightGray: 'rgba(0, 0, 0, 0.50)',
   textGray: '  rgba(150, 150, 150, 1)',
   headerBg: '#202020',
   grayFaded: 'rgba(188, 188, 188, 1)',
   themeRed: 'rgba(215, 48, 0, 1)',
   backgroundTheme: 'rgba(24, 24, 24, 1)',
+  lightGray: 'rgba(0, 0, 0, 0.1)',
+  yellowBgColor: 'rgba(255, 238, 207, 1)',
+  yellowTextColor: 'rgba(137, 119, 86, 1)',
 };
 
 /** FontSize **/

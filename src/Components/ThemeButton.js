@@ -52,7 +52,8 @@ export default ThemeButton;
 const styles = StyleSheet.create({
   button: {
     height: hp('6.5'),
-    width: wp('40'),
+    // width: wp('40'),
+    width: '100%',
     borderRadius: 10,
     // marginVertical: 20,
     alignItems: 'center',
