@@ -90,25 +90,7 @@ export const styles = StyleSheet.create({
 
     elevation: 5,
   },
-  friendCard: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 15,
-    margin: 10,
-    width: wp('50%'),
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: {width: 0, height: 2},
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
 
-    elevation: 5,
-  },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -120,15 +102,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 10,
   },
-  friendUserImage: {
-    borderRadius: Math.round(
-      Dimensions.get('window').width + Dimensions.get('window').height,
-    ),
-    width: Dimensions.get('window').width * 0.15,
-    height: Dimensions.get('window').width * 0.15,
-    marginRight: 10,
-    alignSelf: 'center',
-  },
+
   icon: {
     width: wp('5'),
     height: hp('4'),
@@ -149,13 +123,7 @@ export const styles = StyleSheet.create({
     fontWeight: '400',
     color: Colors.textGray,
   },
-  friendUserName: {
-    fontSize: FontSize.scale18,
-    fontWeight: '600',
-    color: Colors.black,
-    textAlign: 'center',
-    marginTop: hp('2'),
-  },
+
   eventTitle: {
     fontSize: FontSize.scale20,
     fontWeight: '600',
@@ -193,12 +161,7 @@ export const styles = StyleSheet.create({
     paddingTop: 10,
     alignItems: 'center',
   },
-  friendCardFooter: {
-    justifyContent: 'space-between',
-    borderTopColor: '#eee',
-    paddingTop: 10,
-    alignItems: 'center',
-  },
+
   likes: {
     fontSize: FontSize.scale14,
     color: Colors.textGray,

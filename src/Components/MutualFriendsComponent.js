@@ -3,36 +3,35 @@ import {View, Text, StyleSheet} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {FontSize} from '../Theme/Variables';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {wp} from '../Config/responsive';
+import {hp, wp} from '../Config/responsive';
+import {CircleImage} from './CircleImage';
+import {TextComponent} from './TextComponent';
 
-const MutualFriends = ({size, uri, text}) => {
+const MutualFriends = ({friends, size}) => {
   return (
     <View style={styles.container}>
       <View style={styles.avatars}>
-        <Avatar
-          rounded
-          size={size ?? 25}
-          source={{
-            uri: uri,
-          }}
-          containerStyle={styles.avatar}
-        />
-        <Avatar
-          rounded
-          size={size ?? 25}
-          source={{
-            uri: uri,
-          }}
-          containerStyle={styles.avatar}
-        />
-        <Avatar
-          rounded
-          size={size ?? 25}
-          source={{uri: uri}}
-          containerStyle={styles.avatar}
-        />
+        {friends.slice(0, 3).map(res => {
+          return (
+            <Avatar
+              rounded
+              size={size ?? 25}
+              source={{
+                uri: res?.uri ?? 'https://picsum.photos/200',
+              }}
+              containerStyle={styles.avatar}
+              avatarStyle={{
+                borderColor: 'white',
+                borderWidth: 1,
+              }}
+            />
+          );
+        })}
       </View>
-      <Text style={styles.text}>{text}</Text>
+      <TextComponent
+        text={' ' + friends.length + ' Mutual friends'}
+        styles={{fontSize: hp('1.5')}}
+      />
     </View>
   );
 };
@@ -41,14 +40,16 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 10,
+    alignSelf: 'center',
+    marginLeft: wp('2'),
+    // margin: 10,
   },
   avatars: {
     flexDirection: 'row',
-    marginRight: 8,
+    // marginRight: wp('2'),
   },
   avatar: {
-    marginLeft: -12, // To create the overlapping effect
+    marginLeft: wp('-3'), // To create the overlapping effect
   },
   text: {
     fontSize: FontSize.scale12,

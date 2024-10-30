@@ -26,9 +26,9 @@ import {
 import {Colors} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
 import ThemeButton from '../../Components/ThemeButton';
-import MutualFriends from '../../Components/MutualFriendsComponent';
 import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
 import FriendEventsComp from '../../Components/FriendEventsComp';
+import AddFriendComp from '../../Components/AddFriendComp';
 
 const HomeScreen = ({navigation}) => {
   const {search, setSearch} = useHomeScreen(navigation);
@@ -46,130 +46,9 @@ const HomeScreen = ({navigation}) => {
   const friendEvents = useCallback(({item}) => {
     return <FriendEventsComp />;
   }, []);
-  // const renderItem = useCallback(({item}) => {
-  //   return (
-  //     <>
-  //       <View
-  //         style={{
-  //           backgroundColor: item?.friendEvent
-  //             ? 'rgba(255, 238, 207, 1)'
-  //             : 'white',
-  //           ...styles.card,
-  //         }}>
-  //         <View style={styles.cardHeader}>
-  //           <Image source={{uri: item.userImage}} style={styles.userImage} />
-  //           <View>
-  //             <Text numberOfLines={2} style={styles.userName}>
-  //               {item.userName}
-  //             </Text>
-  //             <Text style={styles.eventTitle}>
-  //               {item.eventTitle + ' '}
-  //               <Text style={styles.eventCategory}>{item.eventCategory}</Text>
-  //             </Text>
-  //           </View>
-  //         </View>
-  //         <View style={styles.eventDetails}>
-  //           <View
-  //             style={{
-  //               alignItems: 'center',
-  //               justifyContent: 'flex-start',
-  //               flexDirection: 'row',
-  //             }}>
-  //             <Image source={calender} style={styles.icon} />
-  //             <Text style={styles.eventDate}>{item.eventDate}</Text>
-  //           </View>
-  //           <View
-  //             style={{
-  //               alignItems: 'center',
-  //               justifyContent: 'flex-start',
-  //               flexDirection: 'row',
-  //             }}>
-  //             <Image source={clock} style={styles.icon} />
-
-  //             <Text style={styles.eventTime}>{item.eventTime}</Text>
-  //           </View>
-  //           <View
-  //             style={{
-  //               alignItems: 'center',
-  //               justifyContent: 'flex-start',
-  //               flexDirection: 'row',
-  //             }}>
-  //             <Image source={location} style={styles.icon} />
-
-  //             <Text style={styles.eventLocation}>{item.eventLocation}</Text>
-  //           </View>
-  //         </View>
-  //         <View style={styles.cardFooter}>
-  //           <View
-  //             style={{
-  //               flexDirection: 'row',
-  //               width: wp('25'),
-  //               alignItems: 'center',
-  //             }}>
-  //             <Image
-  //               tintColor={Colors.primaryColor}
-  //               source={heart}
-  //               style={styles.icon}
-  //             />
-  //             <Text style={styles.association}>123 likes</Text>
-  //           </View>
-
-  //           <Text style={styles.association}>{item.association}</Text>
-  //           <View style={styles.dot} />
-  //           <Text style={styles.circuits}>{item.circuits}</Text>
-  //         </View>
-  //         {item?.lock && (
-  //           <Image
-  //             tintColor={Colors.textGray}
-  //             source={lock}
-  //             style={styles.lock}
-  //           />
-  //         )}
-  //       </View>
-  //     </>
-  //   );
-  // }, []);
 
   const renderItemAddFriend = useCallback(({item}) => {
-    return (
-      <>
-        <View style={styles.friendCard}>
-          <Image
-            source={{uri: item.userImage}}
-            style={styles.friendUserImage}
-          />
-          <Text style={styles.friendUserName}>{item.userName}</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <MutualFriends />
-            {/* <TextComponent styles={styles.mutual} text={'32 Mutual friends'} /> */}
-          </View>
-          <View style={styles.friendCardFooter}>
-            <ThemeButton
-              style={{
-                borderRadius: 15,
-                height: hp('5'),
-                backgroundColor: Colors.backgroundTheme,
-              }}
-              title={'Add Friend'}
-            />
-            <ThemeButton
-              style={{
-                borderRadius: 10,
-                height: hp('5'),
-                backgroundColor: 'transparent',
-              }}
-              textStyle={{color: Colors.textGray}}
-              title={'Remove'}
-            />
-          </View>
-        </View>
-      </>
-    );
+    return <AddFriendComp />;
   }, []);
 
   return (

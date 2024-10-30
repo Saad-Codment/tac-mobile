@@ -33,11 +33,11 @@ const FriendLists = ({navigation}) => {
           }}>
           <TextComponent text={'James Dean'} styles={styles.title} />
           <View style={{flexDirection: 'row'}}>
-            <MutualFriends
+            {/* <MutualFriends
               text={'32 Mutual Friends'}
               size={20}
               uri={'https://picsum.photos/200'}
-            />
+            /> */}
           </View>
         </View>
         <Touchable style={styles.r8}>

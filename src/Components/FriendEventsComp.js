@@ -116,18 +116,10 @@ const FriendEventsComp = () => {
               style={{width: wp('5'), marginRight: wp('1')}}
             />
             <TextComponent
-              text={'Start: '}
+              text={'18:00 - 23:00 PM'}
               isThemeColor={true}
               styles={{
                 fontSize: hp('1.5'),
-              }}
-            />
-            <TextComponent
-              text={'Mon. Nov 27'}
-              isThemeColor={true}
-              styles={{
-                fontSize: hp('1.5'),
-                fontWeight: 'bold',
               }}
             />
           </View>
@@ -138,19 +130,10 @@ const FriendEventsComp = () => {
               style={{width: wp('5')}}
             />
             <TextComponent
-              text={'End: '}
-              isThemeColor={true}
-              styles={{
-                marginLeft: wp('1'),
-                fontSize: hp('1.5'),
-              }}
-            />
-            <TextComponent
-              text={'Mon. Nov 27'}
+              text={' 10,000'}
               isThemeColor={true}
               styles={{
                 fontSize: hp('1.5'),
-                fontWeight: 'bold',
               }}
             />
           </View>
@@ -174,11 +157,27 @@ const FriendEventsComp = () => {
             <Image
               source={heartTheme}
               resizeMode="contain"
+              tintColor={Colors.yellowTextColor}
               style={{width: wp('5'), marginRight: wp('1')}}
             />
             <TextComponent
               text={'45 Likes'}
-              fade={true}
+              isThemeColor={true}
+              styles={{
+                fontSize: hp('1.5'),
+              }}
+            />
+          </View>
+          <View style={styles.leftRightView}>
+            <Image
+              source={heartTheme}
+              resizeMode="contain"
+              tintColor={Colors.yellowTextColor}
+              style={{width: wp('5'), marginRight: wp('1')}}
+            />
+            <TextComponent
+              text={'Comment'}
+              isThemeColor={true}
               styles={{
                 fontSize: hp('1.5'),
               }}
@@ -188,11 +187,12 @@ const FriendEventsComp = () => {
             <Image
               source={shareTheme}
               resizeMode="contain"
+              tintColor={Colors.yellowTextColor}
               style={{width: wp('5')}}
             />
             <TextComponent
               text={'Share'}
-              fade={true}
+              isThemeColor={true}
               styles={{
                 marginLeft: wp('1'),
                 fontSize: hp('1.5'),
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   },
   leftRightView: {
     flexDirection: 'row',
-    width: wp('60'),
+    width: wp('31.5'),
     alignItems: 'center',
   },
 });
