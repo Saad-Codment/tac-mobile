@@ -8,6 +8,11 @@ export const styles = StyleSheet.create({
     width: wp('100'),
     height: hp('40'),
   },
+  mainView: {
+    flexGrow: 1,
+    alignItems: 'center',
+    paddingTop: hp('3'),
+  },
   stepCirclesContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -61,18 +66,57 @@ export const styles = StyleSheet.create({
   },
   tagline: {
     color: Colors.black,
-    paddingTop: hp(Platform.OS === 'android' ? '35' : '30'),
-    paddingBottom: hp('3'),
+    paddingTop: hp(Platform.OS == 'android' ? '35' : '25'),
+    // paddingBottom: hp('3'),
     textAlign: 'center',
     fontSize: FontSize.scale30,
     fontWeight: 700,
   },
+  innerTitle: {
+    textAlign: 'center',
+    marginBottom: hp('3'),
+    fontSize: hp('1.5'),
+    marginTop: hp('2'),
+  },
+  stepTwoStyle: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    height: hp('6'),
+  },
+  inputMain: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.backgroundTheme,
+    borderRadius: 30,
+    paddingHorizontal: wp('4'),
+    width: wp('92'),
+    height: hp('6'),
+  },
+  btnTextTwo: {
+    fontSize: hp('1.9'),
+  },
+  inputImage: {
+    width: wp('6'),
+    resizeMode: 'contain',
+    marginRight: wp('0'),
+  },
+  arrowImage: {
+    width: wp('5'),
+    resizeMode: 'contain',
+    marginRight: wp('1'),
+    tintColor: Colors.backgroundTheme,
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: wp('5'),
+    // paddingHorizontal: wp('5'),
     position: 'absolute',
-    bottom: 50,
+    bottom: hp('5'),
+    alignSelf: 'center',
+    width: wp('90'),
   },
 
   pickerStyle: {
@@ -94,7 +138,7 @@ export const styles = StyleSheet.create({
   gender: selectedGender => ({
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: selectedGender ? Colors.black : 'rgba(150, 150, 150, 1)',
+    borderColor: selectedGender ? Colors.black : Colors.textGray,
     borderRadius: 50,
     width: wp('92'),
     paddingHorizontal: wp('4'),
@@ -106,14 +150,14 @@ export const styles = StyleSheet.create({
   genderTitle: selectedGender => ({
     fontWeight: '400',
     fontSize: FontSize.scale16,
-    color: selectedGender ? Colors.white : 'rgba(150, 150, 150, 1)',
+    color: selectedGender ? Colors.white : Colors.textGray,
   }),
   catImage: selectedGender => ({
     width: wp('7'),
     height: hp('3'),
     resizeMode: 'contain',
     alignSelf: 'center',
-    tintColor: selectedGender ? 'white' : 'rgba(150, 150, 150, 1)',
+    tintColor: selectedGender ? 'white' : Colors.textGray,
     marginRight: wp('3'),
   }),
   content: {
@@ -126,5 +170,88 @@ export const styles = StyleSheet.create({
   }),
   nextButton: {
     backgroundColor: Colors.primaryColor,
+  },
+  themeButton: {
+    color: Colors.white,
+  },
+  selectedValStyle: {
+    paddingHorizontal: wp('2'),
+    backgroundColor: Colors.lightGray,
+    overflow: 'hidden',
+    height: 'auto',
+    paddingVertical: hp('0.5'),
+    borderWidth: 0,
+  },
+  innerScroll: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: hp('2'),
+    paddingBottom: hp('60'),
+    flexGrow: 1,
+  },
+
+  // ListViewStyle
+
+  headerMain: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: hp('1'),
+    marginTop: Platform.OS == 'ios' ? hp('3') : 0,
+  },
+  arrBack: {
+    resizeMode: 'contain',
+    width: wp('6'),
+    height: hp('3'),
+  },
+  saveText: {
+    color: Colors.primaryColor,
+  },
+  titleMain: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: hp('2'),
+    // borderTopWidth: 0.2,
+    // marginBottom: hp('2'),
+  },
+  searchMain: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#525252',
+    borderRadius: 30,
+    paddingHorizontal: wp('4'),
+    width: wp('92'),
+    marginVertical: hp('1'),
+    marginBottom: hp('2'),
+    height: hp('5.5'),
+  },
+  inputImage: {
+    width: wp('6'),
+    resizeMode: 'contain',
+    marginRight: wp('0'),
+  },
+  inputStyle: {
+    width: wp('73'),
+    color: 'black',
+  },
+  btnsMain: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: wp('92'),
+  },
+  allergiesBtns: {
+    // backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    height: hp('4'),
+    borderRadius: 20,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderWidth: 0.5,
+    borderColor: Colors.themeGreen,
+    paddingHorizontal: wp('3'),
+    marginHorizontal: wp('1'),
+    marginVertical: hp('.5'),
   },
 });

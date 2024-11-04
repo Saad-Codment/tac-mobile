@@ -9,7 +9,7 @@ const initial_state = {
 const actionMap = {
   [types.UpdateAuth]: (state, act) => {
     return {
-      userData: act.payload.detail,
+      userData: act.payload.user,
       token: act.payload.token,
       isLogin: true,
     };

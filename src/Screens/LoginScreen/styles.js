@@ -143,4 +143,8 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   imageStyle: {width: wp('30'), height: hp('15')},
+  buttonStyle: {
+    borderRadius: 30,
+    // marginTop: hp('3'),
+  },
 });

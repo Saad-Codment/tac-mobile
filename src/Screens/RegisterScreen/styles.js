@@ -61,6 +61,7 @@ export const styles = StyleSheet.create({
     paddingBottom: hp('2'),
   },
   buttonStyle: {
+    borderRadius: 30,
     // marginTop: hp('3'),
   },
   lockstyle: {
@@ -76,7 +77,7 @@ export const styles = StyleSheet.create({
   dontHave: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: hp('3'),
+    // marginTop: hp('1'),
     marginBottom: hp('1'),
   },
   dontHaveText: {

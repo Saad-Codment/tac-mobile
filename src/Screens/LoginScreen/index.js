@@ -76,7 +76,7 @@ const LoginScreen = ({navigation}) => {
               getValues,
               placeholder: 'Password',
               isImage: lock,
-              defaultValue: '',
+              defaultValue: __DEV__ ? 'Test@123' : '',
               isSecure: true,
               isImage: locksetting,
               inputIconStyle: styles.lockstyle,
@@ -84,7 +84,12 @@ const LoginScreen = ({navigation}) => {
           />
 
           <View style={{paddingTop: hp('3')}}>
-            <ThemeButton onPress={handleSubmit(loginUser)} title={'Log In'} />
+            <ThemeButton
+              onPress={handleSubmit(loginUser)}
+              title={'Log In'}
+              isYellowTheme={true}
+              style={styles.buttonStyle}
+            />
           </View>
 
           <View style={styles.rememberSec}>

@@ -63,7 +63,7 @@ export const InputComponent = ({
               {...{
                 value,
                 isDisabled,
-                selectionColor: Colors.gray,
+                selectionColor: Colors.white,
                 placeholder,
                 keyboardType,
                 style: {...styles.input(isSecure), ...textStyle},
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
   error: {
     color: Colors.white,
     fontSize: hp('1.4'),
+    marginLeft: wp('3'),
   },
   inputIcon: {
     // marginLeft: hp('2'),

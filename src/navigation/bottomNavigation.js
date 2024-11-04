@@ -96,7 +96,7 @@ function MybottomTabs() {
       <Tab.Screen
         name="HomeScreen2"
         options={tabarComponent(addcircle, addcircle)}
-        component={Screens.HomeScreen}
+        component={Screens.CreateEventsScreen}
       />
       <Tab.Screen
         name="HomeScreen4"

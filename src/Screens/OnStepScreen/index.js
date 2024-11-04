@@ -4,6 +4,7 @@ import {
   ImageBackground,
   Keyboard,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,37 +13,47 @@ import {
 import React, {useEffect, useState} from 'react';
 import useOnStepScreen from './useOnStepScreen';
 import {styles} from './styles';
-import {arrowrightblack, horse, stepBg} from '../../Assets';
+import {arrowrightblack, arrRightPurple, horse, stepBg} from '../../Assets';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
 import ThemeButton from '../../Components/ThemeButton';
 import {Picker} from '@react-native-picker/picker';
 import ErrorInputComponent from '../../Components/ErrorInputComponent';
 import {step2, step3, step5} from '../../Utils/localDB';
+import {Colors} from '../../Theme/Variables';
+import {Touchable} from '../../Components/Touchable';
+import {allAssociatesUrl, allEventTypeUrl} from '../../Utils/Urls';
+import {MultiSelectButton} from '../../Components/MultiSelectButton';
 
 const OnStepScreen = ({navigation}) => {
   const {
     step,
     onBoardData,
-    setOnboardData,
     age,
     ageRange,
     onSelectValue,
     sport,
-    sports,
     association,
-    SetAssociation,
-    associations,
     handlePreviousStep,
     handleNextStep,
     transport,
+    dynamicRoute,
   } = useOnStepScreen(navigation);
 
   const renderSteps = {
     1: () => {
       return (
         <>
-          <TextComponent text={'What is your age ?'} styles={styles.tagline} />
+          <TextComponent
+            text={'What year were \n you born ?'}
+            styles={styles.tagline}
+          />
+          <TextComponent
+            text={'Salungat sa kaalaman ng marami.'}
+            styles={styles.innerTitle}
+            fade={true}
+          />
+
           <View style={styles.agePicker}>
             <ErrorInputComponent
               dropDownData={ageRange}
@@ -61,6 +72,11 @@ const OnStepScreen = ({navigation}) => {
       return (
         <View>
           <TextComponent text={'Describe yourself ?'} styles={styles.tagline} />
+          <TextComponent
+            text={'Salungat sa kaalaman ng marami.'}
+            styles={styles.innerTitle}
+            fade={true}
+          />
           <View style={styles.content}>
             {step2.map((item, index) => (
               <Pressable
@@ -92,26 +108,26 @@ const OnStepScreen = ({navigation}) => {
         <View>
           <TextComponent
             numberOfLines={2}
-            text={'Do you have transport availability'}
+            text={'Are you willing to have \n horses for others?'}
             styles={styles.tagline}
+          />
+          <TextComponent
+            text={'Salungat sa kaalaman ng marami.'}
+            styles={styles.innerTitle}
+            fade={true}
           />
           {step3.map((item, index) => (
             <Pressable
-              style={styles.gender(
-                Boolean(onBoardData?.transport == item.title),
-              )}
+              style={{
+                ...styles.gender(Boolean(onBoardData?.transport == item.title)),
+                justifyContent: 'center',
+              }}
               key={item?.id}
               onPress={() => onSelectValue('transport', item.title)}>
-              <Image
-                source={item?.image}
-                style={styles.catImage(
-                  Boolean(onBoardData?.gender == item.title),
-                )}
-              />
               <TextComponent
                 text={item?.title}
                 styles={styles.genderTitle(
-                  Boolean(onBoardData?.gender == item.title),
+                  Boolean(onBoardData?.transport == item.title),
                 )}
               />
             </Pressable>
@@ -123,20 +139,36 @@ const OnStepScreen = ({navigation}) => {
       return (
         <View>
           <TextComponent
-            text={'What type of sports you’re interested in'}
+            text={'What type of sports you’re interested in ?'}
             styles={styles.tagline}
           />
-          <View style={styles.agePicker}>
-            <ErrorInputComponent
-              dropDownData={sports}
-              dropDownPlaceholder={'your interested sports'}
-              // text={'Rating  '}
-              preferenceVal={sport}
-              setPreferenceVal={val => onSelectValue('sport', val)}
-              dividerBool
-              dividerLineBool
+          <TextComponent
+            text={'Salungat sa kaalaman ng marami.'}
+            styles={styles.innerTitle}
+            fade={true}
+          />
+          <Touchable
+            style={styles.inputMain}
+            onPress={() =>
+              dynamicRoute('ListViewScreen', {
+                onSelectValue: res => onSelectValue('sport', res),
+                selectedValue: sport,
+                urlName: allEventTypeUrl,
+              })
+            }>
+            <TextComponent text={'Events'} styles={styles.btnTextTwo} />
+            <Image source={arrRightPurple} style={styles.arrowImage} />
+          </Touchable>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.innerScroll}>
+            <MultiSelectButton
+              isDisable={true}
+              items={sport ?? []}
+              btnStyle={styles.selectedValStyle}
+              textStyle={{fontSize: hp('1.5')}}
             />
-          </View>
+          </ScrollView>
         </View>
       );
     },
@@ -147,17 +179,36 @@ const OnStepScreen = ({navigation}) => {
             text={'Any association you’re align with?'}
             styles={styles.tagline}
           />
-          <View style={styles.agePicker}>
-            <ErrorInputComponent
-              dropDownData={associations}
-              dropDownPlaceholder={'Association you’re part of'}
-              // text={'Rating  '}
-              preferenceVal={association}
-              setPreferenceVal={val => onSelectValue('association', val)}
-              dividerBool
-              dividerLineBool
+          <TextComponent
+            text={'Salungat sa kaalaman ng marami.'}
+            styles={styles.innerTitle}
+            fade={true}
+          />
+          <Touchable
+            style={styles.inputMain}
+            onPress={() =>
+              dynamicRoute('ListViewScreen', {
+                onSelectValue: res => onSelectValue('association', res),
+                selectedValue: association,
+                urlName: allAssociatesUrl,
+              })
+            }>
+            <TextComponent
+              text={'Choose all the associations you are a member of'}
+              styles={styles.btnTextTwo}
             />
-          </View>
+            <Image source={arrRightPurple} style={styles.arrowImage} />
+          </Touchable>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.innerScroll}>
+            <MultiSelectButton
+              isDisable={true}
+              items={association ?? []}
+              btnStyle={styles.selectedValStyle}
+              textStyle={{fontSize: hp('1.5')}}
+            />
+          </ScrollView>
         </View>
       );
     },
@@ -248,21 +299,32 @@ const OnStepScreen = ({navigation}) => {
       </ImageBackground>
       <View
         style={{
-          marginLeft: wp(step === 1 ? '0' : '5'),
-          width: wp(step === 1 ? '100' : '50'),
+          // marginLeft: wp(step == 1 ? '0' : '5'),
           ...styles.buttonContainer,
         }}>
-        {step === 1 ? null : (
+        {step != 1 && (
           <ThemeButton
             onPress={handlePreviousStep}
             title={'Previous'}
             textStyle={{...styles.themeButton}}
+            style={{
+              // backgroundColor: Colors.primaryColor,
+              borderRadius: 40,
+              height: hp('6'),
+              width: wp('42'),
+            }}
           />
         )}
         <ThemeButton
           onPress={() => handleNextStep[step]()}
-          title={step === 5 ? 'Submit' : 'Continue'}
+          title={step === 5 ? 'Get Started' : 'Continue'}
           textStyle={{...styles.themeButton}}
+          style={{
+            backgroundColor: Colors.primaryColor,
+            borderRadius: 40,
+            height: hp('6'),
+            width: wp(step == 1 ? '90' : '42'),
+          }}
         />
       </View>
       {/* {!isKeyboardVisible && (

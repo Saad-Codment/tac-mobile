@@ -22,19 +22,11 @@ const useRegister = ({navigate, goBack}) => {
     setRemember(!remember);
   };
 
-  const signUpButton = ({
-    name,
-    last_name,
-    email,
-    number,
-    password,
-    confirm_password,
-    company_name,
-  }) => {
+  const signUpButton = ({first_name, last_name, email, password}) => {
     dispatch(
       loginUser({
         type: 'email',
-        datas: {name, email, number, password, company_name, last_name},
+        datas: {first_name, email, password, last_name},
       }),
     );
   };

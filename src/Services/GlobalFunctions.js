@@ -480,6 +480,10 @@ function updateArryObjById(data, id, newObject) {
   return newArry;
 }
 
+const getIdsFromArry = (arry, key) => {
+  return arry.map(res => res[key]);
+};
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -503,4 +507,5 @@ export {
   getObjectById,
   generateUniqueId,
   updateArryObjById,
+  getIdsFromArry,
 };

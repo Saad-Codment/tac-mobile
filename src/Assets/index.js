@@ -66,6 +66,8 @@ export {default as calendar} from './Icons/calendar.png';
 export {default as dollarCircle} from './Icons/dollarCircle.png';
 export {default as timeCircle} from './Icons/timeCircle.png';
 export {default as msgCircle} from './Icons/msgCircle.png';
+export {default as arrRightPurple} from './Icons/arrowRightPurple.png';
+export {default as crossWhite} from './Icons/crossWhite.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';

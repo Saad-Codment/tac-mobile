@@ -471,10 +471,15 @@ export const step3 = [
   {
     id: 1,
     // image: male,
-    title: 'Yes, I’ve',
+    title: 'Yes, On Fill Rates',
   },
   {
     id: 2,
+    // image: female,
+    title: 'Yes, On Professional Rates',
+  },
+  {
+    id: 3,
     // image: female,
     title: 'No',
   },

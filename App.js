@@ -12,6 +12,7 @@ import {logoScreen, splash, splash2} from './src/Assets';
 import Overlay from './src/Components/Overlay';
 import useReduxStore from './src/Hooks/UseReduxStore';
 import {hp, wp} from './src/Config/responsive';
+import {useIsFetching} from '@tanstack/react-query';
 
 const App = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -19,7 +20,10 @@ const App = () => {
     setIsVisible(false);
   };
   const {getState, dispatch} = useReduxStore();
+
   const {isloading} = getState('isloading');
+  const isFetching = useIsFetching();
+
   console.log('load', isloading);
   const time = () => {
     return 3000;
@@ -59,7 +63,7 @@ const App = () => {
   return (
     <>
       {isVisible === true ? Splash_Screen : <MainNavigator />}
-      {isloading && <Overlay />}
+      {(isloading || isFetching >= 1) && <Overlay />}
       {/* <StackNavigatior />; */}
     </>
   );

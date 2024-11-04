@@ -147,6 +147,5 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
     alignSelf: 'flex-end',
-    backgroundColor: 'red',
   },
 });

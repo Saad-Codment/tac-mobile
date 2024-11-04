@@ -1,13 +1,13 @@
 const getCredentials = () => {
   if (__DEV__)
     return {
-      baseURL: 'https://virtualrealitycreators.com/tieGuy-bakend/api',
+      baseURL: 'https://virtualrealitycreators.com/tac-backend/api',
       imageURL: 'https://virtualrealitycreators.com/tieGuy-bakend/storage/',
     };
   else {
     console.log = () => {};
     return {
-      baseURL: 'https://virtualrealitycreators.com/tieGuy-bakend/api',
+      baseURL: 'https://virtualrealitycreators.com/tac-backend/api',
       imageURL: 'https://virtualrealitycreators.com/tieGuy-bakend/storage/',
     };
   }
@@ -28,10 +28,9 @@ export const MapAPIKey = 'AIzaSyAu-nEBbiOahfUyeMc8Lc1gTTKfete_wnQ';
 
 export const registerUrl = '/signup';
 export const loginUrl = '/login';
-export const allContactsUrl = '/contacts';
-export const addContactsUrl = '/add-contact';
-export const updateContactUrl = '/update-contact';
-export const deleteContactUrl = '/delete-contact';
 export const VerifyUserUrl = '/verify';
+export const allAssociatesUrl = '/setup/associations';
+export const allEventTypeUrl = '/setup/event-types';
+export const onBoardConpleteUrl = '/on-board';
 
 export const logoutUrl = 'auth/logout';

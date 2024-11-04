@@ -63,7 +63,7 @@ const RegisterScreen = ({navigation}) => {
           </View>
           <InputComponent
             {...{
-              name: 'name',
+              name: 'first_name',
               handleSubmit,
               errors,
               reset,
@@ -71,7 +71,7 @@ const RegisterScreen = ({navigation}) => {
               getValues,
               placeholder: 'First Name',
               isImage: user,
-              defaultValue: '',
+              defaultValue: __DEV__ ? 'user' : '',
               handleSubmit,
               errors,
               reset,
@@ -88,7 +88,7 @@ const RegisterScreen = ({navigation}) => {
               control,
               getValues,
               placeholder: 'Last Name',
-              defaultValue: '',
+              defaultValue: __DEV__ ? 'last' : '',
               isImage: user,
             }}
           />
@@ -116,7 +116,7 @@ const RegisterScreen = ({navigation}) => {
               getValues,
               placeholder: 'Password',
               isImage: locksetting,
-              defaultValue: '',
+              defaultValue: __DEV__ ? 'Test@123' : '',
               isSecure: true,
               inputIconStyle: styles.lockstyle,
             }}
@@ -131,7 +131,7 @@ const RegisterScreen = ({navigation}) => {
               getValues,
               placeholder: 'Confirm Password',
               isImage: locksetting,
-              defaultValue: '',
+              defaultValue: __DEV__ ? 'Test@123' : '',
               isSecure: true,
               inputIconStyle: styles.lockstyle,
             }}
@@ -139,8 +139,9 @@ const RegisterScreen = ({navigation}) => {
           <View style={{paddingTop: hp('3')}}>
             <ThemeButton
               title={'Register'}
-              onPress={() => navigation.navigate('OnStepScreen')}
+              onPress={handleSubmit(signUpButton)}
               style={styles.buttonStyle}
+              isYellowTheme={true}
             />
           </View>
           <View style={styles.barMain}>

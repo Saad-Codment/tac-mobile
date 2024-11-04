@@ -13,6 +13,7 @@ const ThemeButton = ({
   textStyle,
   imageStyle,
   isDisable,
+  isYellowTheme,
 }) => {
   return (
     // <ShadowButton>
@@ -24,6 +25,9 @@ const ThemeButton = ({
         styles.button,
         {
           justifyContent: 'center',
+          backgroundColor: isYellowTheme
+            ? Colors.primaryColor
+            : Colors.backgroundTheme,
           ...style,
         },
       ]}>
@@ -60,7 +64,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // paddingHorizontal: '22.5%',
     justifyContent: 'center',
-    backgroundColor: Colors.backgroundTheme,
   },
   image: {
     width: wp('8'),
@@ -70,7 +73,7 @@ const styles = StyleSheet.create({
   },
   text: {
     // fontSize: heightPercentageToDP('2'),
-    color: Colors.textGray,
+    color: Colors.white,
     textAlign: 'center',
     fontSize: hp('2'),
     // marginRight: wp('3'),

@@ -12,7 +12,7 @@ const Stack = createNativeStackNavigator();
 function MainNavigator() {
   const {getState} = useReduxStore();
   const {onboarding} = getState('onboarding');
-  const {isLogin} = getState('Auth');
+  const {isLogin, userData} = getState('Auth');
 
   return (
     <NavigationContainer
@@ -34,14 +34,41 @@ function MainNavigator() {
         )}
         {!isLogin && (
           <>
-            <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
-
-            <Stack.Screen name="HomeScreen" component={Screens.HomeScreen} />
             <Stack.Screen name="LoginScreen" component={Screens.LoginScreen} />
             <Stack.Screen
               name="RegisterScreen"
               component={Screens.RegisterScreen}
             />
+            {/* <Stack.Screen
+              name="OnStepScreen"
+              component={Screens.OnStepScreen}
+            /> */}
+
+            {/* <Stack.Screen
+              name="ForgetPasswordScreen"
+              component={Screens.ForgetPasswordScreen}
+              /> */}
+          </>
+        )}
+        {isLogin && (
+          <>
+            {userData?.is_onboard == 0 && (
+              <Stack.Screen
+                name="OnStepScreen"
+                component={Screens.OnStepScreen}
+              />
+            )}
+            <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
+            <Stack.Screen
+              name="ListViewScreen"
+              component={Screens.ListViewScreen}
+            />
+            <Stack.Screen
+              name="CreateEventsScreen"
+              component={Screens.CreateEventsScreen}
+            />
+
+            <Stack.Screen name="HomeScreen" component={Screens.HomeScreen} />
             <Stack.Screen
               name="SettingScreen"
               options={'SettingScreen'}
@@ -66,20 +93,6 @@ function MainNavigator() {
               name="SubscribeScreen"
               component={Screens.SubscribeScreen}
             />
-            <Stack.Screen
-              name="OnStepScreen"
-              component={Screens.OnStepScreen}
-            />
-
-            {/* <Stack.Screen
-              name="ForgetPasswordScreen"
-              component={Screens.ForgetPasswordScreen}
-              /> */}
-          </>
-        )}
-        {isLogin && (
-          <>
-            <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
             {/* <Stack.Screen
               name="SkeletonScreen"
               component={Screens.SkeletonScreen}
