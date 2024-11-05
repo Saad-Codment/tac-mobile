@@ -8711,13 +8711,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-date-picker@npm:^5.0.4":
-  version: 5.0.4
-  resolution: "react-native-date-picker@npm:5.0.4"
+"react-native-date-picker@npm:^5.0.7":
+  version: 5.0.7
+  resolution: "react-native-date-picker@npm:5.0.7"
   peerDependencies:
     react: ">= 17.0.1"
     react-native: ">= 0.64.3"
-  checksum: 67db7fba5de613c61a70b5b9274daef8c7d3b6f6cdc5a6063eb61126d4df43252c501c2cb78ebda37fb0997ccb0994e949976d0fb395453580019923100e03ad
+  checksum: 94191bf3ce6e88a3acc4ca5e5514eaa6fc15c61666393d85ca258dba3a3efd9145c8fd31ed0f18676d7f083e17f08c760de8193ad24367a65761330084bcdc6b
   languageName: node
   linkType: hard
 
@@ -8727,6 +8727,16 @@ __metadata:
   peerDependencies:
     react-native: "*"
   checksum: bf0630beef9c391498122cc66708fa9922bf8335701b0fe7f30642f509d60441338607a89daaa86eb9ced675926ee948da034c63c03659053ce34c10d50bd9e3
+  languageName: node
+  linkType: hard
+
+"react-native-dropdown-picker@npm:^5.4.6":
+  version: 5.4.6
+  resolution: "react-native-dropdown-picker@npm:5.4.6"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: d81ee3d68c17107a4d21dbdf9c2fe2ffe4bf4398973d10113139aadc0674221ce5038b945299fba2abc796930ec5e6d5f84291945bf903344493a15b8e2fca43
   languageName: node
   linkType: hard
 
@@ -10190,8 +10200,9 @@ __metadata:
     react-native: 0.74.3
     react-native-awesome-alerts: ^2.0.0
     react-native-blurhash: ^2.0.2
-    react-native-date-picker: ^5.0.4
+    react-native-date-picker: ^5.0.7
     react-native-device-info: ^10.13.1
+    react-native-dropdown-picker: ^5.4.6
     react-native-element-dropdown: ^2.12.1
     react-native-elements: ^3.4.3
     react-native-fast-image: ^8.6.3
