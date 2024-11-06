@@ -1,6 +1,8 @@
 import {Alert, Linking, PermissionsAndroid, Platform} from 'react-native';
 import Geolocationios from '@react-native-community/geolocation';
 import Geolocation from 'react-native-geolocation-service';
+import ImageCropPicker from 'react-native-image-crop-picker';
+
 // import Geolocation from '@react-native-community/geolocation';
 import {
   PERMISSIONS,
@@ -484,6 +486,97 @@ const getIdsFromArry = (arry, key) => {
   return arry.map(res => res[key]);
 };
 
+//GET IMAGE From Mobile
+const uploadFromGalary = async () => {
+  const {
+    height,
+    width,
+    size,
+    path,
+    filename,
+    sourceURL,
+    localIdentifier,
+    mime,
+  } = await ImageCropPicker.openPicker({
+    width: 500,
+    height: 400,
+    cropping: true,
+  });
+  const uri = Platform.OS === 'ios' ? sourceURL : path;
+  const fileName = filename || 'photo.jpg';
+  return {
+    uri,
+    name: fileName,
+    type: mime,
+  };
+};
+
+function formatDateToCustomFormat(isoDate) {
+  var originalDate = new Date(isoDate);
+
+  // Define an array of month names
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  // Get the month name using the array
+  var monthName = monthNames[originalDate.getMonth()];
+
+  var year = originalDate.getUTCFullYear();
+  var day = originalDate.getUTCDate();
+
+  var formattedDate = `${monthName} ${day}, ${year}`;
+  console.log({formattedDate});
+  return formattedDate;
+}
+
+//For Time Format Convert Function
+function convertToCustomTimeFormat(isoDate) {
+  const date = new Date(isoDate);
+
+  // Subtract 5 hours
+  date.setUTCHours(date.getUTCHours() - 7);
+
+  // Extract hours and minutes
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+
+  // Determine if it's A.M. or P.M.
+  const amOrPm = hours < 12 ? 'P.M.' : 'A.M.';
+
+  // Convert hours to 12-hour format
+  const formattedHours = hours % 12 || 12;
+
+  // Ensure that both hours and minutes have two digits
+  const formattedTime = `${formattedHours}:${String(minutes).padStart(
+    2,
+    '0',
+  )} ${amOrPm}`;
+
+  return formattedTime;
+}
+
+function getOrdinal(num) {
+  const lastDigit = num % 10;
+  const lastTwoDigits = num % 100;
+
+  if (lastDigit === 1 && lastTwoDigits !== 11) return `${num}st`;
+  if (lastDigit === 2 && lastTwoDigits !== 12) return `${num}nd`;
+  if (lastDigit === 3 && lastTwoDigits !== 13) return `${num}rd`;
+
+  return `${num}th`;
+}
 export {
   getSingleCharacter,
   getProperLocation,
@@ -508,4 +601,8 @@ export {
   generateUniqueId,
   updateArryObjById,
   getIdsFromArry,
+  uploadFromGalary,
+  formatDateToCustomFormat,
+  convertToCustomTimeFormat,
+  getOrdinal,
 };

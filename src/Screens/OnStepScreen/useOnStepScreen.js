@@ -93,6 +93,7 @@ const useOnStepScreen = ({navigate}) => {
           event_type_ids: getIdsFromArry(sport, 'id'),
           gender: gender.toLowerCase(),
           age: age.toLowerCase(),
+          transport_id: 1,
         });
     },
 

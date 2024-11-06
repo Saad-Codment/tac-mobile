@@ -46,6 +46,51 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-tac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tac.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = tac/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-tac-tacTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tac-tacTests.release.xcconfig"; path = "Target Support Files/Pods-tac-tacTests/Pods-tac-tacTests.release.xcconfig"; sourceTree = "<group>"; };
+		A6C55D5D2CDBBCA800B9FA4A /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
+		A6C55D5E2CDBBCA800B9FA4A /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
+		A6C55D5F2CDBBCA800B9FA4A /* Proxima Nova Alt Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Alt Thin.otf"; sourceTree = "<group>"; };
+		A6C55D602CDBBCA800B9FA4A /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
+		A6C55D612CDBBCA800B9FA4A /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-MediumItalic.ttf"; sourceTree = "<group>"; };
+		A6C55D622CDBBCA800B9FA4A /* Rubik-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Bold.ttf"; sourceTree = "<group>"; };
+		A6C55D632CDBBCA800B9FA4A /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.ttf; sourceTree = "<group>"; };
+		A6C55D642CDBBCA800B9FA4A /* Proxima Nova Alt Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Alt Bold.otf"; sourceTree = "<group>"; };
+		A6C55D652CDBBCA800B9FA4A /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Brands.ttf; sourceTree = "<group>"; };
+		A6C55D662CDBBCA800B9FA4A /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
+		A6C55D672CDBBCA800B9FA4A /* Rubik-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		A6C55D682CDBBCA800B9FA4A /* Proxima-Nova-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima-Nova-Thin.otf"; sourceTree = "<group>"; };
+		A6C55D692CDBBCA800B9FA4A /* Proxima-Nova-Alt-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima-Nova-Alt-Light.otf"; sourceTree = "<group>"; };
+		A6C55D6A2CDBBCA800B9FA4A /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AntDesign.ttf; sourceTree = "<group>"; };
+		A6C55D6B2CDBBCA800B9FA4A /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Foundation.ttf; sourceTree = "<group>"; };
+		A6C55D6C2CDBBCA800B9FA4A /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ionicons.ttf; sourceTree = "<group>"; };
+		A6C55D6D2CDBBCA800B9FA4A /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Solid.ttf; sourceTree = "<group>"; };
+		A6C55D6E2CDBBCA800B9FA4A /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Regular.ttf; sourceTree = "<group>"; };
+		A6C55D6F2CDBBCA800B9FA4A /* Rubik-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Light.ttf"; sourceTree = "<group>"; };
+		A6C55D702CDBBCA800B9FA4A /* Proxima-Nova-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima-Nova-Bold.otf"; sourceTree = "<group>"; };
+		A6C55D712CDBBCA800B9FA4A /* Proxima Nova Extrabold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Extrabold.otf"; sourceTree = "<group>"; };
+		A6C55D722CDBBCA800B9FA4A /* Rubik-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Medium.ttf"; sourceTree = "<group>"; };
+		A6C55D732CDBBCA800B9FA4A /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
+		A6C55D742CDBBCA800B9FA4A /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
+		A6C55D752CDBBCA800B9FA4A /* Rubik-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		A6C55D762CDBBCA800B9FA4A /* Rubik-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Black.ttf"; sourceTree = "<group>"; };
+		A6C55D772CDBBCA800B9FA4A /* Proxima Nova Alt Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Alt Light.otf"; sourceTree = "<group>"; };
+		A6C55D782CDBBCA800B9FA4A /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
+		A6C55D792CDBBCA800B9FA4A /* Rubik-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Italic.ttf"; sourceTree = "<group>"; };
+		A6C55D7A2CDBBCA800B9FA4A /* Rubik-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-LightItalic.ttf"; sourceTree = "<group>"; };
+		A6C55D7B2CDBBCA800B9FA4A /* Rubik-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-SemiBold.ttf"; sourceTree = "<group>"; };
+		A6C55D7C2CDBBCA800B9FA4A /* Proxima Nova Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Black.otf"; sourceTree = "<group>"; };
+		A6C55D7D2CDBBCA800B9FA4A /* Rubik-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-BlackItalic.ttf"; sourceTree = "<group>"; };
+		A6C55D7E2CDBBCA800B9FA4A /* Proxima-Nova-Alt-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima-Nova-Alt-Bold.otf"; sourceTree = "<group>"; };
+		A6C55D7F2CDBBCA800B9FA4A /* Proxima-Nova-Extrabold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima-Nova-Extrabold.otf"; sourceTree = "<group>"; };
+		A6C55D802CDBBCA800B9FA4A /* Rubik-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-ExtraBold.ttf"; sourceTree = "<group>"; };
+		A6C55D812CDBBCA800B9FA4A /* Proxima Nova Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Bold.otf"; sourceTree = "<group>"; };
+		A6C55D822CDBBCA800B9FA4A /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
+		A6C55D832CDBBCA800B9FA4A /* Rubik-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Regular.ttf"; sourceTree = "<group>"; };
+		A6C55D842CDBBCA800B9FA4A /* ProximaNova-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Regular.otf"; sourceTree = "<group>"; };
+		A6C55D852CDBBCA800B9FA4A /* Proxima Nova Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Thin.otf"; sourceTree = "<group>"; };
+		A6C55D862CDBBCA800B9FA4A /* Proxima-Nova-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima-Nova-Black.otf"; sourceTree = "<group>"; };
+		A6C55D872CDBBCA800B9FA4A /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		A6C55D882CDBBCA800B9FA4A /* Proxima-Nova-Alt-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima-Nova-Alt-Thin.otf"; sourceTree = "<group>"; };
+		A6C55D892CDBBCA800B9FA4A /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
 		A6CA97E92CD90C550005655C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B2A85497AF162675817B61CF /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = tac/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -123,6 +168,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				A6C55D5C2CDBBCA800B9FA4A /* Resources */,
 				A6CA97E92CD90C550005655C /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* tac */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -143,6 +189,58 @@
 				00E356EE1AD99517003FC87E /* tacTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A6C55D5C2CDBBCA800B9FA4A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A6C55D5D2CDBBCA800B9FA4A /* Fontisto.ttf */,
+				A6C55D5E2CDBBCA800B9FA4A /* Octicons.ttf */,
+				A6C55D5F2CDBBCA800B9FA4A /* Proxima Nova Alt Thin.otf */,
+				A6C55D602CDBBCA800B9FA4A /* Feather.ttf */,
+				A6C55D612CDBBCA800B9FA4A /* Rubik-MediumItalic.ttf */,
+				A6C55D622CDBBCA800B9FA4A /* Rubik-Bold.ttf */,
+				A6C55D632CDBBCA800B9FA4A /* Entypo.ttf */,
+				A6C55D642CDBBCA800B9FA4A /* Proxima Nova Alt Bold.otf */,
+				A6C55D652CDBBCA800B9FA4A /* FontAwesome5_Brands.ttf */,
+				A6C55D662CDBBCA800B9FA4A /* MaterialCommunityIcons.ttf */,
+				A6C55D672CDBBCA800B9FA4A /* Rubik-SemiBoldItalic.ttf */,
+				A6C55D682CDBBCA800B9FA4A /* Proxima-Nova-Thin.otf */,
+				A6C55D692CDBBCA800B9FA4A /* Proxima-Nova-Alt-Light.otf */,
+				A6C55D6A2CDBBCA800B9FA4A /* AntDesign.ttf */,
+				A6C55D6B2CDBBCA800B9FA4A /* Foundation.ttf */,
+				A6C55D6C2CDBBCA800B9FA4A /* Ionicons.ttf */,
+				A6C55D6D2CDBBCA800B9FA4A /* FontAwesome5_Solid.ttf */,
+				A6C55D6E2CDBBCA800B9FA4A /* FontAwesome5_Regular.ttf */,
+				A6C55D6F2CDBBCA800B9FA4A /* Rubik-Light.ttf */,
+				A6C55D702CDBBCA800B9FA4A /* Proxima-Nova-Bold.otf */,
+				A6C55D712CDBBCA800B9FA4A /* Proxima Nova Extrabold.otf */,
+				A6C55D722CDBBCA800B9FA4A /* Rubik-Medium.ttf */,
+				A6C55D732CDBBCA800B9FA4A /* FontAwesome.ttf */,
+				A6C55D742CDBBCA800B9FA4A /* Zocial.ttf */,
+				A6C55D752CDBBCA800B9FA4A /* Rubik-ExtraBoldItalic.ttf */,
+				A6C55D762CDBBCA800B9FA4A /* Rubik-Black.ttf */,
+				A6C55D772CDBBCA800B9FA4A /* Proxima Nova Alt Light.otf */,
+				A6C55D782CDBBCA800B9FA4A /* EvilIcons.ttf */,
+				A6C55D792CDBBCA800B9FA4A /* Rubik-Italic.ttf */,
+				A6C55D7A2CDBBCA800B9FA4A /* Rubik-LightItalic.ttf */,
+				A6C55D7B2CDBBCA800B9FA4A /* Rubik-SemiBold.ttf */,
+				A6C55D7C2CDBBCA800B9FA4A /* Proxima Nova Black.otf */,
+				A6C55D7D2CDBBCA800B9FA4A /* Rubik-BlackItalic.ttf */,
+				A6C55D7E2CDBBCA800B9FA4A /* Proxima-Nova-Alt-Bold.otf */,
+				A6C55D7F2CDBBCA800B9FA4A /* Proxima-Nova-Extrabold.otf */,
+				A6C55D802CDBBCA800B9FA4A /* Rubik-ExtraBold.ttf */,
+				A6C55D812CDBBCA800B9FA4A /* Proxima Nova Bold.otf */,
+				A6C55D822CDBBCA800B9FA4A /* SimpleLineIcons.ttf */,
+				A6C55D832CDBBCA800B9FA4A /* Rubik-Regular.ttf */,
+				A6C55D842CDBBCA800B9FA4A /* ProximaNova-Regular.otf */,
+				A6C55D852CDBBCA800B9FA4A /* Proxima Nova Thin.otf */,
+				A6C55D862CDBBCA800B9FA4A /* Proxima-Nova-Black.otf */,
+				A6C55D872CDBBCA800B9FA4A /* MaterialIcons.ttf */,
+				A6C55D882CDBBCA800B9FA4A /* Proxima-Nova-Alt-Thin.otf */,
+				A6C55D892CDBBCA800B9FA4A /* Rubik-BoldItalic.ttf */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {

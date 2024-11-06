@@ -14,6 +14,7 @@ import {Colors} from '../../Theme/Variables';
 import {Touchable} from '../../Components/Touchable';
 import {
   addcircle,
+  crossWhite,
   gpsImg,
   radioCircle,
   radioCircleOn,
@@ -28,9 +29,22 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import ThemeButton from '../../Components/ThemeButton';
 import {styles} from './styles';
 import useCreateEventsScreen from './useCreateEventsScreen';
+import {
+  convertToCustomTimeFormat,
+  formatDateToCustomFormat,
+  getOrdinal,
+  uploadFromGalary,
+} from '../../Services/GlobalFunctions';
 
 const CreateEventsScreen = ({navigation}) => {
-  const {currentDate, dynamicRoute} = useCreateEventsScreen(navigation);
+  const {
+    currentDate,
+    formDataState,
+    datePicker,
+    toggleDate,
+    onSelectValue,
+    dynamicRoute,
+  } = useCreateEventsScreen(navigation);
 
   const TitleInputView = ({
     title,
@@ -79,38 +93,59 @@ const CreateEventsScreen = ({navigation}) => {
 
   return (
     <View style={{flexGrow: 1}}>
-      <DatePicker modal date={currentDate} open={false} />
       <HeaderComponent headerTitle={'Create Event'} />
+
       <ScrollView
         contentContainerStyle={styles.scrollView}
         showsVerticalScrollIndicator={false}>
         <TitleInputView
           title={'Event Title'}
           innerLeftView={
-            <TextInput style={styles.inputStyle} placeholder="Enter title" />
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="Enter title"
+              maxLength={50}
+              value={formDataState.eventTitle}
+              onChangeText={e => onSelectValue('eventTitle', e)}
+            />
           }
           innerExtraView={
-            <TextComponent text={'32/50'} styles={{fontSize: hp('1.5')}} />
+            <TextComponent
+              text={`${formDataState.eventTitle.length}/50`}
+              styles={{fontSize: hp('1.5')}}
+            />
           }
         />
         <TitleInputView
           title={'Event Image'}
           centerInnerView={
-            <Touchable>
+            <Touchable
+              onPress={async () => {
+                const imgData = await uploadFromGalary();
+                onSelectValue('eventImg', imgData);
+              }}>
               <Image
-                source={uploadImgView}
-                resizeMode="contain"
+                source={
+                  formDataState?.eventImg?.uri
+                    ? {uri: formDataState?.eventImg?.uri}
+                    : uploadImgView
+                }
+                // resizeMode="contain"
                 style={styles.uploadImg}
               />
             </Touchable>
           }
         />
+
         <View style={styles.viewFlex}>
           <TitleInputView
             title={'Start Date'}
             innerLeftView={
               <TextComponent
-                text={'12 - July - 2024'}
+                text={formatDateToCustomFormat(
+                  formDataState.eventStartDate ?? currentDate,
+                )}
+                onPress={() => toggleDate('eventStartDate', 'date')}
                 styles={styles.textStyle}
               />
             }
@@ -119,7 +154,13 @@ const CreateEventsScreen = ({navigation}) => {
           <TitleInputView
             title={'Start Time'}
             innerLeftView={
-              <TextComponent text={'08 : 00 Pm'} styles={styles.textStyle} />
+              <TextComponent
+                text={convertToCustomTimeFormat(
+                  formDataState.eventStartTime ?? currentDate,
+                )}
+                onPress={() => toggleDate('eventStartTime', 'time')}
+                styles={styles.textStyle}
+              />
             }
             innerViewOuterStyle={{width: wp('40')}}
           />
@@ -129,7 +170,10 @@ const CreateEventsScreen = ({navigation}) => {
             title={'End Date'}
             innerLeftView={
               <TextComponent
-                text={'12 - July - 2024'}
+                text={formatDateToCustomFormat(
+                  formDataState.eventEndDate ?? currentDate,
+                )}
+                onPress={() => toggleDate('eventEndDate', 'date')}
                 styles={styles.textStyle}
               />
             }
@@ -138,7 +182,13 @@ const CreateEventsScreen = ({navigation}) => {
           <TitleInputView
             title={'End Time'}
             innerLeftView={
-              <TextComponent text={'08 : 00 Pm'} styles={styles.textStyle} />
+              <TextComponent
+                text={convertToCustomTimeFormat(
+                  formDataState.eventEndTime ?? currentDate,
+                )}
+                onPress={() => toggleDate('eventEndTime', 'time')}
+                styles={styles.textStyle}
+              />
             }
             innerViewOuterStyle={{width: wp('40')}}
           />
@@ -147,8 +197,19 @@ const CreateEventsScreen = ({navigation}) => {
           title={'Event Location'}
           innerLeftView={
             <TextComponent
-              text={'Empire Batteries, Incorporation.'}
+              text={
+                formDataState?.eventCoords?.locationName ??
+                'Please select location.'
+              }
               styles={styles.textStyle}
+              onPress={() =>
+                dynamicRoute('LocationScreen', (locationName, coords) => {
+                  onSelectValue('eventCoords', {
+                    locationName,
+                    coords,
+                  });
+                })
+              }
             />
           }
           innerExtraView={
@@ -161,28 +222,70 @@ const CreateEventsScreen = ({navigation}) => {
         />
         <TitleInputView
           title={'Performances'}
-          innerLeftView={
-            <View>
-              <TextComponent
-                text={'2nd Performance: Team Roping'}
-                styles={styles.textStyle}
-              />
-              <DividerLine DividerLineStyle={styles.divider} />
-              <View style={styles.perInnerView}>
-                <TextComponent
-                  text={'12 - July - 2024'}
-                  styles={styles.perInnerText}
-                />
-                <TextComponent
-                  text={'08 : 00 - 11 : 00 Pm'}
-                  styles={styles.perInnerText}
-                />
-              </View>
+          centerInnerView={
+            <View
+              style={{
+                ...styles.innerView,
+                ...styles.perInnerViewExtra,
+              }}>
+              {formDataState.perfEventList.map((res, i) => {
+                return (
+                  <View style={styles.perMapView}>
+                    <View style={{flexDirection: 'row'}}>
+                      <TextComponent
+                        text={`${getOrdinal(i + 1)} Performance: `}
+                        styles={styles.textStyle}
+                      />
+                      <TextInput
+                        style={{
+                          width: wp('50'),
+                          color: 'black',
+                        }}
+                        placeholder="Enter title"
+                        maxLength={50}
+                        value={formDataState.eventTitle}
+                        onChangeText={e => onSelectValue('eventTitle', e)}
+                      />
+                      {i > 0 && (
+                        <Touchable style={{marginLeft: wp('3')}}>
+                          <Image
+                            source={crossWhite}
+                            resizeMode="contain"
+                            tintColor={'black'}
+                            style={{width: wp('3'), height: hp('2')}}
+                          />
+                        </Touchable>
+                      )}
+                    </View>
+                    <DividerLine DividerLineStyle={styles.divider} />
+                    <View style={styles.perInnerView}>
+                      <TextComponent
+                        text={'12 - July - 2024'}
+                        styles={styles.perInnerText}
+                      />
+                      <TextComponent
+                        text={'08 : 00 - 11 : 00 Pm'}
+                        styles={styles.perInnerText}
+                      />
+                    </View>
+                  </View>
+                );
+              })}
             </View>
           }
-          innerViewOuterStyle={styles.perInnerOuterView}
+          innerViewOuterStyle={{
+            ...styles.perInnerOuterView,
+            paddingHorizontal: 0,
+          }}
           rightView={
-            <Touchable style={styles.addMoreView}>
+            <Touchable
+              style={styles.addMoreView}
+              onPress={() =>
+                onSelectValue('perfEventList', [
+                  ...formDataState.perfEventList,
+                  '',
+                ])
+              }>
               <Image
                 source={addcircle}
                 resizeMode="contain"
@@ -312,6 +415,20 @@ const CreateEventsScreen = ({navigation}) => {
           isYellowTheme
           style={styles.createBtnStyle}
         />
+        {datePicker.alertVal && (
+          <DatePicker
+            mode={datePicker.modalType}
+            open={datePicker.alertVal}
+            date={currentDate}
+            is24hourSource="device"
+            locale="en"
+            modal
+            onConfirm={e => {
+              onSelectValue(datePicker.stateName, e);
+              toggleDate(null);
+            }}
+          />
+        )}
       </ScrollView>
     </View>
   );

@@ -6,11 +6,16 @@ export const styles = StyleSheet.create({
   scrollView: {flexGrow: 1, paddingBottom: hp('15')},
   inputStyle: {flex: 1, color: 'black'},
   uploadImg: {
-    width: wp('100'),
+    width: wp('90'),
     height: hp('17.5'),
     paddingHorizontal: 0,
-    marginLeft: wp('-5'),
+    // marginLeft: wp('-5'),
     marginBottom: hp('2'),
+    alignSelf: 'center',
+    borderRadius: 10,
+    overflow: 'hidden',
+    borderWidth: 0.5,
+    borderColor: Colors.dkBorderColor,
   },
   viewFlex: {flexDirection: 'row'},
   textStyle: {fontSize: hp('1.5')},
@@ -38,6 +43,21 @@ export const styles = StyleSheet.create({
   addMoreImg: {width: wp('5'), height: hp('3')},
   addMoreTxt: {fontSize: hp('1.5'), marginLeft: wp('2')},
   createBtnStyle: {width: wp('90'), alignSelf: 'center', borderRadius: 30},
+
+  perInnerViewExtra: {
+    flexDirection: 'column',
+    backgroundColor: 'transparent',
+    height: 'auto',
+    borderWidth: 0,
+  },
+  perMapView: {
+    backgroundColor: Colors.lightInnerColor,
+    marginVertical: hp('1'),
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 0.3,
+    borderColor: Colors.dkBorderColor,
+  },
 
   // Component View
 

@@ -73,6 +73,7 @@ export {default as gpsImg} from './Icons/gpsImg.png';
 export {default as radioCircle} from './Icons/radioCircle.png';
 export {default as radioCircleOn} from './Icons/radioCircleOn.png';
 export {default as tickSquare} from './Icons/tickSquare.png';
+export {default as currentLoc} from './Icons/currentLoc.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';

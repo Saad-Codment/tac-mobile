@@ -9,4 +9,6 @@ export {default as EditProfileScreen} from './EditProfileScreen';
 export {default as HistoryScreen} from './HistoryScreen';
 export {default as FriendLists} from './FriendLists';
 export {default as CreateEventsScreen} from './CreateEventsScreen';
+export {default as LocationScreen} from './LocationScreen';
+
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

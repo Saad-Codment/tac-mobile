@@ -245,58 +245,47 @@ export default function ErrorInputComponent({
           </View>
         )}
 
-        <>
-          {VectorIconName && (
-            <TouchableOpacity
-              onPress={() => setOpen(true)}
-              style={styles.dateContainer}>
-              <Ionicons
-                style={styles.dropDown}
-                color={Colors.primaryColor}
-                name={VectorIconName}
-                size={hp('3')}
-              />
-
-              <TextComponent
-                text={
-                  (VectorIconName == 'time-outline' && customTimeFormat) ||
-                  (VectorIconName == 'calendar-outline' && customFormatDate) ||
-                  (VectorIconName == 'stopwatch-outline' && selectedTime)
-                }
-                styles={{
-                  color: Colors.themeGray,
-                  fontSize: FontSize.scale14,
-                  fontWeight: '500',
-                }}
-              />
-            </TouchableOpacity>
-          )}
-          {isDate && (
-            <DatePicker
-              minimumDate={minimumDate}
-              onDateChange={date => {
-                console.log(date, 'slslslsl');
-              }}
-              is24hourSource="device"
-              mode={
-                (VectorIconName == 'time-outline' && 'time') ||
-                (VectorIconName == 'calendar-outline' && 'date')
+        {VectorIconName && (
+          <TouchableOpacity onPress={() => setOpen(true)}>
+            <TextComponent
+              text={
+                (VectorIconName == 'time-outline' && customTimeFormat) ||
+                (VectorIconName == 'calendar-outline' && customFormatDate) ||
+                (VectorIconName == 'stopwatch-outline' && selectedTime)
               }
-              locale="en"
-              modal
-              open={open}
-              date={date}
-              onConfirm={date => {
-                setOpen(false);
-                setDate(date);
-                console.log({date});
-              }}
-              onCancel={() => {
-                setOpen(false);
+              styles={{
+                color: Colors.themeGray,
+                fontSize: hp('1.8'),
+                // fontWeight: '500',
               }}
             />
-          )}
-        </>
+          </TouchableOpacity>
+        )}
+        {isDate && (
+          <DatePicker
+            minimumDate={minimumDate}
+            onDateChange={date => {
+              console.log(date, 'slslslsl');
+            }}
+            is24hourSource="device"
+            mode={
+              (VectorIconName == 'time-outline' && 'time') ||
+              (VectorIconName == 'calendar-outline' && 'date')
+            }
+            locale="en"
+            modal
+            open={open}
+            date={date}
+            onConfirm={date => {
+              setOpen(false);
+              setDate(date);
+              console.log({date});
+            }}
+            onCancel={() => {
+              setOpen(false);
+            }}
+          />
+        )}
 
         {/* {MAX_DEFAULT > 0 && (
           <RangeSliderComponent
@@ -549,9 +538,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 7,
     borderWidth: 0.8,
-    marginRight: wp('2'),
+    // marginRight: wp('2'),
     alignItems: 'center',
-    marginTop: hp('1.5'),
+    // marginTop: hp('1.5'),
   },
   dropDown: {
     marginRight: wp('2'),

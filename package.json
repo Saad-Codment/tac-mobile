@@ -29,7 +29,7 @@
     "postversion": "cd android && ./gradlew assembleRelease",
     "gitPush": "git push -u origin DevOnePro",
     "build-ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'",
-    "postinstall": "react-native setup-ios-permissions && npx pod-install"
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -50,9 +50,11 @@
     "@tanstack/react-query": "^5.51.1",
     "geolib": "^3.3.4",
     "jetify": "^1.0.2",
-    "lottie-ios": "3.4.0",
+    "lottie-ios": "3.4.1",
     "lottie-react-native": "^5.1.6",
     "moment": "^2.30.1",
+    "patch-package": "^8.0.0",
+    "postinstall-postinstall": "^2.1.0",
     "react": "18.2.0",
     "react-native": "0.74.3",
     "react-native-awesome-alerts": "^2.0.0",
@@ -66,7 +68,7 @@
     "react-native-flash-message": "^0.4.2",
     "react-native-geolocation-service": "^5.3.1",
     "react-native-google-places-autocomplete": "^2.5.1",
-    "react-native-image-crop-picker": "^0.40.2",
+    "react-native-image-crop-picker": "^0.41.4",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-maps": "1.10.3",
     "react-native-maps-directions": "^1.9.0",
