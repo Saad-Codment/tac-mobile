@@ -141,6 +141,42 @@ const demoKitSchema = yup.object().shape({
   city: yup.string().required('Please enter Your city.'),
 });
 
+const eventCreateSchema = yup.object().shape({
+  eventTitle: yup
+    .string()
+    .required('Please enter the event title.')
+    .max(50, 'Name must be less than 50 characters.')
+    .matches(/^[A-Za-z ]*$/, 'Please enter a valid name.'),
+  eventImg: yup.mixed().required('Event image is required'),
+  eventStartDate: yup.date().required('Event start date is required'),
+  eventStartTime: yup.string().required('Event start time is required'),
+  eventEndDate: yup.date().required('Event end date is required'),
+  eventEndTime: yup.string().required('Event end time is required'),
+  eventLocation: yup.string().required('Event location is required'),
+  eventType: yup.string().required('Event type is required'),
+  privateEvent: yup
+    .boolean()
+    .required('Specify if the event is private or not'),
+  eventAssociation: yup.string().required('Event association is required'),
+  eventCircuit: yup.string().required('Event circuit is required'),
+  evnetTour: yup.string().required('Event tour is required'),
+  evnetConfirm: yup.boolean().required('Event confirmation is required'),
+  perfEventList: yup
+    .array()
+    .of(
+      yup.object().shape({
+        title: yup
+          .string()
+          .required('Event title is required in performance list'),
+        date: yup.date().required('Event date is required in performance list'),
+        time: yup
+          .string()
+          .required('Event time is required in performance list'),
+      }),
+    )
+    .min(1, 'At least one performance event is required'),
+});
+
 const Schemas = {
   signUp: yupResolver(signUpschema),
   logIn: yupResolver(logInUpschema),
@@ -150,6 +186,7 @@ const Schemas = {
   username: yupResolver(addUsernameScheme),
   editProfile: yupResolver(editProfileScheme),
   demoKit: yupResolver(demoKitSchema),
+  eventCreate: yupResolver(eventCreateSchema),
 };
 
 export default Schemas;

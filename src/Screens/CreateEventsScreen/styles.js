@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {hp, wp} from '../../Config/responsive';
+import {Platform, StyleSheet} from 'react-native';
+import {hp, isIos, wp} from '../../Config/responsive';
 import {Colors} from '../../Theme/Variables';
 
 export const styles = StyleSheet.create({
@@ -20,12 +20,16 @@ export const styles = StyleSheet.create({
   viewFlex: {flexDirection: 'row'},
   textStyle: {fontSize: hp('1.5')},
   leftViewImg: {width: wp('7'), height: hp('5')},
-  divider: {marginVertical: hp('1'), width: wp('85')},
+  divider: {
+    marginVertical: isIos ? hp('1') : hp('0'),
+    width: wp('85'),
+    marginBottom: isIos ? hp('1') : hp('2'),
+  },
   perInnerView: {flexDirection: 'row', justifyContent: 'space-between'},
   perInnerText: {
     fontSize: hp('1.5'),
     width: wp('40'),
-    borderRadius: 10,
+    borderRadius: Platform.OS == 'ios' ? 10 : 4,
     borderWidth: 0.2,
     paddingVertical: hp('1'),
     textAlign: 'center',
@@ -82,6 +86,12 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: wp('2'),
-    marginBottom: hp('2'),
+    marginBottom: hp('1'),
+  },
+  errorText: {
+    fontSize: hp('1.2'),
+    color: 'red',
+    marginLeft: wp('1'),
+    marginBottom: hp('1'),
   },
 });

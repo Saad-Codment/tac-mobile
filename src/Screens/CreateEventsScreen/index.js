@@ -5,6 +5,7 @@ import {
   TextInput,
   Image,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import React, {memo, useState} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
@@ -35,12 +36,20 @@ import {
   getOrdinal,
   uploadFromGalary,
 } from '../../Services/GlobalFunctions';
+import KeyBoardWrapper from '../../Components/KeyBoardWrapper';
+import {Controller} from 'react-hook-form';
 
 const CreateEventsScreen = ({navigation}) => {
   const {
     currentDate,
     formDataState,
     datePicker,
+    errors,
+    control,
+    getFieldState,
+    setValue,
+    register,
+    onSelectValueInList,
     toggleDate,
     onSelectValue,
     dynamicRoute,
@@ -57,6 +66,8 @@ const CreateEventsScreen = ({navigation}) => {
     titleStyle,
     innerLeftView,
     centerInnerView,
+    errorName,
+    errorView,
   }) => {
     return (
       <View style={styles.mainView}>
@@ -78,14 +89,22 @@ const CreateEventsScreen = ({navigation}) => {
         {centerInnerView ? (
           centerInnerView
         ) : (
-          <View
-            style={{
-              ...styles.innerView,
-              ...innerViewOuterStyle,
-            }}>
-            {innerLeftView}
-            {innerExtraView}
-          </View>
+          <>
+            <View
+              style={{
+                ...styles.innerView,
+                ...innerViewOuterStyle,
+              }}>
+              {innerLeftView}
+              {innerExtraView}
+            </View>
+            {errors[errorName] && (
+              <TextComponent
+                text={errors[errorName].message}
+                styles={styles.errorText}
+              />
+            )}
+          </>
         )}
       </View>
     );
@@ -95,18 +114,28 @@ const CreateEventsScreen = ({navigation}) => {
     <View style={{flexGrow: 1}}>
       <HeaderComponent headerTitle={'Create Event'} />
 
-      <ScrollView
-        contentContainerStyle={styles.scrollView}
+      <KeyBoardWrapper
+        styles={styles.scrollView}
         showsVerticalScrollIndicator={false}>
+        {/* <Controller
+        render={({field: {onChange, value}}) => ( */}
         <TitleInputView
           title={'Event Title'}
+          errorName="eventTitle"
           innerLeftView={
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="Enter title"
-              maxLength={50}
-              value={formDataState.eventTitle}
-              onChangeText={e => onSelectValue('eventTitle', e)}
+            <Controller
+              control={control}
+              name="eventTitle"
+              render={({field: {onChange, value}}) => (
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Enter title"
+                  maxLength={50}
+                  placeholderTextColor={'gray'}
+                  value={value}
+                  onChangeText={onChange}
+                />
+              )}
             />
           }
           innerExtraView={
@@ -116,24 +145,26 @@ const CreateEventsScreen = ({navigation}) => {
             />
           }
         />
+
         <TitleInputView
           title={'Event Image'}
           centerInnerView={
-            <Touchable
-              onPress={async () => {
-                const imgData = await uploadFromGalary();
-                onSelectValue('eventImg', imgData);
-              }}>
-              <Image
-                source={
-                  formDataState?.eventImg?.uri
-                    ? {uri: formDataState?.eventImg?.uri}
-                    : uploadImgView
-                }
-                // resizeMode="contain"
-                style={styles.uploadImg}
-              />
-            </Touchable>
+            <Controller
+              control={control}
+              name="eventImg"
+              render={({field: {onChange, value}}) => (
+                <Touchable
+                  onPress={async () => {
+                    const imgData = await uploadFromGalary();
+                    onChange(imgData);
+                  }}>
+                  <Image
+                    source={value?.uri ? {uri: value?.uri} : uploadImgView}
+                    style={styles.uploadImg}
+                  />
+                </Touchable>
+              )}
+            />
           }
         />
 
@@ -141,12 +172,16 @@ const CreateEventsScreen = ({navigation}) => {
           <TitleInputView
             title={'Start Date'}
             innerLeftView={
-              <TextComponent
-                text={formatDateToCustomFormat(
-                  formDataState.eventStartDate ?? currentDate,
+              <Controller
+                control={control}
+                name="eventStartDate"
+                render={({field: {onChange, value}}) => (
+                  <TextComponent
+                    text={formatDateToCustomFormat(value ?? currentDate)}
+                    onPress={() => toggleDate('eventStartDate', 'date')}
+                    styles={styles.textStyle}
+                  />
                 )}
-                onPress={() => toggleDate('eventStartDate', 'date')}
-                styles={styles.textStyle}
               />
             }
             innerViewOuterStyle={{width: wp('40')}}
@@ -231,23 +266,31 @@ const CreateEventsScreen = ({navigation}) => {
               {formDataState.perfEventList.map((res, i) => {
                 return (
                   <View style={styles.perMapView}>
-                    <View style={{flexDirection: 'row'}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
                       <TextComponent
                         text={`${getOrdinal(i + 1)} Performance: `}
-                        styles={styles.textStyle}
+                        styles={{...styles.textStyle}}
                       />
+
                       <TextInput
-                        style={{
-                          width: wp('50'),
-                          color: 'black',
-                        }}
+                        placeholderTextColor={'gray'}
                         placeholder="Enter title"
-                        maxLength={50}
-                        value={formDataState.eventTitle}
-                        onChangeText={e => onSelectValue('eventTitle', e)}
+                        value={res.title}
+                        style={{flex: 1, color: 'black', width: wp('50')}}
+                        onChangeText={e => onSelectValueInList(i, 'title', e)}
                       />
                       {i > 0 && (
-                        <Touchable style={{marginLeft: wp('3')}}>
+                        <Touchable
+                          style={{marginLeft: wp('3')}}
+                          onPress={() => {
+                            const newArry = [...formDataState.perfEventList];
+                            newArry.splice(i, 1),
+                              onSelectValue('perfEventList', newArry);
+                          }}>
                           <Image
                             source={crossWhite}
                             resizeMode="contain"
@@ -260,11 +303,15 @@ const CreateEventsScreen = ({navigation}) => {
                     <DividerLine DividerLineStyle={styles.divider} />
                     <View style={styles.perInnerView}>
                       <TextComponent
-                        text={'12 - July - 2024'}
+                        onPress={() => toggleDate('perfEventList', 'date', i)}
+                        text={formatDateToCustomFormat(res.date ?? currentDate)}
                         styles={styles.perInnerText}
                       />
                       <TextComponent
-                        text={'08 : 00 - 11 : 00 Pm'}
+                        onPress={() => toggleDate('perfEventList', 'time', i)}
+                        text={convertToCustomTimeFormat(
+                          res.time ?? currentDate,
+                        )}
                         styles={styles.perInnerText}
                       />
                     </View>
@@ -283,7 +330,11 @@ const CreateEventsScreen = ({navigation}) => {
               onPress={() =>
                 onSelectValue('perfEventList', [
                   ...formDataState.perfEventList,
-                  '',
+                  {
+                    title: null,
+                    date: null,
+                    time: null,
+                  },
                 ])
               }>
               <Image
@@ -424,12 +475,21 @@ const CreateEventsScreen = ({navigation}) => {
             locale="en"
             modal
             onConfirm={e => {
-              onSelectValue(datePicker.stateName, e);
-              toggleDate(null);
+              if (datePicker.stateName == 'perfEventList') {
+                onSelectValueInList(
+                  datePicker?.index,
+                  datePicker.modalType ?? 'date',
+                  e,
+                );
+                toggleDate(null);
+              } else {
+                onSelectValue(datePicker.stateName, e);
+                toggleDate(null);
+              }
             }}
           />
         )}
-      </ScrollView>
+      </KeyBoardWrapper>
     </View>
   );
 };

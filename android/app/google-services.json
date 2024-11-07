@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:433413678709:android:3c2b2ba659ff158faafa3c",
+        "android_client_info": {
+          "package_name": "com.tac"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "433413678709-iuv7ovginqaklbprk8f135fbg7iiosgk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUQPVzEHSwc6kowf3_cmOK3L1B03F25QA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "433413678709-iuv7ovginqaklbprk8f135fbg7iiosgk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "433413678709-qkda10rl6cliba24j8i0k4smiud33jd4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tac.codment"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:433413678709:android:26646458991d526eaafa3c",
         "android_client_info": {
           "package_name": "com.tac.codment"
