@@ -6,6 +6,7 @@ import {
   Image,
   StyleSheet,
   Platform,
+  Switch,
 } from 'react-native';
 import React, {memo, useState} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
@@ -15,10 +16,12 @@ import {Colors} from '../../Theme/Variables';
 import {Touchable} from '../../Components/Touchable';
 import {
   addcircle,
+  arrRight,
   crossWhite,
   gpsImg,
   radioCircle,
   radioCircleOn,
+  squareGray,
   tickSquare,
   uploadImgView,
 } from '../../Assets';
@@ -38,20 +41,29 @@ import {
 } from '../../Services/GlobalFunctions';
 import KeyBoardWrapper from '../../Components/KeyBoardWrapper';
 import {Controller} from 'react-hook-form';
+import {
+  allAssociatesUrl,
+  allEventCircuitUrl,
+  allEventTypeUrl,
+  getAllTypeUrl,
+} from '../../Utils/Urls';
 
 const CreateEventsScreen = ({navigation}) => {
   const {
     currentDate,
-    formDataState,
     datePicker,
     errors,
     control,
+    perfEventListArry,
+    y,
+    createEventFun,
+    handleSubmit,
+    append,
+    remove,
     getFieldState,
     setValue,
     register,
-    onSelectValueInList,
     toggleDate,
-    onSelectValue,
     dynamicRoute,
   } = useCreateEventsScreen(navigation);
 
@@ -98,9 +110,9 @@ const CreateEventsScreen = ({navigation}) => {
               {innerLeftView}
               {innerExtraView}
             </View>
-            {errors[errorName] && (
+            {errorName && (
               <TextComponent
-                text={errors[errorName].message}
+                text={errorName.message}
                 styles={styles.errorText}
               />
             )}
@@ -121,7 +133,7 @@ const CreateEventsScreen = ({navigation}) => {
         render={({field: {onChange, value}}) => ( */}
         <TitleInputView
           title={'Event Title'}
-          errorName="eventTitle"
+          errorName={errors['eventTitle']}
           innerLeftView={
             <Controller
               control={control}
@@ -139,30 +151,46 @@ const CreateEventsScreen = ({navigation}) => {
             />
           }
           innerExtraView={
-            <TextComponent
-              text={`${formDataState.eventTitle.length}/50`}
-              styles={{fontSize: hp('1.5')}}
+            <Controller
+              control={control}
+              name="eventTitle"
+              defaultValue={''}
+              render={({field: {onChange, value}}) => (
+                <TextComponent
+                  text={`${value.length}/50`}
+                  styles={{fontSize: hp('1.5')}}
+                />
+              )}
             />
           }
         />
 
         <TitleInputView
           title={'Event Image'}
+          errorName={errors['eventImg']}
           centerInnerView={
             <Controller
               control={control}
               name="eventImg"
               render={({field: {onChange, value}}) => (
-                <Touchable
-                  onPress={async () => {
-                    const imgData = await uploadFromGalary();
-                    onChange(imgData);
-                  }}>
-                  <Image
-                    source={value?.uri ? {uri: value?.uri} : uploadImgView}
-                    style={styles.uploadImg}
-                  />
-                </Touchable>
+                <>
+                  <Touchable
+                    onPress={async () => {
+                      const imgData = await uploadFromGalary();
+                      onChange(imgData);
+                    }}>
+                    <Image
+                      source={value?.uri ? {uri: value?.uri} : uploadImgView}
+                      style={styles.uploadImg}
+                    />
+                  </Touchable>
+                  {errors['eventImg'] && (
+                    <TextComponent
+                      text={errors['eventImg'].message}
+                      styles={styles.errorText}
+                    />
+                  )}
+                </>
               )}
             />
           }
@@ -171,6 +199,7 @@ const CreateEventsScreen = ({navigation}) => {
         <View style={styles.viewFlex}>
           <TitleInputView
             title={'Start Date'}
+            errorName={errors['eventStartDate']}
             innerLeftView={
               <Controller
                 control={control}
@@ -178,7 +207,9 @@ const CreateEventsScreen = ({navigation}) => {
                 render={({field: {onChange, value}}) => (
                   <TextComponent
                     text={formatDateToCustomFormat(value ?? currentDate)}
-                    onPress={() => toggleDate('eventStartDate', 'date')}
+                    onPress={() =>
+                      toggleDate('eventStartDate', 'date', null, onChange)
+                    }
                     styles={styles.textStyle}
                   />
                 )}
@@ -188,13 +219,20 @@ const CreateEventsScreen = ({navigation}) => {
           />
           <TitleInputView
             title={'Start Time'}
+            errorName={errors['eventStartTime']}
             innerLeftView={
-              <TextComponent
-                text={convertToCustomTimeFormat(
-                  formDataState.eventStartTime ?? currentDate,
+              <Controller
+                control={control}
+                name="eventStartTime"
+                render={({field: {onChange, value}}) => (
+                  <TextComponent
+                    text={convertToCustomTimeFormat(value ?? currentDate)}
+                    onPress={() =>
+                      toggleDate('eventStartTime', 'time', null, onChange)
+                    }
+                    styles={styles.textStyle}
+                  />
                 )}
-                onPress={() => toggleDate('eventStartTime', 'time')}
-                styles={styles.textStyle}
               />
             }
             innerViewOuterStyle={{width: wp('40')}}
@@ -203,26 +241,40 @@ const CreateEventsScreen = ({navigation}) => {
         <View style={styles.viewFlex}>
           <TitleInputView
             title={'End Date'}
+            errorName={errors['eventEndDate']}
             innerLeftView={
-              <TextComponent
-                text={formatDateToCustomFormat(
-                  formDataState.eventEndDate ?? currentDate,
+              <Controller
+                control={control}
+                name="eventEndDate"
+                render={({field: {onChange, value}}) => (
+                  <TextComponent
+                    text={formatDateToCustomFormat(value ?? currentDate)}
+                    onPress={() =>
+                      toggleDate('eventEndDate', 'date', null, onChange)
+                    }
+                    styles={styles.textStyle}
+                  />
                 )}
-                onPress={() => toggleDate('eventEndDate', 'date')}
-                styles={styles.textStyle}
               />
             }
             innerViewOuterStyle={{width: wp('40')}}
           />
           <TitleInputView
             title={'End Time'}
+            errorName={errors['eventEndTime']}
             innerLeftView={
-              <TextComponent
-                text={convertToCustomTimeFormat(
-                  formDataState.eventEndTime ?? currentDate,
+              <Controller
+                control={control}
+                name="eventEndTime"
+                render={({field: {onChange, value}}) => (
+                  <TextComponent
+                    text={convertToCustomTimeFormat(value ?? currentDate)}
+                    onPress={() =>
+                      toggleDate('eventEndTime', 'time', null, onChange)
+                    }
+                    styles={styles.textStyle}
+                  />
                 )}
-                onPress={() => toggleDate('eventEndTime', 'time')}
-                styles={styles.textStyle}
               />
             }
             innerViewOuterStyle={{width: wp('40')}}
@@ -230,21 +282,30 @@ const CreateEventsScreen = ({navigation}) => {
         </View>
         <TitleInputView
           title={'Event Location'}
+          errorName={errors['eventLocation']?.locationName}
           innerLeftView={
-            <TextComponent
-              text={
-                formDataState?.eventCoords?.locationName ??
-                'Please select location.'
-              }
-              styles={styles.textStyle}
-              onPress={() =>
-                dynamicRoute('LocationScreen', (locationName, coords) => {
-                  onSelectValue('eventCoords', {
-                    locationName,
-                    coords,
-                  });
-                })
-              }
+            <Controller
+              control={control}
+              name="eventLocation"
+              render={({field: {onChange, value}}) => (
+                <TextComponent
+                  text={value?.locationName ?? 'Please select location.'}
+                  styles={styles.textStyle}
+                  onPress={() =>
+                    dynamicRoute('LocationScreen', (locationName, coords) => {
+                      console.log(
+                        'locationNamelocationNamelocationNamelocationNamelocationNamelocationName',
+                        locationName,
+                        coords,
+                      );
+                      onChange({
+                        locationName: locationName,
+                        coords: coords,
+                      });
+                    })
+                  }
+                />
+              )}
             />
           }
           innerExtraView={
@@ -263,9 +324,9 @@ const CreateEventsScreen = ({navigation}) => {
                 ...styles.innerView,
                 ...styles.perInnerViewExtra,
               }}>
-              {formDataState.perfEventList.map((res, i) => {
+              {perfEventListArry.map((res, i) => {
                 return (
-                  <View style={styles.perMapView}>
+                  <View style={styles.perMapView} key={res?.id}>
                     <View
                       style={{
                         flexDirection: 'row',
@@ -275,22 +336,25 @@ const CreateEventsScreen = ({navigation}) => {
                         text={`${getOrdinal(i + 1)} Performance: `}
                         styles={{...styles.textStyle}}
                       />
-
-                      <TextInput
-                        placeholderTextColor={'gray'}
-                        placeholder="Enter title"
-                        value={res.title}
-                        style={{flex: 1, color: 'black', width: wp('50')}}
-                        onChangeText={e => onSelectValueInList(i, 'title', e)}
+                      <Controller
+                        control={control}
+                        name={`perfEventList[${i}].title`}
+                        render={({field: {onChange, value}}) => (
+                          <TextInput
+                            placeholderTextColor={'gray'}
+                            placeholder="Enter title"
+                            value={value}
+                            style={{flex: 1, color: 'black', width: wp('50')}}
+                            onChangeText={e =>
+                              setValue(`perfEventList[${i}].title`, e)
+                            }
+                          />
+                        )}
                       />
                       {i > 0 && (
                         <Touchable
                           style={{marginLeft: wp('3')}}
-                          onPress={() => {
-                            const newArry = [...formDataState.perfEventList];
-                            newArry.splice(i, 1),
-                              onSelectValue('perfEventList', newArry);
-                          }}>
+                          onPress={() => remove(i)}>
                           <Image
                             source={crossWhite}
                             resizeMode="contain"
@@ -301,18 +365,74 @@ const CreateEventsScreen = ({navigation}) => {
                       )}
                     </View>
                     <DividerLine DividerLineStyle={styles.divider} />
-                    <View style={styles.perInnerView}>
-                      <TextComponent
-                        onPress={() => toggleDate('perfEventList', 'date', i)}
-                        text={formatDateToCustomFormat(res.date ?? currentDate)}
-                        styles={styles.perInnerText}
-                      />
-                      <TextComponent
-                        onPress={() => toggleDate('perfEventList', 'time', i)}
-                        text={convertToCustomTimeFormat(
-                          res.time ?? currentDate,
+                    <Controller
+                      control={control}
+                      name={`perfEventList[${i}].date`}
+                      render={({field: {onChange, value}}) => (
+                        <TextComponent
+                          onPress={() =>
+                            toggleDate(
+                              `perfEventList[${i}].date`,
+                              'date',
+                              null,
+                              onChange,
+                            )
+                          }
+                          text={formatDateToCustomFormat(value ?? currentDate)}
+                          styles={{
+                            ...styles.perInnerText,
+                            width: wp('85'),
+                            alignSelf: 'center',
+                            marginBottom: hp('1'),
+                          }}
+                        />
+                      )}
+                    />
+                    <View
+                      style={{
+                        ...styles.perInnerView,
+                        alignItems: 'center',
+                      }}>
+                      <Controller
+                        control={control}
+                        name={`perfEventList[${i}].startTime`}
+                        render={({field: {onChange, value}}) => (
+                          <TextComponent
+                            onPress={() =>
+                              toggleDate(
+                                `perfEventList[${i}].startTime`,
+                                'time',
+                                null,
+                                onChange,
+                              )
+                            }
+                            text={convertToCustomTimeFormat(
+                              value ?? currentDate,
+                            )}
+                            styles={styles.perInnerText}
+                          />
                         )}
-                        styles={styles.perInnerText}
+                      />
+                      <TextComponent text={'-'} />
+                      <Controller
+                        control={control}
+                        name={`perfEventList[${i}].endTime`}
+                        render={({field: {onChange, value}}) => (
+                          <TextComponent
+                            onPress={() =>
+                              toggleDate(
+                                `perfEventList[${i}].endTime`,
+                                'time',
+                                null,
+                                onChange,
+                              )
+                            }
+                            text={convertToCustomTimeFormat(
+                              value ?? currentDate,
+                            )}
+                            styles={styles.perInnerText}
+                          />
+                        )}
                       />
                     </View>
                   </View>
@@ -327,16 +447,14 @@ const CreateEventsScreen = ({navigation}) => {
           rightView={
             <Touchable
               style={styles.addMoreView}
-              onPress={() =>
-                onSelectValue('perfEventList', [
-                  ...formDataState.perfEventList,
-                  {
-                    title: null,
-                    date: null,
-                    time: null,
-                  },
-                ])
-              }>
+              onPress={() => {
+                append({
+                  title: '',
+                  date: currentDate,
+                  startTime: currentDate,
+                  endTime: currentDate,
+                });
+              }}>
               <Image
                 source={addcircle}
                 resizeMode="contain"
@@ -353,23 +471,76 @@ const CreateEventsScreen = ({navigation}) => {
         <View style={styles.viewFlex}>
           <TitleInputView
             title={'Event type'}
+            errorName={errors['eventType']?.name}
             innerLeftView={
-              <TextComponent text={'Barrel Racing'} styles={styles.textStyle} />
+              <Controller
+                control={control}
+                name={`eventType`}
+                render={({field: {onChange, value}}) => (
+                  <TextComponent
+                    text={value?.name ?? 'Event Type'}
+                    styles={{
+                      ...styles.textStyle,
+                      color: value?.name ? Colors.black : Colors.grayFaded,
+                      width: wp('30'),
+                    }}
+                    onPress={() =>
+                      dynamicRoute('ListViewScreen', {
+                        onSelectValue: res => onChange(res),
+                        selectedValue: [value] ?? [],
+                        urlName: allEventTypeUrl,
+                      })
+                    }
+                  />
+                )}
+              />
+            }
+            innerExtraView={
+              <Image
+                source={arrRight}
+                resizeMode="contain"
+                style={{...styles.leftViewImg, height: hp('2')}}
+                tintColor={'black'}
+              />
             }
             innerViewOuterStyle={{width: wp('40')}}
           />
           <TitleInputView
             title={'Private event'}
+            errorName={errors['privateEvent']}
             innerLeftView={
-              <DropDownPicker
-                // open={open}
-                // value={value}
-                items={[1, 2, 3, 3]}
-                // setOpen={setOpen}
-                // setValue={setValue}
-                // setItems={setItems}
-                style={{backgroundColor: 'transaprent', borderWidth: 0}}
-                placeholder={'Yes'}
+              <TextComponent
+                text={'Yes'}
+                styles={{
+                  ...styles.textStyle,
+                }}
+                onPress={() =>
+                  dynamicRoute('ListViewScreen', {
+                    onSelectValue: res => onChange(res),
+                    selectedValue: [value] ?? [],
+                    urlName: allEventTypeUrl,
+                  })
+                }
+              />
+            }
+            innerExtraView={
+              <Controller
+                control={control}
+                name={`privateEvent`}
+                render={({field: {onChange, value}}) => {
+                  return (
+                    <Switch
+                      trackColor={{
+                        false: Colors.grayFaded,
+                        true: 'transparent',
+                      }}
+                      thumbColor={value ? Colors.primaryColor : '#EAF6ED'}
+                      ios_backgroundColor="#EAF6ED"
+                      onValueChange={e => onChange(e ? 1 : 0)}
+                      value={Boolean(value == 1)}
+                    />
+                  );
+                }}
               />
             }
             innerViewOuterStyle={{width: wp('40')}}
@@ -377,40 +548,112 @@ const CreateEventsScreen = ({navigation}) => {
         </View>
         <TitleInputView
           title={'Association'}
+          errorName={errors['eventAssociation']?.name}
           innerLeftView={
-            <TextComponent
-              text={'Empire Batteries'}
-              styles={styles.textStyle}
+            <Controller
+              control={control}
+              name={`eventAssociation`}
+              render={({field: {onChange, value}}) => (
+                <TextComponent
+                  text={value?.name ?? 'Event Association'}
+                  styles={{
+                    ...styles.textStyle,
+                    color: value?.name ? Colors.black : Colors.grayFaded,
+                    width: wp('80'),
+                  }}
+                  onPress={() =>
+                    dynamicRoute('ListViewScreen', {
+                      onSelectValue: res => onChange(res),
+                      selectedValue: [value] ?? [],
+                      urlName: allAssociatesUrl,
+                    })
+                  }
+                />
+              )}
             />
           }
           innerExtraView={
             <Image
-              source={gpsImg}
+              source={arrRight}
               resizeMode="contain"
-              style={styles.leftViewImg}
+              style={{...styles.leftViewImg, height: hp('2')}}
+              tintColor={'black'}
             />
           }
         />
         <View style={styles.viewFlex}>
           <TitleInputView
             title={'Circuits'}
+            errorName={errors['eventCircuit']?.name}
             innerLeftView={
-              <TextComponent text={'Green Mile'} styles={styles.textStyle} />
+              <Controller
+                control={control}
+                name={`eventCircuit`}
+                render={({field: {onChange, value}}) => (
+                  <TextComponent
+                    text={value?.name ?? 'Circuits'}
+                    styles={{
+                      ...styles.textStyle,
+                      color: value?.name ? Colors.black : Colors.grayFaded,
+                      width: wp('30'),
+                    }}
+                    onPress={() =>
+                      dynamicRoute('ListViewScreen', {
+                        onSelectValue: res => onChange(res),
+                        selectedValue: [value] ?? [],
+                        urlName: allEventCircuitUrl,
+                      })
+                    }
+                  />
+                )}
+              />
+            }
+            innerExtraView={
+              <Image
+                source={arrRight}
+                resizeMode="contain"
+                style={{...styles.leftViewImg, height: hp('2')}}
+                tintColor={'black'}
+              />
             }
             innerViewOuterStyle={{width: wp('40')}}
           />
           <TitleInputView
             title={'tour'}
+            errorName={errors['evnetTour']}
             innerLeftView={
-              <DropDownPicker
-                // open={open}
-                // value={value}
-                items={[1, 2, 3, 3]}
-                // setOpen={setOpen}
-                // setValue={setValue}
-                // setItems={setItems}
-                style={{backgroundColor: 'transaprent', borderWidth: 0}}
-                placeholder={'No'}
+              <TextComponent
+                text={'Yes'}
+                styles={{
+                  ...styles.textStyle,
+                }}
+                onPress={() =>
+                  dynamicRoute('ListViewScreen', {
+                    onSelectValue: res => onChange(res),
+                    selectedValue: [value] ?? [],
+                    urlName: allEventTypeUrl,
+                  })
+                }
+              />
+            }
+            innerExtraView={
+              <Controller
+                control={control}
+                name={`evnetTour`}
+                render={({field: {onChange, value}}) => {
+                  return (
+                    <Switch
+                      trackColor={{
+                        false: Colors.grayFaded,
+                        true: 'transparent',
+                      }}
+                      thumbColor={value ? Colors.primaryColor : '#EAF6ED'}
+                      ios_backgroundColor="#EAF6ED"
+                      onValueChange={e => onChange(e ? 1 : 0)}
+                      value={Boolean(value == 1)}
+                    />
+                  );
+                }}
               />
             }
             innerViewOuterStyle={{width: wp('40')}}
@@ -419,28 +662,49 @@ const CreateEventsScreen = ({navigation}) => {
         <View style={styles.viewFlex}>
           <TitleInputView
             title={'Event Confirmation'}
+            errorName={errors['eventConfirm']}
             innerLeftView={
-              <>
-                <TextComponent text={'Planning'} styles={styles.textStyle} />
-                <Image
-                  source={radioCircleOn}
-                  resizeMode="contain"
-                  style={styles.leftViewImg}
-                />
-              </>
+              <Controller
+                control={control}
+                name={`eventConfirm`}
+                render={({field: {onChange, value}}) => (
+                  <>
+                    <TextComponent
+                      text={'Planning'}
+                      styles={{...styles.textStyle, width: wp('28')}}
+                      onPress={() => onChange(0)}
+                    />
+                    <Image
+                      source={value == 0 ? radioCircleOn : radioCircle}
+                      resizeMode="contain"
+                      style={styles.leftViewImg}
+                    />
+                  </>
+                )}
+              />
             }
             innerViewOuterStyle={{width: wp('40')}}
           />
           <TitleInputView
             innerLeftView={
-              <>
-                <TextComponent text={'Confirmed'} styles={styles.textStyle} />
-                <Image
-                  source={radioCircle}
-                  resizeMode="contain"
-                  style={styles.leftViewImg}
-                />
-              </>
+              <Controller
+                control={control}
+                name={`eventConfirm`}
+                render={({field: {onChange, value}}) => (
+                  <>
+                    <TextComponent
+                      text={'Confirmed'}
+                      styles={{...styles.textStyle, width: wp('28')}}
+                      onPress={() => onChange(1)}
+                    />
+                    <Image
+                      source={value == 1 ? radioCircleOn : radioCircle}
+                      resizeMode="contain"
+                      style={styles.leftViewImg}
+                    />
+                  </>
+                )}
+              />
             }
             innerViewOuterStyle={{width: wp('40')}}
           />
@@ -448,16 +712,32 @@ const CreateEventsScreen = ({navigation}) => {
         <TitleInputView
           title={'Event Confirmation'}
           innerLeftView={
-            <TextComponent
-              text={'Empire Batteries, Incorporation.'}
-              styles={styles.textStyle}
+            <Controller
+              control={control}
+              name={`eventSync`}
+              defaultValue={false}
+              render={({field: {onChange, value}}) => (
+                <TextComponent
+                  text={'Sync event with Calendar.'}
+                  styles={styles.textStyle}
+                  onPress={() => onChange(!value)}
+                />
+              )}
             />
           }
           innerExtraView={
-            <Image
-              source={tickSquare}
-              resizeMode="contain"
-              style={styles.leftViewImg}
+            <Controller
+              control={control}
+              name={`eventSync`}
+              render={({field: {onChange, value}}) => (
+                <Touchable onPress={() => onChange(!value)}>
+                  <Image
+                    source={value ? tickSquare : squareGray}
+                    resizeMode="contain"
+                    style={styles.leftViewImg}
+                  />
+                </Touchable>
+              )}
             />
           }
         />
@@ -465,28 +745,38 @@ const CreateEventsScreen = ({navigation}) => {
           title={'Create Event'}
           isYellowTheme
           style={styles.createBtnStyle}
+          onPress={handleSubmit(createEventFun)}
         />
         {datePicker.alertVal && (
-          <DatePicker
-            mode={datePicker.modalType}
-            open={datePicker.alertVal}
-            date={currentDate}
-            is24hourSource="device"
-            locale="en"
-            modal
-            onConfirm={e => {
-              if (datePicker.stateName == 'perfEventList') {
-                onSelectValueInList(
-                  datePicker?.index,
-                  datePicker.modalType ?? 'date',
-                  e,
-                );
-                toggleDate(null);
-              } else {
-                onSelectValue(datePicker.stateName, e);
-                toggleDate(null);
-              }
-            }}
+          <Controller
+            control={control}
+            name={datePicker.stateName}
+            render={({field: {onChange, value}}) => (
+              <DatePicker
+                mode={datePicker.modalType}
+                open={datePicker.alertVal}
+                date={value ?? currentDate}
+                is24hourSource="device"
+                locale="en"
+                modal
+                onConfirm={e => {
+                  // if (datePicker.stateName == 'perfEventList') {
+                  //   datePicker.onChange();
+                  //   onSelectValueInList(
+                  //     datePicker?.index,
+                  //     datePicker.modalType ?? 'date',
+                  //     e,
+                  //   );
+                  //   toggleDate(null);
+                  // } else {
+                  onChange(e);
+                  // datePicker.onChange(e);
+                  // onSelectValue(datePicker.stateName, e);
+                  toggleDate(null);
+                  // }
+                }}
+              />
+            )}
           />
         )}
       </KeyBoardWrapper>

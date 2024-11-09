@@ -19,9 +19,12 @@ import {
   heart,
   addcircle,
   messages,
+  messageOut,
 } from '../Assets';
 import {types} from '../Redux/types';
 import useReduxStore from '../Hooks/UseReduxStore';
+import {VerifyUserUrl} from '../Utils/Urls';
+import {fetchGetWithToken} from '../Utils/helperFunc';
 
 globalStyles = {};
 const isIOS = Boolean(Platform.OS == 'ios');
@@ -48,6 +51,8 @@ const Tab = createBottomTabNavigator();
 
 function MybottomTabs() {
   const {getState, dispatch} = useReduxStore();
+
+  fetchGetWithToken(VerifyUserUrl);
 
   return (
     <Tab.Navigator
@@ -100,7 +105,7 @@ function MybottomTabs() {
       />
       <Tab.Screen
         name="HomeScreen4"
-        options={tabarComponent(messages, messages)}
+        options={tabarComponent(messages, messageOut)}
         component={Screens.HomeScreen}
       />
       <Tab.Screen

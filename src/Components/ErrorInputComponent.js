@@ -130,7 +130,6 @@ export default function ErrorInputComponent({
     var day = originalDate.getUTCDate();
 
     var formattedDate = `${monthName} ${day}, ${year}`;
-    console.log({formattedDate});
     return formattedDate;
   }
   var customFormatDate = formatDateToCustomFormat(date);

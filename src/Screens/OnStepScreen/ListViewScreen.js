@@ -22,8 +22,13 @@ import {TextComponent} from '../../Components/TextComponent';
 import {Colors} from '../../Theme/Variables';
 import {useQuery} from '@tanstack/react-query';
 import API from '../../Utils/helperFunc';
-import {allAssociatesUrl, allEventTypeUrl} from '../../Utils/Urls';
+import {
+  allAssociatesUrl,
+  allEventCircuitUrl,
+  allEventTypeUrl,
+} from '../../Utils/Urls';
 import {hp, wp} from '../../Config/responsive';
+import {MultiSelectButton} from '../../Components/MultiSelectButton';
 
 export default function ListViewScreen({navigation, route}) {
   const apiDataType = {
@@ -35,9 +40,13 @@ export default function ListViewScreen({navigation, route}) {
       queryName: 'allEventstype',
       url: allEventTypeUrl,
     },
+    [allEventCircuitUrl]: {
+      queryName: 'allEventsCircuit',
+      url: allEventCircuitUrl,
+    },
   };
 
-  const {onSelectValue, selectedValue, urlName} = route?.params;
+  const {onSelectValue, selectedValue, urlName, isMultiSelect} = route?.params;
 
   const {data, error} = useQuery({
     queryKey: [apiDataType[urlName].queryName],
@@ -48,13 +57,22 @@ export default function ListViewScreen({navigation, route}) {
 
   const toggleAllergy = allergy => {
     console.log('selectedAllergies:', selectedList);
+    if (isMultiSelect) {
+      const foundAllergy = selectedList.find(res => res?.id === allergy?.id);
 
-    const foundAllergy = selectedList.find(res => res?.id === allergy?.id);
+      if (foundAllergy) {
+        setSelectedList(selectedList.filter(item => item?.id !== allergy?.id));
+      } else {
+        setSelectedList([...selectedList, allergy]);
+      }
+    } else if (!isMultiSelect) {
+      const foundAllergy = selectedList.find(res => res?.id === allergy?.id);
 
-    if (foundAllergy) {
-      setSelectedList(selectedList.filter(item => item?.id !== allergy?.id));
-    } else {
-      setSelectedList([...selectedList, allergy]);
+      if (foundAllergy) {
+        setSelectedList(selectedList.filter(item => item?.id !== allergy?.id));
+      } else {
+        setSelectedList([allergy]);
+      }
     }
   };
 
@@ -97,7 +115,8 @@ export default function ListViewScreen({navigation, route}) {
             styles={styles.saveText}
             onPress={() => {
               navigation.goBack();
-              onSelectValue(selectedList);
+              if (isMultiSelect) onSelectValue(selectedList);
+              else onSelectValue(...selectedList);
             }}
           />
         </View>
@@ -110,7 +129,7 @@ export default function ListViewScreen({navigation, route}) {
           <TextInput
             style={styles.inputStyle}
             placeholder={'Search Allergies'}
-            placeholderTextColor={Colors.textGrayColor}
+            placeholderTextColor={Colors.textGray}
             value={text}
             onChangeText={e => searchFun(e)}
           />
@@ -119,6 +138,24 @@ export default function ListViewScreen({navigation, route}) {
       <ScrollView
         contentContainerStyle={styles.btnsMain}
         showsVerticalScrollIndicator={false}>
+        {/* <MultiSelectButton
+          items={filterData.length >= 0 && text != '' ? filterData : data?.data}
+          onSelectVal={(objId, item) => toggleAllergy(item)}
+          objId={urlName}
+          selectedAlter={selectedList}
+          isMultipule={true}
+          leftChildComp={
+            <Image
+              source={crossWhite}
+              resizeMode="contain"
+              style={{
+                width: wp('3'),
+                height: hp('5'),
+                marginLeft: wp('3'),
+              }}
+            />
+          }
+        /> */}
         {data?.data != null &&
           data?.data?.length > 0 &&
           (filterData.length >= 0 && text != '' ? filterData : data?.data)?.map(

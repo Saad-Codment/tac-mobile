@@ -1,6 +1,6 @@
 import {useForm} from 'react-hook-form';
 
-const useFormHook = Schema => {
+const useFormHook = (Schema, defaultValues) => {
   const {
     control,
     handleSubmit,
@@ -20,6 +20,7 @@ const useFormHook = Schema => {
   } = useForm({
     mode: 'all',
     resolver: Schema,
+    defaultValues,
   });
 
   return {

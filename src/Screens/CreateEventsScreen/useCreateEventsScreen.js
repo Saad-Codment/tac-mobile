@@ -3,8 +3,20 @@ import Schemas from '../../Utils/Validation';
 import useFormHook from '../../Hooks/UseFormHooks';
 import {useFieldArray, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
+import RNCalendarEvents from 'react-native-calendar-events';
+import {useMutation} from '@tanstack/react-query';
+import {createEventUrl} from '../../Utils/Urls';
+import API, {formDataFunc} from '../../Utils/helperFunc';
+import {errorMessage, successMessage} from '../../Config/NotificationMessage';
+import {
+  convertDateFormat,
+  convertDateString,
+  getCalenderPerComfirm,
+} from '../../Services/GlobalFunctions';
 
 const useCreateEventsScreen = ({navigate}) => {
+  var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   const {
     control,
     register,
@@ -21,17 +33,22 @@ const useCreateEventsScreen = ({navigate}) => {
     unregister,
     watch,
     errors,
-  } = useFormHook(Schemas.eventCreate);
+  } = useFormHook(Schemas.eventCreate, {
+    perfEventList: [], // Initial empty event
+    privateEvent: 0,
+    evnetTour: 0,
+    eventStartDate: currentDate,
+    eventStartTime: currentDate,
+    eventEndDate: currentDate,
+    eventEndTime: currentDate,
+  });
 
   // Initialize useFieldArray for perfEventList
-  const {fields, append, remove} = useFieldArray({
+  const {fields, append, remove, update} = useFieldArray({
     control,
     name: 'perfEventList',
   });
 
-  const onSubmit = data => {
-    console.log(data);
-  };
   const currentDate = new Date();
 
   const [datePicker, setDateRikcer] = useState({
@@ -39,99 +56,117 @@ const useCreateEventsScreen = ({navigate}) => {
     stateName: null,
     modalType: 'date',
     index: null,
+    onChange: () => {},
   });
 
-  const toggleDate = (stateName, modalType, index) =>
+  const toggleDate = (stateName, modalType, index, onChange) =>
     setDateRikcer({
-      alertVal: !datePicker.alertVal,
       stateName,
+      alertVal: !datePicker.alertVal,
       modalType: modalType ?? 'date',
       index,
-    });
-
-  const [formDataState, setFormDataState] = useState({
-    eventTitle: '',
-    eventImg: null,
-    eventStartDate: null,
-    eventStartTime: null,
-    eventEndDate: null,
-    eventEndTime: null,
-    eventCoords: {
-      locationName: null,
-      coords: {},
-    },
-    eventLocation: null,
-    perfEventList: [
-      {
-        title: null,
-        date: null,
-        time: null,
+      onChange: e => {
+        console.log(stateName, e);
+        setValue(stateName, e);
       },
-    ],
-    eventType: null,
-    privateEvent: null,
-    eventAssociation: null,
-    eventCircuit: null,
-    evnetTour: null,
-    evnetConfirm: null,
-  });
-
-  const {
-    eventAssociation,
-    eventCircuit,
-    eventCoords,
-    eventEndDate,
-    eventImg,
-    eventLocation,
-    eventStartDate,
-    eventStartTime,
-    eventTitle,
-    eventType,
-    evnetConfirm,
-    evnetTour,
-    perfEventList,
-    privateEvent,
-    eventEndTime,
-  } = formDataState;
-
-  const updateState = data => setFormDataState(prev => ({...prev, ...data}));
-
-  const onSelectValue = (key, val) => {
-    updateState({[key]: val});
-  };
+    });
 
   const dynamicRoute = (screenName, screenData) =>
     navigate(screenName, screenData);
 
-  const onSelectValueInList = (index, key, val) => {
-    setFormDataState(prevState => {
-      const updatedPerfEventList = [...prevState.perfEventList];
-      updatedPerfEventList[index] = {
-        ...updatedPerfEventList[index],
-        [key]: val,
-      };
+  const y = 'lsbdkvlbsdlkvbsd';
 
-      return {
-        ...prevState,
-        perfEventList: updatedPerfEventList,
+  const createEventFun = async ({
+    eventTitle,
+    eventImg,
+    eventStartDate,
+    eventStartTime,
+    eventEndDate,
+    eventEndTime,
+    eventLocation,
+    eventType,
+    privateEvent,
+    eventAssociation,
+    eventCircuit,
+    evnetTour,
+    eventConfirm,
+    eventSync,
+    perfEventList,
+  }) => {
+    console.log('slkdklsdbklv');
+    try {
+      const body = {
+        title: eventTitle,
+        from_date: convertDateFormat(eventStartDate),
+        start_time: convertDateString(eventStartTime),
+        to_date: convertDateFormat(eventEndDate),
+        end_time: convertDateString(eventEndTime),
+        latitude: eventLocation.coords.latitude,
+        longitude: eventLocation.coords.longitude,
+        address: eventLocation.locationName,
+        event_type_id: eventType.id,
+        association_id: eventAssociation.id,
+        circuit_id: eventCircuit.id,
+        tour_id: evnetTour,
+        private: privateEvent ? 1 : 0,
+        is_confirmed: eventConfirm ? 1 : 0,
+        'images[]': eventImg,
+        timezone: timeZone,
+        'performances[]':
+          fields.length > 0
+            ? fields.map(res => ({
+                title: res?.title,
+                date: convertDateFormat(res?.date),
+                start_time: convertDateString(res?.startTime),
+                end_time: convertDateString(res?.endTime),
+              }))
+            : null,
       };
-    });
+      console.log('After hit api ', JSON.stringify(fields));
+      const {ok, data} = await formDataFunc(createEventUrl, body, 'imgae[]');
+      if (ok) {
+        if (eventSync) {
+          await RNCalendarEvents.checkPermissions();
+          await RNCalendarEvents.requestPermissions();
+          await getCalenderPerComfirm();
+          const pro = await RNCalendarEvents.saveEvent(
+            eventTitle,
+            {
+              calendarId: data?.id,
+              startDate: eventStartDate.toISOString(),
+              endDate: eventEndDate.toISOString(),
+              location: eventLocation.locationName,
+              notes: eventLocation.locationName,
+              timeZone,
+            },
+            {exceptionDate: data?.from_date},
+          );
+          console.log('propropropropropropro', pro);
+        }
+        // reset();
+        successMessage('Event created successfully');
+      } else errorMessage('Error on creating event');
+    } catch (error) {
+      console.log('lsidgvlkbsdklvbsdklbvklsdbkvlsdbklvbsdkl', error);
+    }
   };
 
   return {
     currentDate,
     dynamicRoute,
-    onSelectValue,
-    formDataState,
     datePicker,
     toggleDate,
-    onSelectValueInList,
     perfEventListArry: fields,
     register,
     errors,
     setValue,
     getFieldState,
     control,
+    append,
+    remove,
+    handleSubmit,
+    createEventFun,
+    y,
   };
 };
 export default useCreateEventsScreen;

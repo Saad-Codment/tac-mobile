@@ -234,7 +234,7 @@ const LocationScreen = ({route, navigation}) => {
         <ThemeButton
           onPress={() => {
             handleLocationConfirm();
-            getLocationFunction(locationName);
+            // getLocationFunction(locationName);
             navigation.goBack();
           }}
           title={'Confirm '}

@@ -537,7 +537,6 @@ function formatDateToCustomFormat(isoDate) {
   var day = originalDate.getUTCDate();
 
   var formattedDate = `${monthName} ${day}, ${year}`;
-  console.log({formattedDate});
   return formattedDate;
 }
 
@@ -577,6 +576,82 @@ function getOrdinal(num) {
 
   return `${num}th`;
 }
+
+function convertDateFormat(inputDate) {
+  const date = new Date(inputDate);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(date.getDate()).padStart(2, '0');
+
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+function convertDateString(dateString) {
+  // Parse the input date string
+  const date = new Date(dateString);
+
+  // Get year, month, day, hours, minutes, and seconds
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  // Format as "YYYY-MM-DD HH:MM:SS"
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+// Function to check location permission
+const checkCalenderPermission = async () => {
+  if (Platform.OS === 'ios') {
+    const permissionStatus = await check(PERMISSIONS.IOS.CALENDARS);
+    return permissionStatus === RESULTS.GRANTED;
+  } else {
+    const granted = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.WRITE_CALENDAR,
+    );
+    return granted;
+  }
+};
+
+// Function to request location permission
+const requestCalenderPermission = async () => {
+  if (Platform.OS === 'ios') {
+    const permissionStatus = await request(PERMISSIONS.IOS.CALENDARS);
+    return permissionStatus === RESULTS.GRANTED;
+  } else {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_CALENDAR,
+    );
+    return granted === PermissionsAndroid.RESULTS.GRANTED;
+  }
+};
+
+const getCalenderPerComfirm = async () => {
+  const hasPermission = await checkCalenderPermission();
+  if (hasPermission) {
+    return {ok: true};
+  } else {
+    const permissionGranted = await requestCalenderPermission();
+    if (permissionGranted) {
+      return {ok: false};
+    } else {
+      Alert.alert(
+        'Permission Denied',
+        'Calender permission is required to use this feature',
+        [{text: 'OK'}],
+      );
+      return {ok: false};
+    }
+  }
+};
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -605,4 +680,7 @@ export {
   formatDateToCustomFormat,
   convertToCustomTimeFormat,
   getOrdinal,
+  convertDateFormat,
+  convertDateString,
+  getCalenderPerComfirm,
 };

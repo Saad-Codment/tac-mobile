@@ -154,6 +154,7 @@ const OnStepScreen = ({navigation}) => {
                 onSelectValue: res => onSelectValue('sport', res),
                 selectedValue: sport,
                 urlName: allEventTypeUrl,
+                isMultiSelect: true,
               })
             }>
             <TextComponent text={'Events'} styles={styles.btnTextTwo} />
@@ -191,6 +192,7 @@ const OnStepScreen = ({navigation}) => {
                 onSelectValue: res => onSelectValue('association', res),
                 selectedValue: association,
                 urlName: allAssociatesUrl,
+                isMultiSelect: true,
               })
             }>
             <TextComponent

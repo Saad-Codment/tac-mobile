@@ -181,21 +181,28 @@ const fetchGetWithToken = async url => {
         // Add other headers if needed
       },
     });
+
     if (!response.ok) {
       store.dispatch({type: types.LogoutType});
       throw new Error('Network response was not ok.');
+    } else if (response.ok) {
+      const data = await response.json();
+
+      store.dispatch({
+        type: types.UpdateProfile,
+        payload: data,
+      });
+
+      // console.log(data, 'alskdjfklajsdfkljadlsfjaklsdjfl2kds444ajf2lkdjs');
+
+      return data; // Return the fetched data
     }
-
-    // console.log(data, 'alskdjfklajsdfkljadlsfjaklsdjfl2kds444ajf2lkdjs');
-    const data = await response.json();
-
-    console.log('datadatadatadatadatadatadatadata', data);
-
-    return data; // Return the fetched data
   } catch (error) {
+    store.dispatch({type: types.LogoutType});
     console.error('Error fetching data:', error);
     throw error; // Rethrow the error to handle it at the caller's level if needed
   }
+  //
   // store.dispatch({type: types.LogoutType});
 };
 
@@ -234,10 +241,12 @@ const formDataFunc = (url, body, imageKey, isArray) => {
     .then(res => res.json())
     .then(res => {
       console.log('test', res);
-      return {data: res, ok: true};
+      store.dispatch(loadingFalse());
+      return {data: res, ok: res?.errors ? false : true};
     })
     .catch(err => {
       console.log('testerr', err);
+      store.dispatch(loadingFalse());
       return {data: err, ok: false};
     });
 };

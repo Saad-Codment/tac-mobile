@@ -13,6 +13,7 @@ import Overlay from './src/Components/Overlay';
 import useReduxStore from './src/Hooks/UseReduxStore';
 import {hp, wp} from './src/Config/responsive';
 import {useIsFetching} from '@tanstack/react-query';
+import Geolocation from '@react-native-community/geolocation';
 
 const App = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -28,6 +29,17 @@ const App = () => {
   const time = () => {
     return 3000;
   };
+
+  useEffect(() => {
+    Geolocation.setRNConfiguration({
+      config: {
+        skipPermissionRequests: true,
+        authorizationLevel: 'always' | 'whenInUse' | 'auto',
+        enableBackgroundLocationUpdates: true,
+        locationProvider: 'playServices' | 'android' | 'auto',
+      },
+    });
+  }, []);
 
   useEffect(async () => {
     (async () => {

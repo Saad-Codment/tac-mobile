@@ -141,6 +141,14 @@ const demoKitSchema = yup.object().shape({
   city: yup.string().required('Please enter Your city.'),
 });
 
+// Helper function to parse time strings into Date objects for comparison
+const parseTimeString = timeString => {
+  const [hours, minutes] = timeString.split(':').map(Number);
+  const date = new Date();
+  date.setHours(hours, minutes, 0, 0);
+  return date;
+};
+
 const eventCreateSchema = yup.object().shape({
   eventTitle: yup
     .string()
@@ -150,31 +158,76 @@ const eventCreateSchema = yup.object().shape({
   eventImg: yup.mixed().required('Event image is required'),
   eventStartDate: yup.date().required('Event start date is required'),
   eventStartTime: yup.string().required('Event start time is required'),
-  eventEndDate: yup.date().required('Event end date is required'),
-  eventEndTime: yup.string().required('Event end time is required'),
-  eventLocation: yup.string().required('Event location is required'),
-  eventType: yup.string().required('Event type is required'),
-  privateEvent: yup
-    .boolean()
-    .required('Specify if the event is private or not'),
-  eventAssociation: yup.string().required('Event association is required'),
-  eventCircuit: yup.string().required('Event circuit is required'),
-  evnetTour: yup.string().required('Event tour is required'),
-  evnetConfirm: yup.boolean().required('Event confirmation is required'),
-  perfEventList: yup
-    .array()
-    .of(
-      yup.object().shape({
-        title: yup
-          .string()
-          .required('Event title is required in performance list'),
-        date: yup.date().required('Event date is required in performance list'),
-        time: yup
-          .string()
-          .required('Event time is required in performance list'),
-      }),
-    )
-    .min(1, 'At least one performance event is required'),
+  eventEndDate: yup
+    .date()
+    .required('Event end date is required')
+    .test(
+      'is-after-start',
+      'End date must be after start date',
+      function (value) {
+        const {eventStartDate} = this.parent;
+        return !eventStartDate || !value || value >= eventStartDate;
+      },
+    ),
+  eventEndTime: yup
+    .string()
+    .required('Event end time is required')
+    .test(
+      'is-after-start-time',
+      'End time must be after start time',
+      function (value) {
+        const {eventStartTime, eventStartDate, eventEndDate} = this.parent;
+
+        if (
+          eventStartDate &&
+          eventEndDate &&
+          eventStartDate.getTime() === eventEndDate.getTime()
+        ) {
+          if (eventStartTime && value) {
+            const startTime = parseTimeString(eventStartTime);
+            const endTime = parseTimeString(value);
+            return endTime > startTime;
+          }
+          return true;
+        }
+        return true; // No need to validate if dates are different
+      },
+    ),
+  eventLocation: yup.object().shape({
+    locationName: yup.string().required('Event location Name is required'),
+    coords: yup.object().shape({
+      latitude: yup.string().required('Please select locaiton'),
+      longitude: yup.string().required('Please select locaiton'),
+    }),
+  }),
+
+  eventType: yup.object().shape({
+    id: yup.string().required('Please select event type'),
+    name: yup.string().required('Please select event type'),
+  }),
+
+  privateEvent: yup.boolean().required('Specify the event type'),
+  eventAssociation: yup.object().shape({
+    id: yup.string().required('Please select event association'),
+    name: yup.string().required('Please select event association'),
+  }),
+  eventCircuit: yup.object().shape({
+    id: yup.string().required('Please select event circuit'),
+    name: yup.string().required('Please select event circuit'),
+  }),
+  evnetTour: yup.string().required('Specify the event tour'),
+  eventConfirm: yup.boolean().required('Event confirmation is required'),
+  eventSync: yup.boolean(),
+  perfEventList: yup.array(),
+  // .of(
+  //   yup.object().shape({
+  //     title: yup.string().required('Event title is required'),
+  //     date: yup.date().required('Event date is required'),
+  //     startTime: yup.string().required('Start time is required'),
+  //     endTime: yup.string().required('End time is required'),
+  //   }),
+  // )
+  // .min(1, 'At least one performance event is required'),
 });
 
 const Schemas = {

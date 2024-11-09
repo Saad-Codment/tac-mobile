@@ -74,6 +74,17 @@ export {default as radioCircle} from './Icons/radioCircle.png';
 export {default as radioCircleOn} from './Icons/radioCircleOn.png';
 export {default as tickSquare} from './Icons/tickSquare.png';
 export {default as currentLoc} from './Icons/currentLoc.png';
+export {default as squareGray} from './Icons/squareGray.png';
+export {default as messageOut} from './Icons/messageOut.png';
+export {default as messages} from './Icons/messages.png';
+export {default as editProfile} from './Icons/editProfile.png';
+export {default as ageIcon} from './Icons/ageIcon.png';
+export {default as assoicationIcon} from './Icons/assoicationIcon.png';
+export {default as eventHistory} from './Icons/eventHistory.png';
+export {default as friendList} from './Icons/friendList.png';
+export {default as racingIcon} from './Icons/racingIcon.png';
+export {default as profileIcon} from './Icons/profileIcon.png';
+export {default as trashRed} from './Icons/trashRed.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';

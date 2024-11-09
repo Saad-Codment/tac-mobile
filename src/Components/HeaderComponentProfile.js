@@ -31,43 +31,34 @@ export const HeaderComponentProfile = ({
   profileImage,
 }) => {
   return (
-    <ImageBackground
-      source={profileBg}
-      resizeMode="cover"
-      style={styles.bgMain}>
-      <View style={{...styles.headerTop, ...headerShow}}>
-        <View style={styles.headerInner}>
-          <Touchable onPress={goBack}>
-            {goBack && (
-              <Image
-                source={backIcon}
-                style={styles.backBtn}
-                resizeMode="contain"
-              />
-            )}
-          </Touchable>
-
-          <TextComponent
-            text={title}
-            numberOfLines={1}
-            styles={styles.heading}
-          />
-          <Touchable onPress={edit}>
+    <View style={{...styles.headerTop, ...headerShow}}>
+      <View style={styles.headerInner}>
+        <Touchable onPress={goBack}>
+          {goBack && (
             <Image
-              source={search ? edit2 : ''}
-              style={styles.searchBtn}
+              source={backIcon}
+              style={styles.backBtn}
               resizeMode="contain"
             />
-          </Touchable>
-        </View>
+          )}
+        </Touchable>
+
+        <TextComponent text={title} numberOfLines={1} styles={styles.heading} />
+        <Touchable onPress={edit}>
+          <Image
+            source={search ? edit2 : ''}
+            style={styles.searchBtn}
+            resizeMode="contain"
+          />
+        </Touchable>
       </View>
-    </ImageBackground>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   headerTop: {
-    // backgroundColor: Colors.black,
+    backgroundColor: Colors.backgroundTheme,
   },
   bgMain: {
     // marginTop: hp('-5'),

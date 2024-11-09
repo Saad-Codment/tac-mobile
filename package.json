@@ -59,6 +59,7 @@
     "react-native": "0.74.3",
     "react-native-awesome-alerts": "^2.0.0",
     "react-native-blurhash": "^2.0.2",
+    "react-native-calendar-events": "^2.2.0",
     "react-native-date-picker": "^5.0.7",
     "react-native-device-info": "^10.13.1",
     "react-native-dropdown-picker": "^5.4.6",

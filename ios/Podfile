@@ -18,6 +18,8 @@ setup_permissions([
   'LocationAccuracy',
   'LocationAlways',
   'LocationWhenInUse',
+    'Calendars',
+    "CalendarsWriteOnly"
 ])
 
 # flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled

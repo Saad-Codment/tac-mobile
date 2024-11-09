@@ -1374,6 +1374,8 @@ PODS:
     - React-perflogger (= 0.74.3)
     - React-utils (= 0.74.3)
   - RecaptchaInterop (100.0.0)
+  - RNCalendarEvents (2.2.0):
+    - React
   - RNCAsyncStorage (1.24.0):
     - React-Core
   - RNCCheckbox (0.5.17):
@@ -1541,6 +1543,7 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNCalendarEvents (from `../node_modules/react-native-calendar-events`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
@@ -1710,6 +1713,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCalendarEvents:
+    :path: "../node_modules/react-native-calendar-events"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCCheckbox:
@@ -1825,6 +1830,7 @@ SPEC CHECKSUMS:
   React-utils: e429e41d4edaae8d0668ecdb9e2122d58c0eea6b
   ReactCommon: 4d15fcb03c1d4086b0d6817bf28032e9da874c75
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
+  RNCalendarEvents: 7e65eb4a94f53c1744d1e275f7fafcfaa619f7a3
   RNCAsyncStorage: ec53e44dc3e75b44aa2a9f37618a49c3bc080a7a
   RNCCheckbox: a3ca9978cb0846b981d28da4e9914bd437403d77
   RNCPicker: b7873ba797dc586bfaf3307d737cbdc620a9ff3e
@@ -1836,7 +1842,7 @@ SPEC CHECKSUMS:
   RNGoogleSignin: 08dc4ba7eac2096c7fecfe109f0950fa4683c803
   RNImageCropPicker: 3d888d481c65776063556b72c19893a8b8344b1b
   RNNotifee: 8e2d3df3f0e9ce8f5d1fe4c967431138190b6175
-  RNPermissions: a4c964f030841f35d918ab3248df9dec9db5f44d
+  RNPermissions: 5bf6367a18a8c97b03f4c83dc1e377eb5ab9dd08
   RNScreens: 3c25c2a372923f2ab43a3c9454b95d6c72f8eb72
   RNVectorIcons: c6689df230427641f2313e35365855eb4cd1a0dd
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
@@ -1845,6 +1851,6 @@ SPEC CHECKSUMS:
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   Yoga: 04f1db30bb810187397fa4c37dd1868a27af229c
 
-PODFILE CHECKSUM: a8f3d946ab45546581d4d6f4af4f8c6fab6b568f
+PODFILE CHECKSUM: 513286996e2931b6014e092c4772c87110f3fae1
 
 COCOAPODS: 1.12.1

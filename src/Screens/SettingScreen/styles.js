@@ -55,22 +55,11 @@ export const styles = StyleSheet.create({
     marginBottom: hp('2'),
   },
   mainBtn: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.headerBg,
 
-    marginHorizontal: wp('4'),
     paddingHorizontal: wp('4'),
     paddingVertical: hp('1'),
-    marginVertical: hp('1.5'),
-    borderRadius: 20,
-    shadowColor: 'rgba(0, 0, 0, 0.3)',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.32,
-    shadowRadius: 5.46,
-
-    elevation: 9,
+    height: hp('40'),
   },
   listBtn: {
     flexDirection: 'row',

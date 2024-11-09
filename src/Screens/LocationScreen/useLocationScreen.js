@@ -24,7 +24,9 @@ const useLocationScreen = ({navigate, addListener, params}) => {
     longitudeDelta: 0.0421,
   });
 
-  const [locationName, setLocationName] = useState('');
+  const [locationName, setLocationName] = useState(
+    '43 Brewster St, San Francisco, CA 94110, USA',
+  );
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const handleLocationSelect = place => {
@@ -181,10 +183,11 @@ const useLocationScreen = ({navigate, addListener, params}) => {
   // Confirm location and call the external function
   const handleLocationConfirm = async () => {
     if (currentLocation) {
-      const locationName = await getPlaceName(
-        currentLocation.latitude,
-        currentLocation.longitude,
-      );
+      // const locationName = await getPlaceName(
+      //   currentLocation.latitude,
+      //   currentLocation.longitude,
+      // );
+      const locationName = '43 Brewster St, San Francisco, CA 94110, USA';
       getLocationFunction(locationName, currentLocation);
     }
   };

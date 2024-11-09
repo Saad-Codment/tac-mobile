@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   FlatList,
   Image,
   ImageBackground,
@@ -20,19 +21,78 @@ import {
   privacy,
   terms,
   profile,
+  editProfile,
+  ageIcon,
+  profileIcon,
+  racingIcon,
+  assoicationIcon,
+  eventHistory,
+  friendList,
+  trashRed,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
 import BlurImage from '../../Components/BlurImage';
 import {profileData, settingData} from '../../Utils/localDB';
 import {keyExtractor} from '../../Utils';
-import {hp} from '../../Config/responsive';
+import {hp, wp} from '../../Config/responsive';
 import useSettingScreen from './useSettingScreen';
 
 import {IconBtn} from '../../Components/IconBtn';
 import {styles} from './styles';
 import {medalstar} from '../../Assets';
 import {Colors} from '../../Theme/Variables';
+import {HeaderComponentProfile} from '../../Components/HeaderComponentProfile';
+import {HeaderComponent} from '../../Components/HeaderComponent';
+import {MultiView} from './MultiView';
+
+const centerView = [
+  {
+    title: '26 Years',
+    leftIcon: ageIcon,
+    rightText: 'Change',
+    onPress: () => {},
+  },
+  {
+    title: 'Female',
+    leftIcon: profileIcon,
+  },
+  {
+    title: 'Barrel Racing',
+    leftIcon: racingIcon,
+    rightText: 'Change',
+  },
+  {
+    title: 'Association',
+    leftIcon: assoicationIcon,
+    rightText: 'Change',
+  },
+  {
+    title: 'Event History',
+    leftIcon: eventHistory,
+    rightText: 'View',
+    onPress: () => {},
+  },
+  {
+    title: 'Friends List',
+    leftIcon: friendList,
+    rightText: 'View',
+    onPress: () => {},
+  },
+];
+
+const bottomView = [
+  {
+    title: 'Log Out',
+    leftIcon: trashRed,
+    onPress: () => {},
+  },
+  {
+    title: 'Delete Account',
+    leftIcon: trashRed,
+    onPress: () => {},
+  },
+];
 
 const SettingScreen = ({navigation}) => {
   const {
@@ -67,49 +127,59 @@ const SettingScreen = ({navigation}) => {
 
   return (
     // <ImageBackground source={stepBg} style={styles.container}>
-    <View showsVerticalScrollIndicator={false}>
-      <View style={styles.header}>
-        <TextComponent text={'Settings'} styles={styles.topHd} />
-      </View>
+    <View showsVerticalScrollIndicator={false} style={{flex: 1}}>
+      <HeaderComponent headerTitle={'Profile'} saveReset={editProfile} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         scrollEnabled
-        contentContainerStyle={{
-          // paddingBottom: hp('70'),
-          backgroundColor: 'background: rgba(255, 255, 255, 0.7)',
-        }}>
-        <TextComponent text={'Plans'} styles={styles.plan} />
+        contentContainerStyle={{flexGrow: 1}}>
         <View style={styles.mainBtn}>
-          <FlatList
-            data={[
-              {
-                icon: medalstar,
-                name: 'Subscription',
-                onpress: (navigate, route) => navigate(route),
-                screenName: 'SubscribeScreen',
-              },
-            ]}
-            scrollEnabled={false}
-            keyExtractor={keyExtractor}
-            renderItem={props =>
-              renderItem({
-                ...props,
-                data: [
-                  {
-                    icon: goalGreen,
-                    name: 'Edit Profile',
-                    onpress: (navigate, route) => navigate(route),
-                    screenName: 'EditProfileScreen',
-                  },
-                ],
-              })
-            }
-          />
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: wp('90'),
+              height: hp('57'),
+              borderRadius: 20,
+              marginTop: hp('10'),
+              paddingTop: hp('10'),
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                alignSelf: 'center',
+                position: 'absolute',
+                zIndex: 1,
+                top: hp('-9'),
+              }}>
+              <CircleImage size={0.4} image={null} />
+            </View>
+            <TextComponent
+              text={'Kinlie Brennise'}
+              styles={{fontSize: hp('3'), fontWeight: 'bold'}}
+            />
+            <TextComponent
+              text={'kinlie@tac.com'}
+              styles={{fontSize: hp('1.5')}}
+              fade
+            />
+            <MultiView data={centerView} />
+          </View>
         </View>
-        <TextComponent text={'General'} styles={styles.plan} />
+        {/* <View
+          style={{
+            backgroundColor: 'white',
+            width: wp('90'),
+            height: hp('57'),
+            borderRadius: 20,
+            // marginTop: hp('10'),
+            paddingTop: hp('10'),
+            alignItems: 'center',
+          }}>
+          <MultiView data={bottomView} />
+        </View> */}
 
-        <View style={styles.mainBtn}>
+        {/* <View style={styles.mainBtn}>
           <IconBtn
             icon={profile}
             btnText={'Edit Profile'}
@@ -132,12 +202,6 @@ const SettingScreen = ({navigation}) => {
             onpress={() => navigation.navigate('ChangePasswordScreen')}
             extraStyle={styles.lastItem}
           />
-          {/* <FlatList
-            data={profileData}
-            keyExtractor={keyExtractor}
-            scrollEnabled={false}
-            renderItem={props => renderItem({...props, data: profileData})}
-          /> */}
         </View>
         <TextComponent text={'Deactivation'} styles={styles.plan} />
 
@@ -154,7 +218,7 @@ const SettingScreen = ({navigation}) => {
             extraStyle={styles.lastItem}
             onpress={() => toggleAlert('deleteAlert')}
           />
-        </View>
+        </View> */}
       </ScrollView>
       {/* <SettingModal
           icon={logOut}
