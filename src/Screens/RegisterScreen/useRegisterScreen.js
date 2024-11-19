@@ -37,6 +37,10 @@ const useRegister = ({navigate, goBack}) => {
     setPolicy(!policy);
   };
 
+  const socialLoginFun = type => {
+    dispatch(loginUser({type, datas: {}}));
+  };
+
   return {
     handleSubmit,
     errors,
@@ -54,6 +58,7 @@ const useRegister = ({navigate, goBack}) => {
     signUpButton,
     PolicyValue,
     policy,
+    socialLoginFun,
   };
 };
 

@@ -1,14 +1,14 @@
 const getCredentials = () => {
   if (__DEV__)
     return {
-      baseURL: 'https://virtualrealitycreators.com/tac-backend/api',
-      imageURL: 'https://virtualrealitycreators.com/tieGuy-bakend/storage/',
+      baseURL: 'https://theappforcowboys.com/tac-backend/api',
+      imageURL: 'https://theappforcowboys.com/tac-backend/storage/',
     };
   else {
     console.log = () => {};
     return {
-      baseURL: 'https://virtualrealitycreators.com/tac-backend/api',
-      imageURL: 'https://virtualrealitycreators.com/tieGuy-bakend/storage/',
+      baseURL: 'https://theappforcowboys.com/tac-backend/api',
+      imageURL: 'https://theappforcowboys.com/tac-backend/storage/',
     };
   }
 };

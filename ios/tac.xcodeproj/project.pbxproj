@@ -14,7 +14,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-tac-tacTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-tac-tacTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		A6CA97EA2CD90C550005655C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A6CA97E92CD90C550005655C /* GoogleService-Info.plist */; };
+		A6D54FE22CE3BC3E002FDB91 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A6D54FE12CE3BC3E002FDB91 /* GoogleService-Info.plist */; };
 		C0579CA92FFD05418159057B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B2A85497AF162675817B61CF /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +46,7 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-tac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tac.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = tac/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-tac-tacTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tac-tacTests.release.xcconfig"; path = "Target Support Files/Pods-tac-tacTests/Pods-tac-tacTests.release.xcconfig"; sourceTree = "<group>"; };
+		A645AF642CEB6CBA0034771A /* tac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = tac.entitlements; path = tac/tac.entitlements; sourceTree = "<group>"; };
 		A6C55D5D2CDBBCA800B9FA4A /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		A6C55D5E2CDBBCA800B9FA4A /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		A6C55D5F2CDBBCA800B9FA4A /* Proxima Nova Alt Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Alt Thin.otf"; sourceTree = "<group>"; };
@@ -91,7 +92,7 @@
 		A6C55D872CDBBCA800B9FA4A /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		A6C55D882CDBBCA800B9FA4A /* Proxima-Nova-Alt-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima-Nova-Alt-Thin.otf"; sourceTree = "<group>"; };
 		A6C55D892CDBBCA800B9FA4A /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
-		A6CA97E92CD90C550005655C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A6D54FE12CE3BC3E002FDB91 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B2A85497AF162675817B61CF /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = tac/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -136,6 +137,7 @@
 		13B07FAE1A68108700A75B9A /* tac */ = {
 			isa = PBXGroup;
 			children = (
+				A645AF642CEB6CBA0034771A /* tac.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -168,8 +170,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				A6D54FE12CE3BC3E002FDB91 /* GoogleService-Info.plist */,
 				A6C55D5C2CDBBCA800B9FA4A /* Resources */,
-				A6CA97E92CD90C550005655C /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* tac */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* tacTests */,
@@ -347,7 +349,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				A6CA97EA2CD90C550005655C /* GoogleService-Info.plist in Resources */,
+				A6D54FE22CE3BC3E002FDB91 /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				C0579CA92FFD05418159057B /* PrivacyInfo.xcprivacy in Resources */,
 			);
@@ -551,8 +553,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = tac/tac.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = T8Y98FC4FU;
+				DEVELOPMENT_TEAM = B4C9P8K93N;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = tac/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -565,8 +568,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.tac.codment;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codment.tac;
 				PRODUCT_NAME = tac;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -580,8 +582,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = tac/tac.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = T8Y98FC4FU;
+				DEVELOPMENT_TEAM = B4C9P8K93N;
 				INFOPLIST_FILE = tac/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -593,8 +596,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.tac.codment;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codment.tac;
 				PRODUCT_NAME = tac;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
