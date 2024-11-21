@@ -63,7 +63,7 @@ const LoginScreen = ({navigation}) => {
               getValues,
               placeholder: 'Email',
               isImage: sms,
-              defaultValue: '',
+              defaultValue: __DEV__ ? 'iphone14@gmail.com' : '',
             }}
           />
           <InputComponent

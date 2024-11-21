@@ -1439,7 +1439,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNVectorIcons (10.1.0):
+  - RNVectorIcons (10.2.0):
     - DoubleConversion
     - glog
     - RCT-Folly (= 2024.01.01.00)
@@ -1844,7 +1844,7 @@ SPEC CHECKSUMS:
   RNNotifee: 8e2d3df3f0e9ce8f5d1fe4c967431138190b6175
   RNPermissions: 5bf6367a18a8c97b03f4c83dc1e377eb5ab9dd08
   RNScreens: 3c25c2a372923f2ab43a3c9454b95d6c72f8eb72
-  RNVectorIcons: c6689df230427641f2313e35365855eb4cd1a0dd
+  RNVectorIcons: a98ff1d74647e3de2eafd248466e7989bbac631c
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d

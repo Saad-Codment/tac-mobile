@@ -64,6 +64,10 @@ function MainNavigator() {
               component={Screens.ListViewScreen}
             />
             <Stack.Screen
+              name="MyEventScreen"
+              component={Screens.MyEventScreen}
+            />
+            <Stack.Screen
               name="LocationScreen"
               component={Screens.LocationScreen}
             />

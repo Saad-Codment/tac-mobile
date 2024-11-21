@@ -23,7 +23,11 @@ const IconBtnView = ({
       onPress={onPress}
       style={{...styles.button, ...viewStyle}}>
       {leftIcon ? (
-        <Image source={leftIcon} style={{...styles.iconStyle, ...leftStyle}} />
+        <Image
+          source={leftIcon}
+          style={{...styles.iconStyle, ...leftStyle}}
+          tintColor={Colors.primaryColor}
+        />
       ) : null}
       <TextComponent text={title} styles={{...styles.text, ...textStyle}} />
       {rightText ? (

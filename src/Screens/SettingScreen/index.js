@@ -29,6 +29,7 @@ import {
   eventHistory,
   friendList,
   trashRed,
+  calender,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
@@ -45,6 +46,7 @@ import {Colors} from '../../Theme/Variables';
 import {HeaderComponentProfile} from '../../Components/HeaderComponentProfile';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import {MultiView} from './MultiView';
+import NavigationService from '../../Services/NavigationService';
 
 const centerView = [
   {
@@ -56,6 +58,11 @@ const centerView = [
   {
     title: 'Female',
     leftIcon: profileIcon,
+  },
+  {
+    title: 'My Events',
+    leftIcon: calender,
+    onPress: () => NavigationService.navigate('MyEventScreen'),
   },
   {
     title: 'Barrel Racing',
@@ -127,57 +134,44 @@ const SettingScreen = ({navigation}) => {
 
   return (
     // <ImageBackground source={stepBg} style={styles.container}>
-    <View showsVerticalScrollIndicator={false} style={{flex: 1}}>
+    <View showsVerticalScrollIndicator={false} style={{flexGrow: 1}}>
       <HeaderComponent headerTitle={'Profile'} saveReset={editProfile} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        scrollEnabled
-        contentContainerStyle={{flexGrow: 1}}>
+        // scrollEnabled
+        // bounces={false}
+        contentContainerStyle={{flexGrow: 1, paddingBottom: hp('10')}}>
         <View style={styles.mainBtn}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: wp('90'),
-              height: hp('57'),
-              borderRadius: 20,
-              marginTop: hp('10'),
-              paddingTop: hp('10'),
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                alignSelf: 'center',
-                position: 'absolute',
-                zIndex: 1,
-                top: hp('-9'),
-              }}>
+          <View style={styles.upperWhiteView}>
+            <View style={styles.imgView}>
               <CircleImage size={0.4} image={null} />
             </View>
             <TextComponent
-              text={'Kinlie Brennise'}
+              text={userData?.first_name + ' ' + userData?.last_name}
               styles={{fontSize: hp('3'), fontWeight: 'bold'}}
             />
             <TextComponent
-              text={'kinlie@tac.com'}
+              text={userData?.email}
               styles={{fontSize: hp('1.5')}}
               fade
             />
             <MultiView data={centerView} />
           </View>
+
+          {/* <View
+            style={{
+              backgroundColor: 'white',
+              width: wp('90'),
+              height: hp('57'),
+              borderRadius: 20,
+              // marginTop: hp('10'),
+              paddingTop: hp('10'),
+              alignItems: 'center',
+            }}>
+            <MultiView data={bottomView} />
+          </View> */}
         </View>
-        {/* <View
-          style={{
-            backgroundColor: 'white',
-            width: wp('90'),
-            height: hp('57'),
-            borderRadius: 20,
-            // marginTop: hp('10'),
-            paddingTop: hp('10'),
-            alignItems: 'center',
-          }}>
-          <MultiView data={bottomView} />
-        </View> */}
 
         {/* <View style={styles.mainBtn}>
           <IconBtn

@@ -63,7 +63,7 @@ const loginSaga = function* ({payload: {datas, type}}) {
         if (ok) {
           yield put(loadingTrue());
           yield put(updateAuth(data));
-        }
+        } else errorMessage(data?.message);
       }
     }
   } catch (error) {
@@ -76,7 +76,9 @@ const loginSaga = function* ({payload: {datas, type}}) {
     errorMessage(
       errorValidation
         ? 'Credential is wrong'
-        : error.message.split(' ').slice(1).join(' ') ?? error,
+        : error.message.split(' ').slice(1).join(' ') ??
+            error?.message ??
+            error,
     );
     console.log('err', newError.toString());
   } finally {
@@ -104,7 +106,7 @@ function* registerSaga({payload: {datas}}) {
         if (ok) {
           yield put(loadingTrue());
           yield put(updateAuth(data));
-        }
+        } else errorMessage(data?.message);
       }
     }
   } catch (error) {
@@ -117,7 +119,9 @@ function* registerSaga({payload: {datas}}) {
     errorMessage(
       errorValidation
         ? 'Credential is wrong'
-        : error.message.split(' ').slice(1).join(' ') ?? error,
+        : error.message.split(' ').slice(1).join(' ') ??
+            error?.message ??
+            error,
     );
     console.log('err', newError.toString());
   } finally {

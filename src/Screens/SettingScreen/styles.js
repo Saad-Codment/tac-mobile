@@ -103,4 +103,19 @@ export const styles = StyleSheet.create({
     marginLeft: wp('4'),
     marginTop: hp('4'),
   },
+  upperWhiteView: {
+    backgroundColor: 'white',
+    width: wp('90'),
+    height: hp('63.5'),
+    borderRadius: 20,
+    marginTop: hp('10'),
+    paddingTop: hp('10'),
+    alignItems: 'center',
+  },
+  imgView: {
+    alignSelf: 'center',
+    position: 'absolute',
+    zIndex: 1,
+    top: hp('-9'),
+  },
 });
