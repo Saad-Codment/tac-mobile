@@ -34,5 +34,7 @@ export const allEventTypeUrl = '/setup/event-types';
 export const onBoardConpleteUrl = '/on-board';
 export const allEventCircuitUrl = 'setup/circuits';
 export const createEventUrl = '/events/store';
+export const getEventDatesUrl = '/events/dates';
+export const getEventByDatesUrl = '/events/get-with-date';
 
 export const logoutUrl = 'auth/logout';

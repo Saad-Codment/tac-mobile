@@ -165,7 +165,7 @@ const useLocationScreen = ({navigate, addListener, params}) => {
 
   // Fetch place name using Google Maps API
   const getPlaceName = async (latitude, longitude) => {
-    const API_KEY = 'AIzaSyBZbrelj6pX2E593uWnF8FIboHhwbFAcnE';
+    const API_KEY = 'AIzaSyBZbrelj6pX2E593uWnF8FIboHhwbFAcn';
     const API_ENDPOINT = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`;
     try {
       const response = await fetch(API_ENDPOINT);

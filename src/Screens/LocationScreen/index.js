@@ -134,7 +134,8 @@ const LocationScreen = ({route, navigation}) => {
             }}
             enablePoweredByContainer={false}
             query={{
-              key: 'AIzaSyBZbrelj6pX2E593uWnF8FIboHhwbFAcnE',
+              key: 'AIzaSyBZbrelj6pX2E593uWnF8FIboHhwbFAcn',
+              // key: 'AIzaSyBZbrelj6pX2E593uWnF8FIboHhwbFAcnE',
               language: 'en',
             }}
             // Override the default renderRow function to style the suggested output

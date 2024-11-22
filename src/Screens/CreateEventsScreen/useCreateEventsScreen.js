@@ -74,8 +74,6 @@ const useCreateEventsScreen = ({navigate}) => {
   const dynamicRoute = (screenName, screenData) =>
     navigate(screenName, screenData);
 
-  const y = 'lsbdkvlbsdlkvbsd';
-
   const createEventFun = async ({
     eventTitle,
     eventImg,
@@ -110,17 +108,17 @@ const useCreateEventsScreen = ({navigate}) => {
         tour_id: evnetTour,
         private: privateEvent ? 1 : 0,
         is_confirmed: eventConfirm ? 1 : 0,
-        'images[]': eventImg,
+        images: eventImg,
         timezone: timeZone,
-        'performances[]':
-          fields.length > 0
-            ? fields.map(res => ({
-                title: res?.title,
-                date: convertDateFormat(res?.date),
-                start_time: convertDateString(res?.startTime),
-                end_time: convertDateString(res?.endTime),
-              }))
-            : null,
+        // 'performances[]':
+        //   fields.length > 0
+        //     ? fields.map(res => ({
+        //         title: res?.title,
+        //         date: convertDateFormat(res?.date),
+        //         start_time: convertDateString(res?.startTime),
+        //         end_time: convertDateString(res?.endTime),
+        //       }))
+        //     : null,
       };
       console.log('After hit api ', JSON.stringify(fields));
       const {ok, data} = await formDataFunc(createEventUrl, body, 'imgae[]');
@@ -143,7 +141,8 @@ const useCreateEventsScreen = ({navigate}) => {
           );
           console.log('propropropropropropro', pro);
         }
-        // reset();
+        reset();
+        queryClient.invalidateQueries({queryKey: ['getEventDate']});
         successMessage('Event created successfully');
       } else errorMessage('Error on creating event');
     } catch (error) {
@@ -166,7 +165,6 @@ const useCreateEventsScreen = ({navigate}) => {
     remove,
     handleSubmit,
     createEventFun,
-    y,
   };
 };
 export default useCreateEventsScreen;

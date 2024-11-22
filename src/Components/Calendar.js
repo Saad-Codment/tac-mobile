@@ -5,7 +5,7 @@ import {hp, wp} from '../Config/responsive';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {StyleSheet} from 'react-native';
 
-const UseCalendar = ({onSelectVal, selectedVal, markedDates}) => {
+const UseCalendar = ({onSelectVal, selectedVal, markedDates, dotCount}) => {
   const today = new Date(); // Get current date
   today.setDate(today.getDate() + 1); // Increase date by one day
 
@@ -17,10 +17,20 @@ const UseCalendar = ({onSelectVal, selectedVal, markedDates}) => {
     markedDay[item] = {
       selected: true,
       marked: true,
-      selectedColor: Colors.grayFadedBtn,
-      disabled: true,
+      selectedColor: Colors.white,
+      // selectedColor: selectedVal == item ? Colors.white : Colors.primaryColor,
+      // disabled: true,
       inactive: true,
-      disableTouchEvent: true,
+      dotColor: Colors.primaryColor,
+      type: 'dot',
+      selectedTextColor: Colors.black,
+      // selectedTextColor: selectedVal == item ? Colors.black : Colors.white,
+      // selectedColor: Colors.primaryColor,
+      // dots: dotCount.map(res => ({
+      //   key: res,
+      //   color: Colors.primaryColor,
+      //   selectedDotColor: Colors.primaryColor,
+      // })),
     };
   });
 
@@ -53,8 +63,9 @@ const UseCalendar = ({onSelectVal, selectedVal, markedDates}) => {
       markedDates={{
         [selectedVal]: {
           selected: true,
-          disableTouchEvent: true,
-          selectedDotColor: 'orange',
+          selectedTextColor: Colors.white,
+          selectedColor: Colors.primaryColor,
+          // type: 'period',
         },
         ...markedDay,
       }}
@@ -79,13 +90,13 @@ const UseCalendar = ({onSelectVal, selectedVal, markedDates}) => {
       theme={{
         // calendarBackground: Colors.themeBlack,
         textSectionTitleColor: Colors.black,
-        // selectedDayBackgroundColor: Colors.themeRed,
-        selectedDayTextColor: Colors.primaryColor,
+        selectedDayBackgroundColor: Colors.themeRed,
         // todayTextColor: Colors.grayFaded,
         dayTextColor: Colors.black,
         // textDisabledColor: Colors.grayFaded,
-        // monthTextColor: Colors.black,
-        // arrowColor: Colors.white,
+        monthTextColor: Colors.black,
+        selectedDayTextColor: Colors.black,
+        arrowColor: Colors.black,
         textDayFontSize: hp('1.5'),
         textMonthFontSize: hp('2'),
         textDayStyle: {
@@ -97,7 +108,7 @@ const UseCalendar = ({onSelectVal, selectedVal, markedDates}) => {
         'stylesheet.calendar.main': {},
         'stylesheet.calendar.header': {
           headerContainer: {
-            //   backgroundColor: 'orange',
+            // backgroundColor: 'orange',
             position: 'absolute',
             flexDirection: 'row',
             left: wp('0'),

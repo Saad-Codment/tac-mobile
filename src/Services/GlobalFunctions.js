@@ -233,34 +233,67 @@ function removeTimeFromDate(datetimeStr) {
 }
 
 function getDateMonthYear(dateString) {
-  const dateParts = dateString.split('-'); // Splitting the date string by '-'
-  const year = dateParts[0];
-  const monthNumber = parseInt(dateParts[1], 10); // Parsing month number to integer
-  const day = dateParts[2];
+  // Create a Date object from the provided global date string
+  const globalDate = new Date(dateString);
 
-  // Array of English month names
-  const monthNames = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
+  // Check if the date is valid
+  if (isNaN(globalDate)) {
+    throw new Error('Invalid date format. Please provide a valid date string.');
+  }
 
-  // Getting English month name using the month number
-  const monthName = monthNames[monthNumber - 1];
+  // Format the local date parts
+  const options = {
+    weekday: 'short', // Day name (e.g., "Mon")
+    year: 'numeric', // Year (e.g., "2024")
+    month: 'short', // Month name (e.g., "Nov")
+    day: '2-digit', // Day of the month (e.g., "25")
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Local time zone
+  };
+
+  // Use Intl.DateTimeFormat to extract formatted date parts
+  const formatter = new Intl.DateTimeFormat(undefined, options);
+  const parts = formatter.formatToParts(globalDate);
+
+  // Extract the needed parts
+  const dayName = parts.find(part => part.type === 'weekday')?.value;
+  const day = parts.find(part => part.type === 'day')?.value;
+  const monthName = parts.find(part => part.type === 'month')?.value;
+  const year = parts.find(part => part.type === 'year')?.value;
 
   return {
-    day,
-    monthName,
-    year,
+    dayName, // Day of the week (e.g., "Mon")
+    day, // Day of the month (e.g., "25")
+    monthName, // Month name (e.g., "Nov")
+    year, // Year (e.g., "2024")
+  };
+}
+
+function convertToLocalTime(globalTimeString) {
+  // Parse the input global time string into a Date object
+  const globalDate = new Date(globalTimeString);
+
+  // Check if the date is valid
+  if (isNaN(globalDate)) {
+    throw new Error('Invalid date format. Please provide a valid date string.');
+  }
+
+  // Format the date to local time with hours and minutes
+  const options = {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true, // Use 12-hour format
+  };
+
+  // Use Intl.DateTimeFormat to format the time
+  const localTimeFormatter = new Intl.DateTimeFormat(undefined, options);
+  const formattedTime = localTimeFormatter.format(globalDate);
+
+  // Split the formatted time into time and period (e.g., "12:53 PM")
+  const [time, period] = formattedTime.split(' ');
+
+  return {
+    time, // Time without period (e.g., "12:53")
+    period, // Period (e.g., "AM" or "PM")
   };
 }
 
@@ -683,4 +716,5 @@ export {
   convertDateFormat,
   convertDateString,
   getCalenderPerComfirm,
+  convertToLocalTime,
 };

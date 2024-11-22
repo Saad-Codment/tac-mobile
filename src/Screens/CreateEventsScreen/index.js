@@ -55,7 +55,6 @@ const CreateEventsScreen = ({navigation}) => {
     errors,
     control,
     perfEventListArry,
-    y,
     createEventFun,
     handleSubmit,
     append,
@@ -316,7 +315,7 @@ const CreateEventsScreen = ({navigation}) => {
             />
           }
         />
-        <TitleInputView
+        {/* <TitleInputView
           title={'Performances'}
           centerInnerView={
             <View
@@ -467,7 +466,7 @@ const CreateEventsScreen = ({navigation}) => {
               />
             </Touchable>
           }
-        />
+        /> */}
         <View style={styles.viewFlex}>
           <TitleInputView
             title={'Event type'}

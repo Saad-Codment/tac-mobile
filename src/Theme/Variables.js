@@ -18,6 +18,7 @@ const Colors = {
   yellowTextColor: 'rgba(137, 119, 86, 1)',
   dkBorderColor: 'rgba(192, 192, 192, 1)',
   lightInnerColor: 'rgba(246, 246, 246, 1)',
+  darkThemeTextColor: 'rgba(24, 24, 24, 1)',
 };
 
 /** FontSize **/
