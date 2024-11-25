@@ -16,6 +16,7 @@ export {default as blackImg} from './Images/blackImg.png';
 export {default as addNewBtn} from './Images/addNewBtn.png';
 export {default as divider} from './Images/divider.png';
 export {default as blurImg} from './Images/blurImg.png';
+export {default as tacLogo} from './Images/tacLogo.png';
 
 //  Icons
 
@@ -136,6 +137,11 @@ export {default as people} from './Icons/people.png';
 export {default as buliding} from './Icons/buliding.png';
 export {default as upload} from './Icons/upload.png';
 export {default as chat} from './Icons/chat.png';
+export {default as unCheck} from './Icons/unCheck.png';
+
+export {default as filledCalender} from './Icons/filledCalender.png';
+export {default as filledLocation} from './Icons/filledLocation.png';
+export {default as filledClock} from './Icons/filledClock.png';
 
 // Lotties files
 

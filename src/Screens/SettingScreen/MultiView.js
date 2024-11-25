@@ -6,7 +6,12 @@ import {divider} from '../../Assets';
 import {Touchable} from '../../Components/Touchable';
 import DividerLine from '../../Components/DividerLine';
 
-export const MultiView = ({data, viewStyle}) => {
+export const MultiView = ({
+  data,
+  viewStyle,
+  dividerStyles,
+  rightTextStyles,
+}) => {
   const renderItem = ({item}) => {
     return (
       <Touchable style={styles.listView} onPress={item?.onPress}>
@@ -21,6 +26,7 @@ export const MultiView = ({data, viewStyle}) => {
           rightText={item?.rightText}
           viewStyle={styles.innerView}
           onPress={item?.onPress}
+          rightTextStyles={item?.rightTextStyles ?? rightTextStyles}
         />
       </Touchable>
     );
@@ -38,7 +44,9 @@ export const MultiView = ({data, viewStyle}) => {
         renderItem={renderItem}
         data={data ?? []}
         ItemSeparatorComponent={
-          <DividerLine DividerLineStyle={styles.divider} />
+          <DividerLine
+            DividerLineStyle={{...styles.divider, ...dividerStyles}}
+          />
         }
       />
       {/* {data?.map((res, i) => {
@@ -68,7 +76,7 @@ export const MultiView = ({data, viewStyle}) => {
 
 const styles = StyleSheet.create({
   mainView: {
-    alignItems: 'center',
+    // alignItems: 'center',
     // flexDirection: 'row',
     // marginBottom: hp('2.5'),
     // width: wp('92'),
@@ -76,7 +84,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     // paddingVertical: hp('2'),
     // marginTop: hp('3'),
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     // height: hp('50'),
     // paddingBottom: hp('2'),
   },

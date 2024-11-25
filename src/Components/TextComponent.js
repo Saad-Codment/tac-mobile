@@ -11,6 +11,7 @@ export const TextComponent = ({
   fade,
   isWhite,
   isThemeColor,
+  isLightThemeColor,
 }) => {
   return (
     <Text
@@ -23,6 +24,8 @@ export const TextComponent = ({
           ? Colors.white
           : isThemeColor
           ? Colors.yellowTextColor
+          : isLightThemeColor
+          ? Colors.primaryColor
           : Colors.black,
         fontSize: hp('2'),
         ...styles,

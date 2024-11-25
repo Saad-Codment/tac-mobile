@@ -15,7 +15,14 @@ function MyEventScreen({navigation}) {
     useMyEventScreen(navigation);
 
   const renderItem = useCallback(({item, index}) => {
-    return <SmallEventCardsComp item={item} />;
+    return (
+      <SmallEventCardsComp
+        item={item}
+        onPress={() =>
+          navigation.navigate('EventsDetailScreen', {id: item?.id})
+        }
+      />
+    );
   }, []);
 
   return (

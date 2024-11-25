@@ -16,6 +16,7 @@ const IconBtnView = ({
   rightIcon,
   rightStyle,
   rightText,
+  rightTextStyles,
 }) => {
   return (
     <Touchable
@@ -34,7 +35,11 @@ const IconBtnView = ({
         <TextComponent
           text={rightText}
           fade={true}
-          styles={{fontSize: FontSize.scale12, marginRight: wp('2')}}
+          styles={{
+            fontSize: FontSize.scale12,
+            marginRight: wp('2'),
+            ...rightTextStyles,
+          }}
         />
       ) : (
         <Image

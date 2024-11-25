@@ -34,6 +34,10 @@ function MainNavigator() {
         )}
         {!isLogin && (
           <>
+            {/* <Stack.Screen
+              name="EventsDetailScreen"
+              component={Screens.EventsDetailScreen}
+            /> */}
             <Stack.Screen name="LoginScreen" component={Screens.LoginScreen} />
             <Stack.Screen
               name="RegisterScreen"
@@ -66,6 +70,10 @@ function MainNavigator() {
             <Stack.Screen
               name="MyEventScreen"
               component={Screens.MyEventScreen}
+            />
+            <Stack.Screen
+              name="EventsDetailScreen"
+              component={Screens.EventsDetailScreen}
             />
             <Stack.Screen
               name="LocationScreen"

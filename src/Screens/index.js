@@ -11,5 +11,6 @@ export {default as FriendLists} from './FriendLists';
 export {default as CreateEventsScreen} from './CreateEventsScreen';
 export {default as LocationScreen} from './LocationScreen';
 export {default as MyEventScreen} from './MyEventScreen';
+export {default as EventsDetailScreen} from './EventsDetailScreen';
 
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

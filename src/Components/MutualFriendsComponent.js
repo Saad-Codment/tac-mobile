@@ -7,7 +7,7 @@ import {hp, wp} from '../Config/responsive';
 import {CircleImage} from './CircleImage';
 import {TextComponent} from './TextComponent';
 
-const MutualFriends = ({friends, size}) => {
+const MutualFriends = ({friends, size, textAfterCount}) => {
   return (
     <View style={styles.container}>
       <View style={styles.avatars}>
@@ -29,7 +29,7 @@ const MutualFriends = ({friends, size}) => {
         })}
       </View>
       <TextComponent
-        text={' ' + friends.length + ' Mutual friends'}
+        text={' ' + friends.length + ' ' + textAfterCount ?? 'Mutual friends'}
         styles={{fontSize: hp('1.5')}}
       />
     </View>

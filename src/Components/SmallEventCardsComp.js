@@ -7,10 +7,11 @@ import {
   convertToLocalTime,
   getDateMonthYear,
 } from '../Services/GlobalFunctions';
+import {Touchable} from './Touchable';
 
-const SmallEventCardsComp = ({item}) => {
+const SmallEventCardsComp = ({item, onPress}) => {
   return (
-    <View style={styles.mainView}>
+    <Touchable onPress={onPress} style={styles.mainView}>
       <View style={styles.dateView}>
         <TextComponent
           text={getDateMonthYear(item?.from_date)?.monthName}
@@ -67,7 +68,7 @@ const SmallEventCardsComp = ({item}) => {
           />
         </View>
       </View>
-    </View>
+    </Touchable>
   );
 };
 export default SmallEventCardsComp;
