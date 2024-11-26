@@ -9,7 +9,7 @@ import {logOutFirebase, logoutService} from '../Services/AuthServices';
 
 const API = create({
   baseURL,
-  // timeout: 15000,
+  timeout: 15000,
   //   timeoutErrorMessage: 'Please try Again...',
 });
 
@@ -217,15 +217,17 @@ const formDataFunc = (url, body, imageKey, isArray) => {
   myHeaders.append('Content-Type', 'multipart/form-data');
 
   const formData = new FormData();
+  if (body[imageKey]?.type) {
+    formData.append(imageKey, {
+      uri: body[imageKey].uri,
+      type: body[imageKey]?.type || 'image/jpeg',
+      name: body[imageKey].name,
+    });
+  }
   Object.entries(body).forEach(([key, value]) => {
-    if (body[imageKey]?.type) {
-      formData.append(imageKey, {
-        uri: body[imageKey].uri,
-        type: body[imageKey]?.type || 'image/jpeg',
-        name: body[imageKey].name,
-      });
+    if (imageKey != key) {
+      formData.append(key, value);
     }
-    formData.append(key, value);
   });
   console.log('asdasd123', formData);
 

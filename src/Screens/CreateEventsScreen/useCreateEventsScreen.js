@@ -13,6 +13,7 @@ import {
   convertDateString,
   getCalenderPerComfirm,
 } from '../../Services/GlobalFunctions';
+import useReduxStore from '../../Hooks/UseReduxStore';
 
 const useCreateEventsScreen = ({navigate}) => {
   var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -42,6 +43,8 @@ const useCreateEventsScreen = ({navigate}) => {
     eventEndDate: currentDate,
     eventEndTime: currentDate,
   });
+
+  const {queryClient} = useReduxStore();
 
   // Initialize useFieldArray for perfEventList
   const {fields, append, remove, update} = useFieldArray({
@@ -108,7 +111,7 @@ const useCreateEventsScreen = ({navigate}) => {
         tour_id: evnetTour,
         private: privateEvent ? 1 : 0,
         is_confirmed: eventConfirm ? 1 : 0,
-        images: eventImg,
+        'images[]': eventImg,
         timezone: timeZone,
         // 'performances[]':
         //   fields.length > 0
@@ -120,8 +123,8 @@ const useCreateEventsScreen = ({navigate}) => {
         //       }))
         //     : null,
       };
-      console.log('After hit api ', JSON.stringify(fields));
-      const {ok, data} = await formDataFunc(createEventUrl, body, 'imgae[]');
+      console.log('After hit api ', JSON.stringify(eventImg));
+      const {ok, data} = await formDataFunc(createEventUrl, body, 'images[]');
       if (ok) {
         if (eventSync) {
           await RNCalendarEvents.checkPermissions();

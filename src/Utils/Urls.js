@@ -36,5 +36,6 @@ export const allEventCircuitUrl = 'setup/circuits';
 export const createEventUrl = '/events/store';
 export const getEventDatesUrl = '/events/dates';
 export const getEventByDatesUrl = '/events/get-with-date';
+export const getEventDetailsUrl = '/events/';
 
 export const logoutUrl = 'auth/logout';
