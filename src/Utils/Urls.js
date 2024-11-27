@@ -37,5 +37,6 @@ export const createEventUrl = '/events/store';
 export const getEventDatesUrl = '/events/dates';
 export const getEventByDatesUrl = '/events/get-with-date';
 export const getEventDetailsUrl = '/events/';
+export const getSuggestedFriendsUrl = '/friends/suggestions';
 
 export const logoutUrl = 'auth/logout';

@@ -138,6 +138,8 @@ export {default as buliding} from './Icons/buliding.png';
 export {default as upload} from './Icons/upload.png';
 export {default as chat} from './Icons/chat.png';
 export {default as unCheck} from './Icons/unCheck.png';
+export {default as boldDivider} from './Icons/boldDivider.png';
+export {default as editPicBtn} from './Icons/editPicBtn.png';
 
 export {default as filledCalender} from './Icons/filledCalender.png';
 export {default as filledLocation} from './Icons/filledLocation.png';

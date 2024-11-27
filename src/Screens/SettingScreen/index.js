@@ -47,46 +47,7 @@ import {HeaderComponentProfile} from '../../Components/HeaderComponentProfile';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import {MultiView} from './MultiView';
 import NavigationService from '../../Services/NavigationService';
-
-const centerView = [
-  {
-    title: '26 Years',
-    leftIcon: ageIcon,
-    rightText: 'Change',
-    onPress: () => {},
-  },
-  {
-    title: 'Female',
-    leftIcon: profileIcon,
-  },
-  {
-    title: 'My Events',
-    leftIcon: calender,
-    onPress: () => NavigationService.navigate('MyEventScreen'),
-  },
-  {
-    title: 'Barrel Racing',
-    leftIcon: racingIcon,
-    rightText: 'Change',
-  },
-  {
-    title: 'Association',
-    leftIcon: assoicationIcon,
-    rightText: 'Change',
-  },
-  {
-    title: 'Event History',
-    leftIcon: eventHistory,
-    rightText: 'View',
-    onPress: () => {},
-  },
-  {
-    title: 'Friends List',
-    leftIcon: friendList,
-    rightText: 'View',
-    onPress: () => {},
-  },
-];
+import SettingModal from './SettingModal';
 
 const bottomView = [
   {
@@ -106,41 +67,68 @@ const SettingScreen = ({navigation}) => {
     toggleAlert,
     onConfirm,
     dynamicRoute,
+    onOpenModal,
+    toggleModal,
+    setModalVal,
+    activeTags,
+    modalVal,
     deleteAlert,
     logoutAlert,
     isloading,
     userData,
   } = useSettingScreen(navigation);
 
-  const renderItem = useCallback(({item, index, data}) => {
-    return (
-      <>
-        <Pressable
-          onPress={() => item?.onpress(navigation.navigate, item?.screenName)}
-          style={styles.listBtn}>
-          <Image source={item?.icon} style={styles.iconGreen} />
-          <View
-            style={[
-              styles.listInner,
-              index === data.length - 1 && styles.lastItem,
-            ]}>
-            <TextComponent text={item?.name} styles={styles.title} />
-            <Image source={rightIos} style={styles.arrowRight} />
-          </View>
-        </Pressable>
-      </>
-    );
-  });
+  const centerView = [
+    {
+      title: '26 Years',
+      leftIcon: ageIcon,
+      rightText: 'Change',
+      onPress: () => {},
+    },
+    {
+      title: 'Female',
+      leftIcon: profileIcon,
+    },
+    {
+      title: 'My Events',
+      leftIcon: calender,
+      onPress: () => NavigationService.navigate('MyEventScreen'),
+    },
+    {
+      title: 'Barrel Racing',
+      leftIcon: racingIcon,
+      rightText: 'Change',
+    },
+    {
+      title: 'Association',
+      leftIcon: assoicationIcon,
+      rightText: 'Change',
+    },
+    {
+      title: 'Event History',
+      leftIcon: eventHistory,
+      rightText: 'View',
+      onPress: () => {},
+    },
+    {
+      title: 'Friends List',
+      leftIcon: friendList,
+      rightText: 'View',
+      onPress: () => {},
+    },
+  ];
 
   return (
     // <ImageBackground source={stepBg} style={styles.container}>
-    <View showsVerticalScrollIndicator={false} style={{flexGrow: 1}}>
-      <HeaderComponent headerTitle={'Profile'} saveReset={editProfile} />
+    <View showsVerticalScrollIndicator={false} style={{flex: 1}}>
+      <HeaderComponent
+        headerTitle={'Profile'}
+        saveReset={editProfile}
+        onRightPress={() => onOpenModal('edit_profile')}
+      />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        // scrollEnabled
-        // bounces={false}
         contentContainerStyle={{flexGrow: 1, paddingBottom: hp('10')}}>
         <View style={styles.mainBtn}>
           <View style={styles.upperWhiteView}>
@@ -214,6 +202,17 @@ const SettingScreen = ({navigation}) => {
           />
         </View> */}
       </ScrollView>
+      {modalVal && (
+        <SettingModal
+          activeTags={activeTags[onPressKey] ?? []}
+          allData={allData != undefined ? allData[onPressKey] : []}
+          heading={onPressKey}
+          isModal={modalVal}
+          onSelect={() => {}}
+          onPress={toggleModal}
+          onBackPress={() => setModalVal(false)}
+        />
+      )}
       {/* <SettingModal
           icon={logOut}
           isVisible={
