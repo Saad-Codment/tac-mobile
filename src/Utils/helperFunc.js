@@ -217,19 +217,31 @@ const formDataFunc = (url, body, imageKey, isArray) => {
   myHeaders.append('Content-Type', 'multipart/form-data');
 
   const formData = new FormData();
-  if (body[imageKey]?.type) {
-    formData.append(imageKey, {
-      uri: body[imageKey].uri,
-      type: body[imageKey]?.type || 'image/jpeg',
-      name: body[imageKey].name,
-    });
+  if (isArray) {
+    if (body[imageKey][0]?.type) {
+      Object.entries(body[imageKey]).forEach(([key, value], index) => {
+        formData.append(`${key}[${index}]`, {
+          uri: value?.uri,
+          type: value?.type || 'image/jpeg',
+          name: value?.name,
+        });
+      });
+    }
+  } else {
+    if (body[imageKey]?.type) {
+      formData.append(imageKey, {
+        uri: body[imageKey].uri,
+        type: body[imageKey]?.type || 'image/jpeg',
+        name: body[imageKey].name,
+      });
+    }
   }
   Object.entries(body).forEach(([key, value]) => {
     if (imageKey != key) {
       formData.append(key, value);
     }
   });
-  console.log('asdasd123', formData);
+  console.log('asdasd123', JSON.stringify(formData));
 
   var requestOptions = {
     method: 'POST',
