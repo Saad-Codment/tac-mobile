@@ -37,7 +37,7 @@ const useCreateEventsScreen = ({navigate}) => {
   } = useFormHook(Schemas.eventCreate, {
     perfEventList: [], // Initial empty event
     privateEvent: 0,
-    evnetTour: 0,
+    evnetTour: 1,
     eventStartDate: currentDate,
     eventStartTime: currentDate,
     eventEndDate: currentDate,

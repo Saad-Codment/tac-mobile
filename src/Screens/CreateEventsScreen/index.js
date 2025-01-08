@@ -648,8 +648,8 @@ const CreateEventsScreen = ({navigation}) => {
                       }}
                       thumbColor={value ? Colors.primaryColor : '#EAF6ED'}
                       ios_backgroundColor="#EAF6ED"
-                      onValueChange={e => onChange(e ? 1 : 0)}
-                      value={Boolean(value == 1)}
+                      onValueChange={e => onChange(e ? 7 : 1)}
+                      value={Boolean(value == 7)}
                     />
                   );
                 }}
