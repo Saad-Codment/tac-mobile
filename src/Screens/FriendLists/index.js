@@ -11,7 +11,7 @@ import {hp, wp} from '../../Config/responsive';
 import MutualFriends from '../../Components/MutualFriendsComponent';
 
 const FriendLists = ({navigation}) => {
-  const {} = useFriendLists(navigation);
+  const {friendListData} = useFriendLists(navigation);
   const renderItem = useCallback(() => {
     return (
       <View style={styles.view}>

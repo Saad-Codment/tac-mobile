@@ -13,6 +13,8 @@ export const MultiSelectButton = ({
   isMultipule,
   btnStyle,
   textStyle,
+  mainViewStyle,
+  selectedBgColor,
 }) => {
   const [dummy, setDummy] = useState(0);
 
@@ -36,6 +38,7 @@ export const MultiSelectButton = ({
                     (selectedAlter?.alternates?.id ?? selectedAlter?.id) ==
                       item.id,
                   ),
+              selectedBgColor,
             ),
             ...btnStyle,
           }}
@@ -57,7 +60,7 @@ export const MultiSelectButton = ({
   );
 };
 export const styles = StyleSheet.create({
-  btnMain: isSelected => ({
+  btnMain: (isSelected, selectedBgColor) => ({
     borderRadius: 30,
     borderWidth: 1,
     borderColor: Colors.textGray,
@@ -66,7 +69,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: wp('4.7'),
     marginRight: wp('2'),
     marginBottom: hp('1'),
-    backgroundColor: isSelected ? Colors.textGray : 'transparent',
+    backgroundColor: isSelected
+      ? selectedBgColor ?? Colors.textGray
+      : 'transparent',
   }),
   btnText: isSelected => ({
     color: isSelected ? 'white' : '#525252',

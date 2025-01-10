@@ -76,18 +76,22 @@ const SettingScreen = ({navigation}) => {
     logoutAlert,
     isloading,
     userData,
+    onPressKey,
+    allData,
   } = useSettingScreen(navigation);
 
   const centerView = [
     {
-      title: '26 Years',
+      title: `${userData?.age} Years`,
       leftIcon: ageIcon,
       rightText: 'Change',
-      onPress: () => {},
+      onPress: () => onOpenModal('age_view'),
     },
     {
-      title: 'Female',
+      title: userData?.gender,
       leftIcon: profileIcon,
+      rightText: 'Change',
+      onPress: () => onOpenModal('user_gender'),
     },
     {
       title: 'My Events',
@@ -98,11 +102,13 @@ const SettingScreen = ({navigation}) => {
       title: 'Barrel Racing',
       leftIcon: racingIcon,
       rightText: 'Change',
+      onPress: () => onOpenModal('event_type'),
     },
     {
       title: 'Association',
       leftIcon: assoicationIcon,
       rightText: 'Change',
+      onPress: () => onOpenModal('event_association'),
     },
     {
       title: 'Event History',
@@ -114,7 +120,7 @@ const SettingScreen = ({navigation}) => {
       title: 'Friends List',
       leftIcon: friendList,
       rightText: 'View',
-      onPress: () => {},
+      onPress: () => NavigationService.navigate('FriendLists'),
     },
   ];
 
@@ -205,11 +211,11 @@ const SettingScreen = ({navigation}) => {
       {modalVal && (
         <SettingModal
           activeTags={activeTags[onPressKey] ?? []}
-          allData={allData != undefined ? allData[onPressKey] : []}
+          allData={allData ?? []}
           heading={onPressKey}
           isModal={modalVal}
           onSelect={() => {}}
-          onPress={toggleModal}
+          onPress={e => toggleModal(e)}
           onBackPress={() => setModalVal(false)}
         />
       )}

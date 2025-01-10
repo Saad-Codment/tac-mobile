@@ -152,6 +152,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: hp('2'),
     textAlign: 'center',
+    marginBottom: hp('2'),
   },
   addIcon: {
     position: 'absolute',
@@ -182,6 +183,11 @@ export const styles = StyleSheet.create({
     borderColor: Colors.dkBorderColor,
     paddingHorizontal: wp('3'),
     marginBottom: hp('5'),
+  },
+  ageViewModal: {
+    width: wp('90'),
+    marginBottom: hp('20'),
+    marginTop: hp('3'),
   },
   modalBtn: {
     width: wp('93'),

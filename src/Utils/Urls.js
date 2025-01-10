@@ -38,5 +38,7 @@ export const getEventDatesUrl = '/events/dates';
 export const getEventByDatesUrl = '/events/get-with-date';
 export const getEventDetailsUrl = '/events/';
 export const getSuggestedFriendsUrl = '/friends/suggestions';
+export const getMyFriendsUrl = '/friends/list';
+export const editProfileUrl = '/profile-update';
 
 export const logoutUrl = 'auth/logout';

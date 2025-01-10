@@ -228,6 +228,7 @@ const HomeScreen = ({navigation}) => {
             <TextComponent
               styles={{color: Colors.black, ...styles.viewall}}
               text={'View All'}
+              onPress={() => navigation.navigate('AllSuggestedFriendsScreen')}
             />
           </View>
           <FlatList
