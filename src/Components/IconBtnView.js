@@ -17,6 +17,8 @@ const IconBtnView = ({
   rightStyle,
   rightText,
   rightTextStyles,
+  rightIconColor,
+  leftIconColor,
 }) => {
   return (
     <Touchable
@@ -27,7 +29,7 @@ const IconBtnView = ({
         <Image
           source={leftIcon}
           style={{...styles.iconStyle, ...leftStyle}}
-          tintColor={Colors.primaryColor}
+          tintColor={leftIconColor ?? Colors.primaryColor}
         />
       ) : null}
       <TextComponent text={title} styles={{...styles.text, ...textStyle}} />
@@ -45,6 +47,7 @@ const IconBtnView = ({
         <Image
           source={rightIcon}
           style={{...styles.arrowStyle, ...rightStyle}}
+          tintColor={rightIconColor}
         />
       )}
     </Touchable>

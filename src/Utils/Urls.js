@@ -41,4 +41,5 @@ export const getSuggestedFriendsUrl = '/friends/suggestions';
 export const getMyFriendsUrl = '/friends/list';
 export const editProfileUrl = '/profile-update';
 
+export const deleteAccUrl = 'auth/account-delete';
 export const logoutUrl = 'auth/logout';

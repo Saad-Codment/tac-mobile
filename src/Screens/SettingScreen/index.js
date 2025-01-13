@@ -48,19 +48,8 @@ import {HeaderComponent} from '../../Components/HeaderComponent';
 import {MultiView} from './MultiView';
 import NavigationService from '../../Services/NavigationService';
 import SettingModal from './SettingModal';
-
-const bottomView = [
-  {
-    title: 'Log Out',
-    leftIcon: trashRed,
-    onPress: () => {},
-  },
-  {
-    title: 'Delete Account',
-    leftIcon: trashRed,
-    onPress: () => {},
-  },
-];
+import {AlertDesign} from '../../Components/AlertDesign';
+import {capitalizeFirstLetter} from '../../Services/GlobalFunctions';
 
 const SettingScreen = ({navigation}) => {
   const {
@@ -88,7 +77,7 @@ const SettingScreen = ({navigation}) => {
       onPress: () => onOpenModal('age_view'),
     },
     {
-      title: userData?.gender,
+      title: capitalizeFirstLetter(userData?.gender),
       leftIcon: profileIcon,
       rightText: 'Change',
       onPress: () => onOpenModal('user_gender'),
@@ -99,7 +88,7 @@ const SettingScreen = ({navigation}) => {
       onPress: () => NavigationService.navigate('MyEventScreen'),
     },
     {
-      title: 'Barrel Racing',
+      title: 'Event Types',
       leftIcon: racingIcon,
       rightText: 'Change',
       onPress: () => onOpenModal('event_type'),
@@ -123,10 +112,23 @@ const SettingScreen = ({navigation}) => {
       onPress: () => NavigationService.navigate('FriendLists'),
     },
   ];
+  const bottomView = [
+    {
+      title: `Delete Account`,
+      leftIcon: trashRed,
+      leftIconColor: 'red',
+      onPress: () => toggleAlert('deleteAlert'),
+    },
+    {
+      title: 'Log out',
+      leftIcon: logout,
+      onPress: () => toggleAlert('logoutAlert'),
+    },
+  ];
 
   return (
     // <ImageBackground source={stepBg} style={styles.container}>
-    <View showsVerticalScrollIndicator={false} style={{flex: 1}}>
+    <View showsVerticalScrollIndicator={false} style={{flexGrow: 1}}>
       <HeaderComponent
         headerTitle={'Profile'}
         saveReset={editProfile}
@@ -135,7 +137,7 @@ const SettingScreen = ({navigation}) => {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{flexGrow: 1, paddingBottom: hp('10')}}>
+        contentContainerStyle={{paddingBottom: hp('70')}}>
         <View style={styles.mainBtn}>
           <View style={styles.upperWhiteView}>
             <View style={styles.imgView}>
@@ -152,61 +154,14 @@ const SettingScreen = ({navigation}) => {
             />
             <MultiView data={centerView} />
           </View>
-
-          {/* <View
+          <View
             style={{
-              backgroundColor: 'white',
-              width: wp('90'),
-              height: hp('57'),
-              borderRadius: 20,
-              // marginTop: hp('10'),
-              paddingTop: hp('10'),
-              alignItems: 'center',
+              ...styles.upperWhiteView,
+              ...styles.bottomView,
             }}>
             <MultiView data={bottomView} />
-          </View> */}
+          </View>
         </View>
-
-        {/* <View style={styles.mainBtn}>
-          <IconBtn
-            icon={profile}
-            btnText={'Edit Profile'}
-            onpress={() => navigation.navigate('EditProfileScreen')}
-          />
-          <IconBtn
-            icon={about}
-            btnText={'About TAC'}
-            onpress={() => navigation.navigate('ChangePasswordScreen')}
-          />
-          <IconBtn
-            icon={privacy}
-            btnText={'Privacy Policy'}
-            onpress={() => navigation.navigate('ChangePasswordScreen')}
-          />
-          <IconBtn
-            rightIos
-            icon={terms}
-            btnText={'Terms and Conditions'}
-            onpress={() => navigation.navigate('ChangePasswordScreen')}
-            extraStyle={styles.lastItem}
-          />
-        </View>
-        <TextComponent text={'Deactivation'} styles={styles.plan} />
-
-        <View style={{...styles.mainBtn, ...styles.bottomSpace}}>
-          <IconBtn
-            icon={logout}
-            btnText={'Log Out'}
-            onpress={() => toggleAlert('logoutAlert')}
-          />
-          <IconBtn
-            borderLine
-            icon={trash}
-            btnText={'Deactivate Account'}
-            extraStyle={styles.lastItem}
-            onpress={() => toggleAlert('deleteAlert')}
-          />
-        </View> */}
       </ScrollView>
       {modalVal && (
         <SettingModal
@@ -215,42 +170,31 @@ const SettingScreen = ({navigation}) => {
           heading={onPressKey}
           isModal={modalVal}
           onSelect={() => {}}
-          onPress={e => toggleModal(e)}
+          onPress={(e, isTrue) => toggleModal(e, isTrue)}
           onBackPress={() => setModalVal(false)}
         />
       )}
-      {/* <SettingModal
-          icon={logOut}
-          isVisible={
-            (deleteAlert == true && deleteAlert) ||
-            (logoutAlert == true && logoutAlert)
-          }
-          onClose={() =>
-            toggleAlert(
-              (logoutAlert && 'logoutAlert') || (deleteAlert && 'deleteAlert'),
-            )
-          }
-          title="Oh no! you are leaving..."
-          content="Are you sure ?"
-          FirstBtnText={
-            (logoutAlert && 'No! Not this time') ||
-            (deleteAlert && 'Don’t Deactivate')
-          }
-          SecondBtnText={
-            (logoutAlert && 'Yes! log me out') ||
-            (deleteAlert && 'Deactivate Account')
-          }
-          FirstBtnOnpress={() =>
-            toggleAlert(
-              (logoutAlert && 'logoutAlert') || (deleteAlert && 'deleteAlert'),
-            )
-          }
-          SecondBtnOnpress={() => {
-            onConfirm(
-              (logoutAlert && 'logoutAlert') || (deleteAlert && 'deleteAlert'),
-            );
-          }}
-        /> */}
+      <AlertDesign
+        isVisible={
+          (deleteAlert == true && deleteAlert) ||
+          (logoutAlert == true && logoutAlert)
+        }
+        message={
+          (logoutAlert && 'Are you sure you want to logout?') ||
+          (deleteAlert && 'Are you sure that you want to delete your account?')
+        }
+        title={'Warning'}
+        onConfirm={() =>
+          onConfirm(
+            (logoutAlert && 'logoutAlert') || (deleteAlert && 'deleteAlert'),
+          )
+        }
+        onCancel={() =>
+          toggleAlert(
+            (logoutAlert && 'logoutAlert') || (deleteAlert && 'deleteAlert'),
+          )
+        }
+      />
     </View>
     // </ImageBackground>
   );

@@ -118,7 +118,12 @@ export const styles = StyleSheet.create({
     zIndex: 1,
     top: hp('-9'),
   },
-
+  bottomView: {
+    paddingTop: hp('1.5'),
+    paddingBottom: hp('1'),
+    height: hp('15'),
+    marginTop: hp('2'),
+  },
   //  Modal Style
 
   modalView: {
@@ -147,7 +152,19 @@ export const styles = StyleSheet.create({
     marginBottom: hp('-2.5'),
     // height: hp('40'),
   },
-  divider: {width: wp('15'), height: hp('5'), alignSelf: 'center'},
+  upperIconView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+  },
+  divider: {width: wp('15'), height: hp('5'), left: wp('40'), top: hp('1')},
+  cancelIcon: {
+    alignSelf: 'flex-end',
+    tintColor: 'black',
+    width: wp('5'),
+    height: hp('4'),
+  },
   headingText: {
     fontWeight: 'bold',
     fontSize: hp('2'),

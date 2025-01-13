@@ -4,13 +4,27 @@ import useReduxStore from '../../Hooks/UseReduxStore';
 import {useRef, useState} from 'react';
 import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import {logoutService} from '../../Services/AuthServices';
-import {logOutUser} from '../../Redux/Action/AuthAction';
+import {logOutAuth, logOutUser} from '../../Redux/Action/AuthAction';
 import {
   allAssociatesUrl,
   allEventTypeUrl,
+  deleteAccUrl,
   editProfileUrl,
 } from '../../Utils/Urls';
 import {types} from '../../Redux/types';
+import {loadingFalse} from '../../Redux/Action/isloadingAction';
+import {
+  ageIcon,
+  assoicationIcon,
+  calender,
+  eventHistory,
+  friendList,
+  logout,
+  profileIcon,
+  racingIcon,
+  trashRed,
+} from '../../Assets';
+import {getIdsFromArry, removeUndefined} from '../../Services/GlobalFunctions';
 
 const SettingScreen = ({navigate, goBack}) => {
   const {dispatch, getState, queryClient} = useReduxStore();
@@ -33,28 +47,16 @@ const SettingScreen = ({navigate, goBack}) => {
     },
   };
 
-  // const data = queryClient.getQueryData([
-  //   apiDataType[onPressKeyRef.current ?? 'null']?.queryName,
-  // ]);
-
   const {data, error} = useQuery({
     queryKey: [apiDataType[onPressKeyRef.current ?? 'null']?.queryName],
     queryFn: () => API.get(apiDataType[onPressKeyRef.current ?? 'null'].url),
   });
-
-  // const data = useQuery({
-  //   queryKey: [apiDataType[onPressKeyRef.current ?? 'null']?.queryName],
-  // });
-
-  console.log('userDatauserDatauserDatauserData', userData);
 
   const {mutateAsync} = useMutation({
     mutationFn: data => {
       return formDataFunc(editProfileUrl, data, 'profile_image');
     },
     onSuccess: ({ok, data}) => {
-      dispatch(loadingFalse());
-      console.log('osdibvklsdbvbsdlvkbsdklsdbvklsd', data);
       if (ok) {
         successMessage('Your profile updated sucessfully!');
         dispatch({
@@ -66,7 +68,6 @@ const SettingScreen = ({navigate, goBack}) => {
       }
     },
     onError: ({message}) => {
-      dispatch(loadingFalse());
       errorMessage('Problem occurred while uploading data.');
     },
   });
@@ -110,41 +111,43 @@ const SettingScreen = ({navigate, goBack}) => {
     }, 900);
   };
 
-  // const addTags = (v, key) => {
-  //   if (key == 'braid_length' || key == 'braid_size') {
-  //     if (Boolean(activeTags[key].find(res => res.id == v.id))) {
-  //       updateState({[key]: activeTags[key].filter(res => res.id != v.id)});
-  //     } else {
-  //       updateState({[key]: [...activeTags[key], v]});
-  //     }
-  //   } else {
-  //     updateState({[key]: v});
-  //   }
-  // };
-
   const [modalVal, setModalVal] = useState(false);
 
   const onOpenModal = key => {
     onPressKeyRef.current = key;
-    // setActiveTags(selectedData);
     toggleModal();
   };
 
-  const toggleModal = modalUpdateData => {
-    console.log(
-      'kjdbvjklsdbkjsbdklbsdlkvbklsbvklds',
-      modalUpdateData,
-      userData?.age,
-    );
+  const toggleModal = (modalUpdateData, isSave) => {
     setModalVal(!modalVal);
-    mutateAsync({
-      first_name: modalUpdateData?.firstName ?? userData?.first_name,
-      last_name: modalUpdateData?.lastName ?? userData?.last_name,
-      age: Number(modalUpdateData?.userAge ?? userData?.age),
-      gender: modalUpdateData?.userGender ?? userData?.gender,
-    });
-    // if (isSave) {
-    // }
+    if (isSave) {
+      mutateAsync({
+        first_name: modalUpdateData?.firstName ?? userData?.first_name,
+        last_name: modalUpdateData?.lastName ?? userData?.last_name,
+        age: Number(modalUpdateData?.userAge ?? userData?.age),
+        gender: modalUpdateData?.userGender?.id ?? userData?.gender,
+        event_type_ids:
+          getIdsFromArry(
+            removeUndefined(modalUpdateData?.eventType ?? []) ?? [],
+            'id',
+          ).length == 0
+            ? getIdsFromArry(userData?.event_types, 'id')
+            : getIdsFromArry(
+                removeUndefined(modalUpdateData?.eventType ?? []) ?? [],
+                'id',
+              ),
+        association_ids:
+          getIdsFromArry(
+            removeUndefined(modalUpdateData?.associations ?? []) ?? [],
+            'id',
+          ).length == 0
+            ? getIdsFromArry(userData?.associations, 'id')
+            : getIdsFromArry(
+                removeUndefined(modalUpdateData?.associations ?? []) ?? [],
+                'id',
+              ),
+      });
+    }
   };
 
   const activeTags = {
@@ -158,8 +161,6 @@ const SettingScreen = ({navigate, goBack}) => {
     event_type: {eventTypes: userData?.event_types},
     event_association: {eventAssociations: userData?.associations},
   };
-
-  console.log('datadatadatadatadatadatadatadatadatadatadata', data?.data);
 
   return {
     toggleAlert,

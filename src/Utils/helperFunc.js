@@ -190,7 +190,7 @@ const fetchGetWithToken = async url => {
 
       store.dispatch({
         type: types.UpdateProfile,
-        payload: data,
+        payload: data?.user,
       });
 
       // console.log(data, 'alskdjfklajsdfkljadlsfjaklsdjfl2kds444ajf2lkdjs');
@@ -238,7 +238,13 @@ const formDataFunc = (url, body, imageKey, isArray) => {
   }
   Object.entries(body).forEach(([key, value]) => {
     if (imageKey != key) {
-      formData.append(key, value);
+      if (Array.isArray(value)) {
+        value.forEach((res, index) => {
+          formData.append(`${key}[${index}]`, res);
+        });
+      } else {
+        formData.append(key, value);
+      }
     }
   });
   console.log('asdasd123', JSON.stringify(formData));

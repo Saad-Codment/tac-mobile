@@ -693,6 +693,16 @@ const getCalenderPerComfirm = async () => {
   }
 };
 
+function capitalizeFirstLetter(string) {
+  return string?.charAt(0)?.toUpperCase() + string?.slice(1);
+}
+
+function removeUndefined(arr) {
+  if (arr) {
+    return arr.filter(item => item !== undefined);
+  } else [];
+}
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -725,4 +735,6 @@ export {
   convertDateString,
   getCalenderPerComfirm,
   convertToLocalTime,
+  capitalizeFirstLetter,
+  removeUndefined,
 };

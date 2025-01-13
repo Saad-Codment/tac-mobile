@@ -20,7 +20,7 @@ const useAllSuggestedFriendsScreen = ({navigate}) => {
     });
   }, []);
 
-  return {friendListData: data?.data?.friendList, onRefresh};
+  return {friendListData: data?.data, onRefresh};
 };
 
 export default useAllSuggestedFriendsScreen;

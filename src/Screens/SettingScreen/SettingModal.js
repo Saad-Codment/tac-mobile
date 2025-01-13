@@ -1,6 +1,6 @@
 import {Image, ScrollView, TextInput, View} from 'react-native';
 import Modal from 'react-native-modal';
-import {boldDivider, editPicBtn} from '../../Assets';
+import {boldDivider, crossWhite, editPicBtn} from '../../Assets';
 import {styles} from './styles';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
@@ -199,11 +199,20 @@ const SettingModal = ({
             justifyContent: 'flex-end',
           }}>
           <View style={styles.modalData}>
-            <Image
-              source={boldDivider}
-              resizeMode="contain"
-              style={styles.divider}
-            />
+            <View style={styles.upperIconView}>
+              <Image
+                source={boldDivider}
+                resizeMode="contain"
+                style={styles.divider}
+              />
+              <Touchable onPress={() => onPress({}, false)}>
+                <Image
+                  source={crossWhite}
+                  resizeMode="contain"
+                  style={styles.cancelIcon}
+                />
+              </Touchable>
+            </View>
             <TextComponent
               text={renderObj[heading]?.title}
               styles={styles.headingText}
@@ -217,7 +226,9 @@ const SettingModal = ({
             <ThemeButton
               title={'Save'}
               style={styles.modalBtn}
-              onPress={() => onPress({...innerDataState, firstName, lastName})}
+              onPress={() => {
+                onPress({...innerDataState, firstName, lastName}, true);
+              }}
               isYellowTheme
             />
             {/* )} */}
