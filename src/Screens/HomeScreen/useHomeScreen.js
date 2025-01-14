@@ -4,7 +4,9 @@ import {TextComponent} from '../../Components/TextComponent';
 const HomeScreen = ({navigate}) => {
   const [search, setSearch] = useState('');
 
-  return {search, setSearch};
+  const dynamicRoute = (routeName, params) => navigate(routeName, params);
+
+  return {search, setSearch, dynamicRoute};
 };
 
 export default HomeScreen;

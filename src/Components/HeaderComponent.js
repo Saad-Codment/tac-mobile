@@ -20,6 +20,8 @@ export const HeaderComponent = ({
   isBack,
   rightIconStyle,
   onRightPress,
+  backIconStyle,
+  rightIconImg,
 }) => {
   return (
     <View style={[styles.TopHeader, {...style}]}>
@@ -32,6 +34,7 @@ export const HeaderComponent = ({
                 resizeMode: 'contain',
                 tintColor: 'white',
                 ...styles.arrowback,
+                ...backIconStyle,
               }}
             />
           )}
@@ -54,7 +57,7 @@ export const HeaderComponent = ({
         </Touchable>
         <Touchable style={styles.backMain} onPress={onRightPress}>
           <Image
-            source={saveReset}
+            source={rightIconImg ?? saveReset}
             style={{...styles.filterIcon, rightIconStyle}}
           />
 

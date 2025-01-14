@@ -12,8 +12,8 @@ export const CircleImage = props => {
         borderRadius: Math.round(
           Dimensions.get('window').width + Dimensions.get('window').height,
         ),
-        width: Dimensions.get('window').width * size ?? 0.11,
-        height: Dimensions.get('window').width * size ?? 0.11,
+        width: Dimensions.get('window').width * size || 0.11,
+        height: Dimensions.get('window').width * size || 0.11,
         ...styles,
       }}
       isURI={props?.uri}

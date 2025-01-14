@@ -126,6 +126,9 @@ const SettingScreen = ({navigate, goBack}) => {
         last_name: modalUpdateData?.lastName ?? userData?.last_name,
         age: Number(modalUpdateData?.userAge ?? userData?.age),
         gender: modalUpdateData?.userGender?.id ?? userData?.gender,
+        profile_image: modalUpdateData?.profileImg?.type
+          ? modalUpdateData?.profileImg
+          : null,
         event_type_ids:
           getIdsFromArry(
             removeUndefined(modalUpdateData?.eventType ?? []) ?? [],

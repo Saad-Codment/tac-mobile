@@ -50,6 +50,7 @@ import NavigationService from '../../Services/NavigationService';
 import SettingModal from './SettingModal';
 import {AlertDesign} from '../../Components/AlertDesign';
 import {capitalizeFirstLetter} from '../../Services/GlobalFunctions';
+import {imageUrl} from '../../Utils/Urls';
 
 const SettingScreen = ({navigation}) => {
   const {
@@ -141,7 +142,11 @@ const SettingScreen = ({navigation}) => {
         <View style={styles.mainBtn}>
           <View style={styles.upperWhiteView}>
             <View style={styles.imgView}>
-              <CircleImage size={0.4} image={null} />
+              <CircleImage
+                size={0.4}
+                image={imageUrl(userData?.profile_image)}
+                uri={true}
+              />
             </View>
             <TextComponent
               text={userData?.first_name + ' ' + userData?.last_name}

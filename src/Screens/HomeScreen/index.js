@@ -31,7 +31,7 @@ import FriendEventsComp from '../../Components/FriendEventsComp';
 import AddFriendComp from '../../Components/AddFriendComp';
 
 const HomeScreen = ({navigation}) => {
-  const {search, setSearch} = useHomeScreen(navigation);
+  const {search, setSearch, dynamicRoute} = useHomeScreen(navigation);
   const [scrollPosition, setScrollPosition] = useState(0);
 
   const handleScroll = event => {
@@ -64,6 +64,7 @@ const HomeScreen = ({navigation}) => {
             image={galleryYellow}
             style={styles.upperBtn}
             imageStyle={{width: wp('7')}}
+            onPress={() => dynamicRoute('CreatePostScreen')}
           />
           <ThemeButton
             title={'Write something'}

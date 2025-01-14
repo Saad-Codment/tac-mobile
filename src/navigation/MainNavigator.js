@@ -113,6 +113,10 @@ function MainNavigator() {
               name="AllSuggestedFriendsScreen"
               component={Screens.AllSuggestedFriendsScreen}
             />
+            <Stack.Screen
+              name="CreatePostScreen"
+              component={Screens.CreatePostScreen}
+            />
             {/* <Stack.Screen
               name="SkeletonScreen"
               component={Screens.SkeletonScreen}

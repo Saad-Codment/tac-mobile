@@ -12,6 +12,7 @@ import {Colors} from '../../Theme/Variables';
 import ErrorInputComponent from '../../Components/ErrorInputComponent';
 import {MultiSelectButton} from '../../Components/MultiSelectButton';
 import {uploadFromGalary} from '../../Services/GlobalFunctions';
+import {imageUrl} from '../../Utils/Urls';
 
 const ageRange = Array.from({length: 23}, (_, i) => {
   const age = 18 + i;
@@ -53,7 +54,9 @@ const SettingModal = ({
       <>
         <View style={styles.whiteCircle}>
           <CircleImage
-            image={profileImg?.uri}
+            image={
+              profileImg?.type ? profileImg?.uri : imageUrl(profileImg?.uri)
+            }
             styles={styles.profileView}
             size={0.4}
             uri={true}

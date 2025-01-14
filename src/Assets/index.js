@@ -64,6 +64,7 @@ export {default as friendList} from './Icons/friendList.png';
 export {default as racingIcon} from './Icons/racingIcon.png';
 export {default as profileIcon} from './Icons/profileIcon.png';
 export {default as trashRed} from './Icons/trashRed.png';
+export {default as uploadGallery} from './Icons/uploadGallery.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';
