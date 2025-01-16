@@ -1,11 +1,14 @@
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import API from '../../Utils/helperFunc';
-import {getSuggestedFriendsUrl} from '../../Utils/Urls';
+import {getSuggestedFriendsUrl, sendFriendReqUrl} from '../../Utils/Urls';
 import {useCallback} from 'react';
 import useReduxStore from '../../Hooks/UseReduxStore';
+import {errorMessage} from '../../Config/NotificationMessage';
+import useFriendServices, {sendFriendReq} from '../../Services/FriendServices';
 
 const useAllSuggestedFriendsScreen = ({navigate}) => {
   const {queryClient} = useReduxStore();
+  const {sendFriendReq, acceptFriendReq, rejectFriendReq} = useFriendServices();
 
   const {data, error} = useQuery({
     queryKey: ['myFriends'],
@@ -20,7 +23,14 @@ const useAllSuggestedFriendsScreen = ({navigate}) => {
     });
   }, []);
 
-  return {friendListData: data?.data, onRefresh};
+  return {
+    friendListData: data?.data,
+    onRefresh,
+    sendReq: async id => {
+      await sendFriendReq.mutateAsync(id);
+      queryClient.invalidateQueries({queryKey: ['myFriends']});
+    },
+  };
 };
 
 export default useAllSuggestedFriendsScreen;

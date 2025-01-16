@@ -40,6 +40,10 @@ export const getEventDetailsUrl = '/events/';
 export const getSuggestedFriendsUrl = '/friends/suggestions';
 export const getMyFriendsUrl = '/friends/list';
 export const editProfileUrl = '/profile-update';
+export const createPostUrl = '/posts/store';
+export const sendFriendReqUrl = '/friend-request/send/';
+export const acceptFriendReqUrl = '/friend-request/accept-request/';
+export const rejectFriendReqUrl = '/friend-request/reject-request/';
 
 export const deleteAccUrl = 'auth/account-delete';
 export const logoutUrl = 'auth/logout';

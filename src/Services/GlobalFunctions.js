@@ -528,7 +528,14 @@ const getIdsFromArry = (arry, key) => {
 };
 
 //GET IMAGE From Mobile
-const uploadFromGalary = async () => {
+const uploadFromGalary = async isMulti => {
+  const imageData = await ImageCropPicker.openPicker({
+    width: 500,
+    height: 400,
+    cropping: true,
+    multiple: isMulti,
+  });
+  console.log('imagefjshavckajkcbadsjkvbsdjkvbkjsdbksdbvkldskvlsd', imageData);
   const {
     height,
     width,
@@ -538,18 +545,20 @@ const uploadFromGalary = async () => {
     sourceURL,
     localIdentifier,
     mime,
-  } = await ImageCropPicker.openPicker({
-    width: 500,
-    height: 400,
-    cropping: true,
-  });
+  } = imageData;
   const uri = Platform.OS === 'ios' ? sourceURL : path;
   const fileName = filename || 'photo.jpg';
-  return {
-    uri,
-    name: fileName,
-    type: mime,
-  };
+  return Array.isArray(imageData)
+    ? imageData.map(res => ({
+        uri: Platform.OS === 'ios' ? res?.sourceURL : res?.path,
+        name: res?.filename,
+        type: res?.mime,
+      }))
+    : {
+        uri,
+        name: fileName,
+        type: mime,
+      };
 };
 
 function formatDateToCustomFormat(isoDate) {

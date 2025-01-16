@@ -8,7 +8,8 @@ import {DataNotFound} from '../../Components/DataNotFound';
 import {wp} from '../../Config/responsive';
 
 const AllSuggestedFriendsScreen = ({navigation}) => {
-  const {friendListData, onRefresh} = useAllSuggestedFriendsScreen(navigation);
+  const {friendListData, onRefresh, sendReq} =
+    useAllSuggestedFriendsScreen(navigation);
 
   return (
     <>
@@ -20,7 +21,7 @@ const AllSuggestedFriendsScreen = ({navigation}) => {
       <AniFlatOneByOne
         data={friendListData}
         flatViewStyle={styles.upComingFlatlistView}
-        //   onRefresh={onRefresh}
+        onRefresh={onRefresh}
         flatListProps={{
           numColumns: 2,
           ListEmptyComponent: (
@@ -28,7 +29,7 @@ const AllSuggestedFriendsScreen = ({navigation}) => {
           ),
         }}
         InnerCompnonet={(item, index) => (
-          <AddFriendComp item={item} index={index} />
+          <AddFriendComp item={item} index={index} sendReq={sendReq} />
         )}
       />
     </>

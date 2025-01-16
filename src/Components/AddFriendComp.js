@@ -6,39 +6,50 @@ import {CircleImage} from './CircleImage';
 import {TextComponent} from './TextComponent';
 import {Colors, FontSize} from '../Theme/Variables';
 import {hp, wp} from '../Config/responsive';
+import {imageUrl} from '../Utils/Urls';
 
-const AddFriendComp = item => {
+const AddFriendComp = ({item, sendReq}) => {
   return (
     <>
       <View style={styles.friendCard}>
         <View style={{alignItems: 'center'}}>
           <CircleImage
-            image={'https://picsum.photos/200'}
+            image={imageUrl(item?.profile_image)}
             styles={styles.friendUserImage}
             uri={true}
           />
         </View>
-        <TextComponent styles={styles.friendUserName} text={'Lily Van Ness'} />
+        <TextComponent
+          styles={styles.friendUserName}
+          text={item?.first_name + ' ' + item?.last_name}
+        />
         <View style={styles.bottomView}>
-          <MutualFriends
+          {/* <MutualFriends
             uri={'https://picsum.photos/200'}
             friends={[1, 2, 3, 4]}
-          />
+          /> */}
           {/* <TextComponent styles={styles.mutual} text={'32 Mutual friends'} /> */}
         </View>
-        <ThemeButton
-          style={styles.addBtn}
-          title={'Add Friend'}
-          textStyle={{
-            color: Colors.white,
-            fontWeight: 'bold',
-          }}
-        />
-        <ThemeButton
-          style={styles.removeBtn}
-          textStyle={{color: Colors.textGray}}
-          title={'Remove'}
-        />
+        {item?.requested == 0 ? (
+          <>
+            <ThemeButton
+              style={styles.addBtn}
+              title={'Add Friend'}
+              onPress={() => sendReq(item?.id)}
+              textStyle={styles.addText}
+            />
+            {/* <ThemeButton
+              style={styles.removeBtn}
+              textStyle={{color: Colors.textGray, fontSize: hp('1.5')}}
+              title={'Remove'}
+            /> */}
+          </>
+        ) : (
+          <TextComponent
+            text={'Already requested'}
+            styles={{textAlign: 'center', marginVertical: hp('2')}}
+          />
+        )}
       </View>
     </>
   );
@@ -50,9 +61,8 @@ const styles = StyleSheet.create({
   friendCard: {
     backgroundColor: Colors.white,
     borderRadius: 20,
-    padding: 15,
     margin: 10,
-    width: wp('50%'),
+    width: wp('45'),
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: {width: 0, height: 2},
@@ -65,6 +75,8 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     overflow: 'hidden',
+    paddingVertical: hp('1'),
+    paddingHorizontal: wp('2'),
   },
   friendUserImage: {
     width: Dimensions.get('window').width * 0.19,
@@ -76,7 +88,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.black,
     textAlign: 'center',
-    marginTop: hp('2'),
+    marginTop: hp('1'),
     marginBottom: hp('0.5'),
   },
   bottomView: {
@@ -86,12 +98,17 @@ const styles = StyleSheet.create({
   },
   addBtn: {
     borderRadius: 10,
-    height: hp('5'),
+    height: hp('4'),
     backgroundColor: Colors.backgroundTheme,
     marginTop: hp('1'),
   },
+  addText: {
+    color: Colors.white,
+    fontWeight: 'bold',
+    fontSize: hp('1.5'),
+  },
   removeBtn: {
-    height: hp('5'),
+    height: hp('4'),
     backgroundColor: 'transparent',
   },
 });

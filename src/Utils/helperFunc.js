@@ -220,7 +220,7 @@ const formDataFunc = (url, body, imageKey, isArray) => {
   if (isArray) {
     if (body[imageKey][0]?.type) {
       Object.entries(body[imageKey]).forEach(([key, value], index) => {
-        formData.append(`${key}[${index}]`, {
+        formData.append(`${imageKey}[${index}]`, {
           uri: value?.uri,
           type: value?.type || 'image/jpeg',
           name: value?.name,
