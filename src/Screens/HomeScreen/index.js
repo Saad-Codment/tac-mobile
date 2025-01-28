@@ -29,9 +29,18 @@ import ThemeButton from '../../Components/ThemeButton';
 import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
 import FriendEventsComp from '../../Components/FriendEventsComp';
 import AddFriendComp from '../../Components/AddFriendComp';
+import {allSuggestedEventsUrl, allUpComingEventsUrl} from '../../Utils/Urls';
 
 const HomeScreen = ({navigation}) => {
-  const {search, setSearch, dynamicRoute} = useHomeScreen(navigation);
+  const {
+    search,
+    setSearch,
+    dynamicRoute,
+    onRefresh,
+    suggestedFriends,
+    sendReq,
+    userData,
+  } = useHomeScreen(navigation);
   const [scrollPosition, setScrollPosition] = useState(0);
 
   const handleScroll = event => {
@@ -48,28 +57,34 @@ const HomeScreen = ({navigation}) => {
   }, []);
 
   const renderItemAddFriend = useCallback(({item}) => {
-    return <AddFriendComp />;
+    return <AddFriendComp item={item} sendReq={sendReq} />;
   }, []);
 
   return (
     <View>
-      <HomeHeader text={'Hello Sheila'} />
+      <HomeHeader
+        text={`Hello ${userData?.first_name}`}
+        onNotificarioPress={() => dynamicRoute('NotificationScreen')}
+      />
       <View
         style={{
           top: hp(Platform.OS === 'android' ? '23' : '26'),
         }}>
         <View style={styles.searchComponent}>
           <ThemeButton
-            title={'Post Picture'}
-            image={galleryYellow}
-            style={styles.upperBtn}
+            title={'Write something'}
+            style={{
+              ...styles.upperBtn,
+              justifyContent: 'flex-start',
+              paddingLeft: wp('5'),
+            }}
             imageStyle={{width: wp('7')}}
+            image={editYellow}
             onPress={() => dynamicRoute('CreatePostScreen')}
           />
           <ThemeButton
-            title={'Write something'}
-            image={editYellow}
-            style={styles.upperBtn}
+            image={galleryYellow}
+            style={{...styles.upperBtn, width: wp('13')}}
             imageStyle={styles.imgStyle}
             textStyle={{marginLeft: wp('0.2')}}
           />
@@ -79,6 +94,7 @@ const HomeScreen = ({navigation}) => {
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
           bounces={false}
+          // refreshControl={}
           contentContainerStyle={styles.scrollContainer}>
           <View style={styles.innerView}>
             <TextComponent
@@ -88,6 +104,13 @@ const HomeScreen = ({navigation}) => {
             <TextComponent
               styles={{color: Colors.white, ...styles.viewall}}
               text={'View All'}
+              onPress={() =>
+                dynamicRoute('AllEventsScreen', {
+                  url: allUpComingEventsUrl,
+                  key: 'upcomingEvents',
+                  title: 'Upcoming Events',
+                })
+              }
             />
           </View>
           <FlatList
@@ -129,6 +152,7 @@ const HomeScreen = ({navigation}) => {
                 ...styles.viewall,
               }}
               text={'View All'}
+              onPress={() => dynamicRoute('FriendsEventsScreen')}
             />
           </View>
           <FlatList
@@ -183,6 +207,13 @@ const HomeScreen = ({navigation}) => {
                 ...styles.viewall,
               }}
               text={'View All'}
+              onPress={() => {
+                dynamicRoute('AllEventsScreen', {
+                  url: allSuggestedEventsUrl,
+                  key: 'suggestedEvents',
+                  title: 'Suggested Events',
+                });
+              }}
             />
           </View>
           <FlatList
@@ -233,35 +264,7 @@ const HomeScreen = ({navigation}) => {
             />
           </View>
           <FlatList
-            data={[
-              {
-                id: '1',
-                userImage: 'https://picsum.photos/200',
-                userName: 'Ricky Jonathan',
-                eventTitle: 'Unity league.',
-                eventCategory: 'Bull Riding',
-                eventDate: 'Mon. Nov 27 - 2023',
-                eventTime: '18:00 - 23:00 P.M.',
-                eventLocation: 'Catherine St French Prairie Gardens.',
-                likes: '123',
-                association: 'Association',
-                circuits: 'Circuits',
-              },
-              {
-                id: '2',
-                userImage: 'https://picsum.photos/200',
-                userName: 'Ricky Jonathan',
-                eventTitle: 'Unity league',
-                eventCategory: 'Bull Riding',
-                eventDate: 'Mon. Nov 27 - 2023',
-                eventTime: '18:00 - 23:00 P.M.',
-                eventLocation: 'Catherine St French Prairie Gardens.',
-                likes: '123',
-                association: 'Association',
-                circuits: 'Circuits',
-              },
-              // Add more items here
-            ]}
+            data={suggestedFriends}
             renderItem={renderItemAddFriend}
             horizontal // Enable horizontal scrolling
             keyExtractor={item => item.toString()}

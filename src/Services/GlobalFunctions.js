@@ -712,6 +712,13 @@ function removeUndefined(arr) {
   } else [];
 }
 
+function checkParagraphForUndefined(paragraph) {
+  if (typeof paragraph !== 'string') {
+    return false;
+  }
+  return !paragraph.includes('undefined');
+}
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -746,4 +753,5 @@ export {
   convertToLocalTime,
   capitalizeFirstLetter,
   removeUndefined,
+  checkParagraphForUndefined,
 };

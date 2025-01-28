@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,6 +6,8 @@ import {
   ImageBackground,
   LogBox,
   Image,
+  AppState,
+  Platform,
 } from 'react-native';
 import MainNavigator from './src/navigation/MainNavigator';
 import {logoScreen, splash, splash2} from './src/Assets';
@@ -14,6 +16,10 @@ import useReduxStore from './src/Hooks/UseReduxStore';
 import {hp, wp} from './src/Config/responsive';
 import {useIsFetching} from '@tanstack/react-query';
 import Geolocation from '@react-native-community/geolocation';
+import {fcmService} from './src/Services/Notifications';
+import {fcmRegister} from './src/Redux/Action/AuthAction';
+import NavigationService from './src/Services/NavigationService';
+import notifee, {EventType} from '@notifee/react-native';
 
 const App = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -22,13 +28,84 @@ const App = () => {
   };
   const {getState, dispatch} = useReduxStore();
 
+  const appState = useRef(AppState.currentState);
   const {isloading} = getState('isloading');
+  const {isLogin} = getState('Auth');
   const isFetching = useIsFetching();
 
   console.log('load', isloading);
   const time = () => {
     return 3000;
   };
+
+  useEffect(() => {
+    /* It's a function that registers the device to receive push notifications. */
+    if (isLogin) {
+      setTimeout(() => {
+        fcmService.register(
+          onRegister,
+          onOpenNotification,
+          appState.current,
+          () => {},
+        );
+      }, 1000);
+    }
+    return () => {
+      /* It's a function that unregisters the device from receiving push notifications. */
+      if (isLogin) {
+        fcmService.unRegister();
+      }
+    };
+  }, [isLogin]);
+  const onRegister = fcm_token => {
+    console.log('fcm_token', Platform.OS, fcm_token);
+    dispatch(fcmRegister(fcm_token));
+  };
+
+  const onOpenNotification = notify => {
+    if (notify?.data?.payload) {
+      console.log(
+        'payloadDatapayloadDatapayloadDatapayloadDatapayloadData',
+        payloadData,
+      );
+      const payloadData = JSON.parse(notify?.data?.payload);
+      if (payloadData?.isRoute) {
+        NavigationService.navigate(
+          payloadData?.screenRoute,
+          payloadData?.app_data?.id && payloadData?.app_data,
+        );
+      }
+    } else {
+      NavigationService.navigate('NotificationScreen');
+    }
+  };
+
+  useEffect(() => {
+    return notifee.onForegroundEvent(({type, detail}) => {
+      switch (type) {
+        case EventType.DISMISSED:
+          console.log('User dismissed notification', detail.notification);
+          break;
+        case EventType.PRESS:
+          const notify = detail.notification;
+          if (notify?.data?.payload) {
+            console.log(
+              'payloadDatapayloadDatapayloadDatapayloadDatapayloadData',
+              payloadData,
+            );
+            const payloadData = JSON.parse(notify?.data?.payload);
+            if (payloadData?.isRoute) {
+              NavigationService.navigate(
+                payloadData?.screenRoute,
+                payloadData?.app_data?.id && payloadData?.app_data,
+              );
+            }
+          }
+          console.log('User pressed notification', detail.notification);
+          break;
+      }
+    });
+  }, []);
 
   useEffect(() => {
     Geolocation.setRNConfiguration({

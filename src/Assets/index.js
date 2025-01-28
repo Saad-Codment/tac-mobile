@@ -146,6 +146,8 @@ export {default as editPicBtn} from './Icons/editPicBtn.png';
 export {default as filledCalender} from './Icons/filledCalender.png';
 export {default as filledLocation} from './Icons/filledLocation.png';
 export {default as filledClock} from './Icons/filledClock.png';
+export {default as commentIcon} from './Icons/commentIcon.png';
+export {default as send} from './Icons/send.png';
 
 // Lotties files
 

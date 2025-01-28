@@ -44,6 +44,16 @@ export const createPostUrl = '/posts/store';
 export const sendFriendReqUrl = '/friend-request/send/';
 export const acceptFriendReqUrl = '/friend-request/accept-request/';
 export const rejectFriendReqUrl = '/friend-request/reject-request/';
+export const homeSuggestedFriendsUrl = '/friends/suggestions-home';
+export const getFriendReqUrl = '/friend-request/check/requests';
+export const getAllNotificationsUrl = '/get-notifications';
+export const allUpComingEventsUrl = '/home/upcoming-events';
+export const allFriendEventsUrl = '/home/friends-events';
+export const allSuggestedEventsUrl = '/home/suggested-events';
+export const likeUnlikeUrl = '/react/like/';
+export const getEventsCommentUrl = '/events/comments/';
+export const postCommentUrl = '/react/comment';
 
+export const fcmTokenUrl = 'add-fcm-token';
 export const deleteAccUrl = 'auth/account-delete';
 export const logoutUrl = 'auth/logout';

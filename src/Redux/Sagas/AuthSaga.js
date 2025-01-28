@@ -197,7 +197,7 @@ function* authSaga() {
   yield takeLatest(types.RegisterUser, registerSaga);
   yield takeLatest(types.forgotPasswordType, forgotUserSaga);
   // yield takeLatest(types.UpdateUser, updateProfileSaga);
-  // yield takeLatest(types.fcmRegType, fcmTokenSaga);
+  yield takeLatest(types.fcmRegType, fcmTokenSaga);
 }
 
 export default authSaga;

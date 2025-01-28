@@ -18,13 +18,14 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
+    marginVertical: hp('1'),
   },
   tacImg: {width: wp('10'), marginRight: wp('2')},
   followView: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    width: wp('50'),
+    // width: wp('50'),
   },
   checkImg: {
     width: wp('8'),

@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   ImageBackground,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -107,6 +108,12 @@ const SettingScreen = ({navigation}) => {
       onPress: () => {},
     },
     {
+      title: 'Friend Requests',
+      leftIcon: eventHistory,
+      rightText: 'View',
+      onPress: () => NavigationService.navigate('FriendReqScreen'),
+    },
+    {
       title: 'Friends List',
       leftIcon: friendList,
       rightText: 'View',
@@ -138,12 +145,12 @@ const SettingScreen = ({navigation}) => {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: hp('70')}}>
+        contentContainerStyle={{paddingBottom: hp('80')}}>
         <View style={styles.mainBtn}>
           <View style={styles.upperWhiteView}>
             <View style={styles.imgView}>
               <CircleImage
-                size={0.4}
+                size={Platform.OS == 'ios' ? 0.4 : 0.35}
                 image={imageUrl(userData?.profile_image)}
                 uri={true}
               />

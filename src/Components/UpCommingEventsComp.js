@@ -6,6 +6,13 @@ import {TextComponent} from './TextComponent';
 import {blackLock, heartTheme, locationGray, shareTheme} from '../Assets';
 import {Colors} from '../Theme/Variables';
 import {MultiSelectButton} from './MultiSelectButton';
+import {
+  convertToCustomTimeFormat,
+  convertToLocalTime,
+  getDateMonthYear,
+} from '../Services/GlobalFunctions';
+import {Touchable} from './Touchable';
+import NavigationService from '../Services/NavigationService';
 
 const tags = [
   {
@@ -18,16 +25,25 @@ const tags = [
   },
 ];
 
-const UpcomingEventsComp = () => {
+const UpcomingEventsComp = ({
+  item,
+  index,
+  mainViewStyle,
+  upperImgStyle,
+  likePost,
+}) => {
   return (
-    <View style={styles.mainView}>
-      <BlurImage styles={styles.upperImage} radius={0} />
-      <View style={styles.innerMainView}>
+    <View style={{...styles.mainView, ...mainViewStyle}}>
+      <BlurImage styles={{...styles.upperImage, ...upperImgStyle}} radius={0} />
+      <Touchable
+        style={styles.innerMainView}
+        disabled={Boolean(!item?.id)}
+        onPress={() =>
+          NavigationService.navigate('EventsDetailScreen', {id: item?.id})
+        }>
         <View style={styles.innerUpperView}>
           <CircleImage
-            image={
-              'https://images.pexels.com/photos/1898555/pexels-photo-1898555.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-            }
+            image={item?.user_image}
             uri={true}
             styles={styles.profileImg}
             radius={5}
@@ -37,7 +53,14 @@ const UpcomingEventsComp = () => {
               marginLeft: wp('3'),
             }}>
             <View style={styles.lockView}>
-              <TextComponent text={'Me'} styles={{fontWeight: 'bold'}} />
+              <TextComponent
+                text={item?.title}
+                styles={{
+                  fontWeight: 'bold',
+                  maxWidth: wp('65'),
+                }}
+                numberOfLines={1}
+              />
               <Image
                 source={blackLock}
                 resizeMode="contain"
@@ -45,19 +68,31 @@ const UpcomingEventsComp = () => {
               />
             </View>
             <TextComponent
-              text={'Mon. Nov 27 - 18:00 - 23:00 PM'}
+              text={`${getDateMonthYear(item?.from_date)?.dayName}. ${
+                getDateMonthYear(item?.from_date)?.monthName
+              } ${
+                getDateMonthYear(item?.from_date)?.day
+              } - ${convertToCustomTimeFormat(
+                item?.from_date,
+              )} - ${convertToCustomTimeFormat(item?.to_date)}`}
+              // text={'Mon. Nov 27 - 18:00 - 23:00 PM'}
               fade={true}
               styles={styles.timeText}
             />
           </View>
         </View>
-        <View style={styles.innerTitleView}>
-          <TextComponent
-            text={'aMobridge, SD Slac.'}
-            styles={{fontWeight: 'bold'}}
-          />
-          <TextComponent text={'( Bull Riding )'} styles={styles.goldenText} />
-        </View>
+        {item?.event_type_name && (
+          <View style={styles.innerTitleView}>
+            <TextComponent
+              text={'aMobridge, SD Slac.'}
+              styles={{fontWeight: 'bold'}}
+            />
+            <TextComponent
+              text={'( Bull Riding )'}
+              styles={styles.goldenText}
+            />
+          </View>
+        )}
         <View style={styles.innerLocationView}>
           <Image
             source={locationGray}
@@ -65,35 +100,39 @@ const UpcomingEventsComp = () => {
             style={{width: wp('5')}}
           />
           <TextComponent
-            text={'Street338 Catherine St, Street Catherine St.'}
+            text={item?.address}
             fade={true}
             styles={styles.locationText}
           />
         </View>
         <View style={styles.tagsMainView}>
           <MultiSelectButton
-            items={tags}
+            items={[item?.association_name, item?.circuit_name].filter(
+              res => res != null,
+            )}
             isDisable={true}
             btnStyle={styles.tagsBtn}
-            textStyle={{fontSize: hp('1.5')}}
+            textStyle={{fontSize: hp('1.5'), color: '#525252'}}
           />
         </View>
         <View style={styles.divider} />
         <View style={styles.bottomView}>
-          <View style={styles.leftRightView}>
+          <Touchable
+            style={styles.leftRightView}
+            onPress={() => likePost(item?.id)}>
             <Image
               source={heartTheme}
               resizeMode="contain"
               style={{width: wp('5'), marginRight: wp('1')}}
             />
             <TextComponent
-              text={'45 Likes'}
+              text={`${item?.likes_count} Likes`}
               fade={true}
               styles={{
                 fontSize: hp('1.5'),
               }}
             />
-          </View>
+          </Touchable>
           <View style={styles.leftRightView}>
             <Image
               source={shareTheme}
@@ -110,7 +149,7 @@ const UpcomingEventsComp = () => {
             />
           </View>
         </View>
-      </View>
+      </Touchable>
     </View>
   );
 };
@@ -134,9 +173,15 @@ const styles = StyleSheet.create({
   },
   upperImage: {
     width: wp('87'),
+    aspectRatio: 1,
     height: hp('13'),
   },
-  innerMainView: {width: wp('78'), alignSelf: 'center', marginTop: hp('1')},
+  innerMainView: {
+    // alignSelf: 'center',
+    marginTop: hp('1'),
+    paddingHorizontal: hp('2'),
+    // flex: 1,
+  },
   innerUpperView: {flexDirection: 'row', alignItems: 'center'},
   profileImg: {borderRadius: 5, width: wp('12'), height: hp('5')},
   lockView: {
@@ -187,7 +232,7 @@ const styles = StyleSheet.create({
   },
   leftRightView: {
     flexDirection: 'row',
-    width: wp('63'),
+    // width: wp('63'),
     alignItems: 'center',
   },
 });

@@ -29,14 +29,14 @@ export const MultiSelectButton = ({
             onSelectVal(objId, item);
             // setDummy(pre => pre + 1);
           }}
-          title={item?.name ?? item?.title}
+          title={item?.name ?? item?.title ?? item}
           style={{
             ...styles.btnMain(
               isMultipule
                 ? Boolean(selectedAlter?.find(res => res?.id == item.id))
                 : Boolean(
                     (selectedAlter?.alternates?.id ?? selectedAlter?.id) ==
-                      item.id,
+                      item?.id,
                   ),
               selectedBgColor,
             ),
@@ -48,7 +48,7 @@ export const MultiSelectButton = ({
                 ? Boolean(selectedAlter?.find(res => res?.id == item.id))
                 : Boolean(
                     (selectedAlter?.alternates?.id ?? selectedAlter?.id) ==
-                      item.id,
+                      item?.id,
                   ),
             ),
             ...textStyle,

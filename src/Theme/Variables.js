@@ -20,6 +20,7 @@ const Colors = {
   lightInnerColor: 'rgba(246, 246, 246, 1)',
   darkThemeTextColor: 'rgba(24, 24, 24, 1)',
   lightBlueTextColor: 'rgba(24, 119, 242, 1)',
+  diableBtnCOlor: 'rgba(238, 238, 238, 1)',
 };
 
 /** FontSize **/

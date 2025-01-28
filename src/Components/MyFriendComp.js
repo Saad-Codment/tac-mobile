@@ -1,0 +1,137 @@
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Platform,
+  Dimensions,
+} from 'react-native';
+import React from 'react';
+import BlurImage from './BlurImage';
+import {hp, wp} from '../Config/responsive';
+import {TextComponent} from './TextComponent';
+import {Touchable} from './Touchable';
+import {Colors, FontSize} from '../Theme/Variables';
+import {chat} from '../Assets';
+import {CircleImage} from './CircleImage';
+import {imageUrl} from '../Utils/Urls';
+import MutualFriends from './MutualFriendsComponent';
+import ThemeButton from './ThemeButton';
+
+const MyFriendComp = ({item}) => {
+  return (
+    <View style={styles.view}>
+      <View>
+        <CircleImage uri={imageUrl(item?.profile_image)} size={0.15} />
+      </View>
+      <View style={styles.titleView}>
+        <TextComponent
+          text={item?.first_name + ' ' + item?.last_name}
+          styles={styles.title}
+        />
+        <View style={{flexDirection: 'row'}}>
+          <MutualFriends
+            uri={'https://picsum.photos/200'}
+            friends={[1, 2, 3, 4, 5]}
+          />
+        </View>
+      </View>
+      <ThemeButton
+        title={'Chat'}
+        isYellowTheme
+        image={chat}
+        style={{width: wp('20')}}
+        imageStyle={{width: wp('5')}}
+      />
+    </View>
+  );
+};
+
+export default MyFriendComp;
+
+const styles = StyleSheet.create({
+  view: {
+    borderRadius: 15,
+    backgroundColor: Colors.white,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: wp('95'),
+    alignSelf: 'center',
+    marginVertical: hp('0.5'),
+    paddingVertical: hp('1'),
+    paddingHorizontal: wp('2'),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 10,
+  },
+  blurImage: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: wp('12'),
+    height: Platform.OS == 'ios' ? hp('6') : hp('6.5'),
+    borderRadius: 10,
+    backgroundColor: 'red',
+  },
+  circle: {
+    resizeMode: 'cover',
+    width: wp('15'),
+    height: hp('10'),
+    // overflow: 'hidden',
+  },
+  titleView: {
+    alignSelf: 'center',
+    justifyContent: 'flex-start',
+    flex: 1,
+    marginLeft: wp('3'),
+  },
+  title: {
+    fontSize: FontSize.scale18,
+    color: Colors.backgroundTheme,
+    fontWeight: 600,
+    // marginLeft: wp('1'),
+    // marginTop: hp('0.5'),
+    marginVertical: hp('0.5'),
+  },
+  des: {
+    fontSize: FontSize.scale14,
+    color: Colors.textGray,
+    fontWeight: 400,
+  },
+  detbtn: {
+    fontSize: FontSize.scale14,
+    color: Colors.primaryColor,
+    fontWeight: 500,
+  },
+  r8: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  introImage: {
+    aspectRatio: 3 / 2,
+    width: wp('4'),
+    tintColor: Colors.primaryColor,
+  },
+  chatView: {
+    backgroundColor: Colors.primaryColor,
+    padding: 10,
+    flexDirection: 'row',
+    borderRadius: 10,
+  },
+  chat: {
+    resizeMode: 'contain',
+    height: hp('2'),
+    width: wp('5'),
+  },
+  chatTxt: {
+    fontSize: FontSize.scale16,
+    color: Colors.white,
+    fontWeight: 500,
+  },
+});

@@ -17,4 +17,5 @@ export const types = {
   getcatalogData: 'getcatalogData',
   UpdateProfile: 'UpdateProfile',
   forgotPasswordType: 'forgotPasswordType',
+  fcmRegType: 'fcmRegType',
 };

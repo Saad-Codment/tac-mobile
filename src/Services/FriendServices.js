@@ -3,6 +3,8 @@ import API from '../Utils/helperFunc';
 import {
   acceptFriendReqUrl,
   acceptRejectFriendReqUrl,
+  likeUnlikeUrl,
+  postCommentUrl,
   rejectFriendReqUrl,
   sendFriendReqUrl,
 } from '../Utils/Urls';
@@ -63,7 +65,46 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     },
   });
 
-  return {sendFriendReq, acceptFriendReq, rejectFriendReq};
+  const likeAndDisLikeEvent = useMutation({
+    mutationFn: data => {
+      return API.post(likeUnlikeUrl + data, {});
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
+  const postComment = useMutation({
+    mutationFn: data => {
+      return API.post(postCommentUrl, data);
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
+
+  return {
+    sendFriendReq,
+    acceptFriendReq,
+    rejectFriendReq,
+    likeAndDisLikeEvent,
+    postComment,
+  };
 };
 
 // Ensure you are using this hook inside a component

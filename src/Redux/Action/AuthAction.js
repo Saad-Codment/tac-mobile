@@ -28,3 +28,8 @@ export const forgotPasswordAction = payload => ({
   type: types.forgotPasswordType,
   payload,
 });
+
+export const fcmRegister = payload => ({
+  type: types.fcmRegType,
+  payload,
+});

@@ -1,4 +1,4 @@
-import {Image, ScrollView, View} from 'react-native';
+import {Image, Linking, ScrollView, View} from 'react-native';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import BlurImage from '../../Components/BlurImage';
 import {hp, wp} from '../../Config/responsive';
@@ -19,10 +19,12 @@ import {MultiView} from '../SettingScreen/MultiView';
 import ThemeButton from '../../Components/ThemeButton';
 import useEventDetailScreen from './useEventsDetailScreen';
 import {
+  checkParagraphForUndefined,
   convertToLocalTime,
   getDateMonthYear,
 } from '../../Services/GlobalFunctions';
 import {imageUrl} from '../../Utils/Urls';
+import {CircleImage} from '../../Components/CircleImage';
 
 const EventsDetailScreen = ({navigation, route}) => {
   const {eventData, onRefresh} = useEventDetailScreen(navigation, route);
@@ -58,39 +60,31 @@ const EventsDetailScreen = ({navigation, route}) => {
     {
       title: eventData?.address,
       leftIcon: filledLocation,
-      rightText: 'View Location',
-      rightTextStyles: {color: Colors.lightBlueTextColor},
     },
   ];
 
   const bottomView = [
     {
       title: 'Association',
-      rightText: eventData?.association?.name,
+      rightText: eventData?.association?.name ?? 'Not Available',
       onPress: () => {},
       rightTextStyles: {color: Colors.primaryColor},
     },
     {
       title: 'Added Money',
-      rightText: '$10,000',
+      rightText: '$10,000' ?? 'Not Available',
       onPress: () => {},
       rightTextStyles: {color: Colors.primaryColor},
     },
     {
       title: 'Circuits',
-      rightText: eventData?.circuit?.name,
+      rightText: eventData?.circuit?.name ?? 'Not Available',
       onPress: () => {},
       rightTextStyles: {color: Colors.primaryColor},
     },
     {
       title: 'tour',
-      rightText: eventData?.tour?.name,
-      onPress: () => {},
-      rightTextStyles: {color: Colors.primaryColor},
-    },
-    {
-      title: '1st Performance',
-      rightText: '04-Jul   |   08 : 00 - 11 : 00 P.m.',
+      rightText: eventData?.tour?.name ?? 'Not Available',
       onPress: () => {},
       rightTextStyles: {color: Colors.primaryColor},
     },
@@ -101,6 +95,19 @@ const EventsDetailScreen = ({navigation, route}) => {
       rightTextStyles: {color: Colors.primaryColor},
     },
   ];
+  const performanceArry =
+    eventData?.performances && eventData?.performances?.length > 0
+      ? eventData?.performances?.map(res => ({
+          title: res?.title,
+          rightText: `${getDateMonthYear(res?.date)?.day}-${
+            getDateMonthYear(res?.date)?.monthName
+          } |  ${convertToLocalTime(res?.start_time)?.time} - ${
+            convertToLocalTime(eventData?.end_time)?.time
+          } ${convertToLocalTime(eventData?.end_time)?.period}.`,
+          onPress: () => {},
+          rightTextStyles: {color: Colors.primaryColor},
+        }))
+      : [];
 
   console.log('eventDataeventDataeventDataeventData', eventData);
 
@@ -123,10 +130,26 @@ const EventsDetailScreen = ({navigation, route}) => {
           radius={15}
         />
         <View style={styles.systemView}>
-          <Image source={tacLogo} resizeMode="contain" style={styles.tacImg} />
+          <CircleImage
+            image={
+              eventData?.user?.profile_image
+                ? imageUrl(eventData?.user?.profile_image)
+                : tacLogo
+            }
+            uri={Boolean(eventData?.user?.profile_image)}
+            styles={styles.tacImg}
+            radius={5}
+          />
           <TextComponent
-            text={'System suggested'}
-            styles={{fontSize: hp('1.8')}}
+            text={
+              eventData?.user?.first_name
+                ? `${eventData?.user?.first_name} ${eventData?.user?.last_name}`
+                : 'System suggested'
+            }
+            styles={{
+              fontSize: hp('1.8'),
+              width: wp('57'),
+            }}
           />
           <View style={styles.followView}>
             <Image
@@ -157,7 +180,9 @@ const EventsDetailScreen = ({navigation, route}) => {
         </View>
         <MultiView
           viewStyle={{width: wp('98')}}
-          data={centerView}
+          data={centerView.filter(res =>
+            checkParagraphForUndefined(res?.title),
+          )}
           dividerStyles={{display: 'none'}}
         />
         <MultiView
@@ -165,10 +190,32 @@ const EventsDetailScreen = ({navigation, route}) => {
           data={bottomView}
           dividerStyles={styles.dividerStyle}
         />
+        {eventData?.performances && performanceArry.length > 0 && (
+          <>
+            <TextComponent
+              text={'Previous Performances'}
+              styles={{
+                ...styles.titleStyle,
+                marginTop: hp('2'),
+                marginBottom: hp('-1'),
+              }}
+            />
+            <MultiView
+              viewStyle={styles.multiViewStyle}
+              data={performanceArry}
+              dividerStyles={styles.dividerStyle}
+            />
+          </>
+        )}
         <ThemeButton
           title={'View Event location on map'}
           style={styles.btnStyle}
           isYellowTheme
+          onPress={() =>
+            Linking.openURL(
+              `https://www.google.com/maps/search/?api=1&query=${eventData?.latitude}%2C${eventData?.longitude}`,
+            )
+          }
         />
       </ScrollView>
     </View>

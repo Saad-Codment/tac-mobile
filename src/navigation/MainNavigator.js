@@ -117,6 +117,26 @@ function MainNavigator() {
               name="CreatePostScreen"
               component={Screens.CreatePostScreen}
             />
+            <Stack.Screen
+              name="FriendReqScreen"
+              component={Screens.FriendReqScreen}
+            />
+            <Stack.Screen
+              name="NotificationScreen"
+              component={Screens.NotificationScreen}
+            />
+            <Stack.Screen
+              name="AllEventsScreen"
+              component={Screens.AllEventsScreen}
+            />
+            <Stack.Screen
+              name="FriendsEventsScreen"
+              component={Screens.FriendsEventsScreen}
+            />
+            <Stack.Screen
+              name="CommentScreen"
+              component={Screens.CommentScreen}
+            />
             {/* <Stack.Screen
               name="SkeletonScreen"
               component={Screens.SkeletonScreen}

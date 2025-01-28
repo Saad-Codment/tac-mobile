@@ -29,6 +29,7 @@ const useAllSuggestedFriendsScreen = ({navigate}) => {
     sendReq: async id => {
       await sendFriendReq.mutateAsync(id);
       queryClient.invalidateQueries({queryKey: ['myFriends']});
+      queryClient.invalidateQueries({queryKey: ['homeSuggestedFriends']});
     },
   };
 };

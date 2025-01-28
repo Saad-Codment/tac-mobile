@@ -20,7 +20,7 @@ import {Touchable} from '../Components/Touchable';
 import Lottie from 'lottie-react-native';
 import {CircleImage} from './CircleImage';
 
-const HomeHeader = ({text}) => {
+const HomeHeader = ({text, onNotificarioPress}) => {
   return (
     <View style={styles.headerView}>
       <View style={styles.firstView}>
@@ -64,12 +64,12 @@ const HomeHeader = ({text}) => {
               />
             </View>
             <TextComponent
-              text={'Welcome to Salt!'}
+              text={'Welcome back'}
               styles={{top: hp('0'), color: Colors.textGray}}
             />
           </View>
         </View>
-        <Touchable>
+        <Touchable onPress={onNotificarioPress}>
           <Image
             source={notificationWhite}
             resizeMode="contain"

@@ -6,6 +6,7 @@ import {TextComponent} from './TextComponent';
 import {
   blackLock,
   calendar,
+  commentIcon,
   dollarCircle,
   heartTheme,
   infoCircle,
@@ -15,6 +16,12 @@ import {
 } from '../Assets';
 import {Colors} from '../Theme/Variables';
 import {MultiSelectButton} from './MultiSelectButton';
+import {
+  convertToCustomTimeFormat,
+  getDateMonthYear,
+} from '../Services/GlobalFunctions';
+import {Touchable} from './Touchable';
+import NavigationService from '../Services/NavigationService';
 
 const tags = [
   {
@@ -27,16 +34,25 @@ const tags = [
   },
 ];
 
-const FriendEventsComp = () => {
+const FriendEventsComp = ({
+  item,
+  index,
+  mainViewStyles,
+  upperImgStyle,
+  likePost,
+}) => {
   return (
-    <View style={styles.mainView}>
-      <BlurImage styles={styles.upperImage} radius={0} />
-      <View style={styles.innerMainView}>
+    <View style={{...styles.mainView, ...mainViewStyles}}>
+      <BlurImage styles={{...styles.upperImage, ...upperImgStyle}} radius={0} />
+      <Touchable
+        style={styles.innerMainView}
+        disabled={Boolean(!item?.id)}
+        onPress={() =>
+          NavigationService.navigate('EventsDetailScreen', {id: item?.id})
+        }>
         <View style={styles.innerUpperView}>
           <CircleImage
-            image={
-              'https://images.pexels.com/photos/1898555/pexels-photo-1898555.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-            }
+            image={item?.user_image}
             uri={true}
             styles={styles.profileImg}
             radius={5}
@@ -44,8 +60,13 @@ const FriendEventsComp = () => {
           <View
             style={{
               marginLeft: wp('3'),
+              width: wp('60'),
             }}>
-            <TextComponent text={'Me'} styles={{fontWeight: 'bold'}} />
+            <TextComponent
+              text={item?.first_name + ' ' + item?.last_name}
+              styles={{fontWeight: 'bold'}}
+              numberOfLines={1}
+            />
             <TextComponent
               text={'Associations  Circuits'}
               styles={styles.timeText}
@@ -58,7 +79,7 @@ const FriendEventsComp = () => {
           />
         </View>
         <TextComponent
-          text={'aMobridge, SD Slac.'}
+          text={`${item?.association_name}, ${item?.circuit_name}.`}
           styles={{fontWeight: 'bold', marginVertical: hp('1')}}
         />
         <View style={styles.middleTimeView}>
@@ -76,7 +97,9 @@ const FriendEventsComp = () => {
               }}
             />
             <TextComponent
-              text={'Mon. Nov 27'}
+              text={`${getDateMonthYear(item?.from_date)?.dayName}. ${
+                getDateMonthYear(item?.from_date)?.monthName
+              } ${getDateMonthYear(item?.from_date)?.day}`}
               isThemeColor={true}
               styles={{
                 fontSize: hp('1.5'),
@@ -99,7 +122,9 @@ const FriendEventsComp = () => {
               }}
             />
             <TextComponent
-              text={'Mon. Nov 27'}
+              text={`${getDateMonthYear(item?.to_date)?.dayName}. ${
+                getDateMonthYear(item?.to_date)?.monthName
+              } ${getDateMonthYear(item?.to_date)?.day}`}
               isThemeColor={true}
               styles={{
                 fontSize: hp('1.5'),
@@ -116,7 +141,9 @@ const FriendEventsComp = () => {
               style={{width: wp('5'), marginRight: wp('1')}}
             />
             <TextComponent
-              text={'18:00 - 23:00 PM'}
+              text={`${convertToCustomTimeFormat(
+                item?.start_time,
+              )} - ${convertToCustomTimeFormat(item?.end_time)}0`}
               isThemeColor={true}
               styles={{
                 fontSize: hp('1.5'),
@@ -146,14 +173,16 @@ const FriendEventsComp = () => {
             tintColor={Colors.yellowTextColor}
           />
           <TextComponent
-            text={'Street338 Catherine St, Street Catherine St.'}
+            text={item?.address}
             isThemeColor={true}
             styles={styles.locationText}
           />
         </View>
         <View style={styles.divider} />
         <View style={styles.bottomView}>
-          <View style={styles.leftRightView}>
+          <Touchable
+            style={styles.leftRightView}
+            onPress={() => likePost(item?.id)}>
             <Image
               source={heartTheme}
               resizeMode="contain"
@@ -161,28 +190,32 @@ const FriendEventsComp = () => {
               style={{width: wp('5'), marginRight: wp('1')}}
             />
             <TextComponent
-              text={'45 Likes'}
+              text={`${item?.likes_count} Likes`}
               isThemeColor={true}
               styles={{
                 fontSize: hp('1.5'),
               }}
             />
-          </View>
-          <View style={styles.leftRightView}>
+          </Touchable>
+          <Touchable
+            style={styles.leftRightView}
+            onPress={() =>
+              NavigationService.navigate('CommentScreen', item?.id)
+            }>
             <Image
-              source={heartTheme}
+              source={commentIcon}
               resizeMode="contain"
               tintColor={Colors.yellowTextColor}
               style={{width: wp('5'), marginRight: wp('1')}}
             />
             <TextComponent
-              text={'Comment'}
+              text={`${item?.comments_count} Comment`}
               isThemeColor={true}
               styles={{
                 fontSize: hp('1.5'),
               }}
             />
-          </View>
+          </Touchable>
           <View style={styles.leftRightView}>
             <Image
               source={shareTheme}
@@ -200,7 +233,7 @@ const FriendEventsComp = () => {
             />
           </View>
         </View>
-      </View>
+      </Touchable>
     </View>
   );
 };
@@ -226,11 +259,13 @@ const styles = StyleSheet.create({
   upperImage: {
     width: wp('87'),
     height: hp('13'),
+    aspectRatio: 1,
   },
   innerMainView: {
-    width: wp('78'),
-    alignSelf: 'center',
+    // width: wp('78'),
+    // alignSelf: 'center',
     marginTop: hp('1'),
+    paddingHorizontal: hp('2'),
   },
   innerUpperView: {flexDirection: 'row', alignItems: 'center'},
   profileImg: {borderRadius: 5, width: wp('12'), height: hp('5')},
@@ -241,7 +276,7 @@ const styles = StyleSheet.create({
   lockImg: {
     width: wp('6'),
     height: hp('3'),
-    marginLeft: wp('23'),
+    marginLeft: wp('2'),
   },
   middleTimeView: {
     flexDirection: 'row',
@@ -297,7 +332,7 @@ const styles = StyleSheet.create({
   },
   leftRightView: {
     flexDirection: 'row',
-    width: wp('31.5'),
+    // width: wp('31.5'),
     alignItems: 'center',
   },
 });

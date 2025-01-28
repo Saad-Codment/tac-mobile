@@ -1,5 +1,11 @@
 import auth from '@react-native-firebase/auth';
-import {fcmToken, loginUrl, logoutUrl, registerUrl} from '../Utils/Urls';
+import {
+  fcmToken,
+  fcmTokenUrl,
+  loginUrl,
+  logoutUrl,
+  registerUrl,
+} from '../Utils/Urls';
 import API from '../Utils/helperFunc';
 
 /**
@@ -27,7 +33,7 @@ const logoutService = async () => await API.get(logoutUrl);
  * The function `fcmRegService` is an asynchronous function that posts a FCM token to an API endpoint.
  */
 const fcmRegService = async params =>
-  await API.post(fcmToken, {fcm_token: params});
+  await API.post(fcmTokenUrl, {fcm_token: params});
 
 /**
  * The function `logOutFirebase` signs out the current user from Firebase authentication.

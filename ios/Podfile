@@ -13,14 +13,19 @@ require_relative '../node_modules/react-native-permissions/scripts/setup'
 platform :ios, 13.4
 prepare_react_native_project!
 
+pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
 
 setup_permissions([
   'LocationAccuracy',
   'LocationAlways',
   'LocationWhenInUse',
     'Calendars',
-    "CalendarsWriteOnly"
+    "CalendarsWriteOnly",
+    'Notifications',
 ])
+
+
+use_modular_headers! # Enable modular headers globally
 
 # flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
 
@@ -56,9 +61,16 @@ target 'tac' do
   pod 'GTMSessionFetcher', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
+  # pod 'FirebaseAuthInterop', :modular_headers => true
+  # pod 'FirebaseAppCheckInterop', :modular_headers => true
+  # pod 'FirebaseCoreExtension', :modular_headers => true
+  # pod 'RecaptchaInterop', :modular_headers => true
+  # pod 'Firebase/CoreOnly', :modular_headers => true
+  #  pod 'Firebase/Auth', :modular_headers => true
+  #  pod 'Firebase/Messaging', :modular_headers => true
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   permissions_path = '../node_modules/react-native-permissions/ios'
-
+  # $RNFirebaseAsStaticFramework = true
   target 'tacTests' do
     inherit! :complete
     # Pods for testing
