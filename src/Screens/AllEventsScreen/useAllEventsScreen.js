@@ -18,9 +18,13 @@ const useAllEventsScreen = ({navigate}, {params}) => {
     queryFn: async () => {
       const response = await API.get(`${params?.url}?page=${page}`);
       if (response.ok) {
-        console.log('lisdhvlbsdlvblsdbvlsd', response?.data);
-        setEventsList(prev => [...prev, ...response?.data?.data]);
-        setHasNextPage(response?.data?.total_pages); // Assuming the API provides this flag
+        if (page == response?.data?.total_pages) {
+          setEventsList(response?.data?.data);
+        } else {
+          setEventsList(prev => [...prev, ...response?.data?.data]);
+          console.log('lisdhvlbsdlvblsdbvlsd', response?.data);
+          setHasNextPage(response?.data?.total_pages); // Assuming the API provides this flag
+        }
       } else errorMessage('Error on fetching data!');
       return response?.data;
     },
@@ -52,7 +56,7 @@ const useAllEventsScreen = ({navigate}, {params}) => {
     isFetching,
     likePost: async id => {
       await likeAndDisLikeEvent.mutateAsync(id);
-      loadMoreData();
+      queryClient.invalidateQueries([params?.key]); // Refetch data
     },
   };
 };
