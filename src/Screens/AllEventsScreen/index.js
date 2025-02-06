@@ -11,12 +11,12 @@ import ThemeButton from '../../Components/ThemeButton';
 
 const AllEventsScreen = ({navigation, route}) => {
   const {
-    eventsList,
     title,
-    onRefresh,
+    eventsList,
     isRefetching,
-    loadMoreData,
     isFetching,
+    onRefresh,
+    loadMoreData,
     likePost,
   } = useAllEventsScreen(navigation, route);
   return (

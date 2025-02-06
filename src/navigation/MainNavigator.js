@@ -137,6 +137,10 @@ function MainNavigator() {
               name="CommentScreen"
               component={Screens.CommentScreen}
             />
+            <Stack.Screen
+              name="FriendProfileScreen"
+              component={Screens.FriendProfileScreen}
+            />
             {/* <Stack.Screen
               name="SkeletonScreen"
               component={Screens.SkeletonScreen}

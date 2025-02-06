@@ -7,11 +7,17 @@ import {TextComponent} from './TextComponent';
 import {Colors, FontSize} from '../Theme/Variables';
 import {hp, wp} from '../Config/responsive';
 import {imageUrl} from '../Utils/Urls';
+import {Touchable} from './Touchable';
+import NavigationService from '../Services/NavigationService';
 
 const AddFriendComp = ({item, sendReq}) => {
   return (
     <>
-      <View style={styles.friendCard}>
+      <Touchable
+        style={styles.friendCard}
+        onPress={() =>
+          NavigationService.navigate('FriendProfileScreen', {id: item?.id})
+        }>
         <View style={{alignItems: 'center'}}>
           <CircleImage
             image={imageUrl(item?.profile_image)}
@@ -50,7 +56,7 @@ const AddFriendComp = ({item, sendReq}) => {
             styles={{textAlign: 'center', marginVertical: hp('2')}}
           />
         )}
-      </View>
+      </Touchable>
     </>
   );
 };

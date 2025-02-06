@@ -19,5 +19,6 @@ export {default as NotificationScreen} from './NotificationScreen';
 export {default as AllEventsScreen} from './AllEventsScreen';
 export {default as FriendsEventsScreen} from './FriendsEventsScreen';
 export {default as CommentScreen} from './CommentScreen';
+export {default as FriendProfileScreen} from './FriendProfileScreen';
 
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     textAlign: 'left',
-    alignItems: 'flex-end',
+    // alignItems: 'flex-end',
 
     // backgroundColor: 'red',
   },
