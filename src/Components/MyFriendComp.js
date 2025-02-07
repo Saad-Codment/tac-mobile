@@ -17,10 +17,15 @@ import {CircleImage} from './CircleImage';
 import {imageUrl} from '../Utils/Urls';
 import MutualFriends from './MutualFriendsComponent';
 import ThemeButton from './ThemeButton';
+import NavigationService from '../Services/NavigationService';
 
 const MyFriendComp = ({item}) => {
   return (
-    <View style={styles.view}>
+    <Touchable
+      style={styles.view}
+      onPress={() =>
+        NavigationService.navigate('FriendProfileScreen', {id: item?.id})
+      }>
       <View>
         <CircleImage uri={imageUrl(item?.profile_image)} size={0.15} />
       </View>
@@ -43,7 +48,7 @@ const MyFriendComp = ({item}) => {
         style={{width: wp('20')}}
         imageStyle={{width: wp('5')}}
       />
-    </View>
+    </Touchable>
   );
 };
 

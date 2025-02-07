@@ -13,6 +13,9 @@ import {
 } from '../Services/GlobalFunctions';
 import {Touchable} from './Touchable';
 import NavigationService from '../Services/NavigationService';
+import {imageUrl} from '../Utils/Urls';
+import useFriendServices from '../Services/FriendServices';
+import useReduxStore from '../Hooks/UseReduxStore';
 
 const tags = [
   {
@@ -30,11 +33,24 @@ const UpcomingEventsComp = ({
   index,
   mainViewStyle,
   upperImgStyle,
-  likePost,
+  refetechKeys,
 }) => {
+  const {likeAndDisLikeEvent} = useFriendServices();
+
+  const {queryClient} = useReduxStore();
+
   return (
     <View style={{...styles.mainView, ...mainViewStyle}}>
-      <BlurImage styles={{...styles.upperImage, ...upperImgStyle}} radius={0} />
+      <BlurImage
+        styles={{...styles.upperImage, ...upperImgStyle}}
+        radius={0}
+        isURI={Boolean(item?.images != '[]')}
+        uri={
+          item?.images == undefined || item?.images == '[]'
+            ? null
+            : imageUrl(JSON.parse(item?.images)[0])
+        }
+      />
       <Touchable
         style={styles.innerMainView}
         disabled={Boolean(!item?.id)}
@@ -43,7 +59,7 @@ const UpcomingEventsComp = ({
         }>
         <View style={styles.innerUpperView}>
           <CircleImage
-            image={item?.user_image}
+            image={imageUrl(item?.user_image ?? item?.profile_image)}
             uri={true}
             styles={styles.profileImg}
             radius={5}
@@ -119,7 +135,14 @@ const UpcomingEventsComp = ({
         <View style={styles.bottomView}>
           <Touchable
             style={styles.leftRightView}
-            onPress={() => likePost(item?.id)}>
+            onPress={async () => {
+              await likeAndDisLikeEvent.mutateAsync(item?.id);
+              if (refetechKeys) {
+                refetechKeys.map(res => {
+                  queryClient.invalidateQueries([res]); // Refetch data
+                });
+              }
+            }}>
             <Image
               source={heartTheme}
               resizeMode="contain"
@@ -173,7 +196,7 @@ const styles = StyleSheet.create({
   },
   upperImage: {
     width: wp('87'),
-    aspectRatio: 1,
+    // aspectRatio: 1,
     height: hp('13'),
   },
   innerMainView: {

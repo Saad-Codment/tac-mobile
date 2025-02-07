@@ -8,6 +8,7 @@ import useFriendServices from '../../Services/FriendServices';
 const useAllEventsScreen = ({navigate}, {params}) => {
   const {queryClient} = useReduxStore();
   const [page, setPage] = useState(1); // Current page for pagination
+  const [totalPages, setTotalPages] = useState(1); // Current page for pagination
   const [eventsList, setEventsList] = useState([]); // Combined list of events
   const [hasNextPage, setHasNextPage] = useState(true); // Flag to check if more data exists
 
@@ -18,6 +19,7 @@ const useAllEventsScreen = ({navigate}, {params}) => {
     queryFn: async () => {
       const response = await API.get(`${params?.url}?page=${page}`);
       if (response.ok) {
+        setTotalPages(response.data?.total_pages);
         if (page == response?.data?.total_pages) {
           setEventsList(response?.data?.data);
         } else {
@@ -44,7 +46,7 @@ const useAllEventsScreen = ({navigate}, {params}) => {
   const onRefresh = useCallback(() => {
     setPage(1); // Reset to the first page
     setEventsList([]); // Clear existing data
-    queryClient.invalidateQueries([params?.key]); // Refetch data
+    queryClient.invalidateQueries([`"${params?.key}"`]); // Refetch data
   }, [queryClient]);
 
   return {
@@ -54,6 +56,8 @@ const useAllEventsScreen = ({navigate}, {params}) => {
     loadMoreData,
     isRefetching,
     isFetching,
+    refetchKey: params?.key,
+    hasMoreData: Boolean(totalPages == page + 1),
     likePost: async id => {
       await likeAndDisLikeEvent.mutateAsync(id);
       queryClient.invalidateQueries([params?.key]); // Refetch data

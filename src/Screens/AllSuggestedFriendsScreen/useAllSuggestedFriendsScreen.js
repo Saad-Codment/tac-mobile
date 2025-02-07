@@ -8,7 +8,7 @@ import useFriendServices, {sendFriendReq} from '../../Services/FriendServices';
 
 const useAllSuggestedFriendsScreen = ({navigate}) => {
   const {queryClient} = useReduxStore();
-  const {sendFriendReq, acceptFriendReq, rejectFriendReq} = useFriendServices();
+  const {sendFriendReq} = useFriendServices();
 
   const {data, error} = useQuery({
     queryKey: ['myFriends'],

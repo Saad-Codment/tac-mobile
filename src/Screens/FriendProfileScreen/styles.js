@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
     // paddingTop: hp('2'),
     alignItems: 'center',
+    paddingTop: hp('2'),
     // alignSelf: 'center',
   },
 });

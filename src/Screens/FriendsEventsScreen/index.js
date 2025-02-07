@@ -10,8 +10,14 @@ import FriendEventsComp from '../../Components/FriendEventsComp';
 import ThemeButton from '../../Components/ThemeButton';
 
 const FriendsEventsScreen = ({navigation, route}) => {
-  const {eventsList, loadMoreData, onRefresh, isFetching, likePost} =
-    useFriendsEventsScreen(navigation, route);
+  const {
+    eventsList,
+    loadMoreData,
+    onRefresh,
+    isFetching,
+    likePost,
+    refetechKeys,
+  } = useFriendsEventsScreen(navigation, route);
   console.log('isbdvlbsdbsdlkklsdksdv', eventsList);
   return (
     <>
@@ -47,7 +53,7 @@ const FriendsEventsScreen = ({navigation, route}) => {
               index={index}
               mainViewStyles={{width: wp('90')}}
               upperImgStyle={{width: wp('90')}}
-              likePost={likePost}
+              refetechKeys={['allFriendsEvents']}
             />
           </View>
         )}

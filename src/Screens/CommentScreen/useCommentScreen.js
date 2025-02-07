@@ -14,7 +14,7 @@ const useCommentScreen = ({navigate}, {params}) => {
 
   const {data, error} = useQuery({
     queryKey: ['comments'],
-    queryFn: () => API.get(getEventsCommentUrl + params),
+    queryFn: () => API.get(getEventsCommentUrl + params?.id),
   });
   console.log('ljskdvhjklsdbvjkbsdkvbsdkjvbksdbvssdfsfvgdfsdbjk', data?.data);
 
@@ -40,11 +40,16 @@ const useCommentScreen = ({navigate}, {params}) => {
   const sendMessage = async comment => {
     if (message.trim()) {
       await postComment.mutateAsync({
-        event_id: params,
+        event_id: params?.id,
         text: message,
       });
       setMessage(null);
       queryClient.invalidateQueries(['comments']); // Refetch data
+      if (params?.refetechKeys) {
+        params?.refetechKeys.map(res => {
+          queryClient.invalidateQueries([res]); // Refetch data
+        });
+      }
     }
   };
 

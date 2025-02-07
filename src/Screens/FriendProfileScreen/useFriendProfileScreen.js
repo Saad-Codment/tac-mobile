@@ -13,6 +13,7 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
   });
 
   const [page, setPage] = useState(1); // Current page for pagination
+  const [totalPages, setTotalPages] = useState(0); // Current page for pagination
   const [eventsList, setEventsList] = useState([]); // Combined list of events
   const [hasNextPage, setHasNextPage] = useState(true); // Flag to check if more data exists
   const {queryClient} = useReduxStore();
@@ -29,13 +30,13 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
           'ksdnvnsklnklsfnbsdfnbndfklnbkldfnb;dfnl;kbdnfl;bndfb',
           response.data,
         );
-
-        // if (page == response?.data?.total_pages) {
-        //   setEventsList(response?.data?.data);
-        // } else {
-        //   setEventsList(prev => [...prev, ...response?.data?.data]);
-        //   setHasNextPage(response?.data?.total_pages); // Assuming the API provides this flag
-        // }
+        setTotalPages(response?.data?.total_pages);
+        if (page == response?.data?.total_pages) {
+          setEventsList(response?.data?.data);
+        } else {
+          setEventsList(prev => [...prev, ...response?.data?.data]);
+          setHasNextPage(response?.data?.total_pages); // Assuming the API provides this flag
+        }
       } else errorMessage('Error on fetching data!');
       return response?.data;
     },
@@ -67,6 +68,7 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
     isFetching,
     eventsList,
     onRefresh,
+    hasMoreData: Boolean(totalPages == page + 1),
   };
 };
 

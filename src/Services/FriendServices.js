@@ -6,6 +6,7 @@ import {
   likeUnlikeUrl,
   postCommentUrl,
   rejectFriendReqUrl,
+  removeFriendUrl,
   sendFriendReqUrl,
 } from '../Utils/Urls';
 import {errorMessage, successMessage} from '../Config/NotificationMessage';
@@ -65,6 +66,8 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     },
   });
 
+  /* The `const likeAndDisLikeEvent` is defining a `useMutation` hook that handles making a POST
+  request to the `likeUnlikeUrl` endpoint with the provided data. */
   const likeAndDisLikeEvent = useMutation({
     mutationFn: data => {
       return API.post(likeUnlikeUrl + data, {});
@@ -81,9 +84,31 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
       errorMessage('Network request failed.');
     },
   });
+
+  /* The `const postComment` is defining a `useMutation` hook that handles making a POST request to the
+  `postCommentUrl` endpoint with the provided data. */
   const postComment = useMutation({
     mutationFn: data => {
       return API.post(postCommentUrl, data);
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
+
+  /* The `const removeFriend` is defining a `useMutation` hook that handles making a POST request to
+  the `removeFriendUrl` endpoint with the provided data. */
+  const removeFriend = useMutation({
+    mutationFn: data => {
+      return API.post(removeFriendUrl + data, {});
     },
     onSuccess: ({ok, data}) => {
       if (ok) {
@@ -104,6 +129,7 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     rejectFriendReq,
     likeAndDisLikeEvent,
     postComment,
+    removeFriend,
   };
 };
 

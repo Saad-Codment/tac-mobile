@@ -1,5 +1,5 @@
 import {View, Text, ActivityIndicator} from 'react-native';
-import React, {memo} from 'react';
+import React, {memo, useCallback} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import {AniFlatOneByOne} from '../../AnimatedComp/AniFlatOneByOne';
 import {DataNotFound} from '../../Components/DataNotFound';
@@ -15,10 +15,27 @@ const AllEventsScreen = ({navigation, route}) => {
     eventsList,
     isRefetching,
     isFetching,
+    hasMoreData,
     onRefresh,
     loadMoreData,
-    likePost,
+    refetchKey,
   } = useAllEventsScreen(navigation, route);
+
+  const RenderItem = useCallback(
+    ({item, index}) => {
+      return (
+        <UpcomingEventsComp
+          item={item}
+          index={index}
+          mainViewStyle={{marginTop: hp('2'), width: wp('95')}}
+          upperImgStyle={{width: wp('95')}}
+          refetechKeys={[refetchKey]}
+        />
+      );
+    },
+    [eventsList],
+  );
+
   return (
     <>
       <HeaderComponent
@@ -36,6 +53,7 @@ const AllEventsScreen = ({navigation, route}) => {
           ),
           ListFooterComponent:
             eventsList.length >= 9 &&
+            !hasMoreData &&
             (isFetching ? (
               <ActivityIndicator size="small" color="#0000ff" />
             ) : (
@@ -47,13 +65,7 @@ const AllEventsScreen = ({navigation, route}) => {
             )), // Show loading spinner at the bottom
         }}
         InnerCompnonet={(item, index) => (
-          <UpcomingEventsComp
-            item={item}
-            index={index}
-            mainViewStyle={{marginTop: hp('2'), width: wp('95')}}
-            upperImgStyle={{width: wp('95')}}
-            likePost={likePost}
-          />
+          <RenderItem item={item} index={index} />
         )}
       />
     </>

@@ -22,6 +22,7 @@ import {AniFlatOneByOne} from '../../AnimatedComp/AniFlatOneByOne';
 import {DataNotFound} from '../../Components/DataNotFound';
 import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
 import {styles} from './styles';
+import PostViewComp from '../../Components/PostViewComp';
 
 const FriendProfileScreen = ({navigation, route}) => {
   const {
@@ -29,6 +30,7 @@ const FriendProfileScreen = ({navigation, route}) => {
     eventsList,
     isRefetching,
     isFetching,
+    hasMoreData,
     onRefresh,
     loadMoreData,
   } = useFriendProfileScreen(navigation, route);
@@ -51,6 +53,7 @@ const FriendProfileScreen = ({navigation, route}) => {
           ),
           ListFooterComponent:
             eventsList.length >= 9 &&
+            !hasMoreData &&
             (isFetching ? (
               <ActivityIndicator size="small" color="#0000ff" />
             ) : (
@@ -61,15 +64,28 @@ const FriendProfileScreen = ({navigation, route}) => {
               />
             )), // Show loading spinner at the bottom
         }}
-        InnerCompnonet={(item, index) => (
-          <UpcomingEventsComp
-            item={item}
-            index={index}
-            mainViewStyle={{marginTop: hp('2'), width: wp('95')}}
-            upperImgStyle={{width: wp('95')}}
-            // likePost={likePost}
-          />
-        )}
+        InnerCompnonet={(item, index) => {
+          return (
+            <View style={{marginVertical: hp('1')}}>
+              {item.type == 2 ? (
+                <UpcomingEventsComp
+                  item={item}
+                  index={index}
+                  mainViewStyle={{width: wp('95')}}
+                  upperImgStyle={{width: wp('95')}}
+                  refetechKeys={['profilePosts']}
+                  // likePost={likePost}
+                />
+              ) : (
+                <PostViewComp
+                  item={item}
+                  index={index}
+                  refetechKeys={['profilePosts']}
+                />
+              )}
+            </View>
+          );
+        }}
       />
     </View>
   );

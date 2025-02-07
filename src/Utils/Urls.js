@@ -55,6 +55,7 @@ export const getEventsCommentUrl = '/events/comments/';
 export const postCommentUrl = '/react/comment';
 export const getUserProfileUrl = '/user/get/';
 export const getUserPostsUrl = '/user/posts-and-events/';
+export const removeFriendUrl = '/friends/remove/';
 
 export const fcmTokenUrl = 'add-fcm-token';
 export const deleteAccUrl = 'auth/account-delete';

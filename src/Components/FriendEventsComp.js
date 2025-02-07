@@ -22,6 +22,8 @@ import {
 } from '../Services/GlobalFunctions';
 import {Touchable} from './Touchable';
 import NavigationService from '../Services/NavigationService';
+import useFriendServices from '../Services/FriendServices';
+import useReduxStore from '../Hooks/UseReduxStore';
 
 const tags = [
   {
@@ -39,8 +41,11 @@ const FriendEventsComp = ({
   index,
   mainViewStyles,
   upperImgStyle,
-  likePost,
+  refetechKeys,
 }) => {
+  const {likeAndDisLikeEvent} = useFriendServices();
+
+  const {queryClient} = useReduxStore();
   return (
     <View style={{...styles.mainView, ...mainViewStyles}}>
       <BlurImage styles={{...styles.upperImage, ...upperImgStyle}} radius={0} />
@@ -182,7 +187,14 @@ const FriendEventsComp = ({
         <View style={styles.bottomView}>
           <Touchable
             style={styles.leftRightView}
-            onPress={() => likePost(item?.id)}>
+            onPress={async () => {
+              await likeAndDisLikeEvent.mutateAsync(item?.id);
+              if (refetechKeys) {
+                refetechKeys.map(res => {
+                  queryClient.invalidateQueries([res]); // Refetch data
+                });
+              }
+            }}>
             <Image
               source={heartTheme}
               resizeMode="contain"
@@ -200,7 +212,10 @@ const FriendEventsComp = ({
           <Touchable
             style={styles.leftRightView}
             onPress={() =>
-              NavigationService.navigate('CommentScreen', item?.id)
+              NavigationService.navigate('CommentScreen', {
+                id: item?.id,
+                refetechKeys,
+              })
             }>
             <Image
               source={commentIcon}

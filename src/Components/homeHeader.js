@@ -19,8 +19,9 @@ import {
 import {Touchable} from '../Components/Touchable';
 import Lottie from 'lottie-react-native';
 import {CircleImage} from './CircleImage';
+import {imageUrl} from '../Utils/Urls';
 
-const HomeHeader = ({text, onNotificarioPress}) => {
+const HomeHeader = ({text, onNotificarioPress, userDataImg}) => {
   return (
     <View style={styles.headerView}>
       <View style={styles.firstView}>
@@ -31,9 +32,7 @@ const HomeHeader = ({text, onNotificarioPress}) => {
             width: wp('70'),
           }}>
           <CircleImage
-            image={
-              'https://images.pexels.com/photos/1898555/pexels-photo-1898555.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-            }
+            image={imageUrl(userDataImg)}
             uri={true}
             styles={{
               alignSelf: 'center',
