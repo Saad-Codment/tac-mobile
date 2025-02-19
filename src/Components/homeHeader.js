@@ -31,21 +31,26 @@ const HomeHeader = ({text, onNotificarioPress, userDataImg}) => {
             alignItems: 'center',
             width: wp('70'),
           }}>
-          <CircleImage
-            image={imageUrl(userDataImg)}
-            uri={true}
-            styles={{
-              alignSelf: 'center',
+          <View
+            style={{
               marginTop: hp('3.5'),
               marginRight: hp('1'),
-              borderRadius: Math.round(
-                Dimensions.get('window').width +
-                  Dimensions.get('window').height,
-              ),
-              width: Dimensions.get('window').width * 0.16,
-              height: Dimensions.get('window').width * 0.16,
-            }}
-          />
+            }}>
+            <CircleImage
+              image={imageUrl(userDataImg)}
+              uri={true}
+              styles={{
+                alignSelf: 'center',
+
+                borderRadius: Math.round(
+                  Dimensions.get('window').width +
+                    Dimensions.get('window').height,
+                ),
+                width: Dimensions.get('window').width * 0.16,
+                height: Dimensions.get('window').width * 0.16,
+              }}
+            />
+          </View>
           <View>
             <View
               style={{

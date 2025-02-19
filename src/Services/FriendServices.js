@@ -3,8 +3,10 @@ import API from '../Utils/helperFunc';
 import {
   acceptFriendReqUrl,
   acceptRejectFriendReqUrl,
+  addCommentOnPostUrl,
   likeUnlikeUrl,
   postCommentUrl,
+  postLikeUrl,
   rejectFriendReqUrl,
   removeFriendUrl,
   sendFriendReqUrl,
@@ -70,7 +72,7 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
   request to the `likeUnlikeUrl` endpoint with the provided data. */
   const likeAndDisLikeEvent = useMutation({
     mutationFn: data => {
-      return API.post(likeUnlikeUrl + data, {});
+      return API.post(likeUnlikeUrl, {id: data});
     },
     onSuccess: ({ok, data}) => {
       if (ok) {
@@ -123,6 +125,44 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     },
   });
 
+  /* The `const addLikeOnPost` is defining a `useMutation` hook that handles making a POST request to
+  the `postLikeUrl` endpoint with the provided data. */
+  const addLikeOnPost = useMutation({
+    mutationFn: data => {
+      return API.post(postLikeUrl, {id: data});
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
+
+  /* The `const addCommentOnPost` is defining a `useMutation` hook that handles making a POST request
+  to the `postLikeUrl` endpoint with the provided data. */
+  const addCommentOnPost = useMutation({
+    mutationFn: data => {
+      return API.post(addCommentOnPostUrl, data);
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
+
   return {
     sendFriendReq,
     acceptFriendReq,
@@ -130,6 +170,8 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     likeAndDisLikeEvent,
     postComment,
     removeFriend,
+    addLikeOnPost,
+    addCommentOnPost,
   };
 };
 

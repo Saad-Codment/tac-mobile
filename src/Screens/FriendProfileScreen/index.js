@@ -33,6 +33,8 @@ const FriendProfileScreen = ({navigation, route}) => {
     hasMoreData,
     onRefresh,
     loadMoreData,
+    refetch,
+    functionToUpdateLike,
   } = useFriendProfileScreen(navigation, route);
   return (
     <View style={{flex: 1}}>
@@ -74,6 +76,7 @@ const FriendProfileScreen = ({navigation, route}) => {
                   mainViewStyle={{width: wp('95')}}
                   upperImgStyle={{width: wp('95')}}
                   refetechKeys={['profilePosts']}
+                  functionToUpdateLike={functionToUpdateLike}
                   // likePost={likePost}
                 />
               ) : (
@@ -81,6 +84,7 @@ const FriendProfileScreen = ({navigation, route}) => {
                   item={item}
                   index={index}
                   refetechKeys={['profilePosts']}
+                  functionToUpdateLike={functionToUpdateLike}
                 />
               )}
             </View>

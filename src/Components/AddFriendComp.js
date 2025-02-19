@@ -36,7 +36,7 @@ const AddFriendComp = ({item, sendReq}) => {
           /> */}
           {/* <TextComponent styles={styles.mutual} text={'32 Mutual friends'} /> */}
         </View>
-        {item?.requested == 0 ? (
+        {/* {item?.requested == 0 ? (
           <>
             <ThemeButton
               style={styles.addBtn}
@@ -44,18 +44,19 @@ const AddFriendComp = ({item, sendReq}) => {
               onPress={() => sendReq(item?.id)}
               textStyle={styles.addText}
             />
-            {/* <ThemeButton
-              style={styles.removeBtn}
-              textStyle={{color: Colors.textGray, fontSize: hp('1.5')}}
-              title={'Remove'}
-            /> */}
           </>
         ) : (
           <TextComponent
             text={'Already requested'}
             styles={{textAlign: 'center', marginVertical: hp('2')}}
           />
-        )}
+        )} */}
+        <ThemeButton
+          style={styles.addBtn}
+          title={'Add Friend'}
+          onPress={() => sendReq(item?.user_id)}
+          textStyle={styles.addText}
+        />
       </Touchable>
     </>
   );

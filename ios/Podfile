@@ -61,6 +61,9 @@ target 'tac' do
   pod 'GTMSessionFetcher', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
+  pod 'Firebase/Auth'
+  pod 'Firebase/Messaging'
+
   # pod 'FirebaseAuthInterop', :modular_headers => true
   # pod 'FirebaseAppCheckInterop', :modular_headers => true
   # pod 'FirebaseCoreExtension', :modular_headers => true

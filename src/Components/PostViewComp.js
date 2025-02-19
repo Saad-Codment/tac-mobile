@@ -4,7 +4,7 @@ import {TextComponent} from './TextComponent';
 import {hp, wp} from '../Config/responsive';
 import {CircleImage} from './CircleImage';
 import {Touchable} from './Touchable';
-import {commentIcon, heartTheme, shareTheme} from '../Assets';
+import {commentIcon, heartFilledLike, heartTheme, shareTheme} from '../Assets';
 import {Colors} from '../Theme/Variables';
 import BlurImage from './BlurImage';
 import NavigationService from '../Services/NavigationService';
@@ -84,8 +84,8 @@ const JustTextRenderPost = ({title}) => {
   );
 };
 
-const PostViewComp = ({item, refetechKeys}) => {
-  const {likeAndDisLikeEvent} = useFriendServices();
+const PostViewComp = ({item, refetechKeys, functionToUpdateLike, index}) => {
+  const {likeAndDisLikeEvent, addLikeOnPost} = useFriendServices();
 
   const {queryClient} = useReduxStore();
 
@@ -129,15 +129,11 @@ const PostViewComp = ({item, refetechKeys}) => {
         <Touchable
           style={styles.leftRightView}
           onPress={async () => {
-            await likeAndDisLikeEvent.mutateAsync(item?.id);
-            if (refetechKeys) {
-              refetechKeys.map(res => {
-                queryClient.invalidateQueries([res]); // Refetch data
-              });
-            }
+            await addLikeOnPost.mutateAsync(item?.id);
+            functionToUpdateLike(index);
           }}>
           <Image
-            source={heartTheme}
+            source={item?.is_liked ? heartFilledLike : heartTheme}
             resizeMode="contain"
             tintColor={Colors.yellowTextColor}
             style={{width: wp('5'), marginRight: wp('1')}}
@@ -156,6 +152,7 @@ const PostViewComp = ({item, refetechKeys}) => {
             NavigationService.navigate('CommentScreen', {
               id: item?.id,
               refetechKeys,
+              isPost: true,
             })
           }>
           <Image

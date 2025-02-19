@@ -1496,6 +1496,8 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - Firebase
+  - Firebase/Auth
+  - Firebase/Messaging
   - FirebaseCore
   - FirebaseCoreInternal
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
@@ -1884,6 +1886,6 @@ SPEC CHECKSUMS:
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   Yoga: 04f1db30bb810187397fa4c37dd1868a27af229c
 
-PODFILE CHECKSUM: 261ab8d2a3601e56896073bd4cf1aa3a68c652bc
+PODFILE CHECKSUM: c6e30f7d021dfce5daed06cfadc5064e88144c72
 
 COCOAPODS: 1.12.1

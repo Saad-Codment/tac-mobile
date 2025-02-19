@@ -17,9 +17,8 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
   const [eventsList, setEventsList] = useState([]); // Combined list of events
   const [hasNextPage, setHasNextPage] = useState(true); // Flag to check if more data exists
   const {queryClient} = useReduxStore();
-  const {likeAndDisLikeEvent} = useFriendServices();
 
-  const {isFetching, isRefetching} = useQuery({
+  const {isFetching, isRefetching, refetch} = useQuery({
     queryKey: ['profilePosts', page],
     queryFn: async () => {
       const response = await API.get(
@@ -56,10 +55,21 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
   const onRefresh = useCallback(() => {
     setPage(1); // Reset to the first page
     setEventsList([]); // Clear existing data
-    queryClient.invalidateQueries(['profilePosts']); // Refetch data
+    refetch();
+    // queryClient.invalidateQueries(['profilePosts']); // Refetch data
   }, [queryClient]);
 
   console.log('userDatauserDatauserDatauserDatauserDatauserData', data?.data);
+
+  const functionToUpdateLike = index => {
+    setEventsList(prev => {
+      prev[index].is_liked = !prev[index].is_liked;
+      prev[index].likes_count = prev[index].is_liked
+        ? ++prev[index].likes_count
+        : --prev[index].likes_count;
+      return prev;
+    });
+  };
 
   return {
     userData: data?.data,
@@ -69,6 +79,8 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
     eventsList,
     onRefresh,
     hasMoreData: Boolean(totalPages == page + 1),
+    refetch,
+    functionToUpdateLike,
   };
 };
 

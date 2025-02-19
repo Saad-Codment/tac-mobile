@@ -3,7 +3,13 @@ import {hp, wp} from '../Config/responsive';
 import BlurImage from './BlurImage';
 import {CircleImage} from './CircleImage';
 import {TextComponent} from './TextComponent';
-import {blackLock, heartTheme, locationGray, shareTheme} from '../Assets';
+import {
+  blackLock,
+  heartFilledLike,
+  heartTheme,
+  locationGray,
+  shareTheme,
+} from '../Assets';
 import {Colors} from '../Theme/Variables';
 import {MultiSelectButton} from './MultiSelectButton';
 import {
@@ -34,6 +40,7 @@ const UpcomingEventsComp = ({
   mainViewStyle,
   upperImgStyle,
   refetechKeys,
+  functionToUpdateLike,
 }) => {
   const {likeAndDisLikeEvent} = useFriendServices();
 
@@ -136,15 +143,11 @@ const UpcomingEventsComp = ({
           <Touchable
             style={styles.leftRightView}
             onPress={async () => {
+              functionToUpdateLike(index);
               await likeAndDisLikeEvent.mutateAsync(item?.id);
-              if (refetechKeys) {
-                refetechKeys.map(res => {
-                  queryClient.invalidateQueries([res]); // Refetch data
-                });
-              }
             }}>
             <Image
-              source={heartTheme}
+              source={item?.is_liked ? heartFilledLike : heartTheme}
               resizeMode="contain"
               style={{width: wp('5'), marginRight: wp('1')}}
             />

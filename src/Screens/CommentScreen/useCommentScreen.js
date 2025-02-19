@@ -1,7 +1,7 @@
 import {useQuery} from '@tanstack/react-query';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import API from '../../Utils/helperFunc';
-import {getEventsCommentUrl} from '../../Utils/Urls';
+import {getEventsCommentUrl, getPostCommentUrl} from '../../Utils/Urls';
 import {useCallback, useLayoutEffect, useRef, useState} from 'react';
 import useFriendServices from '../../Services/FriendServices';
 
@@ -10,11 +10,14 @@ const useCommentScreen = ({navigate}, {params}) => {
 
   const [message, setMessage] = useState(null);
 
-  const {postComment} = useFriendServices();
+  const {postComment, addCommentOnPost} = useFriendServices();
 
   const {data, error} = useQuery({
     queryKey: ['comments'],
-    queryFn: () => API.get(getEventsCommentUrl + params?.id),
+    queryFn: () =>
+      API.get(
+        (params?.isPost ? getPostCommentUrl : getEventsCommentUrl) + params?.id,
+      ),
   });
   console.log('ljskdvhjklsdbvjkbsdkvbsdkjvbksdbvssdfsfvgdfsdbjk', data?.data);
 
@@ -39,10 +42,17 @@ const useCommentScreen = ({navigate}, {params}) => {
 
   const sendMessage = async comment => {
     if (message.trim()) {
-      await postComment.mutateAsync({
-        event_id: params?.id,
-        text: message,
-      });
+      if (params?.isPost) {
+        await addCommentOnPost.mutateAsync({
+          post_id: params?.id,
+          text: message,
+        });
+      } else {
+        await postComment.mutateAsync({
+          event_id: params?.id,
+          text: message,
+        });
+      }
       setMessage(null);
       queryClient.invalidateQueries(['comments']); // Refetch data
       if (params?.refetechKeys) {

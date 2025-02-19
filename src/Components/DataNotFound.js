@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   noDataSubTitle: {
     fontSize: hp('2'),
     textAlign: 'center',
-    color: Colors.textGrayColor,
+    color: Colors.textGray,
     marginBottom: hp('6'),
   },
 });

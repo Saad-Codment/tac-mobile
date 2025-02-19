@@ -1,5 +1,12 @@
 import {create} from 'apisauce';
-import {VerifyUserUrl, baseURL, fcmTokenUrl} from './Urls';
+import {
+  VerifyUserUrl,
+  baseURL,
+  fcmTokenUrl,
+  homeSuggestedFriendsUrl,
+  likeUnlikeUrl,
+  postLikeUrl,
+} from './Urls';
 import {store} from '../Redux/Reducer';
 import {loadingFalse, loadingTrue} from '../Redux/Action/isloadingAction';
 import {Platform} from 'react-native';
@@ -13,10 +20,17 @@ const API = create({
   //   timeoutErrorMessage: 'Please try Again...',
 });
 
-const hideLoaderAPIs = [VerifyUserUrl, fcmTokenUrl];
+const hideLoaderAPIs = [
+  VerifyUserUrl,
+  fcmTokenUrl,
+  likeUnlikeUrl,
+  postLikeUrl,
+  homeSuggestedFriendsUrl,
+];
 // const hideLoaderAPIs = ['/playcount', '/playlist', '/home-content'];
 
 API.addRequestTransform(config => {
+  console.log('kslbdvklsbdkvbksdlnlksdbvsd', config.url);
   if (!hideLoaderAPIs.includes(config.url)) store.dispatch(loadingTrue());
   const {Auth} = store.getState();
   config.headers = {

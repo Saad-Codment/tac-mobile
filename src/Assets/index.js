@@ -151,6 +151,7 @@ export {default as send} from './Icons/send.png';
 export {default as addCircleWhite} from './Icons/addCircleWhite.png';
 export {default as threeDotsHor} from './Icons/threeDotsHor.png';
 export {default as message} from './Icons/message.png';
+export {default as heartFilledLike} from './Icons/heartFilledLike.png';
 
 // Lotties files
 

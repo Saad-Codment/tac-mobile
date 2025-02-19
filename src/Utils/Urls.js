@@ -19,7 +19,6 @@ export const apendUrl = url => {
   return baseURL + url;
 };
 export const imageUrl = url => {
-  console.log(url, 'sdfksdfl;jlsdkj');
   return url ? imageURL + url : '';
   // : 'https://res.cloudinary.com/dd6tdswt5/image/upload/v1684830799/UserImages/mhysa2zj0sbmvnw69b35.jpg';
 };
@@ -52,10 +51,14 @@ export const allFriendEventsUrl = '/home/friends-events';
 export const allSuggestedEventsUrl = '/home/suggested-events';
 export const likeUnlikeUrl = '/react/like/';
 export const getEventsCommentUrl = '/events/comments/';
+export const getPostCommentUrl = '/posts/comments/';
 export const postCommentUrl = '/react/comment';
 export const getUserProfileUrl = '/user/get/';
 export const getUserPostsUrl = '/user/posts-and-events/';
 export const removeFriendUrl = '/friends/remove/';
+export const postLikeUrl = '/react-post/like/';
+export const addCommentOnPostUrl = '/react-post/comment';
+export const getUserFriendsUrl = '/user/friend-list/';
 
 export const fcmTokenUrl = 'add-fcm-token';
 export const deleteAccUrl = 'auth/account-delete';

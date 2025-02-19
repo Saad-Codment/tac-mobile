@@ -152,7 +152,7 @@ const App = () => {
   return (
     <>
       {isVisible === true ? Splash_Screen : <MainNavigator />}
-      {(isloading || isFetching >= 1) && <Overlay />}
+      {isloading && <Overlay />}
       {/* <StackNavigatior />; */}
     </>
   );
