@@ -560,6 +560,39 @@ const uploadFromGalary = async isMulti => {
         type: mime,
       };
 };
+//GET IMAGE From Mobile
+const uploadFromCamera = async isMulti => {
+  const imageData = await ImageCropPicker.openCamera({
+    width: 500,
+    height: 400,
+    cropping: true,
+    multiple: isMulti,
+  });
+  console.log('imagefjshavckajkcbadsjkvbsdjkvbkjsdbksdbvkldskvlsd', imageData);
+  const {
+    height,
+    width,
+    size,
+    path,
+    filename,
+    sourceURL,
+    localIdentifier,
+    mime,
+  } = imageData;
+  const uri = Platform.OS === 'ios' ? sourceURL : path;
+  const fileName = filename || 'photo.jpg';
+  return Array.isArray(imageData)
+    ? imageData.map(res => ({
+        uri: Platform.OS === 'ios' ? res?.sourceURL : res?.path,
+        name: res?.filename,
+        type: res?.mime,
+      }))
+    : {
+        uri,
+        name: fileName,
+        type: mime,
+      };
+};
 
 function formatDateToCustomFormat(isoDate) {
   var originalDate = new Date(isoDate);
@@ -754,4 +787,5 @@ export {
   capitalizeFirstLetter,
   removeUndefined,
   checkParagraphForUndefined,
+  uploadFromCamera,
 };

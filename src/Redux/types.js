@@ -18,4 +18,5 @@ export const types = {
   UpdateProfile: 'UpdateProfile',
   forgotPasswordType: 'forgotPasswordType',
   fcmRegType: 'fcmRegType',
+  restartOnboarding: 'restartOnboarding',
 };

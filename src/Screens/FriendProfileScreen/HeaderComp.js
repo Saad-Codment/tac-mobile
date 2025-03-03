@@ -15,17 +15,17 @@ import {
 import ThemeButton from '../../Components/ThemeButton';
 import {Touchable} from '../../Components/Touchable';
 import NavigationService from '../../Services/NavigationService';
-import {imageUrl} from '../../Utils/Urls';
+import {getUserFriendsUrl, imageUrl} from '../../Utils/Urls';
 import useFriendServices from '../../Services/FriendServices';
 import useReduxStore from '../../Hooks/UseReduxStore';
 
 const HeaderComp = ({userData}) => {
-  const FriendCountHeaderComp = ({num, title}) => {
+  const FriendCountHeaderComp = ({num, title, onPress}) => {
     return (
-      <View style={styles.compView}>
+      <Touchable style={styles.compView} onPress={onPress}>
         <TextComponent text={num} isWhite styles={{fontSize: hp('1.5')}} />
         <TextComponent text={' ' + title} fade styles={{fontSize: hp('1.5')}} />
-      </View>
+      </Touchable>
     );
   };
 
@@ -37,6 +37,11 @@ const HeaderComp = ({userData}) => {
     {
       num: userData?.friends_count,
       title: 'Friends',
+      onPress: () =>
+        NavigationService.navigate('FriendLists', {
+          url: getUserFriendsUrl + userData?.id,
+          key: 'userFriends',
+        }),
     },
     {
       num: userData?.mutual_friends,
@@ -66,7 +71,11 @@ const HeaderComp = ({userData}) => {
           />
           <View style={styles.locationView}>
             {friendCountArry.map(res => (
-              <FriendCountHeaderComp num={res?.num} title={res?.title} />
+              <FriendCountHeaderComp
+                num={res?.num}
+                title={res?.title}
+                onPress={res?.onPress}
+              />
             ))}
           </View>
           <View style={styles.countView}>

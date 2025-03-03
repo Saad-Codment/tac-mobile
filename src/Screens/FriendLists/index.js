@@ -1,4 +1,4 @@
-import {View, Text, FlatList, Image} from 'react-native';
+import {View, Text, FlatList, Image, ActivityIndicator} from 'react-native';
 import React, {useCallback} from 'react';
 import useFriendLists from './useFriendLists';
 import {styles} from './styles';
@@ -13,8 +13,17 @@ import {AniFlatOneByOne} from '../../AnimatedComp/AniFlatOneByOne';
 import {DataNotFound} from '../../Components/DataNotFound';
 import MyFriendComp from '../../Components/MyFriendComp';
 
-const FriendLists = ({navigation}) => {
-  const {friendListData, onRefresh} = useFriendLists(navigation);
+const FriendLists = ({navigation, route}) => {
+  const {
+    friendListData,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isPending,
+    refetch,
+    userData,
+  } = useFriendLists(navigation, route);
 
   return (
     <>
@@ -26,16 +35,26 @@ const FriendLists = ({navigation}) => {
       <AniFlatOneByOne
         data={friendListData}
         flatViewStyle={styles.upComingFlatlistView}
-        onRefresh={onRefresh}
+        onRefresh={refetch}
         flatListProps={{
           numColumns: 1,
           ListEmptyComponent: (
-            <DataNotFound onpress={onRefresh} btnStyles={{width: wp('80')}} />
+            <DataNotFound onpress={refetch} btnStyles={{width: wp('80')}} />
           ),
+          onEndReachedThreshold: 0.5, // Trigger fetch when 50% of the list is scrolled
+          ListFooterComponent: () =>
+            isFetchingNextPage ? <ActivityIndicator /> : null,
+          onEndReached: () => {
+            if (hasNextPage) fetchNextPage();
+          },
         }}
-        InnerCompnonet={(item, index) => (
-          <MyFriendComp item={item} index={index} />
-        )}
+        InnerCompnonet={(item, index) => {
+          return (
+            userData?.id != item?.id && (
+              <MyFriendComp item={item} index={index} refetch={refetch} />
+            )
+          );
+        }}
       />
     </>
   );

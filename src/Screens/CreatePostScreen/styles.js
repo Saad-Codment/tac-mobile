@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
   }),
   bgImg: isTrue => ({
     marginVertical: hp('0.5'),
-    width: wp('47'),
+    width: wp('46'),
     height: hp('30'),
     overflow: 'hidden',
     marginHorizontal: isTrue ? wp('1') : 0,

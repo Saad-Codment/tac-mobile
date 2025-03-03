@@ -51,7 +51,7 @@ import NavigationService from '../../Services/NavigationService';
 import SettingModal from './SettingModal';
 import {AlertDesign} from '../../Components/AlertDesign';
 import {capitalizeFirstLetter} from '../../Services/GlobalFunctions';
-import {imageUrl} from '../../Utils/Urls';
+import {getMyFriendsUrl, imageUrl} from '../../Utils/Urls';
 
 const SettingScreen = ({navigation}) => {
   const {
@@ -73,13 +73,13 @@ const SettingScreen = ({navigation}) => {
 
   const centerView = [
     {
-      title: `${userData?.age} Years`,
+      title: `${userData?.age ?? 'Not Availabe'} Years`,
       leftIcon: ageIcon,
       rightText: 'Change',
       onPress: () => onOpenModal('age_view'),
     },
     {
-      title: capitalizeFirstLetter(userData?.gender),
+      title: capitalizeFirstLetter(userData?.gender ?? 'Not Availabe'),
       leftIcon: profileIcon,
       rightText: 'Change',
       onPress: () => onOpenModal('user_gender'),
@@ -117,7 +117,11 @@ const SettingScreen = ({navigation}) => {
       title: 'Friends List',
       leftIcon: friendList,
       rightText: 'View',
-      onPress: () => NavigationService.navigate('FriendLists'),
+      onPress: () =>
+        NavigationService.navigate('FriendLists', {
+          url: getMyFriendsUrl,
+          key: 'myFriends',
+        }),
     },
   ];
   const bottomView = [

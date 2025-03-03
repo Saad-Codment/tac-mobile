@@ -66,6 +66,9 @@ const HomeScreen = ({navigation}) => {
         text={`Hello ${userData?.first_name}`}
         onNotificarioPress={() => dynamicRoute('NotificationScreen')}
         userDataImg={userData?.profile_image}
+        onProfilePress={() =>
+          dynamicRoute('FriendProfileScreen', {id: userData?.id})
+        }
       />
       <View
         style={{
@@ -88,6 +91,7 @@ const HomeScreen = ({navigation}) => {
             style={{...styles.upperBtn, width: wp('13')}}
             imageStyle={styles.imgStyle}
             textStyle={{marginLeft: wp('0.2')}}
+            onPress={() => dynamicRoute('CreatePostScreen')}
           />
         </View>
         <ScrollView

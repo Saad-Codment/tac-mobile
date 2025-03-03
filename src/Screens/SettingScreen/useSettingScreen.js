@@ -84,6 +84,9 @@ const SettingScreen = ({navigate, goBack}) => {
         successMessage(data?.message);
         await logoutService();
         dispatch(logOutUser());
+        dispatch({
+          type: types.restartOnboarding,
+        });
       } else errorMessage(data?.message);
     },
     onError: e => errorMessage(e),
@@ -107,6 +110,9 @@ const SettingScreen = ({navigate, goBack}) => {
       (logoutAlert && 'logoutAlert') || (deleteAlert && 'deleteAlert'),
     );
     setTimeout(() => {
+      dispatch({
+        type: types.restartOnboarding,
+      });
       dispatch(logOutAuth());
     }, 900);
   };

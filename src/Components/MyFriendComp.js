@@ -12,14 +12,16 @@ import {hp, wp} from '../Config/responsive';
 import {TextComponent} from './TextComponent';
 import {Touchable} from './Touchable';
 import {Colors, FontSize} from '../Theme/Variables';
-import {chat} from '../Assets';
+import {chat, profileAdd} from '../Assets';
 import {CircleImage} from './CircleImage';
 import {imageUrl} from '../Utils/Urls';
 import MutualFriends from './MutualFriendsComponent';
 import ThemeButton from './ThemeButton';
 import NavigationService from '../Services/NavigationService';
+import useFriendServices from '../Services/FriendServices';
 
-const MyFriendComp = ({item}) => {
+const MyFriendComp = ({item, refetch}) => {
+  const {sendFriendReq} = useFriendServices();
   return (
     <Touchable
       style={styles.view}
@@ -41,13 +43,37 @@ const MyFriendComp = ({item}) => {
           />
         </View>
       </View>
-      <ThemeButton
-        title={'Chat'}
-        isYellowTheme
-        image={chat}
-        style={{width: wp('20')}}
-        imageStyle={{width: wp('5')}}
-      />
+      {item?.friends == 0 ? (
+        item?.requested == 0 ? (
+          <ThemeButton
+            title={'Add'}
+            isYellowTheme
+            image={profileAdd}
+            style={{width: wp('20')}}
+            imageStyle={{width: wp('5')}}
+            onPress={async () => {
+              await sendFriendReq.mutateAsync(item?.id);
+              refetch();
+            }}
+          />
+        ) : (
+          <ThemeButton
+            title={'Sent'}
+            style={{width: wp('20'), backgroundColor: Colors.diableBtnCOlor}}
+            imageStyle={{width: wp('5')}}
+            textStyle={{color: Colors.black}}
+            isDisable
+          />
+        )
+      ) : (
+        <ThemeButton
+          title={'Chat'}
+          isYellowTheme
+          image={chat}
+          style={{width: wp('20')}}
+          imageStyle={{width: wp('5')}}
+        />
+      )}
     </Touchable>
   );
 };

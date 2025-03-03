@@ -59,6 +59,8 @@ export const removeFriendUrl = '/friends/remove/';
 export const postLikeUrl = '/react-post/like/';
 export const addCommentOnPostUrl = '/react-post/comment';
 export const getUserFriendsUrl = '/user/friend-list/';
+export const followEventsUrl = '/events/follow-event';
+export const unFollowEventsUrl = '/events/unfollow-event';
 
 export const fcmTokenUrl = 'add-fcm-token';
 export const deleteAccUrl = 'auth/account-delete';

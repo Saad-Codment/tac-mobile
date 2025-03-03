@@ -68,42 +68,58 @@ const useOnStepScreen = ({navigate}) => {
   };
   const nextStep = {
     1: () => {
-      if (age == null) Alert.alert('Warning', 'Please select age');
-      else handleNextStep();
+      handleNextStep();
     },
     2: () => {
-      if (gender == null) Alert.alert('Warning', 'Please select gender');
-      else handleNextStep();
+      handleNextStep();
     },
     3: () => {
-      if (transport == null) Alert.alert('Warning', 'Please select transport');
-      else handleNextStep();
+      handleNextStep();
     },
     4: () => {
-      if (sport.length == 0)
-        Alert.alert('Warning', 'Please select at least one event');
-      else handleNextStep();
+      handleNextStep();
     },
     5: () => {
-      if (association.length == 0)
-        Alert.alert('Warning', 'Please select at least one association');
-      else
-        mutate({
-          association_ids: getIdsFromArry(association, 'id'),
-          event_type_ids: getIdsFromArry(sport, 'id'),
-          gender: gender.toLowerCase(),
-          age: age.toLowerCase(),
-          transport_id: 1,
-        });
+      mutate({
+        association_ids: getIdsFromArry(association, 'id'),
+        event_type_ids: getIdsFromArry(sport, 'id'),
+        gender: gender && gender.toLowerCase(),
+        age: age && age.toLowerCase(),
+        transport_id: 1,
+      });
     },
-
-    // mutate({
-    //   ...onBoardData,
-    //   hearFrom: JSON.stringify(onBoardData?.hearFrom),
-    //   allergies: getIdsFromArry(onBoardData?.allergies, 'id'),
-    //   restrictions: getIdsFromArry(onBoardData?.restrictions, 'id'),
-    // }),
   };
+  // const nextStep = {
+  //   1: () => {
+  //     if (age == null) Alert.alert('Warning', 'Please select age');
+  //     else handleNextStep();
+  //   },
+  //   2: () => {
+  //     if (gender == null) Alert.alert('Warning', 'Please select gender');
+  //     else handleNextStep();
+  //   },
+  //   3: () => {
+  //     if (transport == null) Alert.alert('Warning', 'Please select transport');
+  //     else handleNextStep();
+  //   },
+  //   4: () => {
+  //     if (sport.length == 0)
+  //       Alert.alert('Warning', 'Please select at least one event');
+  //     else handleNextStep();
+  //   },
+  //   5: () => {
+  //     if (association.length == 0)
+  //       Alert.alert('Warning', 'Please select at least one association');
+  //     else
+  //       mutate({
+  //         association_ids: getIdsFromArry(association, 'id'),
+  //         event_type_ids: getIdsFromArry(sport, 'id'),
+  //         gender: gender.toLowerCase(),
+  //         age: age.toLowerCase(),
+  //         transport_id: 1,
+  //       });
+  //   },
+  // };
 
   const dynamicRoute = (screen, params) => navigate(screen, params);
 

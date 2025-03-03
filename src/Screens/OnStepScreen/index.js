@@ -135,7 +135,7 @@ const OnStepScreen = ({navigation}) => {
         </View>
       );
     },
-    4: ({ageData: {setSelectedAge, selectedAge}}) => {
+    4: () => {
       return (
         <View>
           <TextComponent
@@ -173,7 +173,7 @@ const OnStepScreen = ({navigation}) => {
         </View>
       );
     },
-    5: ({genderData: {handleGenderPress, selectedGender}}) => {
+    5: () => {
       return (
         <View>
           <TextComponent
@@ -287,6 +287,13 @@ const OnStepScreen = ({navigation}) => {
   return (
     <>
       <ImageBackground source={stepBg} style={styles.container}>
+        <View style={styles.skipBtn}>
+          <TextComponent
+            text={'Skip'}
+            fade
+            onPress={() => handleNextStep[step]()}
+          />
+        </View>
         <View
           style={{
             flexDirection: 'row',
@@ -296,7 +303,7 @@ const OnStepScreen = ({navigation}) => {
           <Image source={horse} style={styles.horse} />
           <View style={styles.stepCirclesContainer}>{renderStepCircles()}</View>
         </View>
-        <View style={styles.mainContent}>{renderStepContent()}</View>
+        <View style={styles.mainContent}>{renderSteps[step]()}</View>
         {/* <Text onPress={() => setStep(step + 1)}>NEsdasxt</Text> */}
       </ImageBackground>
       <View

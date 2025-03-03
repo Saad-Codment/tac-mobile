@@ -8,6 +8,10 @@ const actionMap = {
     ...state.onboarding,
     onboarding: true,
   }),
+  [types.restartOnboarding]: (state, act) => ({
+    ...state.onboarding,
+    onboarding: false,
+  }),
 };
 export default function (state = initial_state, action) {
   const handler = actionMap[action.type];

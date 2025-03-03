@@ -21,11 +21,17 @@ import Lottie from 'lottie-react-native';
 import {CircleImage} from './CircleImage';
 import {imageUrl} from '../Utils/Urls';
 
-const HomeHeader = ({text, onNotificarioPress, userDataImg}) => {
+const HomeHeader = ({
+  text,
+  onNotificarioPress,
+  userDataImg,
+  onProfilePress,
+}) => {
   return (
     <View style={styles.headerView}>
       <View style={styles.firstView}>
-        <View
+        <Touchable
+          onPress={onProfilePress}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -72,7 +78,7 @@ const HomeHeader = ({text, onNotificarioPress, userDataImg}) => {
               styles={{top: hp('0'), color: Colors.textGray}}
             />
           </View>
-        </View>
+        </Touchable>
         <Touchable onPress={onNotificarioPress}>
           <Image
             source={notificationWhite}

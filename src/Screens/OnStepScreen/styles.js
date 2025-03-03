@@ -51,7 +51,12 @@ export const styles = StyleSheet.create({
     width: wp('10'),
     zIndex: 0,
   },
-
+  skipBtn: {
+    width: wp('100'),
+    alignItems: 'flex-end',
+    paddingTop: hp('2'),
+    paddingRight: wp('3'),
+  },
   horse: {
     resizeMode: 'contain',
     width: wp('8'),

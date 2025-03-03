@@ -16,7 +16,7 @@ const AddFriendComp = ({item, sendReq}) => {
       <Touchable
         style={styles.friendCard}
         onPress={() =>
-          NavigationService.navigate('FriendProfileScreen', {id: item?.id})
+          NavigationService.navigate('FriendProfileScreen', {id: item?.user_id})
         }>
         <View style={{alignItems: 'center'}}>
           <CircleImage

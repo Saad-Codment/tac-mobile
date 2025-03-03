@@ -11,6 +11,7 @@ import NavigationService from '../Services/NavigationService';
 import useFriendServices from '../Services/FriendServices';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {imageUrl} from '../Utils/Urls';
+import {formatDateToCustomFormat} from '../Services/GlobalFunctions';
 
 const images = [
   'https://images.pexels.com/photos/27305813/pexels-photo-27305813/free-photo-of-a-woman-taking-a-photo-with-her-camera.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
@@ -98,8 +99,14 @@ const PostViewComp = ({item, refetechKeys, functionToUpdateLike, index}) => {
           uri
         />
         <View style={styles.userDetails}>
-          <TextComponent text={'Rusty Wright'} styles={styles.userName} />
-          <TextComponent text={'25 min ago'} styles={styles.postTime} />
+          <TextComponent
+            text={item?.first_name + ' ' + item?.last_name}
+            styles={styles.userName}
+          />
+          <TextComponent
+            text={formatDateToCustomFormat(item?.created_at)}
+            styles={styles.postTime}
+          />
         </View>
       </View>
 
@@ -129,8 +136,8 @@ const PostViewComp = ({item, refetechKeys, functionToUpdateLike, index}) => {
         <Touchable
           style={styles.leftRightView}
           onPress={async () => {
-            await addLikeOnPost.mutateAsync(item?.id);
             functionToUpdateLike(index);
+            await addLikeOnPost.mutateAsync(item?.id);
           }}>
           <Image
             source={item?.is_liked ? heartFilledLike : heartTheme}

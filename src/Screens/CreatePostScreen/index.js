@@ -5,6 +5,7 @@ import {
   Image,
   ScrollView,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import React, {memo} from 'react';
 import {HeaderComponentProfile} from '../../Components/HeaderComponentProfile';
@@ -17,7 +18,10 @@ import useCreatePostScreen from './useCreatePostScreen';
 import {imageUrl} from '../../Utils/Urls';
 import {styles} from './styles';
 import ThemeButton from '../../Components/ThemeButton';
-import {uploadFromGalary} from '../../Services/GlobalFunctions';
+import {
+  uploadFromCamera,
+  uploadFromGalary,
+} from '../../Services/GlobalFunctions';
 import BlurImage from '../../Components/BlurImage';
 import {Touchable} from '../../Components/Touchable';
 
@@ -40,11 +44,26 @@ const CreatePostScreen = ({navigation}) => {
         goBack={() => navigation.goBack()}
         rightIconImg={uploadGallery}
         onRightPress={async () => {
-          const images = await uploadFromGalary(true);
-          onChangeVal('postImgs', images);
-          console.log(
-            'imagesimagesimagesimagesimagesimagesimagesimages',
-            images,
+          Alert.alert(
+            'Pick to choose image',
+            '',
+            [
+              {
+                text: 'Camera',
+                onPress: async () => {
+                  const images = await uploadFromCamera(true);
+                  onChangeVal('postImgs', [images]);
+                },
+              },
+              {
+                text: 'Gallery', // Just a dismissal button
+                onPress: async () => {
+                  const images = await uploadFromGalary(true);
+                  onChangeVal('postImgs', images);
+                },
+              },
+            ],
+            {cancelable: true},
           );
         }}
       />

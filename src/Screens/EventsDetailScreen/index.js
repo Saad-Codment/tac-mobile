@@ -25,9 +25,13 @@ import {
 } from '../../Services/GlobalFunctions';
 import {imageUrl} from '../../Utils/Urls';
 import {CircleImage} from '../../Components/CircleImage';
+import {Touchable} from '../../Components/Touchable';
 
 const EventsDetailScreen = ({navigation, route}) => {
-  const {eventData, onRefresh} = useEventDetailScreen(navigation, route);
+  const {eventData, onRefresh, followUnFollowEvent} = useEventDetailScreen(
+    navigation,
+    route,
+  );
 
   const centerView = [
     {
@@ -151,14 +155,16 @@ const EventsDetailScreen = ({navigation, route}) => {
               width: wp('57'),
             }}
           />
-          <View style={styles.followView}>
+          <Touchable
+            style={styles.followView}
+            onPress={() => followUnFollowEvent(eventData?.id)}>
             <Image
               source={unCheck}
               resizeMode="contain"
               style={styles.checkImg}
             />
             <TextComponent text={'Follow Event'} styles={styles.typeStyle} />
-          </View>
+          </Touchable>
         </View>
         <TextComponent text={eventData?.title} styles={styles.titleStyle} />
         {eventData?.likes_count > 0 && (

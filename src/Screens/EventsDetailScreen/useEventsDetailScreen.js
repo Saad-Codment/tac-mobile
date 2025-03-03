@@ -1,7 +1,8 @@
-import {useQuery} from '@tanstack/react-query';
-import {getEventDetailsUrl} from '../../Utils/Urls';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {followEventsUrl, getEventDetailsUrl} from '../../Utils/Urls';
 import API from '../../Utils/helperFunc';
 import {useCallback} from 'react';
+import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 
 const useEventDetailScreen = ({navigate}, {params}) => {
   const {id} = params;
@@ -17,7 +18,30 @@ const useEventDetailScreen = ({navigate}, {params}) => {
     });
   }, []);
 
-  return {eventData: data?.data, onRefresh};
+  const {mutate} = useMutation({
+    mutationFn: data => {
+      return API.post(data?.url, {event_id: data?.id});
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
+
+  return {
+    eventData: data?.data,
+    onRefresh,
+    followUnFollowEvent: id => {
+      mutate({id, url: followEventsUrl});
+    },
+  };
 };
 
 export default useEventDetailScreen;
