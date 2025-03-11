@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, Image, View, Platform} from 'react-native';
+import {StyleSheet, Text, Image, View, Platform, TextInput} from 'react-native';
 import {TextComponent} from './TextComponent';
 import {Touchable} from './Touchable';
 import {arrow, arrowBack, arrowLeft} from '../Assets';
@@ -22,6 +22,9 @@ export const HeaderComponent = ({
   onRightPress,
   backIconStyle,
   rightIconImg,
+  isSearch,
+  searchVal,
+  setSearchVal,
 }) => {
   return (
     <View style={[styles.TopHeader, {...style}]}>
@@ -45,11 +48,23 @@ export const HeaderComponent = ({
         </Touchable>
       </View>
       <View style={styles.HeaderCenter}>
-        <TextComponent
-          text={headerTitle}
-          numberOfLines={numberOfLines ?? 1}
-          styles={{...styles.HeaderTitle, ...titleStyle}}
-        />
+        {isSearch ? (
+          <View style={styles.inputView}>
+            <TextInput
+              style={{flex: 1, color: 'white'}}
+              placeholder="Search for friends"
+              placeholderTextColor={'gray'}
+              value={searchVal}
+              onChangeText={e => setSearchVal(e)}
+            />
+          </View>
+        ) : (
+          <TextComponent
+            text={headerTitle}
+            numberOfLines={numberOfLines ?? 1}
+            styles={{...styles.HeaderTitle, ...titleStyle}}
+          />
+        )}
       </View>
       <View style={styles.HeaderRight}>
         <Touchable style={styles.styleCheck} onPress={onRightPress}>
@@ -126,6 +141,17 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     height: hp('3'),
     marginLeft: wp('2'),
+  },
+  inputView: {
+    width: wp('82'),
+    height: hp('5'),
+    borderRadius: 30,
+    borderWidth: 0.5,
+    borderColor: Colors.dkBorderColor,
+    paddingHorizontal: wp('3'),
+    marginRight: wp('5'),
+    marginTop: Platform.OS == 'android' ? hp('-0.5') : hp('-1.2'),
+    // marginBottom: hp('9'),
   },
   styleCheck: {
     alignItems: 'center',

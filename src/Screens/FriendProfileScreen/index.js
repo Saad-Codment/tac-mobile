@@ -11,6 +11,7 @@ import {
   location,
   message,
   messages,
+  radioCircle,
   threeDots,
   threeDotsHor,
 } from '../../Assets';
@@ -23,6 +24,9 @@ import {DataNotFound} from '../../Components/DataNotFound';
 import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
 import {styles} from './styles';
 import PostViewComp from '../../Components/PostViewComp';
+import {BottomSheet} from 'react-native-elements';
+import BottomModalComponent from '../../Components/BottomModalComponent';
+import {Touchable} from '../../Components/Touchable';
 
 const FriendProfileScreen = ({navigation, route}) => {
   const {
@@ -31,6 +35,10 @@ const FriendProfileScreen = ({navigation, route}) => {
     isRefetching,
     isFetching,
     hasMoreData,
+    myUserData,
+    modal,
+    setModal,
+    openBottomSheet,
     onRefresh,
     loadMoreData,
     refetch,
@@ -44,16 +52,18 @@ const FriendProfileScreen = ({navigation, route}) => {
         backText={'Back'}
         backTextStyle={{color: Colors.textGray}}
       />
-      <HeaderComp userData={userData} />
+      <HeaderComp userData={userData} myUserData={myUserData} />
       <AniFlatOneByOne
-        data={eventsList}
+        data={eventsList ?? []}
         flatViewStyle={styles.upComingFlatlistView}
         onRefresh={onRefresh}
         flatListProps={{
-          ListEmptyComponent: (
-            <DataNotFound onpress={onRefresh} btnStyles={{width: wp('80')}} />
-          ),
+          ListEmptyComponent:
+            eventsList != null && eventsList?.length == 0 ? (
+              <DataNotFound onpress={onRefresh} btnStyles={{width: wp('80')}} />
+            ) : null,
           ListFooterComponent:
+            eventsList != null &&
             eventsList.length >= 9 &&
             !hasMoreData &&
             (isFetching ? (
@@ -75,22 +85,30 @@ const FriendProfileScreen = ({navigation, route}) => {
                   index={index}
                   mainViewStyle={{width: wp('95')}}
                   upperImgStyle={{width: wp('95')}}
-                  refetechKeys={['profilePosts']}
                   functionToUpdateLike={functionToUpdateLike}
+                  openBottomSheet={id => setModal(id)}
                   // likePost={likePost}
                 />
               ) : (
                 <PostViewComp
                   item={item}
                   index={index}
-                  refetechKeys={['profilePosts']}
                   functionToUpdateLike={functionToUpdateLike}
+                  openBottomSheet={id => setModal(id)}
                 />
               )}
             </View>
           );
         }}
       />
+      {Boolean(modal != null) && (
+        <BottomModalComponent
+          isVisible={Boolean(modal != null)}
+          isReport
+          event_id={modal}
+          onClose={() => setModal(null)}
+        />
+      )}
     </View>
   );
 };

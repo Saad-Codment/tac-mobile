@@ -69,10 +69,12 @@ export const styles = StyleSheet.create({
   upcoming: {
     fontSize: FontSize.scale16,
     fontWeight: '600',
+    color: 'black',
   },
   viewall: {
     fontSize: FontSize.scale12,
     fontWeight: '400',
+    color: 'black',
   },
   upcomingHeader: {
     borderRadius: 10,

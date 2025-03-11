@@ -20,6 +20,7 @@ import {fcmService} from './src/Services/Notifications';
 import {fcmRegister} from './src/Redux/Action/AuthAction';
 import NavigationService from './src/Services/NavigationService';
 import notifee, {EventType} from '@notifee/react-native';
+import Orientation from 'react-native-orientation-locker';
 
 const App = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -108,6 +109,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    Orientation.lockToPortrait(); //this will lock the view to Portrait
     Geolocation.setRNConfiguration({
       config: {
         skipPermissionRequests: true,
@@ -148,11 +150,14 @@ const App = () => {
       source={splash2}
       style={styles.SplashScreen_RootView}></ImageBackground>
   );
-
+  const getNameFunc = NavigationService.getCurrentRoute();
   return (
     <>
       {isVisible === true ? Splash_Screen : <MainNavigator />}
-      {isloading && <Overlay />}
+      {isloading &&
+        Boolean(getNameFunc?.getCurrentRoute()?.name != 'AllEventsScreen') && (
+          <Overlay />
+        )}
       {/* <StackNavigatior />; */}
     </>
   );

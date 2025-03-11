@@ -8,6 +8,7 @@ import {
   filledLocation,
   tacLogo,
   tickCircle,
+  tickSquare,
   unCheck,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
@@ -159,7 +160,7 @@ const EventsDetailScreen = ({navigation, route}) => {
             style={styles.followView}
             onPress={() => followUnFollowEvent(eventData?.id)}>
             <Image
-              source={unCheck}
+              source={eventData?.is_followed ? tickSquare : unCheck}
               resizeMode="contain"
               style={styles.checkImg}
             />

@@ -153,6 +153,14 @@ export {default as threeDotsHor} from './Icons/threeDotsHor.png';
 export {default as message} from './Icons/message.png';
 export {default as heartFilledLike} from './Icons/heartFilledLike.png';
 export {default as profileAdd} from './Icons/profile-add.png';
+export {default as searchBottom} from './Icons/searchBottom.png';
+export {default as searchFill} from './Icons/searchFill.png';
+export {default as NoProfile} from './Icons/NoProfile.png';
+export {default as friendReq} from './Icons/friendReq.png';
+export {default as profileCircle} from './Icons/profile-circle.png';
+export {default as userAdd} from './Icons/user-add.png';
+export {default as searchNormal} from './Icons/search-normal.png';
+export {default as dotsVertical} from './Icons/dots-vertical.png';
 
 // Lotties files
 

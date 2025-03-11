@@ -7,7 +7,12 @@
 #import <UserNotifications/UserNotifications.h>
 #import <RNCPushNotificationIOS.h>
 
+#import <FirebaseCore.h>
+#import "Orientation.h"
+
 @implementation AppDelegate
+
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -17,6 +22,8 @@
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
+
+  
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 

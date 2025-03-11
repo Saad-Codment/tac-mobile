@@ -30,6 +30,8 @@ export const InputComponent = ({
   multiline,
   rightText,
   placeholderTextColor,
+  selectionColor,
+  errorStyle,
 }) => {
   const [show, setShow] = useState(!isSecure);
   const handleClick = () => setShow(!show);
@@ -63,7 +65,7 @@ export const InputComponent = ({
               {...{
                 value,
                 isDisabled,
-                selectionColor: Colors.white,
+                selectionColor: selectionColor ?? Colors.white,
                 placeholder,
                 keyboardType,
                 style: {...styles.input(isSecure), ...textStyle},
@@ -111,7 +113,9 @@ export const InputComponent = ({
               // width: Sizes.width * 0.9,
             }
           }>
-          <Text style={[styles.error]}>{errors[name]?.message}</Text>
+          <Text style={{...styles.error, ...errorStyle}}>
+            {errors[name]?.message}
+          </Text>
         </View>
       )}
     </>

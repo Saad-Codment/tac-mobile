@@ -6,8 +6,16 @@ import ThemeButton from './ThemeButton';
 import {hp, wp} from '../Config/responsive';
 import {Colors} from '../Theme/Variables';
 import MutualFriends from './MutualFriendsComponent';
+import useFriendServices from '../Services/FriendServices';
 
-const FriendReqComp = ({item, index, onAcceptReq, onCancelReq}) => {
+const FriendReqComp = ({
+  item,
+  index,
+  onAcceptReq,
+  onCancelReq,
+  refetechKeys,
+}) => {
+  const {acceptFriendReq, rejectFriendReq} = useFriendServices();
   console.log('lksnvklsdnlkvsdnl;vnsdl;vnls;dnv;sd', item);
   return (
     <View style={styles.cardView}>
@@ -36,8 +44,13 @@ const FriendReqComp = ({item, index, onAcceptReq, onCancelReq}) => {
               color: 'white',
               fontSize: hp('1.5'),
             }}
-            onPress={() => {
-              onAcceptReq(item?.id);
+            onPress={async () => {
+              await acceptFriendReq.mutateAsync(item?.id);
+              if (refetechKeys) {
+                refetechKeys.map(res => {
+                  queryClient.invalidateQueries([res]); // Refetch data
+                });
+              }
             }}
           />
           <ThemeButton
@@ -47,8 +60,13 @@ const FriendReqComp = ({item, index, onAcceptReq, onCancelReq}) => {
               fontSize: hp('1.5'),
               color: 'black',
             }}
-            onPress={() => {
-              onCancelReq(item?.id);
+            onPress={async () => {
+              await rejectFriendReq.mutateAsync(item?.id);
+              if (refetechKeys) {
+                refetechKeys.map(res => {
+                  queryClient.invalidateQueries([res]); // Refetch data
+                });
+              }
             }}
           />
         </View>

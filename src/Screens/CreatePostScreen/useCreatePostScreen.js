@@ -25,8 +25,9 @@ const useCreatePostScreen = ({navigate, goBack}) => {
     },
     onSuccess: ({ok, data}) => {
       if (ok) {
-        successMessage('Your profile updated sucessfully!');
+        successMessage('Post Created.');
         goBack();
+        navigate('FriendProfileScreen', {id: userData?.id});
       } else {
         errorMessage(data?.message);
       }
@@ -37,7 +38,7 @@ const useCreatePostScreen = ({navigate, goBack}) => {
   });
 
   const createPost = () => {
-    if (postImgs.length > 0 || (postText != null && postText != undefined)) {
+    if (postText != null && postText != undefined) {
       mutateAsync({
         title: postText,
         images: postImgs,

@@ -19,7 +19,7 @@ import {getUserFriendsUrl, imageUrl} from '../../Utils/Urls';
 import useFriendServices from '../../Services/FriendServices';
 import useReduxStore from '../../Hooks/UseReduxStore';
 
-const HeaderComp = ({userData}) => {
+const HeaderComp = ({userData, myUserData}) => {
   const FriendCountHeaderComp = ({num, title, onPress}) => {
     return (
       <Touchable style={styles.compView} onPress={onPress}>
@@ -39,7 +39,7 @@ const HeaderComp = ({userData}) => {
       title: 'Friends',
       onPress: () =>
         NavigationService.navigate('FriendLists', {
-          url: getUserFriendsUrl + userData?.id,
+          url: getUserFriendsUrl + userData?.id + '?',
           key: 'userFriends',
         }),
     },
@@ -78,39 +78,47 @@ const HeaderComp = ({userData}) => {
               />
             ))}
           </View>
-          <View style={styles.countView}>
-            <ThemeButton
-              title={
-                userData?.friends != 0
-                  ? 'Remove'
-                  : userData?.requested == 0
-                  ? 'Add friend'
-                  : 'Requested'
-              }
-              image={addCircleWhite}
-              isYellowTheme
-              style={styles.btnView}
-              imageStyle={styles.btnImg}
-              onPress={async () => {
-                if (userData?.friends == 0) {
-                  await sendFriendReq.mutateAsync(userData?.id);
-                } else {
-                  await removeFriend.mutateAsync(userData?.id);
+          {userData?.id != myUserData?.id ? (
+            <View style={styles.countView}>
+              <ThemeButton
+                title={
+                  userData?.friends != 0
+                    ? 'Remove'
+                    : userData?.requested == 0
+                    ? 'Add friend'
+                    : 'Requested'
                 }
-                queryClient.invalidateQueries(['getProfileData']);
-              }}
-              isDisable={Boolean(userData?.requested == 1)}
-            />
-            <ThemeButton
-              title={'Message'}
-              image={message}
-              style={{...styles.btnView, backgroundColor: 'white'}}
-              imageStyle={styles.btnImg}
-              textStyle={{color: Colors.textGray}}
-              isYellowTheme={Boolean(userData?.friends == 1)}
-              isDisable={Boolean(userData?.friends == 0)}
-            />
-          </View>
+                image={addCircleWhite}
+                isYellowTheme
+                style={styles.btnView}
+                imageStyle={styles.btnImg}
+                onPress={async () => {
+                  if (userData?.friends == 0) {
+                    await sendFriendReq.mutateAsync(userData?.id);
+                  } else {
+                    await removeFriend.mutateAsync(userData?.friends);
+                  }
+                  queryClient.invalidateQueries(['getProfileData']);
+                }}
+                isDisable={Boolean(userData?.requested == 1)}
+              />
+              <ThemeButton
+                title={'Message'}
+                image={message}
+                style={{...styles.btnView, backgroundColor: 'white'}}
+                imageStyle={styles.btnImg}
+                textStyle={{color: Colors.textGray}}
+                isYellowTheme={Boolean(userData?.friends == 1)}
+                isDisable={Boolean(userData?.friends == 0)}
+              />
+            </View>
+          ) : (
+            <>
+              <View />
+              <View />
+              <View />
+            </>
+          )}
         </View>
       </View>
     </View>

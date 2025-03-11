@@ -106,7 +106,7 @@ export const styles = StyleSheet.create({
   upperWhiteView: {
     backgroundColor: 'white',
     width: wp('90'),
-    height: hp('70.5'),
+    height: hp('79'),
     borderRadius: 20,
     marginTop: hp('10'),
     paddingTop: hp('10'),
@@ -163,7 +163,7 @@ export const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     tintColor: 'black',
     width: wp('5'),
-    height: hp('4'),
+    height: hp('2'),
   },
   headingText: {
     fontWeight: 'bold',
@@ -211,5 +211,12 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: hp('2'),
     marginBottom: hp('2'),
+  },
+  textStyle: {
+    fontSize: hp('1.5'),
+    textAlign: 'center',
+    borderRadius: 25,
+    borderWidth: 1,
+    paddingVertical: hp('2'),
   },
 });

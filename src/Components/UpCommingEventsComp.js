@@ -7,6 +7,7 @@ import {
   blackLock,
   heartFilledLike,
   heartTheme,
+  infoCircle,
   locationGray,
   shareTheme,
 } from '../Assets';
@@ -41,10 +42,17 @@ const UpcomingEventsComp = ({
   upperImgStyle,
   refetechKeys,
   functionToUpdateLike,
+  afterLikeFun,
+  openBottomSheet,
 }) => {
   const {likeAndDisLikeEvent} = useFriendServices();
 
   const {queryClient} = useReduxStore();
+
+  console.log(
+    'sljdbvksbdklvbsdklbskldbvlksdbkvlsdbklvbds',
+    item?.event_type_name,
+  );
 
   return (
     <View style={{...styles.mainView, ...mainViewStyle}}>
@@ -74,6 +82,7 @@ const UpcomingEventsComp = ({
           <View
             style={{
               marginLeft: wp('3'),
+              width: wp('69'),
             }}>
             <View style={styles.lockView}>
               <TextComponent
@@ -103,17 +112,24 @@ const UpcomingEventsComp = ({
               styles={styles.timeText}
             />
           </View>
+          <Touchable onPress={() => openBottomSheet(item?.id)}>
+            <Image
+              source={infoCircle}
+              resizeMode="contain"
+              style={{width: wp('5'), height: hp('5')}}
+            />
+          </Touchable>
         </View>
         {item?.event_type_name && (
           <View style={styles.innerTitleView}>
             <TextComponent
-              text={'aMobridge, SD Slac.'}
+              text={item?.event_type_name}
               styles={{fontWeight: 'bold'}}
             />
-            <TextComponent
+            {/* <TextComponent
               text={'( Bull Riding )'}
               styles={styles.goldenText}
-            />
+            /> */}
           </View>
         )}
         <View style={styles.innerLocationView}>
@@ -145,6 +161,8 @@ const UpcomingEventsComp = ({
             onPress={async () => {
               functionToUpdateLike(index);
               await likeAndDisLikeEvent.mutateAsync(item?.id);
+              if (refetechKeys)
+                refetechKeys.map(res => queryClient.invalidateQueries([res]));
             }}>
             <Image
               source={item?.is_liked ? heartFilledLike : heartTheme}

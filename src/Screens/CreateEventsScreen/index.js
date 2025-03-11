@@ -508,18 +508,26 @@ const CreateEventsScreen = ({navigation}) => {
             title={'Private event'}
             errorName={errors['privateEvent']}
             innerLeftView={
-              <TextComponent
-                text={'Yes'}
-                styles={{
-                  ...styles.textStyle,
+              <Controller
+                control={control}
+                name={`privateEvent`}
+                render={({field: {onChange, value}}) => {
+                  return (
+                    <TextComponent
+                      text={value == 0 ? 'No' : 'Yes'}
+                      styles={{
+                        ...styles.textStyle,
+                      }}
+                      onPress={() =>
+                        dynamicRoute('ListViewScreen', {
+                          onSelectValue: res => onChange(res),
+                          selectedValue: [value] ?? [],
+                          urlName: allEventTypeUrl,
+                        })
+                      }
+                    />
+                  );
                 }}
-                onPress={() =>
-                  dynamicRoute('ListViewScreen', {
-                    onSelectValue: res => onChange(res),
-                    selectedValue: [value] ?? [],
-                    urlName: allEventTypeUrl,
-                  })
-                }
               />
             }
             innerExtraView={
@@ -621,18 +629,26 @@ const CreateEventsScreen = ({navigation}) => {
             title={'tour'}
             errorName={errors['evnetTour']}
             innerLeftView={
-              <TextComponent
-                text={'Yes'}
-                styles={{
-                  ...styles.textStyle,
+              <Controller
+                control={control}
+                name={`evnetTour`}
+                render={({field: {onChange, value}}) => {
+                  return (
+                    <TextComponent
+                      text={value == 1 ? 'No' : 'Yes'}
+                      styles={{
+                        ...styles.textStyle,
+                      }}
+                      onPress={() =>
+                        dynamicRoute('ListViewScreen', {
+                          onSelectValue: res => onChange(res),
+                          selectedValue: [value] ?? [],
+                          urlName: allEventTypeUrl,
+                        })
+                      }
+                    />
+                  );
                 }}
-                onPress={() =>
-                  dynamicRoute('ListViewScreen', {
-                    onSelectValue: res => onChange(res),
-                    selectedValue: [value] ?? [],
-                    urlName: allEventTypeUrl,
-                  })
-                }
               />
             }
             innerExtraView={
@@ -646,7 +662,7 @@ const CreateEventsScreen = ({navigation}) => {
                         false: Colors.grayFaded,
                         true: 'transparent',
                       }}
-                      thumbColor={value ? Colors.primaryColor : '#EAF6ED'}
+                      thumbColor={value == 7 ? Colors.primaryColor : '#EAF6ED'}
                       ios_backgroundColor="#EAF6ED"
                       onValueChange={e => onChange(e ? 7 : 1)}
                       value={Boolean(value == 7)}
@@ -673,11 +689,13 @@ const CreateEventsScreen = ({navigation}) => {
                       styles={{...styles.textStyle, width: wp('28')}}
                       onPress={() => onChange(0)}
                     />
-                    <Image
-                      source={value == 0 ? radioCircleOn : radioCircle}
-                      resizeMode="contain"
-                      style={styles.leftViewImg}
-                    />
+                    <Touchable onPress={() => onChange(0)}>
+                      <Image
+                        source={value == 0 ? radioCircleOn : radioCircle}
+                        resizeMode="contain"
+                        style={styles.leftViewImg}
+                      />
+                    </Touchable>
                   </>
                 )}
               />
@@ -696,11 +714,13 @@ const CreateEventsScreen = ({navigation}) => {
                       styles={{...styles.textStyle, width: wp('28')}}
                       onPress={() => onChange(1)}
                     />
-                    <Image
-                      source={value == 1 ? radioCircleOn : radioCircle}
-                      resizeMode="contain"
-                      style={styles.leftViewImg}
-                    />
+                    <Touchable onPress={() => onChange(1)}>
+                      <Image
+                        source={value == 1 ? radioCircleOn : radioCircle}
+                        resizeMode="contain"
+                        style={styles.leftViewImg}
+                      />
+                    </Touchable>
                   </>
                 )}
               />

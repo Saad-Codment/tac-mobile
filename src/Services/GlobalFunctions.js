@@ -752,6 +752,38 @@ function checkParagraphForUndefined(paragraph) {
   return !paragraph.includes('undefined');
 }
 
+const formatDate = dateString => {
+  // input: "1988-03-04T20:49:00.000Z"
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Ensure 2-digit format
+  const day = String(date.getDate()).padStart(2, '0'); // Ensure 2-digit format
+  return `${year}-${month}-${day}`;
+  // Output: "1988-03-04"
+};
+
+const calculateAge = birthdate => {
+  // input: "1988-03-04"
+  const birthDate = new Date(birthdate);
+  const today = new Date();
+
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  const dayDiff = today.getDate() - birthDate.getDate();
+
+  // Adjust age if the birthday hasn't occurred yet this year
+  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+    age--;
+  }
+
+  return age;
+  // Output: "15"
+};
+
+const getFileNameFromURL = fileURL => {
+  return fileURL.split('/').pop();
+};
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -788,4 +820,7 @@ export {
   removeUndefined,
   checkParagraphForUndefined,
   uploadFromCamera,
+  formatDate,
+  calculateAge,
+  getFileNameFromURL,
 };

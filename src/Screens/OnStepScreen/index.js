@@ -24,6 +24,8 @@ import {Colors} from '../../Theme/Variables';
 import {Touchable} from '../../Components/Touchable';
 import {allAssociatesUrl, allEventTypeUrl} from '../../Utils/Urls';
 import {MultiSelectButton} from '../../Components/MultiSelectButton';
+import DatePicker from 'react-native-date-picker';
+import {formatDateToCustomFormat} from '../../Services/GlobalFunctions';
 
 const OnStepScreen = ({navigation}) => {
   const {
@@ -38,6 +40,9 @@ const OnStepScreen = ({navigation}) => {
     handleNextStep,
     transport,
     dynamicRoute,
+    currentDate,
+    modalState,
+    setModalState,
   } = useOnStepScreen(navigation);
 
   const renderSteps = {
@@ -54,17 +59,29 @@ const OnStepScreen = ({navigation}) => {
             fade={true}
           />
 
-          <View style={styles.agePicker}>
-            <ErrorInputComponent
-              dropDownData={ageRange}
-              dropDownPlaceholder={'Select your Age'}
-              // text={'Rating  '}
-              preferenceVal={age}
-              setPreferenceVal={val => onSelectValue('age', val)}
-              dividerBool
-              dividerLineBool
-            />
-          </View>
+          <TextComponent
+            text={formatDateToCustomFormat(age ?? currentDate)}
+            onPress={() => setModalState(true)}
+            styles={styles.textStyle}
+          />
+
+          {modalState && (
+            <View style={styles.agePicker}>
+              <DatePicker
+                mode={'date'}
+                open={modalState}
+                date={age ?? currentDate}
+                is24hourSource="device"
+                locale="en"
+                modal
+                onConfirm={e => {
+                  onSelectValue('age', e);
+                  setModalState(false);
+                  // }
+                }}
+              />
+            </View>
+          )}
         </>
       );
     },
@@ -175,7 +192,7 @@ const OnStepScreen = ({navigation}) => {
     },
     5: () => {
       return (
-        <View>
+        <>
           <TextComponent
             text={'Any association you’re align with?'}
             styles={styles.tagline}
@@ -203,6 +220,8 @@ const OnStepScreen = ({navigation}) => {
           </Touchable>
           <ScrollView
             showsVerticalScrollIndicator={false}
+            nestedScrollEnabled
+            scrollEnabled
             contentContainerStyle={styles.innerScroll}>
             <MultiSelectButton
               isDisable={true}
@@ -211,7 +230,7 @@ const OnStepScreen = ({navigation}) => {
               textStyle={{fontSize: hp('1.5')}}
             />
           </ScrollView>
-        </View>
+        </>
       );
     },
   };
@@ -304,11 +323,9 @@ const OnStepScreen = ({navigation}) => {
           <View style={styles.stepCirclesContainer}>{renderStepCircles()}</View>
         </View>
         <View style={styles.mainContent}>{renderSteps[step]()}</View>
-        {/* <Text onPress={() => setStep(step + 1)}>NEsdasxt</Text> */}
       </ImageBackground>
       <View
         style={{
-          // marginLeft: wp(step == 1 ? '0' : '5'),
           ...styles.buttonContainer,
         }}>
         {step != 1 && (
@@ -317,7 +334,6 @@ const OnStepScreen = ({navigation}) => {
             title={'Previous'}
             textStyle={{...styles.themeButton}}
             style={{
-              // backgroundColor: Colors.primaryColor,
               borderRadius: 40,
               height: hp('6'),
               width: wp('42'),
@@ -336,33 +352,6 @@ const OnStepScreen = ({navigation}) => {
           }}
         />
       </View>
-      {/* {!isKeyboardVisible && (
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            disabled={Boolean(step == 1)}
-            style={[styles.button, styles.previousButton(Boolean(step == 1))]}
-            onPress={handlePreviousStep}>
-            <Text
-              style={{
-                ...styles.buttonText,
-                display: Boolean(step == 1) ? 'none' : 'flex',
-              }}>
-              Previous
-            </Text>
-          </TouchableOpacity> */}
-
-      {/* <TouchableOpacity
-            style={[styles.button, styles.nextButton]}
-            onPress={() => handleNextStep()}>
-            <Text style={styles.buttonText}>
-              {step == 6 ? 'Submit' : 'Next'}
-            </Text>
-            {step == 6 ? null : (
-              <Image source={arrowrightblack} style={styles.arrRight} />
-            )}
-          </TouchableOpacity> */}
-      {/* </View> */}
-      {/* )} */}
     </>
   );
 };

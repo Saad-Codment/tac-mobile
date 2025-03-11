@@ -19,7 +19,9 @@ export const apendUrl = url => {
   return baseURL + url;
 };
 export const imageUrl = url => {
-  return url ? imageURL + url : '';
+  return url
+    ? imageURL + url
+    : 'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg';
   // : 'https://res.cloudinary.com/dd6tdswt5/image/upload/v1684830799/UserImages/mhysa2zj0sbmvnw69b35.jpg';
 };
 
@@ -37,7 +39,7 @@ export const getEventDatesUrl = '/events/dates';
 export const getEventByDatesUrl = '/events/get-with-date';
 export const getEventDetailsUrl = '/events/';
 export const getSuggestedFriendsUrl = '/friends/suggestions';
-export const getMyFriendsUrl = '/friends/list';
+export const getMyFriendsUrl = '/friends/list?';
 export const editProfileUrl = '/profile-update';
 export const createPostUrl = '/posts/store';
 export const sendFriendReqUrl = '/friend-request/send/';
@@ -61,6 +63,10 @@ export const addCommentOnPostUrl = '/react-post/comment';
 export const getUserFriendsUrl = '/user/friend-list/';
 export const followEventsUrl = '/events/follow-event';
 export const unFollowEventsUrl = '/events/unfollow-event';
+export const searchScreenDataUrl = '/search-screen-data';
+export const searchDataUrl = '/user/search?search=';
+export const getReasonsUrl = '/reports/fetch-reasons';
+export const reportEventUrl = '/reports/report-event';
 
 export const fcmTokenUrl = 'add-fcm-token';
 export const deleteAccUrl = 'auth/account-delete';

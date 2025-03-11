@@ -31,6 +31,9 @@ import {
   friendList,
   trashRed,
   calender,
+  friendReq,
+  profileCircle,
+  userAdd,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
@@ -50,7 +53,10 @@ import {MultiView} from './MultiView';
 import NavigationService from '../../Services/NavigationService';
 import SettingModal from './SettingModal';
 import {AlertDesign} from '../../Components/AlertDesign';
-import {capitalizeFirstLetter} from '../../Services/GlobalFunctions';
+import {
+  calculateAge,
+  capitalizeFirstLetter,
+} from '../../Services/GlobalFunctions';
 import {getMyFriendsUrl, imageUrl} from '../../Utils/Urls';
 
 const SettingScreen = ({navigation}) => {
@@ -73,7 +79,14 @@ const SettingScreen = ({navigation}) => {
 
   const centerView = [
     {
-      title: `${userData?.age ?? 'Not Availabe'} Years`,
+      title: `My profile`,
+      leftIcon: profileCircle,
+      rightText: 'View',
+      onPress: () =>
+        NavigationService.navigate('FriendProfileScreen', {id: userData?.id}),
+    },
+    {
+      title: `${calculateAge(userData?.age) ?? 'Not Availabe'} Years`,
       leftIcon: ageIcon,
       rightText: 'Change',
       onPress: () => onOpenModal('age_view'),
@@ -109,7 +122,7 @@ const SettingScreen = ({navigation}) => {
     },
     {
       title: 'Friend Requests',
-      leftIcon: eventHistory,
+      leftIcon: userAdd,
       rightText: 'View',
       onPress: () => NavigationService.navigate('FriendReqScreen'),
     },
@@ -149,7 +162,8 @@ const SettingScreen = ({navigation}) => {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: hp('80')}}>
+        bounces={false}
+        contentContainerStyle={{paddingBottom: hp('90')}}>
         <View style={styles.mainBtn}>
           <View style={styles.upperWhiteView}>
             <View style={styles.imgView}>

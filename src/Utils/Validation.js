@@ -149,6 +149,8 @@ const parseTimeString = timeString => {
   return date;
 };
 
+const currentDate = new Date();
+
 const eventCreateSchema = yup.object().shape({
   eventTitle: yup
     .string()
@@ -156,8 +158,14 @@ const eventCreateSchema = yup.object().shape({
     .max(50, 'Name must be less than 50 characters.')
     .matches(/^[A-Za-z ]*$/, 'Please enter a valid name.'),
   eventImg: yup.mixed().required('Event image is required'),
-  eventStartDate: yup.date().required('Event start date is required'),
-  eventStartTime: yup.string().required('Event start time is required'),
+  eventStartDate: yup
+    .date()
+    .required('Event start date is required')
+    .default(currentDate),
+  eventStartTime: yup
+    .date()
+    .required('Event start time is required')
+    .default(currentDate),
   eventEndDate: yup
     .date()
     .required('Event end date is required')
@@ -168,9 +176,10 @@ const eventCreateSchema = yup.object().shape({
         const {eventStartDate} = this.parent;
         return !eventStartDate || !value || value >= eventStartDate;
       },
-    ),
+    )
+    .default(currentDate),
   eventEndTime: yup
-    .string()
+    .date()
     .required('Event end time is required')
     .test(
       'is-after-start-time',
@@ -193,6 +202,7 @@ const eventCreateSchema = yup.object().shape({
         return true; // No need to validate if dates are different
       },
     ),
+  // .default(currentDate),
   eventLocation: yup.object().shape({
     locationName: yup.string().required('Event location Name is required'),
     coords: yup.object().shape({

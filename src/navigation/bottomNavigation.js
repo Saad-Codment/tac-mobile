@@ -20,6 +20,9 @@ import {
   addcircle,
   messages,
   messageOut,
+  searchBottom,
+  searchFill,
+  searchNormal,
 } from '../Assets';
 import {types} from '../Redux/types';
 import useReduxStore from '../Hooks/UseReduxStore';
@@ -95,8 +98,8 @@ function MybottomTabs() {
       />
       <Tab.Screen
         name="HomeScreen1"
-        options={tabarComponent(heart, heart)}
-        component={Screens.HomeScreen}
+        options={tabarComponent(searchNormal, searchBottom)}
+        component={Screens.SearchScreen}
       />
       <Tab.Screen
         name="HomeScreen2"

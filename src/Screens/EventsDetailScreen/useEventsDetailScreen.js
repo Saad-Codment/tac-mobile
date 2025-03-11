@@ -6,7 +6,7 @@ import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 
 const useEventDetailScreen = ({navigate}, {params}) => {
   const {id} = params;
-  const {data, error} = useQuery({
+  const {data, error, refetch} = useQuery({
     queryKey: ['eventDetail'],
     queryFn: () => API.get(getEventDetailsUrl + id),
   });
@@ -18,7 +18,7 @@ const useEventDetailScreen = ({navigate}, {params}) => {
     });
   }, []);
 
-  const {mutate} = useMutation({
+  const {mutate, mutateAsync} = useMutation({
     mutationFn: data => {
       return API.post(data?.url, {event_id: data?.id});
     },
@@ -38,8 +38,9 @@ const useEventDetailScreen = ({navigate}, {params}) => {
   return {
     eventData: data?.data,
     onRefresh,
-    followUnFollowEvent: id => {
-      mutate({id, url: followEventsUrl});
+    followUnFollowEvent: async id => {
+      await mutateAsync({id, url: followEventsUrl});
+      refetch();
     },
   };
 };

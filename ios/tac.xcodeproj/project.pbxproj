@@ -14,6 +14,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-tac-tacTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-tac-tacTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A66A25D92D7F55FA001BFBCD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A66A25D82D7F55FA001BFBCD /* GoogleService-Info.plist */; };
 		C0579CA92FFD05418159057B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B2A85497AF162675817B61CF /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +47,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = tac/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-tac-tacTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tac-tacTests.release.xcconfig"; path = "Target Support Files/Pods-tac-tacTests/Pods-tac-tacTests.release.xcconfig"; sourceTree = "<group>"; };
 		A645AF642CEB6CBA0034771A /* tac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = tac.entitlements; path = tac/tac.entitlements; sourceTree = "<group>"; };
+		A66A25D82D7F55FA001BFBCD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A6C55D5D2CDBBCA800B9FA4A /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		A6C55D5E2CDBBCA800B9FA4A /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		A6C55D5F2CDBBCA800B9FA4A /* Proxima Nova Alt Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Alt Thin.otf"; sourceTree = "<group>"; };
@@ -91,7 +93,6 @@
 		A6C55D872CDBBCA800B9FA4A /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		A6C55D882CDBBCA800B9FA4A /* Proxima-Nova-Alt-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima-Nova-Alt-Thin.otf"; sourceTree = "<group>"; };
 		A6C55D892CDBBCA800B9FA4A /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
-		A6D54FE12CE3BC3E002FDB91 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B2A85497AF162675817B61CF /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = tac/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -169,7 +170,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				A6D54FE12CE3BC3E002FDB91 /* GoogleService-Info.plist */,
+				A66A25D82D7F55FA001BFBCD /* GoogleService-Info.plist */,
 				A6C55D5C2CDBBCA800B9FA4A /* Resources */,
 				13B07FAE1A68108700A75B9A /* tac */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -348,6 +349,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				A66A25D92D7F55FA001BFBCD /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				C0579CA92FFD05418159057B /* PrivacyInfo.xcprivacy in Resources */,
 			);

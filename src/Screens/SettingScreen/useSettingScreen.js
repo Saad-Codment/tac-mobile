@@ -24,14 +24,18 @@ import {
   racingIcon,
   trashRed,
 } from '../../Assets';
-import {getIdsFromArry, removeUndefined} from '../../Services/GlobalFunctions';
+import {
+  formatDate,
+  getIdsFromArry,
+  removeUndefined,
+} from '../../Services/GlobalFunctions';
 
 const SettingScreen = ({navigate, goBack}) => {
   const {dispatch, getState, queryClient} = useReduxStore();
   const {userData} = getState('Auth');
   const {isloading} = getState('isloading');
   const onPressKeyRef = useRef(null);
-
+  console.log('userDatauserDatauserDatauserDatauserData', userData);
   const apiDataType = {
     event_association: {
       queryName: 'allAssociate',
@@ -126,11 +130,12 @@ const SettingScreen = ({navigate, goBack}) => {
 
   const toggleModal = (modalUpdateData, isSave) => {
     setModalVal(!modalVal);
+    console.log(';lsdnvl;sndlvbklsdbvklsdbvsdlkbvnlsd;', modalUpdateData);
     if (isSave) {
       mutateAsync({
         first_name: modalUpdateData?.firstName ?? userData?.first_name,
         last_name: modalUpdateData?.lastName ?? userData?.last_name,
-        age: Number(modalUpdateData?.userAge ?? userData?.age),
+        age: formatDate(modalUpdateData?.userAge ?? userData?.age),
         gender: modalUpdateData?.userGender?.id ?? userData?.gender,
         profile_image: modalUpdateData?.profileImg?.type
           ? modalUpdateData?.profileImg

@@ -13,6 +13,7 @@ import {Platform} from 'react-native';
 import {logOutUser} from '../Redux/Action/AuthAction';
 import {types} from '../Redux/types';
 import {logOutFirebase, logoutService} from '../Services/AuthServices';
+import {getFileNameFromURL} from '../Services/GlobalFunctions';
 
 const API = create({
   baseURL,
@@ -237,7 +238,7 @@ const formDataFunc = (url, body, imageKey, isArray) => {
         formData.append(`${imageKey}[${index}]`, {
           uri: value?.uri,
           type: value?.type || 'image/jpeg',
-          name: value?.name,
+          name: value?.name ?? getFileNameFromURL(value?.uri),
         });
       });
     }
@@ -246,7 +247,7 @@ const formDataFunc = (url, body, imageKey, isArray) => {
       formData.append(imageKey, {
         uri: body[imageKey].uri,
         type: body[imageKey]?.type || 'image/jpeg',
-        name: body[imageKey].name,
+        name: body[imageKey].name ?? getFileNameFromURL(body[imageKey]?.uri),
       });
     }
   }

@@ -11,14 +11,18 @@ import {Touchable} from '../../Components/Touchable';
 import {Colors} from '../../Theme/Variables';
 import ErrorInputComponent from '../../Components/ErrorInputComponent';
 import {MultiSelectButton} from '../../Components/MultiSelectButton';
-import {uploadFromGalary} from '../../Services/GlobalFunctions';
+import {
+  formatDateToCustomFormat,
+  uploadFromGalary,
+} from '../../Services/GlobalFunctions';
 import {imageUrl} from '../../Utils/Urls';
+import DatePicker from 'react-native-date-picker';
 
 const ageRange = Array.from({length: 23}, (_, i) => {
   const age = 18 + i;
   return {label: String(age), value: String(age)};
 });
-
+const currentDate = new Date();
 const SettingModal = ({
   activeTags,
   isModal,
@@ -36,6 +40,8 @@ const SettingModal = ({
     eventType: activeTags?.eventTypes,
     associations: activeTags?.eventAssociations,
   });
+
+  const [modalState, setModalState] = useState(false);
 
   const [firstName, setFirstName] = useState(activeTags?.firstName);
 
@@ -100,14 +106,40 @@ const SettingModal = ({
     return (
       <>
         <View style={styles.ageViewModal}>
-          <ErrorInputComponent
+          <TextComponent
+            text={formatDateToCustomFormat(
+              innerDataState?.userAge ?? currentDate,
+            )}
+            onPress={() => setModalState(true)}
+            styles={styles.textStyle}
+          />
+
+          {modalState && (
+            <View style={styles.agePicker}>
+              <DatePicker
+                mode={'date'}
+                open={modalState}
+                date={new Date(innerDataState?.userAge) ?? currentDate}
+                is24hourSource="device"
+                locale="en"
+                modal
+                onConfirm={e => {
+                  console.log('sdhvswhopierhbiobdfiohbilvhdfobhvodfbo;df', e);
+                  setModalState(false);
+                  onChangeVal('userAge', e);
+                  // }
+                }}
+              />
+            </View>
+          )}
+          {/* <ErrorInputComponent
             dropDownData={ageRange}
             dropDownPlaceholder={'Select your Age'}
             preferenceVal={innerDataState?.userAge}
             setPreferenceVal={val => onChangeVal('userAge', val)}
             dividerBool
             dividerLineBool
-          />
+          /> */}
         </View>
       </>
     );

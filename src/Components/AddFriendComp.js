@@ -22,7 +22,7 @@ const AddFriendComp = ({item, sendReq}) => {
           <CircleImage
             image={imageUrl(item?.profile_image)}
             styles={styles.friendUserImage}
-            uri={true}
+            uri
           />
         </View>
         <TextComponent

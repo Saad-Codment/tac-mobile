@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {hp, wp} from '../Config/responsive';
 import {Colors} from '../Theme/Variables';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import * as Animatable from 'react-native-animatable';
 import {keyExtractor} from '../Utils';
 
@@ -32,15 +32,18 @@ export const AniFlatOneByOne = ({
     height.value = withSpring(Number(height.value) + 50);
   };
 
-  const renderItem = ({item, index}) => {
-    return (
-      <Animatable.View
-        animation={'fadeIn'}
-        delay={Number(index.toString() + '0')}>
-        {InnerCompnonet(item, index)}
-      </Animatable.View>
-    );
-  };
+  const renderItem = useCallback(
+    ({item, index}) => {
+      return (
+        <Animatable.View
+          animation={'fadeIn'}
+          delay={Number(index.toString() + '0')}>
+          {InnerCompnonet(item, index)}
+        </Animatable.View>
+      );
+    },
+    [data],
+  );
 
   return (
     <FlatList
@@ -54,6 +57,7 @@ export const AniFlatOneByOne = ({
         onRefresh,
         refreshing: false,
         keyExtractor,
+        contentInsetAdjustmentBehavior: 'automatic',
         ...flatListProps,
       }}
     />

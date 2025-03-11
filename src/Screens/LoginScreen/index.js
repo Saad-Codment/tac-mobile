@@ -63,7 +63,7 @@ const LoginScreen = ({navigation}) => {
               getValues,
               placeholder: 'Email',
               isImage: sms,
-              defaultValue: __DEV__ ? 'iphone14@gmail.com' : '',
+              defaultValue: __DEV__ ? 'iphonexr@gmail.com' : '',
             }}
           />
           <InputComponent
@@ -110,7 +110,7 @@ const LoginScreen = ({navigation}) => {
             <TextComponent
               text={'Forgot Password?'}
               styles={styles.forgetText}
-              onPress={() => navigation.navigate('ForgetPasswordScreen')}
+              onPress={() => navigation.navigate('ForgotPasswordScreen')}
             />
           </View>
 

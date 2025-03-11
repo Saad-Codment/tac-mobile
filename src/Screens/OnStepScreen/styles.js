@@ -71,7 +71,7 @@ export const styles = StyleSheet.create({
   },
   tagline: {
     color: Colors.black,
-    paddingTop: hp(Platform.OS == 'android' ? '35' : '25'),
+    paddingTop: hp(Platform.OS == 'android' ? '27' : '25'),
     // paddingBottom: hp('3'),
     textAlign: 'center',
     fontSize: FontSize.scale30,
@@ -191,8 +191,11 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginTop: hp('2'),
-    paddingBottom: hp('60'),
-    flexGrow: 1,
+    // paddingBottom: hp('60'),
+    // flexGrow: 1,
+    // backgroundColor: 'red',
+    // overflow: 'scroll',
+    height: hp('25'),
   },
 
   // ListViewStyle
@@ -258,5 +261,12 @@ export const styles = StyleSheet.create({
     paddingHorizontal: wp('3'),
     marginHorizontal: wp('1'),
     marginVertical: hp('.5'),
+  },
+  textStyle: {
+    fontSize: hp('1.5'),
+    textAlign: 'center',
+    borderRadius: 25,
+    borderWidth: 1,
+    paddingVertical: hp('2'),
   },
 });

@@ -23,12 +23,24 @@ const FriendLists = ({navigation, route}) => {
     isPending,
     refetch,
     userData,
+    params,
   } = useFriendLists(navigation, route);
+
+  const renderData = useCallback(
+    (item, index) => {
+      return (
+        userData?.id != item?.id && (
+          <MyFriendComp item={item} index={index} refetch={refetch} />
+        )
+      );
+    },
+    [friendListData],
+  );
 
   return (
     <>
       <HeaderComponent
-        headerTitle={'Friend List'}
+        headerTitle={params?.title ?? 'Friend List'}
         goBack={() => navigation.goBack()}
         isBack
       />
@@ -49,11 +61,7 @@ const FriendLists = ({navigation, route}) => {
           },
         }}
         InnerCompnonet={(item, index) => {
-          return (
-            userData?.id != item?.id && (
-              <MyFriendComp item={item} index={index} refetch={refetch} />
-            )
-          );
+          return renderData(item, index);
         }}
       />
     </>

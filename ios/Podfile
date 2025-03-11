@@ -25,7 +25,7 @@ setup_permissions([
 ])
 
 
-use_modular_headers! # Enable modular headers globally
+#use_modular_headers! # Enable modular headers globally
 
 # flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
 
@@ -61,8 +61,16 @@ target 'tac' do
   pod 'GTMSessionFetcher', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
-  pod 'Firebase/Auth'
-  pod 'Firebase/Messaging'
+  #  pod 'RNFBMessaging', :path => '../node_modules/@react-native-firebase/messaging'
+  #  pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
+  #  pod 'lottie-ios', '~> 4.2.0'         # Version should match your setup
+  # pod 'FirebaseCoreInternal', :modular_headers => true
+  # pod 'GTMSessionFetcher', :modular_headers => true
+  # pod 'GoogleUtilities', :modular_headers => true
+  # pod 'FirebaseCore', :modular_headers => true
+  # pod 'Firebase/Auth'
+  # pod 'Firebase/Messaging', :modular_headers => true
+    # pod 'FirebaseAuth'of
 
   # pod 'FirebaseAuthInterop', :modular_headers => true
   # pod 'FirebaseAppCheckInterop', :modular_headers => true

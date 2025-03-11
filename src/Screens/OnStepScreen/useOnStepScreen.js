@@ -10,13 +10,19 @@ import {onBoardConpleteUrl} from '../../Utils/Urls';
 import {types} from '../../Redux/types';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {errorMessage} from '../../Config/NotificationMessage';
-import {getIdsFromArry} from '../../Services/GlobalFunctions';
+import {
+  formatDate,
+  formatDateToCustomFormat,
+  getIdsFromArry,
+} from '../../Services/GlobalFunctions';
 import {Alert} from 'react-native';
 
 const useOnStepScreen = ({navigate}) => {
   const {dispatch} = useReduxStore();
 
   const [step, setStep] = useState(1);
+
+  const currentDate = new Date();
 
   const ageRange = Array.from({length: 23}, (_, i) => {
     const age = 18 + i;
@@ -38,6 +44,8 @@ const useOnStepScreen = ({navigate}) => {
       } else errorMessage(data?.message);
     },
   });
+
+  const [modalState, setModalState] = useState(false);
 
   const [onBoardData, setOnboardData] = useState({
     age: null,
@@ -84,7 +92,7 @@ const useOnStepScreen = ({navigate}) => {
         association_ids: getIdsFromArry(association, 'id'),
         event_type_ids: getIdsFromArry(sport, 'id'),
         gender: gender && gender.toLowerCase(),
-        age: age && age.toLowerCase(),
+        age: formatDate(age ?? currentDate),
         transport_id: 1,
       });
     },
@@ -137,6 +145,9 @@ const useOnStepScreen = ({navigate}) => {
     handleNextStep: nextStep,
     transport,
     dynamicRoute,
+    currentDate,
+    modalState,
+    setModalState,
   };
 };
 

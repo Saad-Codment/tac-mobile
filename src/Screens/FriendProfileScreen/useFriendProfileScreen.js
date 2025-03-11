@@ -1,10 +1,15 @@
 import {useQuery} from '@tanstack/react-query';
-import {getUserPostsUrl, getUserProfileUrl} from '../../Utils/Urls';
+import {
+  getReasonsUrl,
+  getUserPostsUrl,
+  getUserProfileUrl,
+} from '../../Utils/Urls';
 import {useCallback, useState} from 'react';
 import API from '../../Utils/helperFunc';
 import {errorMessage} from '../../Config/NotificationMessage';
 import useFriendServices from '../../Services/FriendServices';
 import useReduxStore from '../../Hooks/UseReduxStore';
+import {loadingFalse} from '../../Redux/Action/isloadingAction';
 
 const useFriendProfileScreen = ({navigate}, {params}) => {
   const {data} = useQuery({
@@ -16,7 +21,9 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
   const [totalPages, setTotalPages] = useState(0); // Current page for pagination
   const [eventsList, setEventsList] = useState([]); // Combined list of events
   const [hasNextPage, setHasNextPage] = useState(true); // Flag to check if more data exists
-  const {queryClient} = useReduxStore();
+  const [modal, setModal] = useState(null); // Flag to check if more data exists
+  const {queryClient, getState} = useReduxStore();
+  const {userData} = getState('Auth');
 
   const {isFetching, isRefetching, refetch} = useQuery({
     queryKey: ['profilePosts', page],
@@ -25,10 +32,6 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
         `${getUserPostsUrl + params?.id}?page=${page}`,
       );
       if (response.ok) {
-        console.log(
-          'ksdnvnsklnklsfnbsdfnbndfklnbkldfnb;dfnl;kbdnfl;bndfb',
-          response.data,
-        );
         setTotalPages(response?.data?.total_pages);
         if (page == response?.data?.total_pages) {
           setEventsList(response?.data?.data);
@@ -59,8 +62,6 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
     // queryClient.invalidateQueries(['profilePosts']); // Refetch data
   }, [queryClient]);
 
-  console.log('userDatauserDatauserDatauserDatauserDatauserData', data?.data);
-
   const functionToUpdateLike = index => {
     setEventsList(prev => {
       prev[index].is_liked = !prev[index].is_liked;
@@ -70,6 +71,8 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
       return prev;
     });
   };
+
+  const openBottomSheet = () => {};
 
   return {
     userData: data?.data,
@@ -81,6 +84,10 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
     hasMoreData: Boolean(totalPages == page + 1),
     refetch,
     functionToUpdateLike,
+    myUserData: userData,
+    modal,
+    setModal,
+    openBottomSheet,
   };
 };
 

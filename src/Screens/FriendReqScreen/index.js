@@ -33,8 +33,7 @@ const FriendReqScreen = ({navigation}) => {
           <FriendReqComp
             item={item}
             index={index}
-            onAcceptReq={acceptReq}
-            onCancelReq={declineReq}
+            refetechKeys={['friendRequests']}
           />
         )}
       />

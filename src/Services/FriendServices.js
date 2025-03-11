@@ -12,6 +12,8 @@ import {
   sendFriendReqUrl,
 } from '../Utils/Urls';
 import {errorMessage, successMessage} from '../Config/NotificationMessage';
+import {store} from '../Redux/Reducer';
+import {loadingFalse} from '../Redux/Action/isloadingAction';
 
 const useFriendServices = () => {
   /* This code snippet is defining a `useMutation` hook called `sendFriendReq` that will handle making a
@@ -72,11 +74,13 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
   request to the `likeUnlikeUrl` endpoint with the provided data. */
   const likeAndDisLikeEvent = useMutation({
     mutationFn: data => {
+      setTimeout(() => {
+        store.dispatch(loadingFalse());
+      }, 1000);
       return API.post(likeUnlikeUrl, {id: data});
     },
     onSuccess: ({ok, data}) => {
       if (ok) {
-        successMessage(data?.message);
       } else {
         console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
         errorMessage(data?.message);
@@ -110,7 +114,7 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
   the `removeFriendUrl` endpoint with the provided data. */
   const removeFriend = useMutation({
     mutationFn: data => {
-      return API.post(removeFriendUrl + data, {});
+      return API.get(removeFriendUrl + data, {});
     },
     onSuccess: ({ok, data}) => {
       if (ok) {

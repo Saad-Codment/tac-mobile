@@ -4,7 +4,13 @@ import {TextComponent} from './TextComponent';
 import {hp, wp} from '../Config/responsive';
 import {CircleImage} from './CircleImage';
 import {Touchable} from './Touchable';
-import {commentIcon, heartFilledLike, heartTheme, shareTheme} from '../Assets';
+import {
+  commentIcon,
+  dotsVertical,
+  heartFilledLike,
+  heartTheme,
+  shareTheme,
+} from '../Assets';
 import {Colors} from '../Theme/Variables';
 import BlurImage from './BlurImage';
 import NavigationService from '../Services/NavigationService';
@@ -85,7 +91,13 @@ const JustTextRenderPost = ({title}) => {
   );
 };
 
-const PostViewComp = ({item, refetechKeys, functionToUpdateLike, index}) => {
+const PostViewComp = ({
+  item,
+  refetechKeys,
+  functionToUpdateLike,
+  index,
+  openBottomSheet,
+}) => {
   const {likeAndDisLikeEvent, addLikeOnPost} = useFriendServices();
 
   const {queryClient} = useReduxStore();
@@ -108,15 +120,24 @@ const PostViewComp = ({item, refetechKeys, functionToUpdateLike, index}) => {
             styles={styles.postTime}
           />
         </View>
+        <Touchable onPress={() => openBottomSheet(item.id)}>
+          <Image
+            source={dotsVertical}
+            resizeMode="contain"
+            style={{width: wp('7'), height: hp('5')}}
+          />
+        </Touchable>
       </View>
 
       {JSON.parse(item?.images)?.length > 0 ? (
         <View style={styles.contentView}>
-          <TextComponent
-            text={item?.title}
-            styles={styles.caption}
-            numberOfLines={100}
-          />
+          {item?.title != null && (
+            <TextComponent
+              text={item?.title}
+              styles={styles.caption}
+              numberOfLines={100}
+            />
+          )}
           <RenderImages images={JSON.parse(item?.images)} />
         </View>
       ) : (
@@ -220,6 +241,7 @@ const styles = StyleSheet.create({
   },
   userDetails: {
     marginLeft: wp('2'),
+    width: wp('70'),
   },
   userName: {
     fontWeight: 'bold',

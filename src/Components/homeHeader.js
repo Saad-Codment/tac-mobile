@@ -11,6 +11,8 @@ import {Colors} from '../Theme/Variables';
 import {hp, wp} from '../Config/responsive';
 import {TextComponent} from '../Components/TextComponent';
 import {
+  editYellow,
+  galleryYellow,
   handShake,
   handShakeLottie,
   notificationWhite,
@@ -20,6 +22,8 @@ import {Touchable} from '../Components/Touchable';
 import Lottie from 'lottie-react-native';
 import {CircleImage} from './CircleImage';
 import {imageUrl} from '../Utils/Urls';
+import ThemeButton from './ThemeButton';
+import NavigationService from '../Services/NavigationService';
 
 const HomeHeader = ({
   text,
@@ -86,6 +90,7 @@ const HomeHeader = ({
             style={styles.notiIcon}
           />
         </Touchable>
+
         {/* <Touchable>
           <Image
             source={settingWhite}
@@ -93,6 +98,26 @@ const HomeHeader = ({
             style={styles.setIcon}
           />
         </Touchable> */}
+      </View>
+      <View style={styles.searchComponent}>
+        <ThemeButton
+          title={'Write something'}
+          style={{
+            ...styles.upperBtn,
+            justifyContent: 'flex-start',
+            paddingLeft: wp('5'),
+          }}
+          imageStyle={{width: wp('7')}}
+          image={editYellow}
+          onPress={() => NavigationService.navigate('CreatePostScreen')}
+        />
+        <ThemeButton
+          image={galleryYellow}
+          style={{...styles.upperBtn, width: wp('13')}}
+          imageStyle={styles.imgStyle}
+          textStyle={{marginLeft: wp('0.2')}}
+          onPress={() => NavigationService.navigate('CreatePostScreen')}
+        />
       </View>
     </View>
   );
@@ -104,8 +129,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.backgroundTheme,
     width: wp('100'),
     paddingTop: hp('2'),
-    zIndex: 0,
-    position: 'absolute',
+    position: 'relative',
+    height: hp('25'),
   },
   firstView: {
     flexDirection: 'row',
@@ -113,7 +138,7 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS == 'ios' ? hp('2') : hp('-2'),
     width: wp('100'),
     alignSelf: 'center',
-    paddingBottom: hp('25'),
+    paddingBottom: hp('11'),
     justifyContent: 'space-between',
     paddingHorizontal: wp('4'),
   },
@@ -133,5 +158,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     marginTop: hp('3'),
+  },
+  searchComponent: {
+    marginTop: hp('-10'),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    // backgroundColor: Colors.white,
+    height: hp('7.5'),
+    width: wp('100'),
+    paddingHorizontal: wp('2'),
+  },
+  upperBtn: {
+    width: wp('80'),
+    borderRadius: 30,
+    height: hp('6'),
+    borderWidth: 0.5,
+    borderColor: Colors.grayBorder,
+  },
+  imgStyle: {marginRight: wp('0.2'), width: wp('7')},
+  searchStyle: {
+    resizeMode: 'contain',
+    width: wp('4'),
+    marginRight: wp('1'),
+  },
+  searchsetting: {
+    resizeMode: 'contain',
+    width: wp('8'),
+    height: hp('5'),
   },
 });

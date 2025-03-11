@@ -48,10 +48,10 @@ function MainNavigator() {
               component={Screens.OnStepScreen}
             /> */}
 
-            {/* <Stack.Screen
-              name="ForgetPasswordScreen"
-              component={Screens.ForgetPasswordScreen}
-              /> */}
+            <Stack.Screen
+              name="ForgotPasswordScreen"
+              component={Screens.ForgotPasswordScreen}
+            />
           </>
         )}
         {isLogin && (
@@ -70,6 +70,10 @@ function MainNavigator() {
             <Stack.Screen
               name="MyEventScreen"
               component={Screens.MyEventScreen}
+            />
+            <Stack.Screen
+              name="SearchScreen"
+              component={Screens.SearchScreen}
             />
             <Stack.Screen
               name="EventsDetailScreen"

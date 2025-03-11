@@ -20,16 +20,16 @@ import ThemeButton from './ThemeButton';
 import NavigationService from '../Services/NavigationService';
 import useFriendServices from '../Services/FriendServices';
 
-const MyFriendComp = ({item, refetch}) => {
+const MyFriendComp = ({item, refetch, mainViewStyles}) => {
   const {sendFriendReq} = useFriendServices();
   return (
     <Touchable
-      style={styles.view}
+      style={{...styles.view, ...mainViewStyles}}
       onPress={() =>
         NavigationService.navigate('FriendProfileScreen', {id: item?.id})
       }>
       <View>
-        <CircleImage uri={imageUrl(item?.profile_image)} size={0.15} />
+        <CircleImage image={imageUrl(item?.profile_image)} size={0.15} uri />
       </View>
       <View style={styles.titleView}>
         <TextComponent
