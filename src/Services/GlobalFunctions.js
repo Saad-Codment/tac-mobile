@@ -2,19 +2,12 @@ import {Alert, Linking, PermissionsAndroid, Platform} from 'react-native';
 import Geolocationios from '@react-native-community/geolocation';
 import Geolocation from 'react-native-geolocation-service';
 import ImageCropPicker from 'react-native-image-crop-picker';
-
 // import Geolocation from '@react-native-community/geolocation';
-import {
-  PERMISSIONS,
-  RESULTS,
-  check,
-  openSettings,
-  request,
-} from 'react-native-permissions';
-import {store} from '../Redux/Reducer';
-import {loadingFalse, loadingTrue} from '../Redux/Action/isloadingAction';
-import {errorMessage} from '../Config/NotificationMessage';
+import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
 import {MapAPIKey} from '../Utils/Urls';
+import bcrypt from 'react-native-bcrypt';
+import AES from 'react-native-aes-crypto';
+import {randomBytes} from 'react-native-get-random-values';
 
 const getSingleCharacter = text => {
   let letter = text?.charAt(0).toUpperCase();
@@ -784,6 +777,92 @@ const getFileNameFromURL = fileURL => {
   return fileURL.split('/').pop();
 };
 
+// Secure fallback for cryptographic security
+
+// bcrypt.setRandomFallback(len => require('crypto').randomBytes(len));
+// const hashPassword = password =>
+//   new Promise((resolve, reject) => {
+//     bcrypt.genSalt(10, (err, salt) => {
+//       if (err) reject(err);
+//       else {
+//         bcrypt.hash(password, salt, (err, hash) => {
+//           err ? reject(err) : resolve(hash);
+//         });
+//       }
+//     });
+//   });
+
+// /**
+//  * Verifies if the provided password matches the hashed password.
+//  * @param {string} password - The plain text password.
+//  * @param {string} hashedPassword - The hashed password.
+//  * @returns {Promise<boolean>} - True if the password matches, otherwise false.
+//  */
+// const verifyPassword = (password, hashedPassword) => {
+//   return new Promise((resolve, reject) => {
+//     bcrypt.compare(password, hashedPassword, (err, result) => {
+//       if (err) return reject(err);
+//       resolve(result); // true or false
+//     });
+//   });
+// };
+
+const getLastNightDigit = async phoneNumbers => {
+  const result = phoneNumbers.map(phoneNumber => {
+    // Remove all non-digit characters
+    const digitsOnly = phoneNumber.replace(/\D/g, '');
+
+    // Take the last nine digits
+    return digitsOnly.slice(-9);
+  });
+  return result;
+};
+
+/**
+ * Generates a random key for AES encryption.
+ */
+const generateRandomKey = async () => {
+  const key = randomBytes(32).toString('hex'); // 32 bytes for AES-256
+  return key;
+};
+
+/**
+ * Hashes a password using AES encryption.
+ * @param {string} password - The plain text password.
+ * @returns {Promise<{hashed: string, key: string}>} - Hashed password and key.
+ */
+const hashPassword = async password => {
+  const key = await AES.randomKey(32); // AES-256 requires a 32-byte key
+  const iv = await AES.randomKey(16); // AES IV requires 16 bytes
+
+  try {
+    const hashed = await AES.encrypt(password, key, iv, 'aes-128-cbc');
+    console.log('Encryption Success:', hashed);
+    return {hashed, key, iv};
+  } catch (error) {
+    console.error('Encryption Error:', error.message);
+    throw new Error('Encryption failed');
+  }
+};
+
+/**
+ * Verifies if the provided password matches the hashed password.
+ * @param {string} password - The plain text password.
+ * @param {string} hashed - The hashed password.
+ * @param {string} key - The original encryption key.
+ * @param {string} iv - The Initialization Vector used during encryption.
+ * @returns {Promise<boolean>} - True if the password matches, otherwise false.
+ */
+const verifyPassword = async (password, hashed, key, iv) => {
+  try {
+    const decrypted = await AES.decrypt(hashed, key, iv);
+    return decrypted === password;
+  } catch (error) {
+    console.error('Decryption Error:', error);
+    return false;
+  }
+};
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -823,4 +902,7 @@ export {
   formatDate,
   calculateAge,
   getFileNameFromURL,
+  hashPassword,
+  verifyPassword,
+  getLastNightDigit,
 };

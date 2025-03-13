@@ -7,6 +7,7 @@ import {
 // import {appleAuth} from '@invertase/react-native-apple-authentication';
 import {sha256} from 'react-native-sha256';
 import {Platform} from 'react-native';
+import {hashPassword} from '../Services/GlobalFunctions';
 
 export const faceBookLogin = async () => {
   // if (Platform.OS === 'android') {
@@ -108,7 +109,10 @@ export const forgotPasswordServices = async email =>
 
 export const emailSignUp = async ({email, password}) => {
   console.log('dffs', email, password);
-  const data = await auth().createUserWithEmailAndPassword(email, password);
+  const data = await auth().createUserWithEmailAndPassword(
+    email,
+    await hashPassword(password),
+  );
   return data;
 };
 

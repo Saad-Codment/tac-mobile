@@ -20,11 +20,12 @@ import ThemeButton from './ThemeButton';
 import NavigationService from '../Services/NavigationService';
 import useFriendServices from '../Services/FriendServices';
 
-const MyFriendComp = ({item, refetch, mainViewStyles}) => {
+const MyFriendComp = ({item, refetch, mainViewStyles, isDisable}) => {
   const {sendFriendReq} = useFriendServices();
   return (
     <Touchable
       style={{...styles.view, ...mainViewStyles}}
+      disabled={isDisable}
       onPress={() =>
         NavigationService.navigate('FriendProfileScreen', {id: item?.id})
       }>
@@ -36,14 +37,27 @@ const MyFriendComp = ({item, refetch, mainViewStyles}) => {
           text={item?.first_name + ' ' + item?.last_name}
           styles={styles.title}
         />
-        <View style={{flexDirection: 'row'}}>
-          <MutualFriends
-            uri={'https://picsum.photos/200'}
-            friends={[1, 2, 3, 4, 5]}
-          />
-        </View>
+        {item?.mutal_count && (
+          <View style={{flexDirection: 'row'}}>
+            <MutualFriends
+              uri={'https://picsum.photos/200'}
+              friends={[1, 2, 3, 4, 5]}
+            />
+          </View>
+        )}
       </View>
-      {item?.friends == 0 ? (
+      {item?.isInvited ? (
+        <ThemeButton
+          title={'Invite'}
+          isYellowTheme
+          style={{width: wp('20')}}
+          imageStyle={{width: wp('5')}}
+          // onPress={async () => {
+          //   await sendFriendReq.mutateAsync(item?.id);
+          //   refetch();
+          // }}
+        />
+      ) : item?.friends == 0 ? (
         item?.requested == 0 ? (
           <ThemeButton
             title={'Add'}

@@ -62,14 +62,31 @@ function MainNavigator() {
                 component={Screens.OnStepScreen}
               />
             )}
+            {userData?.verified == 0 && (
+              <>
+                <Stack.Screen
+                  name="NumberEditScreen"
+                  component={Screens.NumberEditScreen}
+                />
+                <Stack.Screen
+                  name="VerficationScreen"
+                  component={Screens.VerficationScreen}
+                />
+              </>
+            )}
             <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
             <Stack.Screen
               name="ListViewScreen"
               component={Screens.ListViewScreen}
             />
+
             <Stack.Screen
               name="MyEventScreen"
               component={Screens.MyEventScreen}
+            />
+            <Stack.Screen
+              name="SyncPhonebookScreen"
+              component={Screens.SyncPhonebookScreen}
             />
             <Stack.Screen
               name="SearchScreen"
@@ -87,7 +104,6 @@ function MainNavigator() {
               name="CreateEventsScreen"
               component={Screens.CreateEventsScreen}
             />
-
             <Stack.Screen name="HomeScreen" component={Screens.HomeScreen} />
             <Stack.Screen
               name="SettingScreen"
@@ -149,7 +165,6 @@ function MainNavigator() {
               name="SkeletonScreen"
               component={Screens.SkeletonScreen}
             /> */}
-
             {/* <Stack.Screen
               name="SkeletonScreen"
               component={Screens.SkeletonScreen}

@@ -119,7 +119,8 @@ dependencies {
     implementation("com.facebook.react:react-android")
 implementation platform('com.google.firebase:firebase-bom:33.5.1')
 implementation project(':react-native-vector-icons')
-implementation project(':react-native-vector-icons')
+ implementation project(':react-native-contacts')
+     implementation project(':react-native-aes-crypto')
 implementation 'com.google.firebase:firebase-analytics'
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

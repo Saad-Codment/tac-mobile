@@ -17,6 +17,7 @@ export {default as addNewBtn} from './Images/addNewBtn.png';
 export {default as divider} from './Images/divider.png';
 export {default as blurImg} from './Images/blurImg.png';
 export {default as tacLogo} from './Images/tacLogo.png';
+export {default as syncView} from './Images/syncView.png';
 
 //  Icons
 

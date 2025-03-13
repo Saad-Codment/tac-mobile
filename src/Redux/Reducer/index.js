@@ -9,6 +9,8 @@ import {createStore, applyMiddleware, combineReducers} from 'redux';
 import AlertReucer from './AlertReucer';
 import getTrainingCatReducer from './getTrainingCatReducer';
 import videoReducer from './videoReducer';
+import ContactsReducer from './ContactsReducer';
+import IsContactAllow from './IsContactAllow';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -28,14 +30,21 @@ const VideoPersistConfig = {
   storage: AsyncStorage,
   whitelist: 'isVideo',
 };
+const ContactPerConfig = {
+  key: 'isContact',
+  storage: AsyncStorage,
+  whitelist: 'isContact',
+};
 
 const reducers = {
   onboarding: persistReducer(onBoardPersistConfig, onboardingReducer),
   Auth: persistReducer(AuthPersistConfig, AuthReducer),
   isVideo: persistReducer(VideoPersistConfig, videoReducer),
+  isContact: persistReducer(ContactPerConfig, IsContactAllow),
   isloading: loadingReducer,
   isAlert: AlertReucer,
   getCategory: getTrainingCatReducer,
+  contacts: ContactsReducer,
 };
 
 export const store = createStore(

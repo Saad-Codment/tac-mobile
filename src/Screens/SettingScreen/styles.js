@@ -106,7 +106,7 @@ export const styles = StyleSheet.create({
   upperWhiteView: {
     backgroundColor: 'white',
     width: wp('90'),
-    height: hp('79'),
+    height: hp('85'),
     borderRadius: 20,
     marginTop: hp('10'),
     paddingTop: hp('10'),

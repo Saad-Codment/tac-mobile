@@ -67,6 +67,11 @@ export const searchScreenDataUrl = '/search-screen-data';
 export const searchDataUrl = '/user/search?search=';
 export const getReasonsUrl = '/reports/fetch-reasons';
 export const reportEventUrl = '/reports/report-event';
+export const SavePhoneNumberUrl = '/contacts/save-user-phone';
+export const SendVerficatioUrl = '/contacts/send-verification-code';
+export const verifyNumberUrl = '/contacts/validate-verification-code';
+export const sendNumberToServerUrl = '/contacts/send-mobile-numbers';
+export const sendUpdatedAtUrl = '/contacts/match-data';
 
 export const fcmTokenUrl = 'add-fcm-token';
 export const deleteAccUrl = 'auth/account-delete';

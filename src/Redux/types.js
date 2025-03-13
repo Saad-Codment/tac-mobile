@@ -19,4 +19,8 @@ export const types = {
   forgotPasswordType: 'forgotPasswordType',
   fcmRegType: 'fcmRegType',
   restartOnboarding: 'restartOnboarding',
+  isContactTrue: 'isContactTrue',
+  isContactFalse: 'isContactFalse',
+  addContacts: 'addContacts',
+  ClearContacts: 'ClearContacts',
 };

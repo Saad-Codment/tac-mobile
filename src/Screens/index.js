@@ -22,5 +22,8 @@ export {default as CommentScreen} from './CommentScreen';
 export {default as FriendProfileScreen} from './FriendProfileScreen';
 export {default as SearchScreen} from './SearchScreen';
 export {default as ForgotPasswordScreen} from './ForgotPasswordScreen';
+export {default as NumberEditScreen} from './NumberEditScreen';
+export {default as VerficationScreen} from './VerficationScreen';
+export {default as SyncPhonebookScreen} from './SyncPhonebookScreen';
 
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

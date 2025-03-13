@@ -22,7 +22,10 @@ import useReduxStore from '../../Hooks/UseReduxStore';
 const HeaderComp = ({userData, myUserData}) => {
   const FriendCountHeaderComp = ({num, title, onPress}) => {
     return (
-      <Touchable style={styles.compView} onPress={onPress}>
+      <Touchable
+        style={styles.compView}
+        onPress={onPress}
+        disabled={userData?.privacy == 1}>
         <TextComponent text={num} isWhite styles={{fontSize: hp('1.5')}} />
         <TextComponent text={' ' + title} fade styles={{fontSize: hp('1.5')}} />
       </Touchable>

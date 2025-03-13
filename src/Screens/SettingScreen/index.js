@@ -127,6 +127,12 @@ const SettingScreen = ({navigation}) => {
       onPress: () => NavigationService.navigate('FriendReqScreen'),
     },
     {
+      title: 'Sync phonebook',
+      leftIcon: userAdd,
+      rightText: 'View',
+      onPress: () => NavigationService.navigate('SyncPhonebookScreen'),
+    },
+    {
       title: 'Friends List',
       leftIcon: friendList,
       rightText: 'View',
