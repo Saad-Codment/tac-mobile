@@ -19,7 +19,6 @@ import {
 import {types} from '../../Redux/types';
 import {useMutation} from '@tanstack/react-query';
 import {getLastNightDigit, hashPassword} from '../../Services/GlobalFunctions';
-import bcrypt from 'react-native-bcrypt';
 
 const {default: useFormHook} = require('../../Hooks/UseFormHooks');
 const {default: Schemas} = require('../../Utils/Validation');
@@ -132,7 +131,8 @@ const useVerificationScreen = (
     VerifyCode: async () => {
       const getNumber = await getLastNightDigit([params.item.phone]);
       const {hashed} = await hashPassword(getNumber[0]);
-      mutate(hashed);
+      console.log('slkdvlksbdlkbsldbvksdbvbsdklbvksd', getNumber[0], hashed);
+      // mutate(hashed);
     },
     goBack,
     isResend,

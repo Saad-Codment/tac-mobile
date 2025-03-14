@@ -345,6 +345,13 @@ const filterNumberFromArry = phoneBook => {
   const filteredPhoneNumbers = phoneNumbersArray.filter(
     number => number !== undefined,
   );
+  // const hashedNumbers = await Promise.all(
+  //   filteredPhoneNumbers.map(async res => {
+  //     const {hashed} = await hashPassword(res);
+  //     return hashed;
+  //   }),
+  // );
+
   return filteredPhoneNumbers;
 };
 const filterNumberAndNameFromArry = phoneBook => {
@@ -411,20 +418,36 @@ const sendPhoneBookTOServer = async isPerContact => {
   const confirmPer = isPerContact ?? (await checkContactPermission());
   if (confirmPer) {
     const phoneBook = await contact.getAll();
-    const removeSpace = removeSpaceFromNumber(filterNumberFromArry(phoneBook));
-    const nightDigit = await getLastNightDigit(removeSpace);
     console.log(
-      'removeSpaceremoveSpaceremoveSpaceremoveSpaceremoveSpace',
+      'kjsdbkjlvbskjsdbklsbdklvbsdklvbsdkv',
+      filterNumberFromArry(phoneBook),
+    );
+    const removeSpace = removeSpaceFromNumber(filterNumberFromArry(phoneBook));
+    console.log(
+      'removeSpaceremoveSpaceremoveSpaceremoveSpaceremoveSpacesdvsd',
+      removeSpace,
+    );
+    const nightDigit = await getLastNightDigit(removeSpace);
+
+    console.log(
+      'nightDigitnightDigitnightDigitnightDigitnightDigitnightDigitnightDigit0',
       nightDigit,
     );
 
-    const hashedNumber = nightDigit.map(async res => {
-      const {hashed} = await hashPassword(res);
-      return hashed;
-    });
+    const hashedNumber = await Promise.all(
+      nightDigit.map(async res => {
+        const {hashed} = await hashPassword(res);
+        return hashed;
+      }),
+    );
+
+    console.log(
+      'hashedNumberhashedNumberhashedNumberhashedNumberhashedNumberhashedNumberhashedNumber',
+      hashedNumber,
+    );
 
     const {ok, data} = await API.post(sendNumberToServerUrl, {
-      book: nightDigit,
+      book: hashedNumber,
     });
     console.log(
       'sjkdnkfnsdknfsdklnflksdnfknsdlfnsdlnfsdklfsdfsdfsdfsdfsdfsdfds',
@@ -437,11 +460,30 @@ const sendPhoneBookTOServer = async isPerContact => {
         filterNumberAndNameFromArry(phoneBook),
       );
 
+      const hashedNumbers = await Promise.all(
+        afterGetAllNumber.map(async res => {
+          const {hashed} = await hashPassword(res?.phone);
+          return hashed;
+        }),
+      );
+
+      // const hashedNumbers = await afterGetAllNumber.map(async res => {
+      //   const {hashed} = await hashPassword(res?.phone);
+      //   return hashed;
+      // });
+
       console.log(
         'kjbkjbjkbsjkbdjkbfksdbfbsdjbsdjkfbsdkbfbdsbfjsdbjkasdasdasdasdasbjksd',
-        convertToFormattedString(afterGetAllNumber),
-        JSON.stringify(convertToFormattedString(afterGetAllNumber)),
+        hashedNumbers,
+        afterGetAllNumber,
+        // convertToFormattedString(afterGetAllNumber),
+        // JSON.stringify(convertToFormattedString(afterGetAllNumber)),
       );
+      // console.log(
+      //   'kjbkjbjkbsjkbdjkbfksdbfbsdjbsdjkfbsdkbfbdsbfjsdbjkasdasdasdasdasbjksd',
+      //   convertToFormattedString(afterGetAllNumber),
+      //   JSON.stringify(convertToFormattedString(afterGetAllNumber)),
+      // );
 
       store.dispatch({
         type: types.addContacts,

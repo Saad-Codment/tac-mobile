@@ -10,8 +10,6 @@ import ThemeButton from '../../Components/ThemeButton';
 import MyFriendComp from '../../Components/MyFriendComp';
 
 export default function TacUserScreen({tacContacts}) {
-  console.log('sdkbvklsdbklbsdkvbsdbvsdbvsdlkvbsdklvds', tacContacts);
-
   const renderData = (item, index) => {
     return <MyFriendComp item={item} />;
   };

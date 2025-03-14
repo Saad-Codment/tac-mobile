@@ -17,16 +17,7 @@ const useSyncPhonebookScreen = () => {
   const {isContact} = getState('isContact');
   const {contacts} = getState('contacts');
 
-  console.log(
-    'contactscontactscontactscontactscontacts',
-    prioritizeInAppContacts(contacts),
-  );
   const [isPer, setIsPer] = useState(false);
-
-  //   useEffect(async () => {
-  //     const checkPer = await checkContactPer();
-  //     setIsPer(checkPer);
-  //   }, []);
 
   const [alertState, setAlertState] = useState(false);
 
@@ -54,19 +45,15 @@ const useSyncPhonebookScreen = () => {
 
   const onConfirm = async () => {
     // toggleAlert();
-    const confirmPer = await checkContactPermission();
-
-    if (confirmPer) {
-      if (userData?.isNewUser) {
-        await sendPhoneBookTOServer(true);
-        await getContactFromSql();
-      } else {
-        checkSqlDataBase();
-        await getContactFromSql();
-      }
-
-      dispatch(contactTrue());
+    if (userData?.isNewUser) {
+      await sendPhoneBookTOServer();
+      await getContactFromSql();
+    } else {
+      checkSqlDataBase();
+      await getContactFromSql();
     }
+
+    dispatch(contactTrue());
   };
 
   const onChangeToggle = e => {

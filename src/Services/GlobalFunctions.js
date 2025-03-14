@@ -826,19 +826,25 @@ const generateRandomKey = async () => {
   return key;
 };
 
+const deriveIV = password => crypto.createHash('md5').update(password).digest(); // Always 16 bytes
+
 /**
  * Hashes a password using AES encryption.
  * @param {string} password - The plain text password.
  * @returns {Promise<{hashed: string, key: string}>} - Hashed password and key.
  */
 const hashPassword = async password => {
-  const key = await AES.randomKey(32); // AES-256 requires a 32-byte key
-  const iv = await AES.randomKey(16); // AES IV requires 16 bytes
-
+  const fixedKey =
+    '2b7e151628aed2a6abf7158809cf4f3c2b7e151628aed2a6abf7158809cf4f3c'; // Must be 32 bytes for AES-256
+  const fixedIV = '3ad77bb40d7a3660a89ecaf32466ef97'; // Must be 16 bytes
   try {
-    const hashed = await AES.encrypt(password, key, iv, 'aes-128-cbc');
-    console.log('Encryption Success:', hashed);
-    return {hashed, key, iv};
+    const hashed = await AES.encrypt(
+      password,
+      fixedKey,
+      fixedIV,
+      'aes-128-cbc',
+    );
+    return {hashed, fixedKey, fixedIV};
   } catch (error) {
     console.error('Encryption Error:', error.message);
     throw new Error('Encryption failed');

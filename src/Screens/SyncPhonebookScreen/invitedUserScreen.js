@@ -7,10 +7,6 @@ import {wp} from '../../Config/responsive';
 import {styles} from './styles';
 
 const InvitedUserScreen = ({invitedContacts}) => {
-  console.log(
-    'invitedContactsinvitedContactsinvitedContactsinvitedContacts',
-    invitedContacts,
-  );
   const renderData = (item, index) => {
     return (
       <MyFriendComp
