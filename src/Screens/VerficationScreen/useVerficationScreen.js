@@ -121,6 +121,41 @@ const useVerificationScreen = (
     );
   };
 
+  function xorEncrypt(input, key) {
+    let output = '';
+    for (let i = 0; i < input.length; i++) {
+      // XOR each character of the input with the corresponding character in the key
+      const charCode = input.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+      output += String.fromCharCode(charCode);
+    }
+    return output;
+  }
+
+  // Example usage
+  const password = 'myPassword123';
+  // const key = '2b7e151628aed2a6abf7158809cf4f3c'; // Fixed key
+  // const encrypted = xorEncrypt(password, key);
+
+  const key = '2b7e151628aed2a6abf7158809cf4f3c'; // Fixed key
+
+  function hashPassword(password) {
+    let output = '';
+    console.log('skdjbvjksbdkjlvbksd', password);
+    for (let i = 0; i < password.length; i++) {
+      // XOR each character of the password with the corresponding character in the key
+      const charCode = password.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+      console.log('skdjbvjksbdkjlvbkssdsdsdsdd', charCode);
+      output += String.fromCharCode(charCode);
+    }
+    console.log(
+      'skdjbvjksbdkjlvbkssasdsdfgdfgdfdfdsdsdsdd',
+      JSON.stringify(output),
+    );
+    // Encode the output in hexadecimal to handle non-printable characters
+    // const hashed = Buffer.from(output).toString('hex');
+    return {hashed: JSON.stringify(output)};
+  }
+
   return {
     props,
     getCellOnLayoutHandler,
@@ -130,9 +165,10 @@ const useVerificationScreen = (
     CELL_COUNT,
     VerifyCode: async () => {
       const getNumber = await getLastNightDigit([params.item.phone]);
-      const {hashed} = await hashPassword(getNumber[0]);
-      console.log('slkdvlksbdlkbsldbvksdbvbsdklbvksd', getNumber[0], hashed);
-      // mutate(hashed);
+      const {hashed} = hashPassword(getNumber[0]);
+      // const encrypted = xorEncrypt(getNumber[0], key);
+      console.log('slkdvlksbdlkbsldbvksdbvbsdklbvksd', hashed);
+      mutate(hashed);
     },
     goBack,
     isResend,

@@ -23,16 +23,22 @@ const useSyncPhonebookScreen = () => {
 
   const toggleAlert = () => setAlertState(!alertState);
 
-  const getUser = () => {
-    getContactFromSql();
+  const getUser = async () => {
+    await getContactFromSql();
   };
 
   const useEffectFuc = async () => {
-    getUser();
-    sendUpdatedAt();
+    await getUser();
+    await sendUpdatedAt();
   };
 
-  // useEffect(useEffectFuc, []);
+  useEffect(() => {
+    const innerFunction = () => {
+      if (isContact) useEffectFuc();
+    };
+
+    innerFunction(); // Call the inner function
+  }, []);
 
   function prioritizeInAppContacts() {
     // Filter out contacts with the inApp key and those without it

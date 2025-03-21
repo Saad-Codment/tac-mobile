@@ -310,20 +310,36 @@ const sendUpdatedAt = async () => {
             'nightDigitnightDigitnightDigitnightDigitnightDigitnightDigit',
             nightDigit,
           );
+
+          const hashedNumber = await Promise.all(
+            nightDigit.map(async res => {
+              const {hashed} = await hashPassword(res);
+              return hashed;
+            }),
+          );
+
           const {ok, data} = await API.post(sendUpdatedAtUrl, {
             updated_at: row.updated_at,
-            book: nightDigit,
+            book: hashedNumber,
           });
 
           const phoneBook = await contact.getAll();
 
-          console.log('data.bookdata.bookdata.book', data);
-          const afterGetAllNumber = await removeDuplicatesNumberFromArry(
-            data.book.length > 0 ? JSON.parse(data.book) : [],
-            filterNumberAndNameFromArry(phoneBook),
-          );
-
           if (ok) {
+            console.log('data.bookdata.bookdata.book', data);
+            const afterGetAllNumber = await removeDuplicatesNumberFromArry(
+              data.book.length > 0 ? data.book : [],
+              filterNumberAndNameFromArry(phoneBook),
+            );
+
+            console.log(
+              'afterGetAllNumberafterGetAllNumberafterGetAllNumberafterGetAllNumberafterGetAllNumber',
+              afterGetAllNumber,
+            );
+            store.dispatch({
+              type: types.addContacts,
+              payload: afterGetAllNumber,
+            });
             if (data?.book?.length > 0) {
               updateDataAccourdingToId({
                 ...data,

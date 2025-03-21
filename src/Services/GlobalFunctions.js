@@ -828,28 +828,56 @@ const generateRandomKey = async () => {
 
 const deriveIV = password => crypto.createHash('md5').update(password).digest(); // Always 16 bytes
 
+const key = '2b7e151628aed2a6abf7158809cf4f3c'; // Fixed key
+
+function hashPassword(password) {
+  let output = '';
+  // console.log('skdjbvjksbdkjlvbksd', password);
+  for (let i = 0; i < password.length; i++) {
+    // XOR each character of the password with the corresponding character in the key
+    const charCode = password.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+    // console.log('skdjbvjksbdkjlvbkssdsdsdsdd', charCode);
+    output += String.fromCharCode(charCode);
+  }
+  // console.log('skdjbvjksbdkjlvbkssasdsdfgdfgdfdfdsdsdsdd', output);
+  // Encode the output in hexadecimal to handle non-printable characters
+  // const hashed = Buffer.from(output).toString('hex');
+  return {hashed: JSON.stringify(output)};
+}
+
+// Example usage
+
 /**
  * Hashes a password using AES encryption.
  * @param {string} password - The plain text password.
  * @returns {Promise<{hashed: string, key: string}>} - Hashed password and key.
  */
-const hashPassword = async password => {
-  const fixedKey =
-    '2b7e151628aed2a6abf7158809cf4f3c2b7e151628aed2a6abf7158809cf4f3c'; // Must be 32 bytes for AES-256
-  const fixedIV = '3ad77bb40d7a3660a89ecaf32466ef97'; // Must be 16 bytes
-  try {
-    const hashed = await AES.encrypt(
-      password,
-      fixedKey,
-      fixedIV,
-      'aes-128-cbc',
-    );
-    return {hashed, fixedKey, fixedIV};
-  } catch (error) {
-    console.error('Encryption Error:', error.message);
-    throw new Error('Encryption failed');
-  }
-};
+// const hashPassword = async password => {
+//   let output = '';
+//   for (let i = 0; i < password.length; i++) {
+//     // XOR each character of the input with the corresponding character in the key
+//     const charCode = input.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+//     output += String.fromCharCode(charCode);
+//   }
+//   return {hashed: output};
+// };
+// const hashPassword = async password => {
+//   const fixedKey =
+//     '2b7e151628aed2a6abf7158809cf4f3c2b7e151628aed2a6abf7158809cf4f3c'; // Must be 32 bytes for AES-256
+//   const fixedIV = '3ad77bb40d7a3660a89ecaf32466ef97'; // Must be 16 bytes
+//   try {
+//     const hashed = await AES.encrypt(
+//       password,
+//       fixedKey,
+//       fixedIV,
+//       'aes-128-cbc',
+//     );
+//     return {hashed, fixedKey, fixedIV};
+//   } catch (error) {
+//     console.error('Encryption Error:', error.message);
+//     throw new Error('Encryption failed');
+//   }
+// };
 
 /**
  * Verifies if the provided password matches the hashed password.
