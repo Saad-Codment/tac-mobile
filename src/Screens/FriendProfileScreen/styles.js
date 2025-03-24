@@ -8,6 +8,8 @@ export const styles = StyleSheet.create({
     // paddingTop: hp('2'),
     alignItems: 'center',
     paddingTop: hp('2'),
+    backgroundColor: '#fff',
+
     // alignSelf: 'center',
   },
   modalHeading: {alignSelf: 'center', fontWeight: 'bold'},
@@ -19,5 +21,29 @@ export const styles = StyleSheet.create({
     fontSize: hp('1.5'),
     marginLeft: wp('2'),
     maxWidth: wp('80'),
+  },
+  iconMainContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  iconContainer: {
+    alignSelf: 'center',
+  },
+  icon: {
+    width: wp('30 '),
+    height: hp('20'),
+    resizeMode: 'contain',
+  },
+  title: {
+    fontSize: hp('3.2'),
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 5,
+  },
+  description: {
+    fontSize: hp('1.2'),
+    color: '#666',
+    textAlign: 'center',
   },
 });

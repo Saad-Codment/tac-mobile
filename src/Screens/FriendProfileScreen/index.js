@@ -9,6 +9,7 @@ import {
   backIcon,
   divider,
   location,
+  lockCircle,
   message,
   messages,
   radioCircle,
@@ -54,7 +55,24 @@ const FriendProfileScreen = ({navigation, route}) => {
       />
       <HeaderComp userData={userData} myUserData={myUserData} />
       {userData?.privacy != 1 ? (
-        <View style={{flex: 1}}></View>
+        <View style={{flex: 1, marginTop: hp('15')}}>
+          <View style={styles.iconMainContainer}>
+            <View style={styles.iconContainer}>
+              <Image
+                source={lockCircle} // Replace with your lock icon
+                style={styles.icon}
+              />
+            </View>
+            <TextComponent
+              text={'Rusty locked his profile'}
+              styles={styles.title}
+            />
+            <TextComponent
+              text={'Only his friends can see what he shares on his profile.'}
+              styles={styles.description}
+            />
+          </View>
+        </View>
       ) : (
         <AniFlatOneByOne
           data={eventsList ?? []}
@@ -108,6 +126,7 @@ const FriendProfileScreen = ({navigation, route}) => {
           }}
         />
       )}
+
       {Boolean(modal != null) && (
         <BottomModalComponent
           isVisible={Boolean(modal != null)}

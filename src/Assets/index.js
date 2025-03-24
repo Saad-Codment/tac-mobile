@@ -67,6 +67,7 @@ export {default as profileIcon} from './Icons/profileIcon.png';
 export {default as trashRed} from './Icons/trashRed.png';
 export {default as uploadGallery} from './Icons/uploadGallery.png';
 export {default as crossFill} from './Icons/crossFill.png';
+export {default as lockCircle} from './Icons/lockCircle.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';
