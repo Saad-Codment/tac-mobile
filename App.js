@@ -21,6 +21,7 @@ import {fcmRegister} from './src/Redux/Action/AuthAction';
 import NavigationService from './src/Services/NavigationService';
 import notifee, {EventType} from '@notifee/react-native';
 import Orientation from 'react-native-orientation-locker';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const App = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -121,6 +122,15 @@ const App = () => {
   }, []);
 
   useEffect(async () => {
+    GoogleSignin.configure({
+      offlineAccess: true,
+      iosClientId:
+        '433413678709-2dkgedloqvurj77k6474e09slpatdfta.apps.googleusercontent.com',
+      webClientId:
+        Platform.OS == 'ios'
+          ? '433413678709-2dkgedloqvurj77k6474e09slpatdfta.apps.googleusercontent.com'
+          : '433413678709-iuv7ovginqaklbprk8f135fbg7iiosgk.apps.googleusercontent.com',
+    });
     (async () => {
       LogBox.ignoreLogs([
         'VirtualizedLists should never be nested',

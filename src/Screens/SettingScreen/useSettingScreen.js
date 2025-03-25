@@ -10,6 +10,7 @@ import {
   allEventTypeUrl,
   deleteAccUrl,
   editProfileUrl,
+  isPrivateUrl,
 } from '../../Utils/Urls';
 import {types} from '../../Redux/types';
 import {loadingFalse} from '../../Redux/Action/isloadingAction';
@@ -90,6 +91,21 @@ const SettingScreen = ({navigate, goBack}) => {
         dispatch(logOutUser());
         dispatch({
           type: types.restartOnboarding,
+        });
+      } else errorMessage(data?.message);
+    },
+    onError: e => errorMessage(e),
+  });
+
+  const isPrivateFun = useMutation({
+    mutationFn: () => API.post(isPrivateUrl, {}),
+    onSuccess: ({ok, data}) => {
+      console.log('skldbvklbsdklvbklsdbvkbsdkvbsdbvklsdbvksd', data);
+      if (ok) {
+        successMessage(data?.message);
+        dispatch({
+          type: types.UpdateProfile,
+          payload: data.user,
         });
       } else errorMessage(data?.message);
     },
@@ -191,6 +207,9 @@ const SettingScreen = ({navigate, goBack}) => {
     activeTags,
     onPressKey: onPressKeyRef.current,
     allData: data?.data,
+    privateTheProfile: () => {
+      isPrivateFun.mutate();
+    },
   };
 };
 

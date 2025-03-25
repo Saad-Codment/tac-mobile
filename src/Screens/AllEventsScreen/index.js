@@ -9,6 +9,7 @@ import {styles} from './styles';
 import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
 import ThemeButton from '../../Components/ThemeButton';
 import {keyExtractor} from '../../Utils';
+import Overlay from '../../Components/Overlay';
 
 const AllEventsScreen = ({navigation, route}) => {
   const {
@@ -56,42 +57,48 @@ const AllEventsScreen = ({navigation, route}) => {
         goBack={() => navigation.goBack()}
         isBack
       />
-      <FlatList
-        data={eventsList}
-        extraData={eventsList}
-        contentContainerStylee={styles.upComingFlatlistView}
-        onRefresh={onRefresh}
-        keyExtractor={keyExtractor}
-        refreshing={false}
-        ListEmptyComponent={
-          <DataNotFound
-            onpress={onRefresh}
-            btnStyles={{width: wp('80')}}
-            mainViewStyles={{alignSelf: 'center', marginTop: hp('20')}}
-          />
-        }
-        renderItem={({item, index}) => <RenderItem item={item} index={index} />}
-        ListFooterComponent={
-          eventsList.length >= 9 &&
-          (isFetchingNextPage ? (
-            <ActivityIndicator size="small" color="gray" />
-          ) : (
-            <ThemeButton
-              title={'Load More'}
-              style={{
-                marginTop: hp('2'),
-                width: wp('40'),
-                alignSelf: 'center',
-                marginBottom: hp('5'),
-              }}
-              onPress={async () => {
-                await fetchNextPage();
-                afterFetchNextPage();
-              }}
+      {eventsList != null ? (
+        <FlatList
+          data={eventsList ?? []}
+          extraData={eventsList}
+          contentContainerStylee={styles.upComingFlatlistView}
+          onRefresh={onRefresh}
+          keyExtractor={keyExtractor}
+          refreshing={false}
+          ListEmptyComponent={
+            <DataNotFound
+              onpress={onRefresh}
+              btnStyles={{width: wp('80')}}
+              mainViewStyles={{alignSelf: 'center', marginTop: hp('20')}}
             />
-          )) // Show loading spinner at the bottom
-        }
-      />
+          }
+          renderItem={({item, index}) => (
+            <RenderItem item={item} index={index} />
+          )}
+          ListFooterComponent={
+            eventsList.length >= 9 &&
+            (isFetchingNextPage ? (
+              <ActivityIndicator size="small" color="gray" />
+            ) : (
+              <ThemeButton
+                title={'Load More'}
+                style={{
+                  marginTop: hp('2'),
+                  width: wp('40'),
+                  alignSelf: 'center',
+                  marginBottom: hp('5'),
+                }}
+                onPress={async () => {
+                  await fetchNextPage();
+                  afterFetchNextPage();
+                }}
+              />
+            )) // Show loading spinner at the bottom
+          }
+        />
+      ) : (
+        <Overlay />
+      )}
       {/* <AniFlatOneByOne
         data={eventsList}
         flatViewStyle={styles.upComingFlatlistView}

@@ -7,6 +7,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from 'react-native';
@@ -67,6 +68,7 @@ const SettingScreen = ({navigation}) => {
     onOpenModal,
     toggleModal,
     setModalVal,
+    privateTheProfile,
     activeTags,
     modalVal,
     deleteAlert,
@@ -82,6 +84,24 @@ const SettingScreen = ({navigation}) => {
       title: `My profile`,
       leftIcon: profileCircle,
       rightText: 'View',
+      onPress: () =>
+        NavigationService.navigate('FriendProfileScreen', {id: userData?.id}),
+    },
+    {
+      title: `Private`,
+      leftIcon: profileCircle,
+      rightChilderView: (
+        <Switch
+          trackColor={{
+            false: Colors.grayFaded,
+            true: 'transparent',
+          }}
+          thumbColor={userData?.privacy == 1 ? Colors.primaryColor : '#EAF6ED'}
+          ios_backgroundColor="#EAF6ED"
+          onValueChange={privateTheProfile}
+          value={Boolean(userData?.privacy == 1)}
+        />
+      ),
       onPress: () =>
         NavigationService.navigate('FriendProfileScreen', {id: userData?.id}),
     },
@@ -169,7 +189,7 @@ const SettingScreen = ({navigation}) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         bounces={false}
-        contentContainerStyle={{paddingBottom: hp('90')}}>
+        contentContainerStyle={{paddingBottom: hp('100')}}>
         <View style={styles.mainBtn}>
           <View style={styles.upperWhiteView}>
             <View style={styles.imgView}>

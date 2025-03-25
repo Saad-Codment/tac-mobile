@@ -26,7 +26,7 @@ const HeaderComp = ({userData, myUserData}) => {
         style={styles.compView}
         onPress={onPress}
         disabled={userData?.privacy == 1}>
-        <TextComponent text={num} isWhite styles={{fontSize: hp('1.5')}} />
+        <TextComponent text={num ?? 0} isWhite styles={{fontSize: hp('1.5')}} />
         <TextComponent text={' ' + title} fade styles={{fontSize: hp('1.5')}} />
       </Touchable>
     );
@@ -48,7 +48,7 @@ const HeaderComp = ({userData, myUserData}) => {
     },
     {
       num: userData?.mutual_friends,
-      title: 'Mutal',
+      title: 'Mutual',
     },
   ];
 
@@ -103,7 +103,9 @@ const HeaderComp = ({userData, myUserData}) => {
                   }
                   queryClient.invalidateQueries(['getProfileData']);
                 }}
-                isDisable={Boolean(userData?.requested == 1)}
+                isDisable={Boolean(
+                  userData?.requested == 1 && userData?.friends == 0,
+                )}
               />
               <ThemeButton
                 title={'Message'}

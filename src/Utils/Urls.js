@@ -72,6 +72,7 @@ export const SendVerficatioUrl = '/contacts/send-verification-code';
 export const verifyNumberUrl = '/contacts/validate-verification-code';
 export const sendNumberToServerUrl = '/contacts/send-mobile-numbers';
 export const sendUpdatedAtUrl = '/contacts/match-data';
+export const isPrivateUrl = '/privacy';
 
 export const fcmTokenUrl = 'add-fcm-token';
 export const deleteAccUrl = 'auth/account-delete';

@@ -42,7 +42,7 @@ const useAllEventsScreen = ({navigate, addListener}, {params}) => {
   //   return event;
   // });
 
-  const list = data?.pages.flatMap(page => page.data?.data) || [];
+  const list = data?.pages.flatMap(page => page.data?.data) || null;
 
   const functionToUpdateLike = index => {
     // setEventsList(list);

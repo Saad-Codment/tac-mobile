@@ -9,8 +9,18 @@
 
 #import <FirebaseCore.h>
 #import "Orientation.h"
+#import <GoogleSignIn/GoogleSignIn.h> // ⬅️ add the header import
+#import <AuthenticationServices/AuthenticationServices.h>
+#import <SafariServices/SafariServices.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 @implementation AppDelegate
+
+// ⬇️ Add this method before file @end
+- (BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<NSString *,id> *)options {
+  // Add any other URL handlers you're using (e.g. Facebook SDK)
+  return [[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options] || [GIDSignIn.sharedInstance handleURL:url];
+}
 
 
 

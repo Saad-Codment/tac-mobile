@@ -4,7 +4,7 @@ import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-// import {appleAuth} from '@invertase/react-native-apple-authentication';
+import {appleAuth} from '@invertase/react-native-apple-authentication';
 import {sha256} from 'react-native-sha256';
 import {Platform} from 'react-native';
 import {hashPassword} from '../Services/GlobalFunctions';
@@ -38,29 +38,29 @@ export const faceBookLogin = async () => {
 
 export const appleIdlogin = async () => {
   // Start the sign-in request
-  // if (!appleAuth.isSupported)
-  //   throw new Error(
-  //     'AppleAuth is not supported on the device. Currently Apple Authentication works on iOS devices running iOS 13 or later',
-  //   );
-  // const appleAuthRequestResponse = await appleAuth.performRequest({
-  //   requestedOperation: appleAuth.Operation.LOGIN,
-  //   requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-  // });
-  // if (!appleAuthRequestResponse.identityToken)
-  //   throw new Error('Apple Sign-In failed - no identify token returned');
-  // const {
-  //   identityToken,
-  //   nonce,
-  //   fullName: {givenName, familyName},
-  // } = appleAuthRequestResponse;
-  // const token = auth.AppleAuthProvider.credential(identityToken, nonce);
-  // const {additionalUserInfo} = await auth().signInWithCredential(token);
-  // return {
-  //   token,
-  //   name: `${givenName || ''} ${familyName || ''}`,
-  //   identityToken,
-  //   isNewUser: additionalUserInfo.isNewUser,
-  // };
+  if (!appleAuth.isSupported)
+    throw new Error(
+      'AppleAuth is not supported on the device. Currently Apple Authentication works on iOS devices running iOS 13 or later',
+    );
+  const appleAuthRequestResponse = await appleAuth.performRequest({
+    requestedOperation: appleAuth.Operation.LOGIN,
+    requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+  });
+  if (!appleAuthRequestResponse.identityToken)
+    throw new Error('Apple Sign-In failed - no identify token returned');
+  const {
+    identityToken,
+    nonce,
+    fullName: {givenName, familyName},
+  } = appleAuthRequestResponse;
+  const token = auth.AppleAuthProvider.credential(identityToken, nonce);
+  const {additionalUserInfo} = await auth().signInWithCredential(token);
+  return {
+    token,
+    name: `${givenName || ''} ${familyName || ''}`,
+    identityToken,
+    isNewUser: additionalUserInfo.isNewUser,
+  };
 };
 
 export const googleLogin = async () => {
@@ -76,8 +76,12 @@ export const googleLogin = async () => {
   });
   if (!hasPlayService) throw new Error('play services not available');
   const isSignIn = GoogleSignin.hasPreviousSignIn();
-  if (isSignIn) await logOutWithGoogle();
+  if (isSignIn && Platform.OS == 'android') await logOutWithGoogle();
   console.log('isSIngIN ', isSignIn);
+  // const {idToken, user} =
+  //   Platform.OS == 'ios'
+  //     ? await GoogleSignin.signIn()
+  //     : await GoogleSignin.signIn();
   const {idToken, user} = await GoogleSignin.signIn();
   console.log('tpken', idToken, user);
   const token = auth.GoogleAuthProvider.credential(idToken);

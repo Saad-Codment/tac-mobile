@@ -29,6 +29,7 @@ export const MultiView = ({
           viewStyle={styles.innerView}
           onPress={item?.onPress}
           rightTextStyles={item?.rightTextStyles ?? rightTextStyles}
+          rightChilderView={item?.rightChilderView}
         />
       </Touchable>
     );

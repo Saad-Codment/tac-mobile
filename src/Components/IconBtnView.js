@@ -19,6 +19,7 @@ const IconBtnView = ({
   rightTextStyles,
   rightIconColor,
   leftIconColor,
+  rightChilderView,
 }) => {
   return (
     <Touchable
@@ -33,23 +34,24 @@ const IconBtnView = ({
         />
       ) : null}
       <TextComponent text={title} styles={{...styles.text, ...textStyle}} />
-      {rightText ? (
-        <TextComponent
-          text={rightText}
-          fade={true}
-          styles={{
-            fontSize: FontSize.scale12,
-            marginRight: wp('2'),
-            ...rightTextStyles,
-          }}
-        />
-      ) : (
-        <Image
-          source={rightIcon}
-          style={{...styles.arrowStyle, ...rightStyle}}
-          tintColor={rightIconColor}
-        />
-      )}
+      {rightChilderView ??
+        (rightText ? (
+          <TextComponent
+            text={rightText}
+            fade={true}
+            styles={{
+              fontSize: FontSize.scale12,
+              marginRight: wp('2'),
+              ...rightTextStyles,
+            }}
+          />
+        ) : (
+          <Image
+            source={rightIcon}
+            style={{...styles.arrowStyle, ...rightStyle}}
+            tintColor={rightIconColor}
+          />
+        ))}
     </Touchable>
   );
 };

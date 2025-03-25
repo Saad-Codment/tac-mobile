@@ -45,6 +45,12 @@ const FriendProfileScreen = ({navigation, route}) => {
     refetch,
     functionToUpdateLike,
   } = useFriendProfileScreen(navigation, route);
+  console.log(
+    'slkdbvlkbsdlkvbklsdbvklsdbkvlblsdv',
+    userData?.friends,
+    userData?.privacy,
+  );
+
   return (
     <View style={{flex: 1}}>
       <HeaderComponent
@@ -54,7 +60,7 @@ const FriendProfileScreen = ({navigation, route}) => {
         backTextStyle={{color: Colors.textGray}}
       />
       <HeaderComp userData={userData} myUserData={myUserData} />
-      {userData?.privacy != 1 ? (
+      {userData?.privacy == 1 && userData?.friends == 0 ? (
         <View style={{flex: 1, marginTop: hp('15')}}>
           <View style={styles.iconMainContainer}>
             <View style={styles.iconContainer}>
@@ -64,7 +70,7 @@ const FriendProfileScreen = ({navigation, route}) => {
               />
             </View>
             <TextComponent
-              text={'Rusty locked his profile'}
+              text={`${userData?.first_name} locked his profile`}
               styles={styles.title}
             />
             <TextComponent

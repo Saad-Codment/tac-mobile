@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "433413678709-qkda10rl6cliba24j8i0k4smiud33jd4.apps.googleusercontent.com",
+              "client_id": "433413678709-2dkgedloqvurj77k6474e09slpatdfta.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.tac.codment"
+                "bundle_id": "com.codment.tac"
               }
             }
           ]
@@ -67,10 +67,10 @@
               "client_type": 3
             },
             {
-              "client_id": "433413678709-qkda10rl6cliba24j8i0k4smiud33jd4.apps.googleusercontent.com",
+              "client_id": "433413678709-2dkgedloqvurj77k6474e09slpatdfta.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.tac.codment"
+                "bundle_id": "com.codment.tac"
               }
             }
           ]

@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
+    "@invertase/react-native-apple-authentication": "^2.4.0",
     "@notifee/react-native": "^7.8.2",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/checkbox": "^0.5.17",
@@ -74,6 +75,7 @@
     "react-native-element-dropdown": "^2.12.1",
     "react-native-elements": "^3.4.3",
     "react-native-fast-image": "^8.6.3",
+    "react-native-fbsdk-next": "^13.4.1",
     "react-native-flash-message": "^0.4.2",
     "react-native-geolocation-service": "^5.3.1",
     "react-native-get-random-values": "^1.11.0",

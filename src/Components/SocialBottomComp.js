@@ -19,13 +19,13 @@ const SocialBottomComp = ({onSocialPress}) => {
       <Touchable onPress={() => onSocialPress('appleID')}>
         <Image source={apple} resizeMode="contain" style={styles.imageStyle} />
       </Touchable>
-      <Touchable onPress={() => onSocialPress('facebook')}>
+      {/* <Touchable onPress={() => onSocialPress('facebook')}>
         <Image
           source={facebook}
           resizeMode="contain"
           style={styles.imageStyle}
         />
-      </Touchable>
+      </Touchable> */}
     </View>
   );
 };

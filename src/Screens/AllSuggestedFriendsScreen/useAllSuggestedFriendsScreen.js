@@ -24,7 +24,7 @@ const useAllSuggestedFriendsScreen = ({navigate}) => {
   }, []);
 
   return {
-    friendListData: data?.data?.data ?? [],
+    friendListData: data?.data?.data ?? null,
     onRefresh,
     sendReq: async id => {
       await sendFriendReq.mutateAsync(id);
