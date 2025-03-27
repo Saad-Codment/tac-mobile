@@ -60,7 +60,9 @@ const FriendProfileScreen = ({navigation, route}) => {
         backTextStyle={{color: Colors.textGray}}
       />
       <HeaderComp userData={userData} myUserData={myUserData} />
-      {userData?.privacy == 1 && userData?.friends == 0 ? (
+      {userData?.privacy == 1 &&
+      userData?.friends == 0 &&
+      userData?.id != myUserData?.id ? (
         <View style={{flex: 1, marginTop: hp('15')}}>
           <View style={styles.iconMainContainer}>
             <View style={styles.iconContainer}>
@@ -80,57 +82,59 @@ const FriendProfileScreen = ({navigation, route}) => {
           </View>
         </View>
       ) : (
-        <AniFlatOneByOne
-          data={eventsList ?? []}
-          flatViewStyle={styles.upComingFlatlistView}
-          onRefresh={onRefresh}
-          flatListProps={{
-            ListEmptyComponent:
-              eventsList != null && eventsList?.length == 0 ? (
-                <DataNotFound
-                  onpress={onRefresh}
-                  btnStyles={{width: wp('80')}}
-                />
-              ) : null,
-            ListFooterComponent:
-              eventsList != null &&
-              eventsList.length >= 9 &&
-              !hasMoreData &&
-              (isFetching ? (
-                <ActivityIndicator size="small" color="#0000ff" />
-              ) : (
-                <ThemeButton
-                  title={'Load More'}
-                  style={{marginTop: hp('2'), width: wp('40')}}
-                  onPress={() => loadMoreData()}
-                />
-              )), // Show loading spinner at the bottom
-          }}
-          InnerCompnonet={(item, index) => {
-            return (
-              <View style={{marginVertical: hp('1')}}>
-                {item.type == 2 ? (
-                  <UpcomingEventsComp
-                    item={item}
-                    index={index}
-                    mainViewStyle={{width: wp('95')}}
-                    upperImgStyle={{width: wp('95')}}
-                    functionToUpdateLike={functionToUpdateLike}
-                    openBottomSheet={id => setModal(id)}
-                    // likePost={likePost}
+        !isFetching && (
+          <AniFlatOneByOne
+            data={eventsList ?? []}
+            flatViewStyle={styles.upComingFlatlistView}
+            onRefresh={onRefresh}
+            flatListProps={{
+              ListEmptyComponent:
+                eventsList != null && eventsList?.length == 0 ? (
+                  <DataNotFound
+                    onpress={onRefresh}
+                    btnStyles={{width: wp('80')}}
                   />
+                ) : null,
+              ListFooterComponent:
+                eventsList != null &&
+                eventsList.length >= 9 &&
+                !hasMoreData &&
+                (isFetching ? (
+                  <ActivityIndicator size="small" color="#0000ff" />
                 ) : (
-                  <PostViewComp
-                    item={item}
-                    index={index}
-                    functionToUpdateLike={functionToUpdateLike}
-                    openBottomSheet={id => setModal(id)}
+                  <ThemeButton
+                    title={'Load More'}
+                    style={{marginTop: hp('2'), width: wp('40')}}
+                    onPress={() => loadMoreData()}
                   />
-                )}
-              </View>
-            );
-          }}
-        />
+                )), // Show loading spinner at the bottom
+            }}
+            InnerCompnonet={(item, index) => {
+              return (
+                <View style={{marginVertical: hp('1')}}>
+                  {item.type == 2 ? (
+                    <UpcomingEventsComp
+                      item={item}
+                      index={index}
+                      mainViewStyle={{width: wp('95')}}
+                      upperImgStyle={{width: wp('95')}}
+                      functionToUpdateLike={functionToUpdateLike}
+                      openBottomSheet={id => setModal(id)}
+                      // likePost={likePost}
+                    />
+                  ) : (
+                    <PostViewComp
+                      item={item}
+                      index={index}
+                      functionToUpdateLike={functionToUpdateLike}
+                      openBottomSheet={id => setModal(id)}
+                    />
+                  )}
+                </View>
+              );
+            }}
+          />
+        )
       )}
 
       {Boolean(modal != null) && (

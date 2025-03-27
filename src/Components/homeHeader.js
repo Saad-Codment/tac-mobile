@@ -56,8 +56,8 @@ const HomeHeader = ({
                   Dimensions.get('window').width +
                     Dimensions.get('window').height,
                 ),
-                width: Dimensions.get('window').width * 0.16,
-                height: Dimensions.get('window').width * 0.16,
+                width: Dimensions.get('window').width * 0.14,
+                height: Dimensions.get('window').width * 0.14,
               }}
             />
           </View>
@@ -66,7 +66,7 @@ const HomeHeader = ({
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginTop: hp('2.5'),
+                marginTop: hp('5.4'),
               }}>
               <TextComponent text={text} styles={styles.nameText} />
               <Lottie
@@ -79,7 +79,11 @@ const HomeHeader = ({
             </View>
             <TextComponent
               text={'Welcome back'}
-              styles={{top: hp('0'), color: Colors.textGray}}
+              styles={{
+                top: hp('-0.7'),
+                color: Colors.textGray,
+                fontSize: hp('1.5'),
+              }}
             />
           </View>
         </Touchable>
@@ -107,13 +111,21 @@ const HomeHeader = ({
             justifyContent: 'flex-start',
             paddingLeft: wp('5'),
           }}
-          imageStyle={{width: wp('7')}}
+          imageStyle={{width: wp('5')}}
           image={editYellow}
+          textStyle={{fontSize: hp('1.5')}}
           onPress={() => NavigationService.navigate('CreatePostScreen')}
         />
         <ThemeButton
           image={galleryYellow}
-          style={{...styles.upperBtn, width: wp('13')}}
+          style={{
+            ...styles.upperBtn,
+            borderRadius: Math.round(
+              Dimensions.get('window').width + Dimensions.get('window').height,
+            ),
+            width: Dimensions.get('window').width * 0.1,
+            height: Dimensions.get('window').width * 0.1,
+          }}
           imageStyle={styles.imgStyle}
           textStyle={{marginLeft: wp('0.2')}}
           onPress={() => NavigationService.navigate('CreatePostScreen')}
@@ -130,12 +142,12 @@ const styles = StyleSheet.create({
     width: wp('100'),
     paddingTop: hp('2'),
     position: 'relative',
-    height: hp('25'),
+    height: hp('22'),
   },
   firstView: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: Platform.OS == 'ios' ? hp('2') : hp('-2'),
+    marginTop: Platform.OS == 'ios' ? hp('0') : hp('-2'),
     width: wp('100'),
     alignSelf: 'center',
     paddingBottom: hp('11'),
@@ -143,12 +155,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp('4'),
   },
   nameText: {
-    fontSize: hp('3'),
+    fontSize: hp('2'),
     fontWeight: 'bold',
     color: Colors.white,
     // marginTop: hp('2.5'),
   },
-  notiIcon: {width: wp('7')},
+  notiIcon: {width: wp('7'), marginTop: hp('1')},
   setIcon: {width: wp('7')},
   headingView: {
     flexDirection: 'row',
@@ -160,23 +172,24 @@ const styles = StyleSheet.create({
     marginTop: hp('3'),
   },
   searchComponent: {
-    marginTop: hp('-10'),
+    marginTop: hp('-10.5'),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     // backgroundColor: Colors.white,
     height: hp('7.5'),
-    width: wp('100'),
+    width: wp('96'),
     paddingHorizontal: wp('2'),
+    alignSelf: 'center',
   },
   upperBtn: {
     width: wp('80'),
     borderRadius: 30,
-    height: hp('6'),
+    height: hp('5'),
     borderWidth: 0.5,
     borderColor: Colors.grayBorder,
   },
-  imgStyle: {marginRight: wp('0.2'), width: wp('7')},
+  imgStyle: {marginRight: wp('0.2'), width: wp('5')},
   searchStyle: {
     resizeMode: 'contain',
     width: wp('4'),

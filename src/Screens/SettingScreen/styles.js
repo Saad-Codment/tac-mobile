@@ -191,6 +191,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     width: wp('90'),
+    // paddingBottom: hp('5'), // Adjust as needed
   },
   inputView: {
     width: wp('90'),

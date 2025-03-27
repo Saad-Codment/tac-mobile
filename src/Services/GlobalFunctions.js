@@ -572,11 +572,11 @@ const uploadFromCamera = async isMulti => {
     localIdentifier,
     mime,
   } = imageData;
-  const uri = Platform.OS === 'ios' ? sourceURL : path;
+  const uri = Platform.OS === 'ios' ? path : sourceURL;
   const fileName = filename || 'photo.jpg';
   return Array.isArray(imageData)
     ? imageData.map(res => ({
-        uri: Platform.OS === 'ios' ? res?.sourceURL : res?.path,
+        uri: Platform.OS === 'ios' ? res?.path : res?.sourceURL,
         name: res?.filename,
         type: res?.mime,
       }))

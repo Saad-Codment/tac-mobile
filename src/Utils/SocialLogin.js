@@ -113,10 +113,7 @@ export const forgotPasswordServices = async email =>
 
 export const emailSignUp = async ({email, password}) => {
   console.log('dffs', email, password);
-  const data = await auth().createUserWithEmailAndPassword(
-    email,
-    await hashPassword(password),
-  );
+  const data = await auth().createUserWithEmailAndPassword(email, password);
   return data;
 };
 

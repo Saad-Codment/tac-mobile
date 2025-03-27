@@ -18,6 +18,7 @@ export {default as divider} from './Images/divider.png';
 export {default as blurImg} from './Images/blurImg.png';
 export {default as tacLogo} from './Images/tacLogo.png';
 export {default as syncView} from './Images/syncView.png';
+export {default as noDataImg} from './Images/noDataImg.png';
 
 //  Icons
 
@@ -68,6 +69,7 @@ export {default as trashRed} from './Icons/trashRed.png';
 export {default as uploadGallery} from './Icons/uploadGallery.png';
 export {default as crossFill} from './Icons/crossFill.png';
 export {default as lockCircle} from './Icons/lockCircle.png';
+export {default as syncContact} from './Icons/syncContact.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';

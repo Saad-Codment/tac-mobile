@@ -10,6 +10,7 @@ import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
 import ThemeButton from '../../Components/ThemeButton';
 import {keyExtractor} from '../../Utils';
 import Overlay from '../../Components/Overlay';
+import BottomModalComponent from '../../Components/BottomModalComponent';
 
 const AllEventsScreen = ({navigation, route}) => {
   const {
@@ -30,6 +31,8 @@ const AllEventsScreen = ({navigation, route}) => {
     afterLikeFun,
     functionToUpdateLike,
     afterFetchNextPage,
+    modal,
+    setModal,
   } = useAllEventsScreen(navigation, route);
 
   const RenderItem = useCallback(({item, index}) => {
@@ -46,6 +49,7 @@ const AllEventsScreen = ({navigation, route}) => {
         refetechKeys={[refetchKey]}
         key={index}
         functionToUpdateLike={() => {}}
+        openBottomSheet={id => setModal(id)}
       />
     );
   }, []);
@@ -132,6 +136,15 @@ const AllEventsScreen = ({navigation, route}) => {
           <RenderItem item={item} index={index} />
         )}
       /> */}
+
+      {Boolean(modal != null) && (
+        <BottomModalComponent
+          isVisible={Boolean(modal != null)}
+          isReport
+          event_id={modal}
+          onClose={() => setModal(null)}
+        />
+      )}
     </>
   );
 };

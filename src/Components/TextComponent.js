@@ -17,6 +17,8 @@ export const TextComponent = ({
     <Text
       onPress={onPress}
       numberOfLines={numberOfLines}
+      android_disableSound={true}
+      suppressHighlighting={true} // This is specifically for iOS but might help
       style={{
         color: fade
           ? Colors.grayFaded

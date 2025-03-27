@@ -11,7 +11,7 @@ const useFriendsEventsScreen = ({params}) => {
   const [page, setPage] = useState(1); // Current page for pagination
   const [eventsList, setEventsList] = useState([]); // Combined list of events
   const [hasNextPage, setHasNextPage] = useState(true); // Flag to check if more data exists
-
+  const [modal, setModal] = useState(null); // Flag to check if more data exists
   const {likeAndDisLikeEvent} = useFriendServices();
 
   const {isFetching, isRefetching} = useQuery({
@@ -55,6 +55,8 @@ const useFriendsEventsScreen = ({params}) => {
     isFetching,
     isRefetching,
     title: params?.title,
+    modal,
+    setModal,
     likePost: async id => {
       await likeAndDisLikeEvent.mutateAsync(id);
       queryClient.invalidateQueries(['allFriendsEvents']); // Refetch data

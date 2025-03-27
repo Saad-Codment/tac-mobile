@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     // paddingTop: hp('2'),
     alignItems: 'center',
     paddingTop: hp('2'),
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
 
     // alignSelf: 'center',
   },

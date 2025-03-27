@@ -128,7 +128,7 @@ export default function ListViewScreen({navigation, route}) {
           />
           <TextInput
             style={styles.inputStyle}
-            placeholder={'Search Allergies'}
+            placeholder={'Search'}
             placeholderTextColor={Colors.textGray}
             value={text}
             onChangeText={e => searchFun(e)}

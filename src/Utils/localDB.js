@@ -70,24 +70,24 @@ import {
 export const onBoardingData = [
   {
     id: 0,
-    heading: 'Variationen\nder Passages',
+    heading: 'Find Your\nRodeo Family',
     description:
-      'Salungat sa kaalaman ng marami, ang\nLorem Ipsum ay hindi puro.',
+      'Join a vibrant community of rodeo lovers, riders,\nand fans. Make new friends who share your passion!',
     image: splashOne,
     splashImage: splashMarine,
   },
   {
     id: 1,
-    heading: 'Standardteil genutzt richtigen',
+    heading: 'Discover and Attend Events',
     description:
-      'Salungat sa kaalaman ng marami, ang Lorem Ipsum ay hindi puro.',
+      'Explore rodeo events near you or hosted by friends. Create your own events and sync them with your calendar effortlessly!',
     image: splashTwo,
     splashImage: splashLand,
   },
   {
     id: 2,
-    heading: `Get Started`,
-    description: `Wanna be a part of TAC society?`,
+    heading: `Post, Engage, and Stay Connected`,
+    description: `Share your best rodeo moments with photos, videos, and stories. Like, comment, and interact with fellow enthusiasts!`,
     image: splashThree,
     splashImage: splashIndustrial,
   },

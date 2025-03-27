@@ -8,6 +8,7 @@ import useFriendsEventsScreen from './useFriendsEventsScreen';
 import {styles} from './styles';
 import FriendEventsComp from '../../Components/FriendEventsComp';
 import ThemeButton from '../../Components/ThemeButton';
+import BottomModalComponent from '../../Components/BottomModalComponent';
 
 const FriendsEventsScreen = ({navigation, route}) => {
   const {
@@ -17,6 +18,8 @@ const FriendsEventsScreen = ({navigation, route}) => {
     isFetching,
     likePost,
     refetechKeys,
+    modal,
+    setModal,
   } = useFriendsEventsScreen(navigation, route);
   console.log('isbdvlbsdbsdlkklsdksdv', eventsList);
   return (
@@ -54,10 +57,19 @@ const FriendsEventsScreen = ({navigation, route}) => {
               mainViewStyles={{width: wp('90')}}
               upperImgStyle={{width: wp('90')}}
               refetechKeys={['allFriendsEvents']}
+              openBottomSheet={id => setModal(id)}
             />
           </View>
         )}
       />
+      {Boolean(modal != null) && (
+        <BottomModalComponent
+          isVisible={Boolean(modal != null)}
+          isReport
+          event_id={modal}
+          onClose={() => setModal(null)}
+        />
+      )}
     </>
   );
 };

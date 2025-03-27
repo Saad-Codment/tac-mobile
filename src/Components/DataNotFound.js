@@ -4,7 +4,7 @@ import {TextComponent} from './TextComponent';
 import ThemeButton from './ThemeButton';
 import {hp, wp} from '../Config/responsive';
 import {Colors} from '../Theme/Variables';
-import {noData} from '../Assets';
+import {noData, noDataImg} from '../Assets';
 
 export const DataNotFound = ({
   title,
@@ -14,10 +14,16 @@ export const DataNotFound = ({
   btnStyles,
   mainViewStyles,
   noImg,
+  imgStyles,
 }) => {
   return (
     <View style={{...styles.mealInner, ...mainViewStyles}}>
-      {!noImg && <Image source={noData} style={styles.noDataImage} />}
+      {!noImg && (
+        <Image
+          source={noDataImg}
+          style={{...styles.noDataImage, ...imgStyles}}
+        />
+      )}
       <TextComponent
         text={title ?? 'Data not found'}
         styles={styles.noDataTitle}
@@ -51,18 +57,19 @@ const styles = StyleSheet.create({
     height: hp('17.5'),
     resizeMode: 'contain',
     alignSelf: 'center',
-    marginBottom: hp('2'),
+    // marginBottom: hp('2'),
   },
   noDataTitle: {
-    fontSize: hp('3.5'),
+    fontSize: hp('3'),
     textAlign: 'center',
     fontWeight: 600,
     color: Colors.primaryColor,
   },
   noDataSubTitle: {
-    fontSize: hp('2'),
+    fontSize: hp('1.5'),
     textAlign: 'center',
     color: Colors.textGray,
     marginBottom: hp('6'),
+    marginTop: hp('1'),
   },
 });

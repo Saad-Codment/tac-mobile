@@ -26,7 +26,14 @@ const FriendReqScreen = ({navigation}) => {
         flatListProps={{
           numColumns: 1,
           ListEmptyComponent: (
-            <DataNotFound onpress={onRefresh} btnStyles={{width: wp('80')}} />
+            <DataNotFound
+              onpress={onRefresh}
+              btnStyles={{width: wp('80')}}
+              title={'The Stable’s Quiet – No Requests'}
+              subTitle={
+                'Looks like no new friend requests for now. Keep the rodeo spirit alive and grow your TAC crew!'
+              }
+            />
           ),
         }}
         InnerCompnonet={(item, index) => (

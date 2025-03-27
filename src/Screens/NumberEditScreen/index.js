@@ -12,19 +12,29 @@ import PhoneInput from 'react-native-phone-number-input';
 import {Touchable} from '../../Components/Touchable';
 import {Colors} from '../../Theme/Variables';
 import KeyBoardWrapper from '../../Components/KeyBoardWrapper';
+import {parsePhoneNumberFromString} from 'libphonenumber-js';
 
 const NumberEditScreen = ({navigation}) => {
   const {
     goBack,
-    number,
+    formattedNumber,
     sendVerficationCode,
     updateState,
     edit,
     phoneNumber,
-    skipVerification,
-    alert,
-    isVerified,
+    phoneInput,
+    handleCountryChange,
+    handlePhoneNumberChange,
+    validationError,
+    maxLength,
+    number,
   } = useNumberEditScreen(navigation);
+
+  console.log(
+    'formattedNumberformattedNumberformattedNumberformattedNumber',
+    formattedNumber,
+  );
+
   return (
     <>
       <ImageBackground
@@ -53,34 +63,39 @@ const NumberEditScreen = ({navigation}) => {
           </View>
         )}
         {edit && (
-          <View style={styles.fieldView}>
-            <PhoneInput
-              //   ref={phoneInput}
-              defaultValue={number}
-              defaultCode="US"
-              layout="first"
-              onChangeFormattedText={text => {
-                updateState({number: text});
-              }}
-              onChangeCountry={test => {
-                console.log('onChangeCountry', test);
-              }}
-              value={number}
-              autoFocus={false}
-              containerStyle={styles.inputView}
-              textInputStyle={{
-                textAlignVertical: 'center',
-                verticalAlign: 'middle',
-              }}
-              textInputProps={{
-                placeholderTextColor: 'gray',
-                keyboardType: 'number-pad',
-                blurOnSubmit: true,
-                padding: 0,
-              }}
-              textContainerStyle={{backgroundColor: 'transparent'}}
-            />
-          </View>
+          <>
+            <View style={styles.fieldView}>
+              <PhoneInput
+                ref={phoneInput}
+                defaultValue={number}
+                defaultCode="US"
+                layout="first"
+                onChangeFormattedText={handlePhoneNumberChange}
+                onChangeCountry={handleCountryChange}
+                value={formattedNumber}
+                autoFocus={false}
+                containerStyle={styles.inputView}
+                textInputStyle={{
+                  textAlignVertical: 'center',
+                  verticalAlign: 'middle',
+                }}
+                textInputProps={{
+                  placeholderTextColor: 'gray',
+                  keyboardType: 'number-pad',
+                  blurOnSubmit: true,
+                  padding: 0,
+                  maxLength: maxLength, // Add maxLength restriction
+                }}
+                textContainerStyle={{backgroundColor: 'transparent'}}
+              />
+            </View>
+            {/* {validationError ? (
+              <TextComponent
+                text={validationError}
+                styles={{color: 'red', marginTop: hp('1')}}
+              />
+            ) : null} */}
+          </>
         )}
         <View style={styles.btnView}>
           <ThemeButton

@@ -56,6 +56,8 @@ export const HeaderComponent = ({
               placeholderTextColor={'gray'}
               value={searchVal}
               onChangeText={e => setSearchVal(e)}
+              returnKeyType="search"
+              onEndEditing={onRightPress}
             />
           </View>
         ) : (

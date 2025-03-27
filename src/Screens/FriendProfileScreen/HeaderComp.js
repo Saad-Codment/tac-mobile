@@ -1,5 +1,5 @@
 import {View, Text, Image, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
 import {Colors} from '../../Theme/Variables';
@@ -32,9 +32,25 @@ const HeaderComp = ({userData, myUserData}) => {
     );
   };
 
-  const friendCountArry = [
+  // const friendCountArry = [
+  //   {
+  //     num: userData?.event_count,
+  //     title: 'Events',
+  //   },
+  //   {
+  //     num: userData?.friends_count,
+  //     title: 'Friends',
+  //     onPress: () =>
+  //       NavigationService.navigate('FriendLists', {
+  //         url: getUserFriendsUrl + userData?.id + '?',
+  //         key: 'userFriends',
+  //       }),
+  //   },
+  // ];
+
+  const [friendCountArry, setFriendCountArry] = useState([
     {
-      num: userData?.events_count,
+      num: userData?.event_count,
       title: 'Events',
     },
     {
@@ -46,11 +62,47 @@ const HeaderComp = ({userData, myUserData}) => {
           key: 'userFriends',
         }),
     },
-    {
-      num: userData?.mutual_friends,
-      title: 'Mutual',
-    },
-  ];
+  ]);
+
+  useEffect(() => {
+    if (userData?.id != myUserData?.id) {
+      setFriendCountArry(prev => [
+        {
+          num: userData?.event_count,
+          title: 'Events',
+        },
+        {
+          num: userData?.friends_count,
+          title: 'Friends',
+          onPress: () =>
+            NavigationService.navigate('FriendLists', {
+              url: getUserFriendsUrl + userData?.id + '?',
+              key: 'userFriends',
+            }),
+        },
+        {
+          num: userData?.mutual_count,
+          title: 'Mutual',
+        },
+      ]);
+    } else {
+      setFriendCountArry([
+        {
+          num: userData?.event_count,
+          title: 'Events',
+        },
+        {
+          num: userData?.friends_count,
+          title: 'Friends',
+          onPress: () =>
+            NavigationService.navigate('FriendLists', {
+              url: getUserFriendsUrl + userData?.id + '?',
+              key: 'userFriends',
+            }),
+        },
+      ]);
+    }
+  }, [userData?.id, myUserData?.id]);
 
   const {sendFriendReq, removeFriend} = useFriendServices();
   const {queryClient} = useReduxStore();

@@ -53,11 +53,11 @@ const OnStepScreen = ({navigation}) => {
             text={'What year were \n you born ?'}
             styles={styles.tagline}
           />
-          <TextComponent
+          {/* <TextComponent
             text={'Salungat sa kaalaman ng marami.'}
             styles={styles.innerTitle}
             fade={true}
-          />
+          /> */}
 
           <TextComponent
             text={formatDateToCustomFormat(age ?? currentDate)}
@@ -89,11 +89,11 @@ const OnStepScreen = ({navigation}) => {
       return (
         <View>
           <TextComponent text={'Describe yourself ?'} styles={styles.tagline} />
-          <TextComponent
+          {/* <TextComponent
             text={'Salungat sa kaalaman ng marami.'}
             styles={styles.innerTitle}
             fade={true}
-          />
+          /> */}
           <View style={styles.content}>
             {step2.map((item, index) => (
               <Pressable
@@ -128,11 +128,11 @@ const OnStepScreen = ({navigation}) => {
             text={'Are you willing to have \n horses for others?'}
             styles={styles.tagline}
           />
-          <TextComponent
+          {/* <TextComponent
             text={'Salungat sa kaalaman ng marami.'}
             styles={styles.innerTitle}
             fade={true}
-          />
+          /> */}
           {step3.map((item, index) => (
             <Pressable
               style={{
@@ -159,11 +159,11 @@ const OnStepScreen = ({navigation}) => {
             text={'What type of sports you’re interested in ?'}
             styles={styles.tagline}
           />
-          <TextComponent
+          {/* <TextComponent
             text={'Salungat sa kaalaman ng marami.'}
             styles={styles.innerTitle}
             fade={true}
-          />
+          /> */}
           <Touchable
             style={styles.inputMain}
             onPress={() =>
@@ -175,7 +175,11 @@ const OnStepScreen = ({navigation}) => {
               })
             }>
             <TextComponent text={'Events'} styles={styles.btnTextTwo} />
-            <Image source={arrRightPurple} style={styles.arrowImage} />
+            <Image
+              source={arrRightPurple}
+              style={styles.arrowImage}
+              tintColor={'white'}
+            />
           </Touchable>
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -197,11 +201,11 @@ const OnStepScreen = ({navigation}) => {
             text={'Any association you’re align with?'}
             styles={styles.tagline}
           />
-          <TextComponent
+          {/* <TextComponent
             text={'Salungat sa kaalaman ng marami.'}
             styles={styles.innerTitle}
             fade={true}
-          />
+          /> */}
           <Touchable
             style={styles.inputMain}
             onPress={() =>
@@ -216,7 +220,11 @@ const OnStepScreen = ({navigation}) => {
               text={'Choose all the associations you are a member of'}
               styles={styles.btnTextTwo}
             />
-            <Image source={arrRightPurple} style={styles.arrowImage} />
+            <Image
+              source={arrRightPurple}
+              style={styles.arrowImage}
+              tintColor={'white'}
+            />
           </Touchable>
           <ScrollView
             showsVerticalScrollIndicator={false}

@@ -1,11 +1,18 @@
-import {Image, ScrollView, TextInput, View} from 'react-native';
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TextInput,
+  View,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import {boldDivider, crossWhite, editPicBtn} from '../../Assets';
 import {styles} from './styles';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
 import ThemeButton from '../../Components/ThemeButton';
-import {useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {CircleImage} from '../../Components/CircleImage';
 import {Touchable} from '../../Components/Touchable';
 import {Colors} from '../../Theme/Variables';
@@ -47,6 +54,11 @@ const SettingModal = ({
 
   const [lastName, setLastName] = useState(activeTags?.lastName);
 
+  const [_, forceUpdate] = useState(); // Just to trigger updates
+
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+
   const {associations, eventType, profileImg, userAge, userGender} =
     innerDataState;
 
@@ -85,8 +97,11 @@ const SettingModal = ({
             style={{flex: 1, color: 'black'}}
             placeholder="Enter your first name"
             placeholderTextColor={'gray'}
+            autoFocus={true} // Add this to maintain focus
+            blurOnSubmit={false} // Prevent keyboard from dismissing on submit
             value={firstName}
-            onChangeText={e => setFirstName(e)}
+            onChangeText={setFirstName}
+            ref={firstNameRef}
           />
         </View>
         <View style={styles.inputView}>
@@ -95,7 +110,9 @@ const SettingModal = ({
             placeholder="Enter your last name"
             placeholderTextColor={'gray'}
             value={lastName}
-            onChangeText={e => setLastName(e)}
+            onChangeText={setLastName}
+            blurOnSubmit={false}
+            ref={lastNameRef}
           />
         </View>
       </>
@@ -148,12 +165,12 @@ const SettingModal = ({
   const renderObj = {
     edit_profile: {
       title: 'Edit Profile',
-      renderView: () => <EditProfileView />,
+      // renderView: <EditProfileView />,
     },
-    age_view: {title: 'Update Your Age', renderView: () => <AgeChangeView />},
+    age_view: {title: 'Update Your Age', renderView: <AgeChangeView />},
     event_type: {
-      title: 'Update Your Event Type',
-      renderView: () => (
+      title: 'Update Your Sports Type',
+      renderView: (
         <MultiSelectButton
           items={allData}
           isMultipule
@@ -172,7 +189,7 @@ const SettingModal = ({
     },
     event_association: {
       title: 'Update Association',
-      renderView: () => (
+      renderView: (
         <MultiSelectButton
           items={allData}
           isMultipule
@@ -192,7 +209,7 @@ const SettingModal = ({
     },
     user_gender: {
       title: 'Update Gender',
-      renderView: () => (
+      renderView: (
         <View>
           <MultiSelectButton
             items={[
@@ -222,8 +239,8 @@ const SettingModal = ({
         animationOutTiming={100}
         avoidKeyboard
         animationType="fade"
-        hideModalContentWhileAnimating
-        useNativeDriver
+        // hideModalContentWhileAnimating
+        // useNativeDriver
         onBackButtonPress={
           firstHit && activeTags.length == 0 ? onPress : onBackPress
         }
@@ -252,10 +269,60 @@ const SettingModal = ({
               text={renderObj[heading]?.title}
               styles={styles.headingText}
             />
+
             <ScrollView
               showsVerticalScrollIndicator={false}
+              // keyboardShouldPersistTaps="always"
               contentContainerStyle={styles.modalScroll}>
-              {renderObj[heading]?.renderView()}
+              {heading == 'edit_profile' && (
+                <>
+                  <View style={styles.whiteCircle}>
+                    <CircleImage
+                      image={
+                        profileImg?.type
+                          ? profileImg?.uri
+                          : imageUrl(profileImg?.uri)
+                      }
+                      styles={styles.profileView}
+                      size={0.4}
+                      uri={true}
+                    />
+                    <Touchable
+                      style={styles.addIcon}
+                      onPress={async () => {
+                        const img = await uploadFromGalary();
+                        onChangeVal('profileImg', img);
+                      }}>
+                      <Image
+                        source={editPicBtn}
+                        resizeMode="contain"
+                        style={{height: hp('6')}}
+                      />
+                    </Touchable>
+                  </View>
+                  <View style={styles.inputView}>
+                    <TextInput
+                      style={{flex: 1, color: 'black'}}
+                      placeholder="Enter your first name"
+                      placeholderTextColor={'gray'}
+                      value={firstName}
+                      onChangeText={setFirstName}
+                      ref={firstNameRef}
+                    />
+                  </View>
+                  <View style={styles.inputView}>
+                    <TextInput
+                      style={{flex: 1, color: 'black'}}
+                      placeholder="Enter your last name"
+                      placeholderTextColor={'gray'}
+                      value={lastName}
+                      onChangeText={setLastName}
+                      ref={lastNameRef}
+                    />
+                  </View>
+                </>
+              )}
+              {renderObj[heading]?.renderView}
             </ScrollView>
             {/* {firstHit && ( */}
             <ThemeButton

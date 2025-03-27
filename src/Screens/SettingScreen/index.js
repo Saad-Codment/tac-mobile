@@ -35,6 +35,7 @@ import {
   friendReq,
   profileCircle,
   userAdd,
+  syncContact,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
@@ -148,7 +149,7 @@ const SettingScreen = ({navigation}) => {
     },
     {
       title: 'Sync phonebook',
-      leftIcon: userAdd,
+      leftIcon: syncContact,
       rightText: 'View',
       onPress: () => NavigationService.navigate('SyncPhonebookScreen'),
     },

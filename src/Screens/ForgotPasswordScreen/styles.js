@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {hp, wp} from '../../Config/responsive';
 
 export const styles = StyleSheet.create({
@@ -11,5 +11,15 @@ export const styles = StyleSheet.create({
     marginTop: hp('10'),
     width: wp('95'),
     alignSelf: 'center',
+  },
+  skipBtn: {
+    width: wp('19'),
+    // alignItems: 'flex-end',
+    paddingTop: Platform.OS == 'ios' ? hp('5') : hp('2'),
+    paddingRight: wp('3'),
+    marginLeft: wp('2'),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });

@@ -29,6 +29,8 @@ const CreatePostScreen = ({navigation}) => {
   const {userData, postImgs, postText, onChangeVal, createPost} =
     useCreatePostScreen(navigation);
 
+  console.log('postImgspostImgspostImgspostImgs', postImgs);
+
   const imgHeight = {
     1: {width: wp('100'), height: hp('30')},
   };

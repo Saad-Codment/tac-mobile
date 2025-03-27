@@ -63,10 +63,11 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    // height: hp('95'),
+    // height: hp('100'),
     width: wp('100'),
     // aspectRatio: 1,
     paddingBottom: hp('15'),
+    // aspectRatio: 1,
   },
   btnArrow: {
     display: 'flex',

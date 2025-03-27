@@ -63,7 +63,7 @@ const HomeScreen = ({navigation}) => {
   return (
     <View>
       <HomeHeader
-        text={`Hello ${userData?.first_name}`}
+        text={`Howdy, ${userData?.first_name}`}
         onNotificarioPress={() => dynamicRoute('NotificationScreen')}
         userDataImg={userData?.profile_image}
         onProfilePress={() =>
@@ -96,24 +96,7 @@ const HomeScreen = ({navigation}) => {
           />
         </View>
         <FlatList
-          data={[
-            {
-              id: '1',
-              userImage: 'https://picsum.photos/200',
-              userName: 'Me',
-              eventTitle: 'Unity league.',
-              eventCategory: 'Bull Riding',
-              eventDate: 'Mon. Nov 27 - 2023',
-              eventTime: '18:00 - 23:00 P.M.',
-              eventLocation: 'Catherine St French Prairie Gardens.',
-              likes: '123',
-              association: 'Association',
-              circuits: 'Circuits',
-              lock: true,
-            },
-
-            // Add more items here
-          ]}
+          data={[]}
           renderItem={renderItem}
           horizontal // Enable horizontal scrolling
           keyExtractor={item => item.toString()}
@@ -136,37 +119,7 @@ const HomeScreen = ({navigation}) => {
           />
         </View>
         <FlatList
-          data={[
-            {
-              id: '1',
-              userImage: 'https://picsum.photos/200',
-              userName: 'James Dean',
-              eventTitle: 'Berbury Hawks',
-              eventCategory: 'Team Roping',
-              eventDate: 'Mon. Nov 27 - 2023',
-              eventTime: '18:00 - 23:00 P.M.',
-              eventLocation: 'Catherine St French Prairie Gardens.',
-              likes: '123',
-              association: 'Association',
-              circuits: 'Circuits',
-              friendEvent: true,
-            },
-            {
-              id: '2',
-              userImage: 'https://picsum.photos/200',
-              userName: 'James Dean',
-              eventTitle: 'Berbury Hawks',
-              eventCategory: 'Team Roping',
-              eventDate: 'Mon. Nov 27 - 2023',
-              eventTime: '18:00 - 23:00 P.M.',
-              eventLocation: 'Catherine St French Prairie Gardens.',
-              likes: '123',
-              association: 'Association',
-              circuits: 'Circuits',
-              friendEvent: true,
-            },
-            // Add more items here
-          ]}
+          data={[]}
           renderItem={friendEvents}
           horizontal // Enable horizontal scrolling
           keyExtractor={item => item.toString()}
@@ -197,35 +150,7 @@ const HomeScreen = ({navigation}) => {
           />
         </View>
         <FlatList
-          data={[
-            {
-              id: '1',
-              userImage: 'https://picsum.photos/200',
-              userName: 'System suggested',
-              eventTitle: 'Empire Batteries, Incorporation.',
-              eventCategory: 'Barrel Racing',
-              eventDate: 'Mon. Nov 27 - 2023',
-              eventTime: '18:00 - 23:00 P.M.',
-              eventLocation: 'Catherine St French Prairie Gardens.',
-              likes: '123',
-              association: 'Association',
-              circuits: 'Circuits',
-            },
-            {
-              id: '2',
-              userImage: 'https://picsum.photos/200',
-              userName: 'Me',
-              eventTitle: 'Unity league',
-              eventCategory: 'Bull Riding',
-              eventDate: 'Mon. Nov 27 - 2023',
-              eventTime: '18:00 - 23:00 P.M.',
-              eventLocation: 'Catherine St French Prairie Gardens.',
-              likes: '123',
-              association: 'Association',
-              circuits: 'Circuits',
-            },
-            // Add more items here
-          ]}
+          data={[]}
           renderItem={renderItem}
           horizontal // Enable horizontal scrolling
           keyExtractor={item => item.toString()}

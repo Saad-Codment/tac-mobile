@@ -71,6 +71,6 @@ export const styles = StyleSheet.create({
   }),
   btnText: isSelected => ({
     color: isSelected ? 'white' : '#525252',
-    fontSize: hp('1.8'),
+    fontSize: hp('1.5'),
   }),
 });

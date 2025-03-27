@@ -12,6 +12,8 @@ const useAllEventsScreen = ({navigate, addListener}, {params}) => {
   const [totalPages, setTotalPages] = useState(1); // Current page for pagination
   const [eventsList, setEventsList] = useState(null); // Combined list of events
 
+  const [modal, setModal] = useState(null); // Flag to check if more data exists
+
   const {likeAndDisLikeEvent} = useFriendServices();
 
   const {
@@ -138,6 +140,8 @@ const useAllEventsScreen = ({navigate, addListener}, {params}) => {
     afterLikeFun: () => queryClient.invalidateQueries([params?.key]),
     functionToUpdateLike,
     afterFetchNextPage: () => setEventsList(null),
+    modal,
+    setModal,
     likePost: async (i, id) => {
       // await likeAndDisLikeEvent.mutateAsync(id);
       // queryClient.invalidateQueries([params?.key]); // Refetch data

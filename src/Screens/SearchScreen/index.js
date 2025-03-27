@@ -65,7 +65,7 @@ const SearchScreen = ({navigation}) => {
           </View>
           <TextComponent
             text={'See all'}
-            styles={{marginRight: wp('2')}}
+            styles={{marginRight: wp('2'), fontSize: hp('1.6')}}
             onPress={() =>
               navigation.navigate(
                 selectedVal.id == 'FriendRequests'
@@ -74,7 +74,7 @@ const SearchScreen = ({navigation}) => {
                 {
                   url: getMyFriendsUrl,
                   key: 'myFriends',
-                  title: 'Search Friends',
+                  title: 'Friends list',
                 },
               )
             }
@@ -92,11 +92,21 @@ const SearchScreen = ({navigation}) => {
             numColumns: 1,
             ListEmptyComponent: (
               <DataNotFound
-                onpress={refetch}
                 btnStyles={{width: wp('85')}}
+                imgStyles={{width: wp('30')}}
+                title={
+                  selectedVal.id == 'YourFriends'
+                    ? 'No Rodeo Crew Yet'
+                    : 'The Stable’s Quiet – No Requests'
+                }
+                subTitle={
+                  selectedVal.id == 'YourFriends'
+                    ? 'Search for friends or sync your contacts to see which rodeo enthusiasts are already on TAC.'
+                    : 'Looks like no new friend requests for now. Keep the rodeo spirit alive and grow your TAC crew!'
+                }
                 mainViewStyles={{
                   flex: 1,
-                  paddingTop: hp('15'),
+                  paddingTop: hp('10'),
                   width: wp('100'),
                 }}
               />

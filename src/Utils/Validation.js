@@ -155,8 +155,7 @@ const eventCreateSchema = yup.object().shape({
   eventTitle: yup
     .string()
     .required('Please enter the event title.')
-    .max(50, 'Name must be less than 50 characters.')
-    .matches(/^[A-Za-z ]*$/, 'Please enter a valid name.'),
+    .max(50, 'Name must be less than 50 characters.'),
   eventImg: yup.mixed().required('Event image is required'),
   eventStartDate: yup
     .date()

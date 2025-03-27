@@ -153,7 +153,7 @@ const EventsDetailScreen = ({navigation, route}) => {
             }
             styles={{
               fontSize: hp('1.8'),
-              width: wp('57'),
+              width: wp('56'),
             }}
           />
           <Touchable

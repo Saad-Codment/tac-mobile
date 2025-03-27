@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
   stepCirclesContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: Platform.OS == 'ios' ? hp('5') : 0,
+    // paddingTop: Platform.OS == 'ios' ? hp('5') : 0,
   },
   circleContainer: {
     alignItems: 'center',
@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
   skipBtn: {
     width: wp('100'),
     alignItems: 'flex-end',
-    paddingTop: hp('2'),
+    paddingTop: Platform.OS == 'ios' ? hp('5') : hp('2'),
     paddingRight: wp('3'),
   },
   horse: {
@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
     height: hp('8'),
     alignSelf: 'center',
     marginRight: wp('3'),
-    marginTop: Platform.OS == 'ios' && hp('5'),
+    // marginTop: Platform.OS == 'ios' && hp('5'),
   },
   mainContent: {
     width: wp('100'),
@@ -76,6 +76,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: FontSize.scale30,
     fontWeight: 700,
+    marginBottom: hp('2'),
   },
   innerTitle: {
     textAlign: 'center',
@@ -94,14 +95,16 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: Colors.backgroundTheme,
+    backgroundColor: Colors.backgroundTheme,
     borderRadius: 30,
     paddingHorizontal: wp('4'),
     width: wp('92'),
     height: hp('6'),
+    fontSize: hp('1.5'),
   },
   btnTextTwo: {
-    fontSize: hp('1.9'),
+    fontSize: hp('1.5'),
+    color: 'white',
   },
   inputImage: {
     width: wp('6'),
@@ -268,5 +271,8 @@ export const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     paddingVertical: hp('2'),
+    backgroundColor: Colors.backgroundTheme,
+    overflow: 'hidden',
+    color: 'white',
   },
 });

@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
   checkImg: {
     width: wp('8'),
     height: hp('3'),
-    marginRight: wp('1'),
+    // marginRight: wp('-2'),
   },
   titleStyle: {
     fontWeight: 'bold',

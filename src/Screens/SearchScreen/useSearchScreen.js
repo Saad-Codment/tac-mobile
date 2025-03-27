@@ -32,7 +32,7 @@ const useSearchScreen = ({navigate}) => {
     navigate('FriendLists', {
       url: searchDataUrl + searchVal + '&',
       key: 'searchResults',
-      title: 'Search friends',
+      title: 'Search Friends',
     });
     // setSearchVal(null);
   };

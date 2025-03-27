@@ -12,6 +12,7 @@ const InvitedUserScreen = ({invitedContacts}) => {
       <MyFriendComp
         item={{first_name: item?.name, last_name: '', isInvited: true, ...item}}
         isDisable={true}
+        notShowProfile={true}
       />
     );
   };

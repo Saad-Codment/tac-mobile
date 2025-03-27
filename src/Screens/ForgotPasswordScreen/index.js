@@ -1,6 +1,6 @@
-import {View, Text, ImageBackground} from 'react-native';
+import {View, Text, ImageBackground, Image} from 'react-native';
 import React, {memo} from 'react';
-import {sms, stepBg} from '../../Assets';
+import {arrowLeft, sms, stepBg} from '../../Assets';
 import {styles} from './styles';
 import {TextComponent} from '../../Components/TextComponent';
 import {hp, wp} from '../../Config/responsive';
@@ -8,6 +8,7 @@ import {InputComponent} from '../../Components/InputComponent';
 import useForgotPasswordScreen from './useForgotPasswordScreen';
 import {Colors} from '../../Theme/Variables';
 import ThemeButton from '../../Components/ThemeButton';
+import {Touchable} from '../../Components/Touchable';
 
 const ForgotPasswordScreen = ({navigation}) => {
   const {
@@ -21,11 +22,27 @@ const ForgotPasswordScreen = ({navigation}) => {
   } = useForgotPasswordScreen(navigation);
   return (
     <>
-      <ImageBackground
-        source={stepBg}
-        style={styles.container}></ImageBackground>
+      <ImageBackground source={stepBg} style={styles.container}>
+        <Touchable style={styles.skipBtn} onPress={navigation.goBack}>
+          <Image
+            source={arrowLeft}
+            style={{
+              resizeMode: 'contain',
+              tintColor: 'white',
+              width: wp('5'),
+              // ...styles.arrowback,
+              // ...backIconStyle,
+            }}
+          />
+          <TextComponent
+            text={'Back'}
+            fade
+            // onPress={() => handleNextStep[step]()}
+          />
+        </Touchable>
+      </ImageBackground>
       <TextComponent
-        text={'Forgort Password'}
+        text={'Forgot Password'}
         styles={{fontSize: hp('3'), fontWeight: 'bold', marginLeft: wp('5')}}
       />
       <TextComponent
