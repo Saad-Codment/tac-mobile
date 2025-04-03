@@ -57,7 +57,13 @@ const HomeScreen = ({navigation}) => {
   }, []);
 
   const renderItemAddFriend = useCallback(({item}) => {
-    return <AddFriendComp item={item} sendReq={sendReq} />;
+    return (
+      <AddFriendComp
+        item={item}
+        sendReq={sendReq}
+        mainViewStyle={{marginHorizontal: wp('1')}}
+      />
+    );
   }, []);
 
   return (
@@ -174,7 +180,7 @@ const HomeScreen = ({navigation}) => {
           horizontal // Enable horizontal scrolling
           keyExtractor={item => item.toString()}
           showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
-          contentContainerStyle={{paddingHorizontal: 10}} // Padding around the list
+          contentContainerStyle={{paddingHorizontal: wp('1')}} // Padding around the list
         />
       </ScrollView>
     </View>

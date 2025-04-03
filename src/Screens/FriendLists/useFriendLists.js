@@ -48,7 +48,7 @@ const useFriendLists = ({navigation, route}, {params}) => {
     }, [refetch]),
   );
 
-  const list = data?.pages.flatMap(page => page.data?.data) || [];
+  const list = data?.pages?.flatMap(page => page.data?.data) || [];
 
   return {
     friendListData: list,

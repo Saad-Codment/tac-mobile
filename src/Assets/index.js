@@ -18,7 +18,8 @@ export {default as divider} from './Images/divider.png';
 export {default as blurImg} from './Images/blurImg.png';
 export {default as tacLogo} from './Images/tacLogo.png';
 export {default as syncView} from './Images/syncView.png';
-export {default as noDataImg} from './Images/noDataImg.png';
+export {default as maleImg} from './Images/maleImg.png';
+export {default as femaleImg} from './Images/femaleImg.png';
 
 //  Icons
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {TextComponent} from './TextComponent';
 import {hp, wp} from '../Config/responsive';
 import {CircleImage} from './CircleImage';
@@ -18,6 +18,7 @@ import useFriendServices from '../Services/FriendServices';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {imageUrl} from '../Utils/Urls';
 import {formatDateToCustomFormat} from '../Services/GlobalFunctions';
+import {types} from '../Redux/types';
 
 const images = [
   'https://images.pexels.com/photos/27305813/pexels-photo-27305813/free-photo-of-a-woman-taking-a-photo-with-her-camera.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
@@ -27,14 +28,20 @@ const images = [
   'https://images.pexels.com/photos/27305813/pexels-photo-27305813/free-photo-of-a-woman-taking-a-photo-with-her-camera.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
 ];
 
-const RenderImages = ({images}) => {
+const RenderImages = ({images, onImagePress}) => {
   if (images.length == 1) {
     return (
-      <BlurImage uri={imageUrl(images[0])} isURI styles={styles.singleImage} />
+      <Pressable onPress={onImagePress}>
+        <BlurImage
+          uri={imageUrl(images[0])}
+          isURI
+          styles={styles.singleImage}
+        />
+      </Pressable>
     );
   } else if (images.length == 2) {
     return (
-      <View style={styles.twoImagesContainer}>
+      <Touchable style={styles.twoImagesContainer} onPress={onImagePress}>
         {images.map((img, index) => (
           <BlurImage
             key={index}
@@ -43,11 +50,11 @@ const RenderImages = ({images}) => {
             styles={styles.twoImage}
           />
         ))}
-      </View>
+      </Touchable>
     );
   } else if (images.length == 3) {
     return (
-      <View style={styles.threeImagesContainer}>
+      <Touchable style={styles.threeImagesContainer} onPress={onImagePress}>
         {images.map((img, index) => (
           <BlurImage
             key={index}
@@ -56,11 +63,11 @@ const RenderImages = ({images}) => {
             styles={styles.threeImage}
           />
         ))}
-      </View>
+      </Touchable>
     );
   } else {
     return (
-      <View style={styles.gridContainer}>
+      <Touchable style={styles.gridContainer} onPress={onImagePress}>
         {images.slice(0, 4).map((img, index) => (
           <View key={index} style={styles.gridItem}>
             <BlurImage
@@ -78,7 +85,7 @@ const RenderImages = ({images}) => {
             )}
           </View>
         ))}
-      </View>
+      </Touchable>
     );
   }
 };
@@ -86,7 +93,11 @@ const RenderImages = ({images}) => {
 const JustTextRenderPost = ({title}) => {
   return (
     <View style={styles.textPostView}>
-      <TextComponent text={title} numberOfLines={100} />
+      <TextComponent
+        text={title}
+        numberOfLines={100}
+        styles={{fontSize: hp('1.8')}}
+      />
     </View>
   );
 };
@@ -100,7 +111,16 @@ const PostViewComp = ({
 }) => {
   const {likeAndDisLikeEvent, addLikeOnPost} = useFriendServices();
 
-  const {queryClient} = useReduxStore();
+  const {getState, dispatch} = useReduxStore();
+
+  const onImagePress = () => {
+    dispatch({
+      payload: JSON.parse(item?.images),
+      type: types.openModal,
+    });
+  };
+
+  const {userData} = getState('Auth');
 
   return (
     <View style={styles.mainView}>
@@ -120,13 +140,18 @@ const PostViewComp = ({
             styles={styles.postTime}
           />
         </View>
-        <Touchable onPress={() => openBottomSheet(item.id)}>
-          <Image
-            source={dotsVertical}
-            resizeMode="contain"
-            style={{width: wp('7'), height: hp('5')}}
-          />
-        </Touchable>
+        {userData?.id != item?.user_id && (
+          <Touchable
+            onPress={() => {
+              if (userData?.id != item?.user_id) openBottomSheet(item?.id);
+            }}>
+            <Image
+              source={dotsVertical}
+              resizeMode="contain"
+              style={{width: wp('7'), height: hp('5')}}
+            />
+          </Touchable>
+        )}
       </View>
 
       {JSON.parse(item?.images)?.length > 0 ? (
@@ -138,7 +163,10 @@ const PostViewComp = ({
               numberOfLines={100}
             />
           )}
-          <RenderImages images={JSON.parse(item?.images)} />
+          <RenderImages
+            images={JSON.parse(item?.images)}
+            onImagePress={onImagePress}
+          />
         </View>
       ) : (
         <View>
@@ -146,7 +174,8 @@ const PostViewComp = ({
             style={{
               ...styles.divider,
               marginTop: hp('1'),
-              marginBottom: hp('-1'),
+              // marginVertical: hp('-1'),
+              // marginBottom: hp('-1'),
             }}
           />
           <JustTextRenderPost title={item?.title} />
@@ -256,7 +285,7 @@ const styles = StyleSheet.create({
     marginBottom: hp('2'),
   },
   caption: {
-    fontSize: wp('3.8'),
+    fontSize: wp('3'),
     marginBottom: hp('1'),
   },
   textPostView: {

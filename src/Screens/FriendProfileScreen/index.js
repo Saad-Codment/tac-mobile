@@ -46,9 +46,9 @@ const FriendProfileScreen = ({navigation, route}) => {
     functionToUpdateLike,
   } = useFriendProfileScreen(navigation, route);
   console.log(
-    'slkdbvlkbsdlkvbklsdbvklsdbkvlblsdv',
-    userData?.friends,
-    userData?.privacy,
+    'slkdbvlkbsdlkvbklsdbvklsddsfsdfsdbkvlblsdv',
+    eventsList,
+    userData,
   );
 
   return (
@@ -90,10 +90,7 @@ const FriendProfileScreen = ({navigation, route}) => {
             flatListProps={{
               ListEmptyComponent:
                 eventsList != null && eventsList?.length == 0 ? (
-                  <DataNotFound
-                    onpress={onRefresh}
-                    btnStyles={{width: wp('80')}}
-                  />
+                  <DataNotFound btnStyles={{width: wp('80')}} />
                 ) : null,
               ListFooterComponent:
                 eventsList != null &&

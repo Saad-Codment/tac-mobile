@@ -6,6 +6,7 @@ import {
   Platform,
   StyleSheet,
   Dimensions,
+  Pressable,
 } from 'react-native';
 import {Colors} from '../Theme/Variables';
 import {hp, wp} from '../Config/responsive';
@@ -24,6 +25,9 @@ import {CircleImage} from './CircleImage';
 import {imageUrl} from '../Utils/Urls';
 import ThemeButton from './ThemeButton';
 import NavigationService from '../Services/NavigationService';
+import useReduxStore from '../Hooks/UseReduxStore';
+import {types} from '../Redux/types';
+import {checkMaleFemaleForImg} from '../Services/GlobalFunctions';
 
 const HomeHeader = ({
   text,
@@ -31,6 +35,15 @@ const HomeHeader = ({
   userDataImg,
   onProfilePress,
 }) => {
+  const {dispatch} = useReduxStore();
+
+  const onImagePress = () => {
+    dispatch({
+      payload: userDataImg,
+      type: types.openModal,
+    });
+  };
+
   return (
     <View style={styles.headerView}>
       <View style={styles.firstView}>
@@ -41,13 +54,15 @@ const HomeHeader = ({
             alignItems: 'center',
             width: wp('70'),
           }}>
-          <View
+          <Pressable
+            onPress={onImagePress}
             style={{
               marginTop: hp('3.5'),
               marginRight: hp('1'),
             }}>
             <CircleImage
               image={imageUrl(userDataImg)}
+              // defaultSource={checkMaleFemaleForImg}
               uri={true}
               styles={{
                 alignSelf: 'center',
@@ -60,7 +75,7 @@ const HomeHeader = ({
                 height: Dimensions.get('window').width * 0.14,
               }}
             />
-          </View>
+          </Pressable>
           <View>
             <View
               style={{

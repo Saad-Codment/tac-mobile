@@ -2,9 +2,17 @@ import React from 'react';
 import {Image, Dimensions} from 'react-native';
 import BlurImage from './BlurImage';
 
-export const CircleImage = ({styles, size, image, uri, radius}) => {
+export const CircleImage = ({
+  styles,
+  size,
+  image,
+  uri,
+  radius,
+  defaultSource,
+}) => {
   return (
     <BlurImage
+      defaultSource={defaultSource}
       uri={image}
       styles={{
         borderRadius: Math.round(

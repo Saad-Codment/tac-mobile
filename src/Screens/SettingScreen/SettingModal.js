@@ -67,57 +67,6 @@ const SettingModal = ({
   const onChangeVal = (key, val) => {
     updateState({[key]: val});
   };
-  const EditProfileView = () => {
-    return (
-      <>
-        <View style={styles.whiteCircle}>
-          <CircleImage
-            image={
-              profileImg?.type ? profileImg?.uri : imageUrl(profileImg?.uri)
-            }
-            styles={styles.profileView}
-            size={0.4}
-            uri={true}
-          />
-          <Touchable
-            style={styles.addIcon}
-            onPress={async () => {
-              const img = await uploadFromGalary();
-              onChangeVal('profileImg', img);
-            }}>
-            <Image
-              source={editPicBtn}
-              resizeMode="contain"
-              style={{height: hp('6')}}
-            />
-          </Touchable>
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            style={{flex: 1, color: 'black'}}
-            placeholder="Enter your first name"
-            placeholderTextColor={'gray'}
-            autoFocus={true} // Add this to maintain focus
-            blurOnSubmit={false} // Prevent keyboard from dismissing on submit
-            value={firstName}
-            onChangeText={setFirstName}
-            ref={firstNameRef}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            style={{flex: 1, color: 'black'}}
-            placeholder="Enter your last name"
-            placeholderTextColor={'gray'}
-            value={lastName}
-            onChangeText={setLastName}
-            blurOnSubmit={false}
-            ref={lastNameRef}
-          />
-        </View>
-      </>
-    );
-  };
 
   const AgeChangeView = () => {
     return (

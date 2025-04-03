@@ -2,13 +2,13 @@ const getCredentials = () => {
   if (__DEV__)
     return {
       baseURL: 'https://theappforcowboys.com/tac-backend/api',
-      imageURL: 'https://theappforcowboys.com/tac-backend/storage/',
+      imageURL: 'https://tac-app-bucket.s3.us-east-2.amazonaws.com/',
     };
   else {
     console.log = () => {};
     return {
       baseURL: 'https://theappforcowboys.com/tac-backend/api',
-      imageURL: 'https://theappforcowboys.com/tac-backend/storage/',
+      imageURL: 'https://tac-app-bucket.s3.us-east-2.amazonaws.com/',
     };
   }
 };

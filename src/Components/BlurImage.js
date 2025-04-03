@@ -3,9 +3,27 @@ import {View} from 'react-native';
 import {Blurhash} from 'react-native-blurhash';
 import FastImage from 'react-native-fast-image';
 
-const BlurImage = ({styles, uri, blurhash, radius, children, isURI}) => {
-  const [load, setLoad] = useState(true);
+const BlurImage = ({
+  styles,
+  uri,
+  blurhash,
+  radius,
+  children,
+  isURI,
+  defaultSource,
+}) => {
+  const [load, setLoad] = useState(Boolean(!defaultSource));
   const imageSource = {uri, priority: FastImage.priority.high};
+  function hasHttpProtocol(url) {
+    // Check if the URL starts with http:// or https://
+    return /^https?:\/\//i.test(url);
+  }
+
+  console.log(
+    'defaultSourcedefaultSourcedefaultSourcedefaultSource',
+    defaultSource,
+  );
+
   // const imageSource = uri
   //   ? {uri, priority: FastImage.priority.normal}
   //   : background;
@@ -18,8 +36,10 @@ const BlurImage = ({styles, uri, blurhash, radius, children, isURI}) => {
       }}>
       <FastImage
         style={[styles, {zIndex: -1, position: 'relative'}]}
-        source={isURI ? imageSource : uri}
+        source={Boolean(hasHttpProtocol(uri) && isURI) ? imageSource : uri}
+        defaultSource={defaultSource ? defaultSource() : null}
         onLoad={() => setLoad(false)}
+        // resizeMode="contain"
       />
       {load && (
         <Blurhash

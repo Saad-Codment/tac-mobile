@@ -41,24 +41,26 @@ function MyEventScreen({navigation}) {
         />
       </View>
       <TextComponent text={'Events'} styles={styles.heading} />
-      <FlatList
-        keyExtractor={keyExtractor}
-        data={eventsByDate}
-        renderItem={renderItem}
-        contentContainerStyle={{alignItems: 'center'}}
-        onRefresh={() => onSelectVal(eventDate[0])}
-        refreshing={false}
-        ListEmptyComponent={
-          <DataNotFound
-            onpress={() => onSelectVal(eventDate[0])}
-            btnStyles={{marginTop: hp('-2'), width: wp('50')}}
-            noImg={true}
-            mainViewStyles={{marginTop: hp('10')}}
-            title={'Events not found'}
-            subTitle={'No events for the selected date!'}
-          />
-        }
-      />
+      {eventDate && (
+        <FlatList
+          keyExtractor={keyExtractor}
+          data={eventsByDate}
+          renderItem={renderItem}
+          contentContainerStyle={{alignItems: 'center'}}
+          onRefresh={() => onSelectVal(eventDate[0])}
+          refreshing={false}
+          ListEmptyComponent={
+            <DataNotFound
+              onpress={() => onSelectVal(eventDate[0])}
+              btnStyles={{marginTop: hp('-2'), width: wp('50')}}
+              noImg={true}
+              mainViewStyles={{marginTop: hp('10')}}
+              title={'Events not found'}
+              subTitle={'No events for the selected date!'}
+            />
+          }
+        />
+      )}
     </View>
   );
 }

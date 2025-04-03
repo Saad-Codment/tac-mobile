@@ -3,8 +3,13 @@ import {followEventsUrl, getEventDetailsUrl} from '../../Utils/Urls';
 import API from '../../Utils/helperFunc';
 import {useCallback} from 'react';
 import {errorMessage, successMessage} from '../../Config/NotificationMessage';
+import useReduxStore from '../../Hooks/UseReduxStore';
 
 const useEventDetailScreen = ({navigate}, {params}) => {
+  const {getState} = useReduxStore();
+
+  const {userData} = getState('Auth');
+
   const {id} = params;
   const {data, error, refetch} = useQuery({
     queryKey: ['eventDetail'],
@@ -38,6 +43,7 @@ const useEventDetailScreen = ({navigate}, {params}) => {
   return {
     eventData: data?.data,
     onRefresh,
+    userData,
     followUnFollowEvent: async id => {
       await mutateAsync({id, url: followEventsUrl});
       refetch();

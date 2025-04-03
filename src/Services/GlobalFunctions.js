@@ -8,6 +8,8 @@ import {MapAPIKey} from '../Utils/Urls';
 import bcrypt from 'react-native-bcrypt';
 import AES from 'react-native-aes-crypto';
 import {randomBytes} from 'react-native-get-random-values';
+import {store} from '../Redux/Reducer';
+import {femaleImg, maleImg} from '../Assets';
 
 const getSingleCharacter = text => {
   let letter = text?.charAt(0).toUpperCase();
@@ -897,6 +899,13 @@ const verifyPassword = async (password, hashed, key, iv) => {
   }
 };
 
+const checkMaleFemaleForImg = () => {
+  const {Auth} = store.getState();
+  if (Auth?.userData?.gender == 'male') return maleImg;
+  else if (Auth?.userData?.gender == 'female') return femaleImg;
+  else return maleImg;
+};
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -939,4 +948,5 @@ export {
   hashPassword,
   verifyPassword,
   getLastNightDigit,
+  checkMaleFemaleForImg,
 };

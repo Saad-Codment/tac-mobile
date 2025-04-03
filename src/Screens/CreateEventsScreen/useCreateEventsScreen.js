@@ -133,7 +133,7 @@ const useCreateEventsScreen = ({navigate}) => {
           await RNCalendarEvents.requestPermissions();
           await getCalenderPerComfirm();
           const pro = await RNCalendarEvents.saveEvent(
-            eventTitle,
+            {title: eventTitle},
             {
               calendarId: data?.id,
               startDate: eventStartDate.toISOString(),
@@ -149,6 +149,7 @@ const useCreateEventsScreen = ({navigate}) => {
         reset();
         queryClient.invalidateQueries({queryKey: ['getEventDate']});
         successMessage('Event created successfully');
+        navigate('MyEventScreen');
       } else errorMessage('Error on creating event');
     } catch (error) {
       console.log('lsidgvlkbsdklvbsdklbvklsdbkvlsdbklvbsdkl', error);

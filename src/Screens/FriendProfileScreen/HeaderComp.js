@@ -1,4 +1,4 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, Pressable} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
@@ -18,6 +18,7 @@ import NavigationService from '../../Services/NavigationService';
 import {getUserFriendsUrl, imageUrl} from '../../Utils/Urls';
 import useFriendServices from '../../Services/FriendServices';
 import useReduxStore from '../../Hooks/UseReduxStore';
+import {types} from '../../Redux/types';
 
 const HeaderComp = ({userData, myUserData}) => {
   const FriendCountHeaderComp = ({num, title, onPress}) => {
@@ -26,8 +27,8 @@ const HeaderComp = ({userData, myUserData}) => {
         style={styles.compView}
         onPress={onPress}
         disabled={userData?.privacy == 1}>
-        <TextComponent text={num ?? 0} isWhite styles={{fontSize: hp('1.5')}} />
-        <TextComponent text={' ' + title} fade styles={{fontSize: hp('1.5')}} />
+        <TextComponent text={num ?? 0} isWhite styles={{fontSize: hp('1.2')}} />
+        <TextComponent text={' ' + title} fade styles={{fontSize: hp('1.2')}} />
       </Touchable>
     );
   };
@@ -105,18 +106,25 @@ const HeaderComp = ({userData, myUserData}) => {
   }, [userData?.id, myUserData?.id]);
 
   const {sendFriendReq, removeFriend} = useFriendServices();
-  const {queryClient} = useReduxStore();
+  const {queryClient, dispatch} = useReduxStore();
+
+  const onImagePress = () => {
+    dispatch({
+      payload: userData?.profile_image,
+      type: types.openModal,
+    });
+  };
 
   return (
     <View style={styles.mainView}>
       <View style={{flexDirection: 'row'}}>
-        <View>
+        <Pressable onPress={onImagePress}>
           <CircleImage
             image={imageUrl(userData?.profile_image)}
             uri
-            size={0.27}
+            size={0.2}
           />
-        </View>
+        </Pressable>
         <View style={styles.centerView}>
           <TextComponent
             text={`${userData?.first_name} ${userData?.last_name}`}
@@ -147,6 +155,7 @@ const HeaderComp = ({userData, myUserData}) => {
                 isYellowTheme
                 style={styles.btnView}
                 imageStyle={styles.btnImg}
+                textStyle={{fontSize: hp('1.5')}}
                 onPress={async () => {
                   if (userData?.friends == 0) {
                     await sendFriendReq.mutateAsync(userData?.id);
@@ -164,7 +173,7 @@ const HeaderComp = ({userData, myUserData}) => {
                 image={message}
                 style={{...styles.btnView, backgroundColor: 'white'}}
                 imageStyle={styles.btnImg}
-                textStyle={{color: Colors.textGray}}
+                textStyle={{color: Colors.textGray, fontSize: hp('1.5')}}
                 isYellowTheme={Boolean(userData?.friends == 1)}
                 isDisable={Boolean(userData?.friends == 0)}
               />
@@ -199,9 +208,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   nameText: {
-    fontWeight: 'bold',
-    fontSize: hp('2.5'),
-    marginLeft: wp('0.7'),
+    // fontWeight: 'bold',
+    fontSize: hp('2'),
+    // marginLeft: wp('0.7'),
     width: wp('60'),
   },
   locationView: {flexDirection: 'row', alignItems: 'center'},
@@ -214,7 +223,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: wp('65'),
+    width: wp('52'),
   },
   backView: {
     flexDirection: 'row',
@@ -232,8 +241,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: hp('2'),
   },
-  btnView: {width: wp('30'), height: hp('4')},
-  btnImg: {width: wp('5'), height: hp('5')},
+  btnView: {width: wp('25'), height: hp('3')},
+  btnImg: {width: wp('4'), height: hp('3')},
   dotsBtnView: {
     width: wp('15'),
     height: hp('5'),

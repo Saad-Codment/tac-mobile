@@ -1,4 +1,4 @@
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, Pressable, StyleSheet, View} from 'react-native';
 import {CircleImage} from './CircleImage';
 import {imageUrl} from '../Utils/Urls';
 import {TextComponent} from './TextComponent';
@@ -7,6 +7,8 @@ import {hp, wp} from '../Config/responsive';
 import {Colors} from '../Theme/Variables';
 import MutualFriends from './MutualFriendsComponent';
 import useFriendServices from '../Services/FriendServices';
+import useReduxStore from '../Hooks/UseReduxStore';
+import {types} from '../Redux/types';
 
 const FriendReqComp = ({
   item,
@@ -16,15 +18,25 @@ const FriendReqComp = ({
   refetechKeys,
 }) => {
   const {acceptFriendReq, rejectFriendReq} = useFriendServices();
+
+  const {dispatch} = useReduxStore();
+
+  const onImagePress = () => {
+    dispatch({
+      payload: item?.sender?.profile_image,
+      type: types.openModal,
+    });
+  };
+
   console.log('lksnvklsdnlkvsdnl;vnsdl;vnls;dnv;sd', item);
   return (
     <View style={styles.cardView}>
-      <View>
+      <Pressable onPress={onImagePress}>
         <CircleImage
           uri={imageUrl(item?.sender?.profile_image)}
           styles={styles.circleImg}
         />
-      </View>
+      </Pressable>
       <View style={styles.secView}>
         <TextComponent
           text={item?.sender?.first_name + ' ' + item?.sender?.last_name}

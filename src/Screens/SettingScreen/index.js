@@ -60,6 +60,8 @@ import {
   capitalizeFirstLetter,
 } from '../../Services/GlobalFunctions';
 import {getMyFriendsUrl, imageUrl} from '../../Utils/Urls';
+import useReduxStore from '../../Hooks/UseReduxStore';
+import {types} from '../../Redux/types';
 
 const SettingScreen = ({navigation}) => {
   const {
@@ -178,6 +180,15 @@ const SettingScreen = ({navigation}) => {
     },
   ];
 
+  const {dispatch} = useReduxStore();
+
+  const onImagePress = () => {
+    dispatch({
+      payload: userData?.profile_image,
+      type: types.openModal,
+    });
+  };
+
   return (
     // <ImageBackground source={stepBg} style={styles.container}>
     <View showsVerticalScrollIndicator={false} style={{flexGrow: 1}}>
@@ -193,13 +204,13 @@ const SettingScreen = ({navigation}) => {
         contentContainerStyle={{paddingBottom: hp('100')}}>
         <View style={styles.mainBtn}>
           <View style={styles.upperWhiteView}>
-            <View style={styles.imgView}>
+            <Pressable style={styles.imgView} onPress={onImagePress}>
               <CircleImage
                 size={Platform.OS == 'ios' ? 0.4 : 0.35}
                 image={imageUrl(userData?.profile_image)}
                 uri={true}
               />
-            </View>
+            </Pressable>
             <TextComponent
               text={userData?.first_name + ' ' + userData?.last_name}
               styles={{fontSize: hp('3'), fontWeight: 'bold'}}

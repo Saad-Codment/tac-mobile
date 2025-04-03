@@ -1,4 +1,4 @@
-import {Image, Linking, ScrollView, View} from 'react-native';
+import {Image, Linking, Pressable, ScrollView, View} from 'react-native';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import BlurImage from '../../Components/BlurImage';
 import {hp, wp} from '../../Config/responsive';
@@ -27,12 +27,23 @@ import {
 import {imageUrl} from '../../Utils/Urls';
 import {CircleImage} from '../../Components/CircleImage';
 import {Touchable} from '../../Components/Touchable';
+import useReduxStore from '../../Hooks/UseReduxStore';
+import {types} from '../../Redux/types';
 
 const EventsDetailScreen = ({navigation, route}) => {
-  const {eventData, onRefresh, followUnFollowEvent} = useEventDetailScreen(
-    navigation,
-    route,
-  );
+  const {eventData, onRefresh, followUnFollowEvent, userData} =
+    useEventDetailScreen(navigation, route);
+
+  const {dispatch} = useReduxStore();
+
+  const onImagePress = isEvent => {
+    dispatch({
+      payload: isEvent
+        ? JSON.parse(eventData?.images)[0]
+        : eventData?.user?.profile_image,
+      type: types.openModal,
+    });
+  };
 
   const centerView = [
     {
@@ -42,7 +53,7 @@ const EventsDetailScreen = ({navigation, route}) => {
         getDateMonthYear(eventData?.from_date)?.year
       }`,
       leftIcon: filledCalender,
-      rightText: 'Start',
+      rightText: 'Start Date',
       onPress: () => {},
     },
     {
@@ -52,15 +63,24 @@ const EventsDetailScreen = ({navigation, route}) => {
         getDateMonthYear(eventData?.to_date)?.year
       }`,
       leftIcon: filledCalender,
-      rightText: 'End',
+      rightText: 'End Date',
       onPress: () => {},
     },
     {
-      title: `${convertToLocalTime(eventData?.start_time)?.time} - ${
-        convertToLocalTime(eventData?.end_time)?.time
-      } ${convertToLocalTime(eventData?.end_time)?.period}`,
+      title: `${convertToLocalTime(eventData?.start_time)?.time} ${
+        convertToLocalTime(eventData?.start_time)?.period
+      }`,
       leftIcon: filledClock,
       onPress: () => {},
+      rightText: 'Start Time',
+    },
+    {
+      title: `${convertToLocalTime(eventData?.end_time)?.time} ${
+        convertToLocalTime(eventData?.end_time)?.period
+      }`,
+      leftIcon: filledClock,
+      onPress: () => {},
+      rightText: 'End Time',
     },
     {
       title: eventData?.address,
@@ -88,7 +108,7 @@ const EventsDetailScreen = ({navigation, route}) => {
       rightTextStyles: {color: Colors.primaryColor},
     },
     {
-      title: 'tour',
+      title: 'Tour',
       rightText: eventData?.tour?.name ?? 'Not Available',
       onPress: () => {},
       rightTextStyles: {color: Colors.primaryColor},
@@ -126,25 +146,37 @@ const EventsDetailScreen = ({navigation, route}) => {
       <ScrollView
         contentContainerStyle={styles.scrollView}
         showsVerticalScrollIndicator={false}>
-        <BlurImage
-          isURI
-          uri={
-            eventData?.images ? imageUrl(JSON.parse(eventData?.images)[0]) : ''
-          }
-          styles={styles.imgStyle}
-          radius={15}
-        />
-        <View style={styles.systemView}>
-          <CircleImage
-            image={
-              eventData?.user?.profile_image
-                ? imageUrl(eventData?.user?.profile_image)
-                : tacLogo
+        <Pressable onPress={() => onImagePress(true)}>
+          <BlurImage
+            isURI
+            uri={
+              eventData?.images
+                ? imageUrl(JSON.parse(eventData?.images)[0])
+                : ''
             }
-            uri={Boolean(eventData?.user?.profile_image)}
-            styles={styles.tacImg}
-            radius={5}
+            styles={styles.imgStyle}
+            radius={15}
           />
+        </Pressable>
+        <View style={styles.systemView}>
+          <Pressable
+            onPress={() => onImagePress(false)}
+            disabled={Boolean(
+              !eventData?.user?.profile_image || !eventData?.suggested,
+            )}>
+            <CircleImage
+              image={
+                eventData?.user?.profile_image || !eventData?.suggested
+                  ? imageUrl(eventData?.user?.profile_image)
+                  : tacLogo
+              }
+              uri={Boolean(
+                eventData?.user?.profile_image || !eventData?.suggested,
+              )}
+              styles={styles.tacImg}
+              radius={5}
+            />
+          </Pressable>
           <TextComponent
             text={
               eventData?.user?.first_name
@@ -156,16 +188,18 @@ const EventsDetailScreen = ({navigation, route}) => {
               width: wp('56'),
             }}
           />
-          <Touchable
-            style={styles.followView}
-            onPress={() => followUnFollowEvent(eventData?.id)}>
-            <Image
-              source={eventData?.is_followed ? tickSquare : unCheck}
-              resizeMode="contain"
-              style={styles.checkImg}
-            />
-            <TextComponent text={'Follow Event'} styles={styles.typeStyle} />
-          </Touchable>
+          {userData?.id != eventData?.user?.id && (
+            <Touchable
+              style={styles.followView}
+              onPress={() => followUnFollowEvent(eventData?.id)}>
+              <Image
+                source={eventData?.is_followed ? tickSquare : unCheck}
+                resizeMode="contain"
+                style={styles.checkImg}
+              />
+              <TextComponent text={'Follow Event'} styles={styles.typeStyle} />
+            </Touchable>
+          )}
         </View>
         <TextComponent text={eventData?.title} styles={styles.titleStyle} />
         {eventData?.likes_count > 0 && (

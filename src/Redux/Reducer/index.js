@@ -11,6 +11,7 @@ import getTrainingCatReducer from './getTrainingCatReducer';
 import videoReducer from './videoReducer';
 import ContactsReducer from './ContactsReducer';
 import IsContactAllow from './IsContactAllow';
+import ImagePrevReducer from './ImagePrevReducer';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -45,6 +46,7 @@ const reducers = {
   isAlert: AlertReucer,
   getCategory: getTrainingCatReducer,
   contacts: ContactsReducer,
+  modalState: ImagePrevReducer,
 };
 
 export const store = createStore(

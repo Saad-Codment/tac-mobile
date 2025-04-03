@@ -93,7 +93,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    minHeight: hp('7'),
+    minHeight: hp('6'),
     maxHeight: hp('14'),
     // height: 'auto',
     borderRadius: 10,
@@ -102,7 +102,7 @@ export const styles = StyleSheet.create({
     // marginHorizontal: wp('4'),
     // marginVertical: hp('2'),
     overflow: 'hidden',
-    marginBottom: Platform.OS == 'ios' ? hp('1') : hp('0'), // justifyContent: 'center',
+    marginBottom: Platform.OS == 'ios' ? hp('2') : hp('0'), // justifyContent: 'center',
     backgroundColor: Colors.themeBlack,
   },
   searchinput: {

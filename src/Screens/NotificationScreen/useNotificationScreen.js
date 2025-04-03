@@ -23,7 +23,7 @@ const useNotificationScreen = () => {
   }, []);
 
   return {
-    notificationsList: data?.data?.notifications,
+    notificationsList: data?.data?.data,
     onRefresh,
     acceptReq: async id => {
       await acceptFriendReq.mutateAsync(id);

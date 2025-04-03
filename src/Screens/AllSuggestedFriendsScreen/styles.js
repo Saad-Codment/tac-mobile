@@ -41,5 +41,6 @@ export const styles = StyleSheet.create({
     paddingBottom: hp('15'),
     flexGrow: 1,
     alignSelf: 'center',
+    marginTop: hp('2'),
   },
 });

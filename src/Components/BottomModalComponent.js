@@ -79,10 +79,7 @@ const BottomModalComponent = ({
         }}>
         {isReport ? (
           <KeyBoardWrapper>
-            <TextComponent
-              text={'Report this set'}
-              styles={styles.modalHeading}
-            />
+            <TextComponent text={'Report'} styles={styles.modalHeading} />
             <TextComponent
               text={'Why is this inappropriate?'}
               styles={styles.innerHeading}

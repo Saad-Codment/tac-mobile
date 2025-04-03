@@ -22,6 +22,7 @@ import NavigationService from './src/Services/NavigationService';
 import notifee, {EventType} from '@notifee/react-native';
 import Orientation from 'react-native-orientation-locker';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import ImagePreviewComp from './src/Components/ImagePreviewComp';
 
 const App = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -33,6 +34,7 @@ const App = () => {
   const appState = useRef(AppState.currentState);
   const {isloading} = getState('isloading');
   const {isLogin} = getState('Auth');
+  const {image, modalType} = getState('modalState');
   const isFetching = useIsFetching();
 
   console.log('load', isloading);
@@ -164,6 +166,7 @@ const App = () => {
   return (
     <>
       {isVisible === true ? Splash_Screen : <MainNavigator />}
+      {modalType && <ImagePreviewComp visible={modalType} images={image} />}
       {isloading &&
         Boolean(getNameFunc?.getCurrentRoute()?.name != 'AllEventsScreen') && (
           <Overlay />

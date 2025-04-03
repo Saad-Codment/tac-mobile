@@ -23,4 +23,6 @@ export const types = {
   isContactFalse: 'isContactFalse',
   addContacts: 'addContacts',
   ClearContacts: 'ClearContacts',
+  openModal: 'openModal',
+  closeModal: 'closeModal',
 };

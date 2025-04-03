@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Platform,
   Switch,
+  Alert,
 } from 'react-native';
 import React, {memo, useState} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
@@ -37,6 +38,7 @@ import {
   convertToCustomTimeFormat,
   formatDateToCustomFormat,
   getOrdinal,
+  uploadFromCamera,
   uploadFromGalary,
 } from '../../Services/GlobalFunctions';
 import KeyBoardWrapper from '../../Components/KeyBoardWrapper';
@@ -174,9 +176,32 @@ const CreateEventsScreen = ({navigation}) => {
               render={({field: {onChange, value}}) => (
                 <>
                   <Touchable
+                    // onPress={async () => {
+                    //   const imgData = await uploadFromGalary();
+                    //   onChange(imgData);
+                    // }}
                     onPress={async () => {
-                      const imgData = await uploadFromGalary();
-                      onChange(imgData);
+                      Alert.alert(
+                        'Pick to choose image',
+                        '',
+                        [
+                          {
+                            text: 'Camera',
+                            onPress: async () => {
+                              const imgData = await uploadFromCamera(true);
+                              onChange(imgData);
+                            },
+                          },
+                          {
+                            text: 'Gallery', // Just a dismissal button
+                            onPress: async () => {
+                              const imgData = await uploadFromGalary(true);
+                              onChange(imgData);
+                            },
+                          },
+                        ],
+                        {cancelable: true},
+                      );
                     }}>
                     <Image
                       source={value?.uri ? {uri: value?.uri} : uploadImgView}

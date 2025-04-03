@@ -1,4 +1,4 @@
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {hp, wp} from '../Config/responsive';
 import BlurImage from './BlurImage';
 import {CircleImage} from './CircleImage';
@@ -24,6 +24,7 @@ import {Touchable} from './Touchable';
 import NavigationService from '../Services/NavigationService';
 import useFriendServices from '../Services/FriendServices';
 import useReduxStore from '../Hooks/UseReduxStore';
+import {types} from '../Redux/types';
 
 const tags = [
   {
@@ -45,7 +46,14 @@ const FriendEventsComp = ({
 }) => {
   const {likeAndDisLikeEvent} = useFriendServices();
 
-  const {queryClient} = useReduxStore();
+  const {queryClient, dispatch} = useReduxStore();
+
+  const onImagePress = () => {
+    dispatch({
+      payload: item?.user_image,
+      type: types.openModal,
+    });
+  };
   return (
     <View style={{...styles.mainView, ...mainViewStyles}}>
       <BlurImage styles={{...styles.upperImage, ...upperImgStyle}} radius={0} />
@@ -56,12 +64,14 @@ const FriendEventsComp = ({
           NavigationService.navigate('EventsDetailScreen', {id: item?.id})
         }>
         <View style={styles.innerUpperView}>
-          <CircleImage
-            image={item?.user_image}
-            uri={true}
-            styles={styles.profileImg}
-            radius={5}
-          />
+          <Pressable onPress={onImagePress}>
+            <CircleImage
+              image={item?.user_image}
+              uri={true}
+              styles={styles.profileImg}
+              radius={5}
+            />
+          </Pressable>
           <View
             style={{
               marginLeft: wp('3'),

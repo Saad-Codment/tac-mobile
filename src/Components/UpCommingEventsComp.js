@@ -1,4 +1,4 @@
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {hp, wp} from '../Config/responsive';
 import BlurImage from './BlurImage';
 import {CircleImage} from './CircleImage';
@@ -23,6 +23,7 @@ import NavigationService from '../Services/NavigationService';
 import {imageUrl} from '../Utils/Urls';
 import useFriendServices from '../Services/FriendServices';
 import useReduxStore from '../Hooks/UseReduxStore';
+import {types} from '../Redux/types';
 
 const tags = [
   {
@@ -47,7 +48,16 @@ const UpcomingEventsComp = ({
 }) => {
   const {likeAndDisLikeEvent} = useFriendServices();
 
-  const {queryClient} = useReduxStore();
+  const {queryClient, getState, dispatch} = useReduxStore();
+
+  const {userData} = getState('Auth');
+
+  const onImagePress = () => {
+    dispatch({
+      payload: item?.user_image ?? item?.profile_image,
+      type: types.openModal,
+    });
+  };
 
   console.log(
     'sljdbvksbdklvbsdklbskldbvlksdbkvlsdbklvbds',
@@ -73,12 +83,14 @@ const UpcomingEventsComp = ({
           NavigationService.navigate('EventsDetailScreen', {id: item?.id})
         }>
         <View style={styles.innerUpperView}>
-          <CircleImage
-            image={imageUrl(item?.user_image ?? item?.profile_image)}
-            uri={true}
-            styles={styles.profileImg}
-            radius={5}
-          />
+          <Pressable onPress={onImagePress}>
+            <CircleImage
+              image={imageUrl(item?.user_image ?? item?.profile_image)}
+              uri={true}
+              styles={styles.profileImg}
+              radius={5}
+            />
+          </Pressable>
           <View
             style={{
               marginLeft: wp('3'),
@@ -112,13 +124,18 @@ const UpcomingEventsComp = ({
               styles={styles.timeText}
             />
           </View>
-          <Touchable onPress={() => openBottomSheet(item?.id)}>
-            <Image
-              source={infoCircle}
-              resizeMode="contain"
-              style={{width: wp('5'), height: hp('5')}}
-            />
-          </Touchable>
+          {userData?.id != item?.user_id && (
+            <Touchable
+              onPress={() => {
+                if (userData?.id != item?.user_id) openBottomSheet(item?.id);
+              }}>
+              <Image
+                source={infoCircle}
+                resizeMode="contain"
+                style={{width: wp('5'), height: hp('5')}}
+              />
+            </Touchable>
+          )}
         </View>
         {item?.event_type_name && (
           <View style={styles.innerTitleView}>

@@ -22,8 +22,14 @@ const UseCalendar = ({onSelectVal, selectedVal, markedDates, dotCount}) => {
       // disabled: true,
       inactive: true,
       dotColor: Colors.primaryColor,
-      type: 'dot',
+      type: 'multi-dot',
       selectedTextColor: Colors.black,
+      dots: markedDates?.map((_, index) => ({
+        // Changed this part
+        key: `dot-${index}`,
+        color: Colors.primaryColor,
+        selectedDotColor: Colors.primaryColor,
+      })),
       // selectedTextColor: selectedVal == item ? Colors.black : Colors.white,
       // selectedColor: Colors.primaryColor,
       // dots: dotCount.map(res => ({
@@ -128,5 +134,3 @@ const UseCalendar = ({onSelectVal, selectedVal, markedDates, dotCount}) => {
   );
 };
 export default UseCalendar;
-
-const styles = StyleSheet.create({});

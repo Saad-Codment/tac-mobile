@@ -1,4 +1,4 @@
-import {Platform, StyleSheet, View} from 'react-native';
+import {Platform, Pressable, StyleSheet, View} from 'react-native';
 import {TextComponent} from './TextComponent';
 import {hp, wp} from '../Config/responsive';
 import {CircleImage} from './CircleImage';
@@ -6,17 +6,28 @@ import ThemeButton from './ThemeButton';
 import {Colors} from '../Theme/Variables';
 import moment from 'moment';
 import {convertToCustomTimeFormat} from '../Services/GlobalFunctions';
+import useReduxStore from '../Hooks/UseReduxStore';
+import {types} from '../Redux/types';
+import {imageUrl} from '../Utils/Urls';
 
 const NotificationComp = ({item, index, acceptReq, declineReq}) => {
   console.log('itemitemitemitem', item);
+  const {dispatch} = useReduxStore();
+
+  const onImagePress = () => {
+    dispatch({
+      payload: item?.profile_image,
+      type: types.openModal,
+    });
+  };
 
   const notificationsType = {
     1: data => {
       return (
         <View style={styles.reqMainView}>
-          <View>
+          <Pressable>
             <CircleImage image={null} uri={true} size={0.15} />
-          </View>
+          </Pressable>
           <View style={{marginLeft: wp('2')}}>
             <View style={styles.reqTitleView}>
               <TextComponent
@@ -68,9 +79,13 @@ const NotificationComp = ({item, index, acceptReq, declineReq}) => {
 
   return (
     <View style={styles.reqMainView}>
-      <View>
-        <CircleImage image={null} uri={true} size={0.15} />
-      </View>
+      <Pressable onPress={onImagePress}>
+        <CircleImage
+          image={imageUrl(item?.profile_image)}
+          uri={true}
+          size={0.15}
+        />
+      </Pressable>
       <View style={{marginLeft: wp('2')}}>
         <View style={styles.reqTitleView}>
           <TextComponent
@@ -84,7 +99,7 @@ const NotificationComp = ({item, index, acceptReq, declineReq}) => {
         </View>
         <TextComponent
           text={item?.body}
-          styles={{fontSize: hp('1.8'), width: wp('80'), marginTop: hp('0.5')}}
+          styles={{fontSize: hp('1.5'), width: wp('75'), marginTop: hp('0.5')}}
         />
         {item?.notification_type_id == 1 && (
           <View style={styles.btnView}>

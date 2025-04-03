@@ -9,22 +9,33 @@ import {hp, wp} from '../Config/responsive';
 import {imageUrl} from '../Utils/Urls';
 import {Touchable} from './Touchable';
 import NavigationService from '../Services/NavigationService';
+import useReduxStore from '../Hooks/UseReduxStore';
+import {types} from '../Redux/types';
 
-const AddFriendComp = ({item, sendReq}) => {
+const AddFriendComp = ({item, sendReq, mainViewStyle}) => {
+  const {dispatch} = useReduxStore();
+
+  const onImagePress = () => {
+    dispatch({
+      payload: item?.profile_image,
+      type: types.openModal,
+    });
+  };
+
   return (
     <>
       <Touchable
-        style={styles.friendCard}
+        style={{...styles.friendCard, ...mainViewStyle}}
         onPress={() =>
           NavigationService.navigate('FriendProfileScreen', {id: item?.user_id})
         }>
-        <View style={{alignItems: 'center'}}>
+        <Touchable style={{alignItems: 'center'}} onPress={onImagePress}>
           <CircleImage
             image={imageUrl(item?.profile_image)}
             styles={styles.friendUserImage}
             uri
           />
-        </View>
+        </Touchable>
         <TextComponent
           styles={styles.friendUserName}
           text={item?.first_name + ' ' + item?.last_name}
@@ -67,9 +78,9 @@ export default AddFriendComp;
 const styles = StyleSheet.create({
   friendCard: {
     backgroundColor: Colors.white,
-    borderRadius: 20,
-    margin: 10,
-    width: wp('45'),
+    borderRadius: 15,
+    marginHorizontal: wp('2'),
+    width: wp('40'),
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: {width: 0, height: 2},
@@ -84,14 +95,15 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingVertical: hp('1'),
     paddingHorizontal: wp('2'),
+    marginVertical: hp('0.5'),
   },
   friendUserImage: {
-    width: Dimensions.get('window').width * 0.19,
-    height: Dimensions.get('window').width * 0.19,
+    width: Dimensions.get('window').width * 0.15,
+    height: Dimensions.get('window').width * 0.15,
     // alignSelf: 'center',
   },
   friendUserName: {
-    fontSize: FontSize.scale18,
+    fontSize: hp('1.5'),
     fontWeight: '600',
     color: Colors.black,
     textAlign: 'center',
@@ -104,15 +116,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   addBtn: {
-    borderRadius: 10,
-    height: hp('4'),
+    borderRadius: 8,
+    height: hp('3'),
     backgroundColor: Colors.backgroundTheme,
     marginTop: hp('1'),
+    width: wp('30'),
+    alignSelf: 'center',
+    marginBottom: hp('0.5'),
   },
   addText: {
     color: Colors.white,
     fontWeight: 'bold',
-    fontSize: hp('1.5'),
+    fontSize: hp('1.2'),
   },
   removeBtn: {
     height: hp('4'),

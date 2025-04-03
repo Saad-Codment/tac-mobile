@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Platform,
   Dimensions,
+  Pressable,
 } from 'react-native';
 import React from 'react';
 import BlurImage from './BlurImage';
@@ -19,6 +20,8 @@ import MutualFriends from './MutualFriendsComponent';
 import ThemeButton from './ThemeButton';
 import NavigationService from '../Services/NavigationService';
 import useFriendServices from '../Services/FriendServices';
+import useReduxStore from '../Hooks/UseReduxStore';
+import {types} from '../Redux/types';
 
 const MyFriendComp = ({
   item,
@@ -28,6 +31,15 @@ const MyFriendComp = ({
   notShowProfile,
 }) => {
   const {sendFriendReq} = useFriendServices();
+  const {dispatch} = useReduxStore();
+
+  const onImagePress = () => {
+    dispatch({
+      payload: item?.profile_image,
+      type: types.openModal,
+    });
+  };
+
   return (
     <Touchable
       style={{...styles.view, ...mainViewStyles}}
@@ -36,9 +48,9 @@ const MyFriendComp = ({
         NavigationService.navigate('FriendProfileScreen', {id: item?.id})
       }>
       {!notShowProfile && (
-        <View>
-          <CircleImage image={imageUrl(item?.profile_image)} size={0.15} uri />
-        </View>
+        <Pressable onPress={onImagePress}>
+          <CircleImage image={imageUrl(item?.profile_image)} size={0.13} uri />
+        </Pressable>
       )}
       <View style={styles.titleView}>
         <TextComponent
@@ -58,8 +70,9 @@ const MyFriendComp = ({
         <ThemeButton
           title={'Invite'}
           isYellowTheme
-          style={{width: wp('20')}}
+          style={{width: wp('15'), height: hp('4'), paddingHorizontal: wp('3')}}
           imageStyle={{width: wp('5')}}
+          textStyle={{fontSize: hp('1.5')}}
           // onPress={async () => {
           //   await sendFriendReq.mutateAsync(item?.id);
           //   refetch();
@@ -71,8 +84,13 @@ const MyFriendComp = ({
             title={'Add'}
             isYellowTheme
             image={profileAdd}
-            style={{width: wp('20')}}
-            imageStyle={{width: wp('5')}}
+            style={{
+              width: wp('15'),
+              height: hp('4'),
+              paddingHorizontal: wp('3'),
+            }}
+            imageStyle={{width: wp('3.5')}}
+            textStyle={{fontSize: hp('1.5'), marginLeft: wp('-0.5')}}
             onPress={async () => {
               await sendFriendReq.mutateAsync(item?.id);
               refetch();
@@ -80,10 +98,14 @@ const MyFriendComp = ({
           />
         ) : (
           <ThemeButton
-            title={'Sent'}
-            style={{width: wp('20'), backgroundColor: Colors.diableBtnCOlor}}
+            title={'Requested'}
+            style={{
+              width: wp('20'),
+              height: hp('4'),
+              backgroundColor: Colors.diableBtnCOlor,
+            }}
             imageStyle={{width: wp('5')}}
-            textStyle={{color: Colors.black}}
+            textStyle={{color: Colors.black, fontSize: hp('1.5')}}
             isDisable
           />
         )
@@ -92,8 +114,9 @@ const MyFriendComp = ({
           title={'Chat'}
           isYellowTheme
           image={chat}
-          style={{width: wp('20')}}
-          imageStyle={{width: wp('5')}}
+          style={{width: wp('15'), height: hp('4')}}
+          imageStyle={{width: wp('3.5')}}
+          textStyle={{fontSize: hp('1.5'), marginLeft: wp('-0.5')}}
         />
       )}
     </Touchable>
@@ -146,7 +169,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: FontSize.scale18,
     color: Colors.backgroundTheme,
-    fontWeight: 600,
+    fontWeight: '600',
     // marginLeft: wp('1'),
     // marginTop: hp('0.5'),
     marginVertical: hp('0.5'),
