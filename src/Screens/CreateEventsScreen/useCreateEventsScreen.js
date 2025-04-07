@@ -95,6 +95,7 @@ const useCreateEventsScreen = ({navigate}) => {
     eventConfirm,
     eventSync,
     perfEventList,
+    eventPrice,
   }) => {
     console.log('slkdklsdbklv');
     try {

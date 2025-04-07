@@ -75,15 +75,18 @@ class FCMService {
   };
 
   getToken = onRegister => {
-    if (Platform.OS == 'android') {
-      messaging()
-        .getToken()
-        .then(res => onRegister(res));
-    } else {
-      messaging()
-        .getAPNSToken()
-        .then(res => onRegister(res));
-    }
+    messaging()
+      .getToken()
+      .then(res => onRegister(res));
+    // if (Platform.OS == 'android') {
+    //   messaging()
+    //     .getToken()
+    //     .then(res => onRegister(res));
+    // } else {
+    //   messaging()
+    //     .getAPNSToken()
+    //     .then(res => onRegister(res));
+    // }
   };
 
   requestPermission = async onRegister => {

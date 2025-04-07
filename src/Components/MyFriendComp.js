@@ -54,7 +54,7 @@ const MyFriendComp = ({
       )}
       <View style={styles.titleView}>
         <TextComponent
-          text={item?.first_name + ' ' + item?.last_name}
+          text={(item?.first_name ?? '') + ' ' + (item?.last_name ?? '')}
           styles={styles.title}
         />
         {item?.mutal_count && (

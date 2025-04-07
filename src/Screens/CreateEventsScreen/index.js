@@ -188,14 +188,14 @@ const CreateEventsScreen = ({navigation}) => {
                           {
                             text: 'Camera',
                             onPress: async () => {
-                              const imgData = await uploadFromCamera(true);
+                              const imgData = await uploadFromCamera();
                               onChange(imgData);
                             },
                           },
                           {
                             text: 'Gallery', // Just a dismissal button
                             onPress: async () => {
-                              const imgData = await uploadFromGalary(true);
+                              const imgData = await uploadFromGalary();
                               onChange(imgData);
                             },
                           },
@@ -610,6 +610,39 @@ const CreateEventsScreen = ({navigation}) => {
               resizeMode="contain"
               style={{...styles.leftViewImg, height: hp('2')}}
               tintColor={'black'}
+            />
+          }
+        />
+        <TitleInputView
+          title={'Event price'}
+          errorName={errors['eventPrice']}
+          innerLeftView={
+            <Controller
+              control={control}
+              name="eventPrice"
+              render={({field: {onChange, value}}) => (
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Enter price"
+                  maxLength={50}
+                  placeholderTextColor={'gray'}
+                  value={value}
+                  onChangeText={onChange}
+                />
+              )}
+            />
+          }
+          innerExtraView={
+            <Controller
+              control={control}
+              name="eventPrice"
+              defaultValue={''}
+              render={({field: {onChange, value}}) => (
+                <TextComponent
+                  text={`${value.length}/50`}
+                  styles={{fontSize: hp('1.5')}}
+                />
+              )}
             />
           }
         />
