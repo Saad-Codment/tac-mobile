@@ -19,6 +19,8 @@ import useReduxStore from '../../Hooks/UseReduxStore';
 
 const useCreateEventsScreen = ({navigate}) => {
   var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const currentDate = new Date();
+  const nextDay = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // Adds 1 day in milliseconds
 
   const {
     control,
@@ -42,8 +44,8 @@ const useCreateEventsScreen = ({navigate}) => {
     evnetTour: 1,
     eventStartDate: currentDate,
     eventStartTime: currentDate,
-    eventEndDate: currentDate,
-    eventEndTime: currentDate,
+    eventEndDate: nextDay,
+    eventEndTime: nextDay,
   });
 
   const {queryClient} = useReduxStore();
@@ -54,7 +56,7 @@ const useCreateEventsScreen = ({navigate}) => {
     name: 'perfEventList',
   });
 
-  const currentDate = new Date();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [datePicker, setDateRikcer] = useState({
     alertVal: false,
@@ -116,6 +118,7 @@ const useCreateEventsScreen = ({navigate}) => {
         is_confirmed: eventConfirm ? 1 : 0,
         'images[]': eventImg,
         timezone: timeZone,
+        added_money: eventPrice,
         // 'performances[]':
         //   fields.length > 0
         //     ? fields.map(res => ({
@@ -126,7 +129,7 @@ const useCreateEventsScreen = ({navigate}) => {
         //       }))
         //     : null,
       };
-      console.log('After hit api ', JSON.stringify(eventImg));
+      console.log('After hit api ', JSON.stringify(body));
       const {ok, data} = await formDataFunc(createEventUrl, body, 'images[]');
       if (ok) {
         if (eventSync) {
@@ -172,6 +175,8 @@ const useCreateEventsScreen = ({navigate}) => {
     remove,
     handleSubmit,
     createEventFun,
+    modalVisible,
+    setModalVisible,
   };
 };
 export default useCreateEventsScreen;

@@ -27,7 +27,7 @@ const SmallEventCardsComp = ({item, onPress}) => {
       <View style={styles.secondView}>
         <TextComponent text={item?.title} styles={styles.titleStyle} />
         <View style={styles.centerView}>
-          <Image
+          {/* <Image
             source={calender}
             resizeMode="contain"
             style={styles.calendarStyle}
@@ -40,7 +40,7 @@ const SmallEventCardsComp = ({item, onPress}) => {
             }`}
             styles={{fontSize: hp('1.5')}}
             fade
-          />
+          /> */}
           <Image
             source={clock}
             resizeMode="contain"
@@ -112,7 +112,11 @@ const styles = StyleSheet.create({
     marginRight: wp('1'),
     height: hp('2'),
   },
-  clockStyle: {width: wp('4'), marginLeft: wp('2'), marginRight: wp('1')},
+  clockStyle: {
+    width: wp('4'),
+    // marginLeft: wp('2'),
+    marginRight: wp('1'),
+  },
   bottomView: {flexDirection: 'row', alignItems: 'center'},
   locationIcon: {width: wp('4'), height: hp('2'), marginRight: wp('1')},
   locationText: {fontSize: hp('1.5'), width: wp('65')},

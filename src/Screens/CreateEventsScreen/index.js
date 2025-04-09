@@ -20,6 +20,7 @@ import {
   arrRight,
   crossWhite,
   gpsImg,
+  infoCircle,
   radioCircle,
   radioCircleOn,
   squareGray,
@@ -49,6 +50,7 @@ import {
   allEventTypeUrl,
   getAllTypeUrl,
 } from '../../Utils/Urls';
+import {InfoModal} from '../../Components/InfoModalComp';
 
 const CreateEventsScreen = ({navigation}) => {
   const {
@@ -57,6 +59,8 @@ const CreateEventsScreen = ({navigation}) => {
     errors,
     control,
     perfEventListArry,
+    modalVisible,
+    setModalVisible,
     createEventFun,
     handleSubmit,
     append,
@@ -87,7 +91,8 @@ const CreateEventsScreen = ({navigation}) => {
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: rightView ? 'space-between' : 'flex-start',
+            // justifyContent: rightView ? 'space-between' : 'flex-start',
+            alignItems: 'center',
           }}>
           <TextComponent
             text={title}
@@ -133,7 +138,7 @@ const CreateEventsScreen = ({navigation}) => {
         {/* <Controller
         render={({field: {onChange, value}}) => ( */}
         <TitleInputView
-          title={'Event Title'}
+          title={'Event Title *'}
           errorName={errors['eventTitle']}
           innerLeftView={
             <Controller
@@ -167,7 +172,7 @@ const CreateEventsScreen = ({navigation}) => {
         />
 
         <TitleInputView
-          title={'Event Image'}
+          title={'Event Image *'}
           errorName={errors['eventImg']}
           centerInnerView={
             <Controller
@@ -222,7 +227,7 @@ const CreateEventsScreen = ({navigation}) => {
 
         <View style={styles.viewFlex}>
           <TitleInputView
-            title={'Start Date'}
+            title={'Start Date *'}
             errorName={errors['eventStartDate']}
             innerLeftView={
               <Controller
@@ -242,7 +247,7 @@ const CreateEventsScreen = ({navigation}) => {
             innerViewOuterStyle={{width: wp('40')}}
           />
           <TitleInputView
-            title={'Start Time'}
+            title={'Start Time *'}
             errorName={errors['eventStartTime']}
             innerLeftView={
               <Controller
@@ -264,7 +269,7 @@ const CreateEventsScreen = ({navigation}) => {
         </View>
         <View style={styles.viewFlex}>
           <TitleInputView
-            title={'End Date'}
+            title={'End Date *'}
             errorName={errors['eventEndDate']}
             innerLeftView={
               <Controller
@@ -284,7 +289,7 @@ const CreateEventsScreen = ({navigation}) => {
             innerViewOuterStyle={{width: wp('40')}}
           />
           <TitleInputView
-            title={'End Time'}
+            title={'End Time *'}
             errorName={errors['eventEndTime']}
             innerLeftView={
               <Controller
@@ -305,7 +310,7 @@ const CreateEventsScreen = ({navigation}) => {
           />
         </View>
         <TitleInputView
-          title={'Event Location'}
+          title={'Event Location *'}
           errorName={errors['eventLocation']?.locationName}
           innerLeftView={
             <Controller
@@ -494,7 +499,7 @@ const CreateEventsScreen = ({navigation}) => {
         /> */}
         <View style={styles.viewFlex}>
           <TitleInputView
-            title={'Event type'}
+            title={'Event Type *'}
             errorName={errors['eventType']?.name}
             innerLeftView={
               <Controller
@@ -502,7 +507,7 @@ const CreateEventsScreen = ({navigation}) => {
                 name={`eventType`}
                 render={({field: {onChange, value}}) => (
                   <TextComponent
-                    text={value?.name ?? 'Event Type'}
+                    text={value?.name ?? 'Event type'}
                     styles={{
                       ...styles.textStyle,
                       color: value?.name ? Colors.black : Colors.grayFaded,
@@ -530,8 +535,21 @@ const CreateEventsScreen = ({navigation}) => {
             innerViewOuterStyle={{width: wp('40')}}
           />
           <TitleInputView
-            title={'Private event'}
+            title={'Private Event *'}
             errorName={errors['privateEvent']}
+            rightView={
+              <Touchable
+                style={{
+                  marginLeft: wp('2'),
+                }}
+                onPress={() => setModalVisible(true)}>
+                <Image
+                  source={infoCircle}
+                  resizeMode="contain"
+                  style={{width: wp('5'), height: hp('3')}}
+                />
+              </Touchable>
+            }
             innerLeftView={
               <Controller
                 control={control}
@@ -579,7 +597,7 @@ const CreateEventsScreen = ({navigation}) => {
           />
         </View>
         <TitleInputView
-          title={'Association'}
+          title={'Associations'}
           errorName={errors['eventAssociation']?.name}
           innerLeftView={
             <Controller
@@ -587,7 +605,7 @@ const CreateEventsScreen = ({navigation}) => {
               name={`eventAssociation`}
               render={({field: {onChange, value}}) => (
                 <TextComponent
-                  text={value?.name ?? 'Event Association'}
+                  text={value?.name ?? 'No association'}
                   styles={{
                     ...styles.textStyle,
                     color: value?.name ? Colors.black : Colors.grayFaded,
@@ -614,7 +632,7 @@ const CreateEventsScreen = ({navigation}) => {
           }
         />
         <TitleInputView
-          title={'Event price'}
+          title={'Added Money *'}
           errorName={errors['eventPrice']}
           innerLeftView={
             <Controller
@@ -623,24 +641,12 @@ const CreateEventsScreen = ({navigation}) => {
               render={({field: {onChange, value}}) => (
                 <TextInput
                   style={styles.inputStyle}
-                  placeholder="Enter price"
+                  placeholder="Enter price (in USD)"
                   maxLength={50}
                   placeholderTextColor={'gray'}
                   value={value}
                   onChangeText={onChange}
-                />
-              )}
-            />
-          }
-          innerExtraView={
-            <Controller
-              control={control}
-              name="eventPrice"
-              defaultValue={''}
-              render={({field: {onChange, value}}) => (
-                <TextComponent
-                  text={`${value.length}/50`}
-                  styles={{fontSize: hp('1.5')}}
+                  keyboardType="number-pad"
                 />
               )}
             />
@@ -656,7 +662,7 @@ const CreateEventsScreen = ({navigation}) => {
                 name={`eventCircuit`}
                 render={({field: {onChange, value}}) => (
                   <TextComponent
-                    text={value?.name ?? 'Circuits'}
+                    text={value?.name ?? 'No circuits'}
                     styles={{
                       ...styles.textStyle,
                       color: value?.name ? Colors.black : Colors.grayFaded,
@@ -684,7 +690,7 @@ const CreateEventsScreen = ({navigation}) => {
             innerViewOuterStyle={{width: wp('40')}}
           />
           <TitleInputView
-            title={'tour'}
+            title={'Tour *'}
             errorName={errors['evnetTour']}
             innerLeftView={
               <Controller
@@ -734,7 +740,7 @@ const CreateEventsScreen = ({navigation}) => {
         </View>
         <View style={styles.viewFlex}>
           <TitleInputView
-            title={'Event Confirmation'}
+            title={'Event Confirmation *'}
             errorName={errors['eventConfirm']}
             innerLeftView={
               <Controller
@@ -787,7 +793,7 @@ const CreateEventsScreen = ({navigation}) => {
           />
         </View>
         <TitleInputView
-          title={'Event Confirmation'}
+          title={'Want To Add In Calender?'}
           innerLeftView={
             <Controller
               control={control}
@@ -795,7 +801,7 @@ const CreateEventsScreen = ({navigation}) => {
               defaultValue={false}
               render={({field: {onChange, value}}) => (
                 <TextComponent
-                  text={'Sync event with Calendar.'}
+                  text={'Add To Calendar'}
                   styles={styles.textStyle}
                   onPress={() => onChange(!value)}
                 />
@@ -856,6 +862,12 @@ const CreateEventsScreen = ({navigation}) => {
             )}
           />
         )}
+        <InfoModal
+          isVisible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          title="Private Event"
+          content="Enable this if you want the event to stay private, and only visible to you. It won't appear on public event listings."
+        />
       </KeyBoardWrapper>
     </View>
   );

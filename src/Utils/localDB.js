@@ -461,11 +461,6 @@ export const step2 = [
     image: female,
     title: 'Female',
   },
-  {
-    id: 3,
-    image: others,
-    title: 'Other',
-  },
 ];
 export const step3 = [
   {

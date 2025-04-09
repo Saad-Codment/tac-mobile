@@ -21,9 +21,9 @@ const EditProfileScreen = ({navigate}) => {
     {label: 'Horse Riding', value: 'horseriding'},
   ];
   const associationList = [
-    {label: 'Association', value: 'association'},
-    {label: 'Association', value: 'association'},
-    {label: 'Association', value: 'association'},
+    {label: 'Associations', value: 'association'},
+    {label: 'Associations', value: 'association'},
+    {label: 'Associations', value: 'association'},
   ];
 
   const [isModalVisible, setModalVisible] = useState(false);

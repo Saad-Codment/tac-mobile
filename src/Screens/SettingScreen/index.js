@@ -132,7 +132,7 @@ const SettingScreen = ({navigation}) => {
       onPress: () => onOpenModal('event_type'),
     },
     {
-      title: 'Association',
+      title: 'Associations',
       leftIcon: assoicationIcon,
       rightText: 'Change',
       onPress: () => onOpenModal('event_association'),

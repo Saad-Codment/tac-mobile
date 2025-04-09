@@ -151,6 +151,8 @@ const parseTimeString = timeString => {
 
 const currentDate = new Date();
 
+const nextDay = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // Adds 1 day in milliseconds
+
 const eventCreateSchema = yup.object().shape({
   eventTitle: yup
     .string()
@@ -177,7 +179,7 @@ const eventCreateSchema = yup.object().shape({
         return !eventStartDate || !value || value >= eventStartDate;
       },
     )
-    .default(currentDate),
+    .default(nextDay),
   eventEndTime: yup
     .date()
     .required('Event end time is required')
@@ -218,12 +220,12 @@ const eventCreateSchema = yup.object().shape({
 
   privateEvent: yup.boolean().required('Specify the event type'),
   eventAssociation: yup.object().shape({
-    id: yup.string().required('Please select event association'),
-    name: yup.string().required('Please select event association'),
+    id: yup.string(),
+    name: yup.string(),
   }),
   eventCircuit: yup.object().shape({
-    id: yup.string().required('Please select event circuit'),
-    name: yup.string().required('Please select event circuit'),
+    id: yup.string(),
+    name: yup.string(),
   }),
   evnetTour: yup.string().required('Specify the event tour'),
   eventConfirm: yup.boolean().required('Event confirmation is required'),

@@ -107,14 +107,14 @@ const EditProfileScreen = ({navigation}) => {
     },
     {
       icon: buliding,
-      name: 'Association',
+      name: 'Associations',
 
       rightText: 'Change',
-      title: 'Update Association',
+      title: 'Update Associations',
       list: associationList,
 
       onpress: () => toggleModal(3),
-      dropDownPlaceholder: 'Select your Association',
+      dropDownPlaceholder: 'Select your Associations',
       state: assocType,
 
       setState: setAssocType,

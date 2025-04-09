@@ -102,12 +102,12 @@ const OnStepScreen = ({navigation}) => {
                 )}
                 key={item?.id}
                 onPress={() => onSelectValue('gender', item.title)}>
-                <Image
+                {/* <Image
                   source={item?.image}
                   style={styles.catImage(
                     Boolean(onBoardData?.gender == item.title),
                   )}
-                />
+                /> */}
                 <TextComponent
                   text={item?.title}
                   styles={styles.genderTitle(
@@ -125,7 +125,7 @@ const OnStepScreen = ({navigation}) => {
         <View>
           <TextComponent
             numberOfLines={2}
-            text={'Are you willing to have \n horses for others?'}
+            text={'Are you willing to haul \n horses for others?'}
             styles={styles.tagline}
           />
           {/* <TextComponent
@@ -156,7 +156,7 @@ const OnStepScreen = ({navigation}) => {
       return (
         <View>
           <TextComponent
-            text={'What type of sports you’re interested in ?'}
+            text={'What type of events are you interested in?'}
             styles={styles.tagline}
           />
           {/* <TextComponent

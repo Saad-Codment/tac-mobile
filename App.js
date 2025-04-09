@@ -23,6 +23,7 @@ import notifee, {EventType} from '@notifee/react-native';
 import Orientation from 'react-native-orientation-locker';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import ImagePreviewComp from './src/Components/ImagePreviewComp';
+import {Settings} from 'react-native-fbsdk-next';
 
 const App = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -133,6 +134,7 @@ const App = () => {
           ? '433413678709-2dkgedloqvurj77k6474e09slpatdfta.apps.googleusercontent.com'
           : '433413678709-iuv7ovginqaklbprk8f135fbg7iiosgk.apps.googleusercontent.com',
     });
+    Settings.initializeSDK();
     (async () => {
       LogBox.ignoreLogs([
         'VirtualizedLists should never be nested',

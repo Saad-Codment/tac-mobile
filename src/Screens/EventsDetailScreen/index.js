@@ -57,6 +57,14 @@ const EventsDetailScreen = ({navigation, route}) => {
       onPress: () => {},
     },
     {
+      title: `${convertToLocalTime(eventData?.start_time)?.time} ${
+        convertToLocalTime(eventData?.start_time)?.period
+      }`,
+      leftIcon: filledClock,
+      onPress: () => {},
+      rightText: 'Start Time',
+    },
+    {
       title: `${getDateMonthYear(eventData?.to_date)?.dayName}. ${
         getDateMonthYear(eventData?.to_date)?.monthName
       } ${getDateMonthYear(eventData?.to_date)?.day} - ${
@@ -66,14 +74,7 @@ const EventsDetailScreen = ({navigation, route}) => {
       rightText: 'End Date',
       onPress: () => {},
     },
-    {
-      title: `${convertToLocalTime(eventData?.start_time)?.time} ${
-        convertToLocalTime(eventData?.start_time)?.period
-      }`,
-      leftIcon: filledClock,
-      onPress: () => {},
-      rightText: 'Start Time',
-    },
+
     {
       title: `${convertToLocalTime(eventData?.end_time)?.time} ${
         convertToLocalTime(eventData?.end_time)?.period
@@ -90,14 +91,14 @@ const EventsDetailScreen = ({navigation, route}) => {
 
   const bottomView = [
     {
-      title: 'Association',
+      title: 'Associations',
       rightText: eventData?.association?.name ?? 'Not Available',
       onPress: () => {},
       rightTextStyles: {color: Colors.primaryColor},
     },
     {
       title: 'Added Money',
-      rightText: '$10,000' ?? 'Not Available',
+      rightText: `$ ${eventData?.added_money}` ?? 'Not Available',
       onPress: () => {},
       rightTextStyles: {color: Colors.primaryColor},
     },

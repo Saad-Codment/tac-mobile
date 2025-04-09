@@ -118,7 +118,7 @@ const SettingModal = ({
     },
     age_view: {title: 'Update Your Age', renderView: <AgeChangeView />},
     event_type: {
-      title: 'Update Your Sports Type',
+      title: 'Update Your Event Type',
       renderView: (
         <MultiSelectButton
           items={allData}
@@ -137,7 +137,7 @@ const SettingModal = ({
       ),
     },
     event_association: {
-      title: 'Update Association',
+      title: 'Update Associations',
       renderView: (
         <MultiSelectButton
           items={allData}

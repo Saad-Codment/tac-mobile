@@ -69,7 +69,7 @@ const HomeScreen = ({navigation}) => {
   return (
     <View>
       <HomeHeader
-        text={`Howdy, ${userData?.first_name}`}
+        text={`Hi, ${userData?.first_name}`}
         onNotificarioPress={() => dynamicRoute('NotificationScreen')}
         userDataImg={userData?.profile_image}
         onProfilePress={() =>
