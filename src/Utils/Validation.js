@@ -213,20 +213,32 @@ const eventCreateSchema = yup.object().shape({
     }),
   }),
 
-  eventType: yup.object().shape({
-    id: yup.string().required('Please select event type'),
-    name: yup.string().required('Please select event type'),
-  }),
+  eventType: yup
+    .array()
+    .of(
+      yup.object().shape({
+        id: yup.string().required('Please select event type'),
+        name: yup.string().required('Please select event type'),
+      }),
+    )
+    .min(1, 'At least one event type is required'),
 
   privateEvent: yup.boolean().required('Specify the event type'),
-  eventAssociation: yup.object().shape({
-    id: yup.string(),
-    name: yup.string(),
-  }),
-  eventCircuit: yup.object().shape({
-    id: yup.string(),
-    name: yup.string(),
-  }),
+  eventAssociation: yup.array().of(
+    yup.object().shape({
+      id: yup.string(),
+      name: yup.string(),
+    }),
+  ),
+  eventCircuit: yup
+    .array()
+    .of(
+      yup.object().shape({
+        id: yup.string(),
+        name: yup.string(),
+      }),
+    )
+    .min(1, 'At least one event circuit is required'),
   evnetTour: yup.string().required('Specify the event tour'),
   eventConfirm: yup.boolean().required('Event confirmation is required'),
   eventSync: yup.boolean(),

@@ -166,6 +166,7 @@ export {default as profileCircle} from './Icons/profile-circle.png';
 export {default as userAdd} from './Icons/user-add.png';
 export {default as searchNormal} from './Icons/search-normal.png';
 export {default as dotsVertical} from './Icons/dots-vertical.png';
+export {default as questionMark} from './Icons/questionMark.png';
 
 // Lotties files
 

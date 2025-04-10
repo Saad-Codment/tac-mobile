@@ -14,6 +14,7 @@ import {
   convertToCustomTimeFormat,
   formatDateToCustomFormat,
   getCalenderPerComfirm,
+  getIdsFromArry,
 } from '../../Services/GlobalFunctions';
 import useReduxStore from '../../Hooks/UseReduxStore';
 
@@ -110,9 +111,9 @@ const useCreateEventsScreen = ({navigate}) => {
         latitude: eventLocation.coords.latitude,
         longitude: eventLocation.coords.longitude,
         address: eventLocation.locationName,
-        event_type_id: eventType.id,
-        association_id: eventAssociation.id,
-        circuit_id: eventCircuit.id,
+        event_type_ids: getIdsFromArry(eventType),
+        association_ids: getIdsFromArry(eventAssociation),
+        circuit_ids: getIdsFromArry(eventCircuit),
         tour_id: evnetTour,
         private: privateEvent ? 1 : 0,
         is_confirmed: eventConfirm ? 1 : 0,

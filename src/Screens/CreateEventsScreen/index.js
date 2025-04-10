@@ -21,6 +21,7 @@ import {
   crossWhite,
   gpsImg,
   infoCircle,
+  questionMark,
   radioCircle,
   radioCircleOn,
   squareGray,
@@ -507,7 +508,11 @@ const CreateEventsScreen = ({navigation}) => {
                 name={`eventType`}
                 render={({field: {onChange, value}}) => (
                   <TextComponent
-                    text={value?.name ?? 'Event type'}
+                    text={
+                      value?.length
+                        ? value?.length + ' types is selected'
+                        : 'Event type'
+                    }
                     styles={{
                       ...styles.textStyle,
                       color: value?.name ? Colors.black : Colors.grayFaded,
@@ -516,8 +521,9 @@ const CreateEventsScreen = ({navigation}) => {
                     onPress={() =>
                       dynamicRoute('ListViewScreen', {
                         onSelectValue: res => onChange(res),
-                        selectedValue: [value] ?? [],
+                        selectedValue: value ?? [],
                         urlName: allEventTypeUrl,
+                        isMultiSelect: true,
                       })
                     }
                   />
@@ -544,7 +550,7 @@ const CreateEventsScreen = ({navigation}) => {
                 }}
                 onPress={() => setModalVisible(true)}>
                 <Image
-                  source={infoCircle}
+                  source={questionMark}
                   resizeMode="contain"
                   style={{width: wp('5'), height: hp('3')}}
                 />
@@ -564,8 +570,9 @@ const CreateEventsScreen = ({navigation}) => {
                       onPress={() =>
                         dynamicRoute('ListViewScreen', {
                           onSelectValue: res => onChange(res),
-                          selectedValue: [value] ?? [],
+                          selectedValue: value ?? [],
                           urlName: allEventTypeUrl,
+                          isMultiSelect: true,
                         })
                       }
                     />
@@ -605,7 +612,11 @@ const CreateEventsScreen = ({navigation}) => {
               name={`eventAssociation`}
               render={({field: {onChange, value}}) => (
                 <TextComponent
-                  text={value?.name ?? 'No association'}
+                  text={
+                    value?.length
+                      ? value?.length + ' associations is selected'
+                      : 'No association'
+                  }
                   styles={{
                     ...styles.textStyle,
                     color: value?.name ? Colors.black : Colors.grayFaded,
@@ -614,8 +625,9 @@ const CreateEventsScreen = ({navigation}) => {
                   onPress={() =>
                     dynamicRoute('ListViewScreen', {
                       onSelectValue: res => onChange(res),
-                      selectedValue: [value] ?? [],
+                      selectedValue: value ?? [],
                       urlName: allAssociatesUrl,
+                      isMultiSelect: true,
                     })
                   }
                 />
@@ -662,7 +674,11 @@ const CreateEventsScreen = ({navigation}) => {
                 name={`eventCircuit`}
                 render={({field: {onChange, value}}) => (
                   <TextComponent
-                    text={value?.name ?? 'No circuits'}
+                    text={
+                      value?.length
+                        ? value?.length + ' circuits is selected'
+                        : 'No circuits'
+                    }
                     styles={{
                       ...styles.textStyle,
                       color: value?.name ? Colors.black : Colors.grayFaded,
@@ -671,8 +687,9 @@ const CreateEventsScreen = ({navigation}) => {
                     onPress={() =>
                       dynamicRoute('ListViewScreen', {
                         onSelectValue: res => onChange(res),
-                        selectedValue: [value] ?? [],
+                        selectedValue: value ?? [],
                         urlName: allEventCircuitUrl,
+                        isMultiSelect: true,
                       })
                     }
                   />
@@ -703,13 +720,14 @@ const CreateEventsScreen = ({navigation}) => {
                       styles={{
                         ...styles.textStyle,
                       }}
-                      onPress={() =>
-                        dynamicRoute('ListViewScreen', {
-                          onSelectValue: res => onChange(res),
-                          selectedValue: [value] ?? [],
-                          urlName: allEventTypeUrl,
-                        })
-                      }
+                      // onPress={() =>
+                      //   dynamicRoute('ListViewScreen', {
+                      //     onSelectValue: res => onChange(res),
+                      //     selectedValue: [value] ?? [],
+                      //     urlName: allEventTypeUrl,
+                      //     isMultiSelect: true,
+                      //   })
+                      // }
                     />
                   );
                 }}
