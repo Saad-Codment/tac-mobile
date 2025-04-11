@@ -67,4 +67,22 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 30,
   },
+  selectedValStyle: {
+    paddingHorizontal: wp('2.5'),
+    backgroundColor: Colors.thridColor,
+    overflow: 'hidden',
+    height: 'auto',
+    paddingVertical: hp('0.5'),
+    borderWidth: 0,
+  },
+  arryMainView: {
+    width: wp('98'),
+    marginHorizontal: wp('3'),
+    marginVertical: hp('3'),
+  },
+  multiMainView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: hp('1.5'),
+  },
 });

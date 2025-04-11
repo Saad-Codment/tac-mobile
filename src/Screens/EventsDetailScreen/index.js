@@ -29,6 +29,9 @@ import {CircleImage} from '../../Components/CircleImage';
 import {Touchable} from '../../Components/Touchable';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {types} from '../../Redux/types';
+import {Text} from 'react-native';
+import {MultiSelectButton} from '../../Components/MultiSelectButton';
+import DividerLine from '../../Components/DividerLine';
 
 const EventsDetailScreen = ({navigation, route}) => {
   const {eventData, onRefresh, followUnFollowEvent, userData} =
@@ -91,20 +94,8 @@ const EventsDetailScreen = ({navigation, route}) => {
 
   const bottomView = [
     {
-      title: 'Associations',
-      rightText: eventData?.association?.name ?? 'Not Available',
-      onPress: () => {},
-      rightTextStyles: {color: Colors.primaryColor},
-    },
-    {
       title: 'Added Money',
       rightText: `$ ${eventData?.added_money}` ?? 'Not Available',
-      onPress: () => {},
-      rightTextStyles: {color: Colors.primaryColor},
-    },
-    {
-      title: 'Circuits',
-      rightText: eventData?.circuit?.name ?? 'Not Available',
       onPress: () => {},
       rightTextStyles: {color: Colors.primaryColor},
     },
@@ -212,14 +203,14 @@ const EventsDetailScreen = ({navigation, route}) => {
             />
           </View>
         )}
-        <View style={styles.eventTypeView}>
+        {/* <View style={styles.eventTypeView}>
           <TextComponent text={'Event Type'} styles={styles.typeHeading} />
           <TextComponent
             text={eventData?.event_type?.name}
             isLightThemeColor
             styles={styles.typeStyle}
           />
-        </View>
+        </View> */}
         <MultiView
           viewStyle={{width: wp('98')}}
           data={centerView.filter(res =>
@@ -227,6 +218,68 @@ const EventsDetailScreen = ({navigation, route}) => {
           )}
           dividerStyles={{display: 'none'}}
         />
+        <View style={styles.arryMainView}>
+          <TextComponent text={'Event Type'} styles={{fontSize: hp('1.56')}} />
+          <View style={styles.multiMainView}>
+            {eventData?.event_types?.length > 0 ? (
+              <MultiSelectButton
+                isDisable={true}
+                items={eventData?.event_types ?? []}
+                btnStyle={styles.selectedValStyle}
+                textStyle={{fontSize: hp('1.5'), color: Colors.primaryColor}}
+              />
+            ) : (
+              <TextComponent
+                text={'Event types are not selected.'}
+                fade
+                styles={{fontSize: hp('1.5')}}
+              />
+            )}
+          </View>
+          <DividerLine
+            DividerLineStyle={{width: wp('95'), marginVertical: hp('2')}}
+          />
+          <TextComponent
+            text={'Associations'}
+            styles={{fontSize: hp('1.56')}}
+          />
+          <View style={styles.multiMainView}>
+            {eventData?.associations?.length > 0 ? (
+              <MultiSelectButton
+                isDisable={true}
+                items={eventData?.associations ?? []}
+                btnStyle={styles.selectedValStyle}
+                textStyle={{fontSize: hp('1.5'), color: Colors.primaryColor}}
+              />
+            ) : (
+              <TextComponent
+                text={'Associations are not selected.'}
+                fade
+                styles={{fontSize: hp('1.5')}}
+              />
+            )}
+          </View>
+          <DividerLine
+            DividerLineStyle={{width: wp('95'), marginVertical: hp('2')}}
+          />
+          <TextComponent text={'Circuits'} styles={{fontSize: hp('1.56')}} />
+          <View style={styles.multiMainView}>
+            {eventData?.circuits?.length > 0 ? (
+              <MultiSelectButton
+                isDisable={true}
+                items={eventData?.circuits ?? []}
+                btnStyle={styles.selectedValStyle}
+                textStyle={{fontSize: hp('1.5'), color: Colors.primaryColor}}
+              />
+            ) : (
+              <TextComponent
+                text={'Circuits are not selected.'}
+                fade
+                styles={{fontSize: hp('1.5')}}
+              />
+            )}
+          </View>
+        </View>
         <MultiView
           viewStyle={styles.multiViewStyle}
           data={bottomView}

@@ -7,7 +7,6 @@ export {default as splashOne} from './Images/splashOne.png';
 export {default as splashTwo} from './Images/splashTwo.png';
 export {default as splashThree} from './Images/splashThree.png';
 export {default as stepBg} from './Images/stepBg.png';
-export {default as horse} from './Images/horse.png';
 export {default as noData} from './Images/noData.png';
 
 export {default as LoginBg} from './Images/loginBg.png';
@@ -71,6 +70,7 @@ export {default as uploadGallery} from './Icons/uploadGallery.png';
 export {default as crossFill} from './Icons/crossFill.png';
 export {default as lockCircle} from './Icons/lockCircle.png';
 export {default as syncContact} from './Icons/syncContact.png';
+export {default as horse} from './Icons/hourse.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';

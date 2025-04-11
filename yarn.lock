@@ -9125,19 +9125,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-fbsdk-next@npm:^13.4.1":
-  version: 13.4.1
-  resolution: "react-native-fbsdk-next@npm:13.4.1"
-  peerDependencies:
-    expo: ">=47.0.0"
-    react-native: ">=0.63.3"
-  peerDependenciesMeta:
-    expo:
-      optional: true
-  checksum: e8f0f470009485c48e17279b1dfe8e6f94303de52394ce579fb888518a694b79f741a060d957b097534003abb07827e03955203b55101c333ba07bf8f5d307b1
-  languageName: node
-  linkType: hard
-
 "react-native-flash-message@npm:^0.4.2":
   version: 0.4.2
   resolution: "react-native-flash-message@npm:0.4.2"
@@ -10648,7 +10635,6 @@ __metadata:
     react-native-element-dropdown: ^2.12.1
     react-native-elements: ^3.4.3
     react-native-fast-image: ^8.6.3
-    react-native-fbsdk-next: ^13.4.1
     react-native-flash-message: ^0.4.2
     react-native-geolocation-service: ^5.3.1
     react-native-get-random-values: ^1.11.0

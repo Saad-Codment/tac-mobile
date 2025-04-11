@@ -93,10 +93,10 @@ const FriendEventsComp = ({
             style={styles.lockImg}
           />
         </View>
-        <TextComponent
+        {/* <TextComponent
           text={`${item?.association_name}, ${item?.circuit_name}.`}
           styles={{fontWeight: 'bold', marginVertical: hp('1')}}
-        />
+        /> */}
         <View style={styles.middleTimeView}>
           <View style={styles.middleLeftRightView}>
             <Image
