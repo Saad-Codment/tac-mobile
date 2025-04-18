@@ -71,6 +71,8 @@ export {default as crossFill} from './Icons/crossFill.png';
 export {default as lockCircle} from './Icons/lockCircle.png';
 export {default as syncContact} from './Icons/syncContact.png';
 export {default as horse} from './Icons/hourse.png';
+export {default as userEdit} from './Icons/userEdit.png';
+export {default as securityUser} from './Icons/securityUser.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';
@@ -124,7 +126,7 @@ export {default as facebook} from './Icons/facebookImage.png';
 export {default as male} from './Icons/male.png';
 export {default as female} from './Icons/female.png';
 export {default as others} from './Icons/others.png';
-export {default as medalstar} from './Icons/medalstar.png';
+export {default as medalstar} from './Icons/medalStar.png';
 export {default as tickCircle} from './Icons/tickCircle.png';
 export {default as heart} from './Icons/heart.png';
 export {default as addcircle} from './Icons/addCircle.png';
@@ -167,6 +169,12 @@ export {default as userAdd} from './Icons/user-add.png';
 export {default as searchNormal} from './Icons/search-normal.png';
 export {default as dotsVertical} from './Icons/dots-vertical.png';
 export {default as questionMark} from './Icons/questionMark.png';
+export {default as documentCloud} from './Icons/documentCloud.png';
+export {default as helpCircle} from './Icons/helpCircle.png';
+export {default as likeTag} from './Icons/likeTag.png';
+export {default as infoIcon} from './Icons/infoIcon.png';
+export {default as privacyWithOutBg} from './Icons/receiptSearch.png';
+export {default as termNoBg} from './Icons/termNoBg.png';
 
 // Lotties files
 

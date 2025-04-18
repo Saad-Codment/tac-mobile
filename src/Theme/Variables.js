@@ -16,6 +16,7 @@ const Colors = {
   backgroundTheme: 'rgba(24, 24, 24, 1)',
   lightGray: 'rgba(0, 0, 0, 0.1)',
   yellowBgColor: 'rgba(255, 238, 207, 1)',
+  lightYellowBgColor: 'rgba(255, 238, 207, 0.4)',
   yellowTextColor: 'rgba(137, 119, 86, 1)',
   dkBorderColor: 'rgba(192, 192, 192, 1)',
   lightInnerColor: 'rgba(246, 246, 246, 1)',

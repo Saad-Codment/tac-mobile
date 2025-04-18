@@ -35,6 +35,7 @@ const SettingScreen = ({navigate, goBack}) => {
   const {dispatch, getState, queryClient} = useReduxStore();
   const {userData} = getState('Auth');
   const {isloading} = getState('isloading');
+  const {isContact} = getState('isContact');
   const onPressKeyRef = useRef(null);
   console.log('userDatauserDatauserDatauserDatauserData', userData);
   const apiDataType = {
@@ -210,6 +211,7 @@ const SettingScreen = ({navigate, goBack}) => {
     privateTheProfile: () => {
       isPrivateFun.mutate();
     },
+    isContact,
   };
 };
 

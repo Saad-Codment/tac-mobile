@@ -206,7 +206,7 @@ const CreateEventsScreen = ({navigation}) => {
                             },
                           },
                         ],
-                        {cancelable: true},
+                        {cancelable: true, onDismiss: () => {}},
                       );
                     }}>
                     <Image

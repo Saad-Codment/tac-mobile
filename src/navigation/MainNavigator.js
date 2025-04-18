@@ -85,6 +85,18 @@ function MainNavigator() {
               component={Screens.MyEventScreen}
             />
             <Stack.Screen
+              name="ProfileScreen"
+              component={Screens.ProfileScreen}
+            />
+            <Stack.Screen
+              name="AccountPrivacyScreen"
+              component={Screens.AccountPrivacyScreen}
+            />
+            <Stack.Screen
+              name="ChangePasswordScreen"
+              component={Screens.ChangePasswordScreen}
+            />
+            <Stack.Screen
               name="SyncPhonebookScreen"
               component={Screens.SyncPhonebookScreen}
             />

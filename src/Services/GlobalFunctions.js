@@ -529,6 +529,8 @@ const uploadFromGalary = async isMulti => {
     height: 400,
     cropping: true,
     multiple: isMulti,
+    avoidEmptySpaceAroundImage: true,
+    enableRotationGesture: true,
   });
   console.log('imagefjshavckajkcbadsjkvbsdjkvbkjsdbksdbvkldskvlsd', imageData);
   const {

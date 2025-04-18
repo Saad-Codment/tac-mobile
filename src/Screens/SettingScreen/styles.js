@@ -19,6 +19,15 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: hp('2'),
   },
+  upperProfileView: {
+    width: wp('100'),
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: hp('2'),
+    paddingVertical: hp('1'),
+    marginBottom: hp('1'),
+  },
   ProfileImage: {
     // aspectRatio: 2,
     alignSelf: 'center',
@@ -55,11 +64,7 @@ export const styles = StyleSheet.create({
     marginBottom: hp('2'),
   },
   mainBtn: {
-    backgroundColor: Colors.headerBg,
-
-    paddingHorizontal: wp('4'),
-    paddingVertical: hp('1'),
-    height: hp('40'),
+    alignItems: 'center',
   },
   listBtn: {
     flexDirection: 'row',
@@ -105,12 +110,9 @@ export const styles = StyleSheet.create({
   },
   upperWhiteView: {
     backgroundColor: 'white',
-    width: wp('90'),
-    height: hp('93'),
-    borderRadius: 20,
-    marginTop: hp('10'),
-    paddingTop: hp('10'),
-    alignItems: 'center',
+    width: wp('100'),
+    marginVertical: hp('0.5'),
+    paddingVertical: hp('1'),
   },
   imgView: {
     alignSelf: 'center',
@@ -118,11 +120,26 @@ export const styles = StyleSheet.create({
     zIndex: 1,
     top: hp('-9'),
   },
-  bottomView: {
-    paddingTop: hp('1.5'),
-    paddingBottom: hp('1'),
-    height: hp('15'),
-    marginTop: hp('2'),
+  // bottomView: {
+  //   paddingTop: hp('1.5'),
+  //   paddingBottom: hp('1'),
+  //   height: hp('15'),
+  //   marginTop: hp('2'),
+  // },
+  rightImgStyle: {
+    width: wp('4'),
+    height: hp('4'),
+    tintColor: Colors.black,
+    marginRight: wp('2'),
+  },
+  statusText: {
+    fontSize: hp('1.5'),
+    paddingVertical: hp('0.3'),
+    borderRadius: 12,
+    borderWidth: 0.5,
+    paddingHorizontal: wp('2'),
+    marginRight: wp('2'),
+    borderColor: 'gray',
   },
   //  Modal Style
 
@@ -166,10 +183,10 @@ export const styles = StyleSheet.create({
     height: hp('2'),
   },
   headingText: {
-    fontWeight: 'bold',
     fontSize: hp('2'),
-    textAlign: 'center',
-    marginBottom: hp('2'),
+    fontWeight: 'bold',
+    paddingLeft: wp('5'),
+    marginBottom: hp('1'),
   },
   addIcon: {
     position: 'absolute',

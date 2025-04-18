@@ -15,12 +15,13 @@ export const DataNotFound = ({
   mainViewStyles,
   noImg,
   imgStyles,
+  centerImg,
 }) => {
   return (
     <View style={{...styles.mealInner, ...mainViewStyles}}>
       {!noImg && (
         <Image
-          source={noDataImg}
+          source={centerImg ?? noDataImg}
           style={{...styles.noDataImage, ...imgStyles}}
         />
       )}

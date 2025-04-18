@@ -32,6 +32,7 @@ export const InputComponent = ({
   placeholderTextColor,
   selectionColor,
   errorStyle,
+  rightIconColor,
 }) => {
   const [show, setShow] = useState(!isSecure);
   const handleClick = () => setShow(!show);
@@ -85,7 +86,7 @@ export const InputComponent = ({
                   source={show ? eye : eyeOff}
                   style={{
                     resizeMode: 'contain',
-                    tintColor: Colors.white,
+                    tintColor: rightIconColor ?? Colors.white,
                   }}
                 />
               </Touchable>

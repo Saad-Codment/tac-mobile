@@ -36,6 +36,20 @@ import {
   profileCircle,
   userAdd,
   syncContact,
+  lock,
+  arrRight,
+  edit2,
+  editIcon,
+  userEdit,
+  securityUser,
+  locksetting,
+  notificationWhite,
+  documentCloud,
+  helpCircle,
+  likeTag,
+  infoIcon,
+  privacyWithOutBg,
+  termNoBg,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
@@ -62,6 +76,7 @@ import {
 import {getMyFriendsUrl, imageUrl} from '../../Utils/Urls';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {types} from '../../Redux/types';
+import {Touchable} from '../../Components/Touchable';
 
 const SettingScreen = ({navigation}) => {
   const {
@@ -80,105 +95,188 @@ const SettingScreen = ({navigation}) => {
     userData,
     onPressKey,
     allData,
+    isContact,
   } = useSettingScreen(navigation);
 
-  const centerView = [
-    {
-      title: `My profile`,
-      leftIcon: profileCircle,
-      rightText: 'View',
-      onPress: () =>
-        NavigationService.navigate('FriendProfileScreen', {id: userData?.id}),
-    },
-    {
-      title: `Private`,
-      leftIcon: profileCircle,
-      rightChilderView: (
-        <Switch
-          trackColor={{
-            false: Colors.grayFaded,
-            true: 'transparent',
-          }}
-          thumbColor={userData?.privacy == 1 ? Colors.primaryColor : '#EAF6ED'}
-          ios_backgroundColor="#EAF6ED"
-          onValueChange={privateTheProfile}
-          value={Boolean(userData?.privacy == 1)}
-        />
-      ),
-      onPress: () =>
-        NavigationService.navigate('FriendProfileScreen', {id: userData?.id}),
-    },
-    {
-      title: `${calculateAge(userData?.age) ?? 'Not Availabe'} Years`,
-      leftIcon: ageIcon,
-      rightText: 'Change',
-      onPress: () => onOpenModal('age_view'),
-    },
-    {
-      title: capitalizeFirstLetter(userData?.gender ?? 'Not Availabe'),
-      leftIcon: profileIcon,
-      rightText: 'Change',
-      onPress: () => onOpenModal('user_gender'),
-    },
-    {
-      title: 'My Events',
-      leftIcon: calender,
-      onPress: () => NavigationService.navigate('MyEventScreen'),
-    },
-    {
-      title: 'Event Types',
-      leftIcon: racingIcon,
-      rightText: 'Change',
-      onPress: () => onOpenModal('event_type'),
-    },
-    {
-      title: 'Associations',
-      leftIcon: assoicationIcon,
-      rightText: 'Change',
-      onPress: () => onOpenModal('event_association'),
-    },
-    {
-      title: 'Event History',
-      leftIcon: eventHistory,
-      rightText: 'View',
-      onPress: () => {},
-    },
-    {
-      title: 'Friend Requests',
-      leftIcon: userAdd,
-      rightText: 'View',
-      onPress: () => NavigationService.navigate('FriendReqScreen'),
-    },
-    {
-      title: 'Sync phonebook',
-      leftIcon: syncContact,
-      rightText: 'View',
-      onPress: () => NavigationService.navigate('SyncPhonebookScreen'),
-    },
-    {
-      title: 'Friends List',
-      leftIcon: friendList,
-      rightText: 'View',
-      onPress: () =>
-        NavigationService.navigate('FriendLists', {
-          url: getMyFriendsUrl,
-          key: 'myFriends',
-        }),
-    },
-  ];
-  const bottomView = [
-    {
-      title: `Delete Account`,
-      leftIcon: trashRed,
-      leftIconColor: 'red',
-      onPress: () => toggleAlert('deleteAlert'),
-    },
-    {
-      title: 'Log out',
-      leftIcon: logout,
-      onPress: () => toggleAlert('logoutAlert'),
-    },
-  ];
+  const AccountInfo = {
+    title: 'Account',
+    arryView: [
+      {
+        title: `Edit information`,
+        leftIcon: userEdit,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('ProfileScreen'),
+      },
+      {
+        title: 'Account Privacy',
+        leftIcon: securityUser,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('AccountPrivacyScreen'),
+        rightChilderView: (
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TextComponent
+              text={userData?.privacy == 1 ? 'Private' : 'Public'}
+              styles={styles.statusText}
+              fade
+            />
+            <Image
+              source={arrRight}
+              resizeMode="contain"
+              style={styles.rightImgStyle}
+            />
+          </View>
+        ),
+      },
+      {
+        title: 'Change Password',
+        leftIcon: locksetting,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('ChangePasswordScreen'),
+      },
+    ],
+  };
+  const GeneralInfo = {
+    title: 'General',
+    arryView: [
+      {
+        title: `Subscriptions`,
+        leftIcon: medalstar,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+      },
+      {
+        title: 'Notifications',
+        leftIcon: notificationWhite,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('NotificationScreen'),
+      },
+    ],
+  };
+  const FriendsInfo = {
+    title: 'Friends',
+    arryView: [
+      {
+        title: `Friends list`,
+        leftIcon: friendList,
+        rightIcon: arrRight,
+        onPress: () =>
+          NavigationService.navigate('FriendLists', {
+            url: getMyFriendsUrl,
+            key: 'myFriends',
+          }),
+        rightIconColor: Colors.black,
+      },
+      {
+        title: 'Friends Requests',
+        leftIcon: userAdd,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('FriendReqScreen'),
+      },
+      {
+        title: 'Phonebook',
+        leftIcon: documentCloud,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('SyncPhonebookScreen'),
+        rightChilderView: (
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TextComponent
+              text={isContact ? 'Synced' : 'Not Sync'}
+              styles={styles.statusText}
+              fade
+            />
+            <Image
+              source={arrRight}
+              resizeMode="contain"
+              style={styles.rightImgStyle}
+            />
+          </View>
+        ),
+      },
+    ],
+  };
+  const RodeosInfo = {
+    title: 'Rodeos',
+    arryView: [
+      {
+        title: `Event Types`,
+        leftIcon: racingIcon,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => onOpenModal('event_type'),
+      },
+      {
+        title: 'Associations',
+        leftIcon: assoicationIcon,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => onOpenModal('event_association'),
+      },
+    ],
+  };
+  const CalenderInfo = {
+    title: 'Calender',
+    arryView: [
+      {
+        title: `My events`,
+        leftIcon: calender,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('MyEventScreen'),
+      },
+      {
+        title: 'Event history',
+        leftIcon: eventHistory,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+      },
+    ],
+  };
+  const AboutApp = {
+    title: 'About App',
+    arryView: [
+      {
+        title: `Help Centre`,
+        leftIcon: helpCircle,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+      },
+      {
+        title: 'Feedback Submission',
+        leftIcon: likeTag,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+      },
+    ],
+  };
+  const SupportInfo = {
+    title: 'Terms & Support',
+    arryView: [
+      {
+        title: `About TAC`,
+        leftIcon: infoIcon,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+      },
+      {
+        title: 'Privacy Policy',
+        leftIcon: privacyWithOutBg,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+      },
+      {
+        title: 'Terms and Conditions',
+        leftIcon: termNoBg,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+      },
+    ],
+  };
 
   const {dispatch} = useReduxStore();
 
@@ -192,42 +290,119 @@ const SettingScreen = ({navigation}) => {
   return (
     // <ImageBackground source={stepBg} style={styles.container}>
     <View showsVerticalScrollIndicator={false} style={{flexGrow: 1}}>
-      <HeaderComponent
-        headerTitle={'Profile'}
-        saveReset={editProfile}
-        onRightPress={() => onOpenModal('edit_profile')}
-      />
+      <HeaderComponent headerTitle={'Settings'} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         bounces={false}
-        contentContainerStyle={{paddingBottom: hp('100')}}>
+        contentContainerStyle={{paddingBottom: hp('15')}}>
         <View style={styles.mainBtn}>
-          <View style={styles.upperWhiteView}>
-            <Pressable style={styles.imgView} onPress={onImagePress}>
+          <View style={styles.upperProfileView}>
+            <Pressable onPress={onImagePress}>
               <CircleImage
-                size={Platform.OS == 'ios' ? 0.4 : 0.35}
+                size={Platform.OS == 'ios' ? 0.2 : 0.35}
                 image={imageUrl(userData?.profile_image)}
                 uri={true}
               />
             </Pressable>
-            <TextComponent
-              text={userData?.first_name + ' ' + userData?.last_name}
-              styles={{fontSize: hp('3'), fontWeight: 'bold'}}
-            />
-            <TextComponent
-              text={userData?.email}
-              styles={{fontSize: hp('1.5')}}
-              fade
-            />
-            <MultiView data={centerView} />
+            <View style={{marginLeft: wp('2')}}>
+              <TextComponent
+                text={userData?.first_name + ' ' + userData?.last_name}
+                styles={{fontSize: hp('2.5'), fontWeight: 'bold'}}
+              />
+              <TextComponent
+                text={userData?.email}
+                styles={{fontSize: hp('1.5')}}
+                fade
+              />
+            </View>
+            <Touchable
+              style={{marginLeft: 'auto'}}
+              onPress={() => toggleAlert('logoutAlert')}>
+              <Image
+                source={logout}
+                resizeMode="contain"
+                style={{width: wp('8'), height: wp('8')}}
+              />
+            </Touchable>
           </View>
           <View
             style={{
               ...styles.upperWhiteView,
-              ...styles.bottomView,
+              marginTop: 0,
             }}>
-            <MultiView data={bottomView} />
+            <TextComponent
+              text={AccountInfo.title}
+              styles={styles.headingText}
+            />
+            <MultiView
+              data={AccountInfo.arryView}
+              viewStyle={{alignSelf: 'center', width: wp('95')}}
+              dividerStyles={{marginLeft: wp('12.4')}}
+            />
+          </View>
+          <View style={styles.upperWhiteView}>
+            <TextComponent
+              text={GeneralInfo.title}
+              styles={styles.headingText}
+            />
+            <MultiView
+              data={GeneralInfo.arryView}
+              viewStyle={{alignSelf: 'center', width: wp('95')}}
+              dividerStyles={{marginLeft: wp('12.4')}}
+            />
+          </View>
+          <View style={styles.upperWhiteView}>
+            <TextComponent
+              text={FriendsInfo.title}
+              styles={styles.headingText}
+            />
+            <MultiView
+              data={FriendsInfo.arryView}
+              viewStyle={{alignSelf: 'center', width: wp('95')}}
+              dividerStyles={{marginLeft: wp('12.4')}}
+            />
+          </View>
+          <View style={styles.upperWhiteView}>
+            <TextComponent
+              text={RodeosInfo.title}
+              styles={styles.headingText}
+            />
+            <MultiView
+              data={RodeosInfo.arryView}
+              viewStyle={{alignSelf: 'center', width: wp('95')}}
+              dividerStyles={{marginLeft: wp('12.4')}}
+            />
+          </View>
+          <View style={styles.upperWhiteView}>
+            <TextComponent
+              text={CalenderInfo.title}
+              styles={styles.headingText}
+            />
+            <MultiView
+              data={CalenderInfo.arryView}
+              viewStyle={{alignSelf: 'center', width: wp('95')}}
+              dividerStyles={{marginLeft: wp('12.4')}}
+            />
+          </View>
+          <View style={styles.upperWhiteView}>
+            <TextComponent text={AboutApp.title} styles={styles.headingText} />
+            <MultiView
+              data={AboutApp.arryView}
+              viewStyle={{alignSelf: 'center', width: wp('95')}}
+              dividerStyles={{marginLeft: wp('12.4')}}
+            />
+          </View>
+          <View style={styles.upperWhiteView}>
+            <TextComponent
+              text={SupportInfo.title}
+              styles={styles.headingText}
+            />
+            <MultiView
+              data={SupportInfo.arryView}
+              viewStyle={{alignSelf: 'center', width: wp('95')}}
+              dividerStyles={{marginLeft: wp('12.4')}}
+            />
           </View>
         </View>
       </ScrollView>
