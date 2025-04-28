@@ -908,6 +908,18 @@ const checkMaleFemaleForImg = () => {
   else return maleImg;
 };
 
+function showFirstThreeAndCountRest(arr, startingCount) {
+  // input [1,2,3,4,5]
+
+  if (arr.length <= (startingCount ?? 3)) {
+    return arr; // If array has 3 or fewer items, return as is
+  }
+  const firstThree = arr.slice(0, 3);
+  const remainingCount = arr.length - 3;
+  return [...firstThree, `+${remainingCount}`];
+  // output: [1, 2, 3, "+2"]
+}
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -951,4 +963,5 @@ export {
   verifyPassword,
   getLastNightDigit,
   checkMaleFemaleForImg,
+  showFirstThreeAndCountRest,
 };

@@ -175,6 +175,7 @@ export {default as likeTag} from './Icons/likeTag.png';
 export {default as infoIcon} from './Icons/infoIcon.png';
 export {default as privacyWithOutBg} from './Icons/receiptSearch.png';
 export {default as termNoBg} from './Icons/termNoBg.png';
+export {default as eventLogo} from './Icons/eventLogo.png';
 
 // Lotties files
 

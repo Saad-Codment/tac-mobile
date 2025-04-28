@@ -43,6 +43,30 @@ export const styles = StyleSheet.create({
     marginLeft: wp('3'),
     marginTop: hp('2'),
   },
+  locationView: {
+    flexDirection: 'row',
+    width: wp('95'),
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    marginVertical: hp('2'),
+  },
+  locationImg: {width: wp('5'), height: hp('3'), marginRight: wp('2')},
+  eventTimeViewGray: {
+    backgroundColor: Colors.bgGray,
+    paddingVertical: hp('2'),
+    paddingHorizontal: wp('3'),
+    justifyContent: 'space-between',
+  },
+  eventTimeView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  eventCallImg: {
+    width: wp('6'),
+    height: hp('4'),
+    marginRight: wp('1'),
+  },
   eventTypeView: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -69,11 +93,12 @@ export const styles = StyleSheet.create({
   },
   selectedValStyle: {
     paddingHorizontal: wp('2.5'),
-    backgroundColor: Colors.thridColor,
+    // backgroundColor: Colors.thridColor,
     overflow: 'hidden',
     height: 'auto',
     paddingVertical: hp('0.5'),
-    borderWidth: 0,
+    borderWidth: 1,
+    borderColor: Colors.thridColor,
   },
   arryMainView: {
     width: wp('98'),

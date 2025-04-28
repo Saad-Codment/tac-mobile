@@ -6,6 +6,7 @@ import {
   filledCalender,
   filledClock,
   filledLocation,
+  locationGray,
   tacLogo,
   tickCircle,
   tickSquare,
@@ -211,13 +212,98 @@ const EventsDetailScreen = ({navigation, route}) => {
             styles={styles.typeStyle}
           />
         </View> */}
-        <MultiView
+        <View style={styles.locationView}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Image
+              source={locationGray}
+              tintColor={Colors.primaryColor}
+              style={styles.locationImg}
+            />
+            <TextComponent
+              text={eventData?.address}
+              numberOfLines={3}
+              styles={{width: wp('60')}}
+            />
+          </View>
+          <TextComponent
+            text={'View Location'}
+            styles={{color: Colors.lightBlueTextColor}}
+          />
+        </View>
+
+        <View style={styles.eventTimeViewGray}>
+          <View style={styles.eventTimeView}>
+            <TextComponent text={'Starts At'} fade />
+            <Image
+              source={filledCalender}
+              resizeMode="contain"
+              style={{
+                ...styles.eventCallImg,
+                marginLeft: wp('15'),
+              }}
+            />
+            <TextComponent
+              text={`${getDateMonthYear(eventData?.from_date)?.monthName} ${
+                getDateMonthYear(eventData?.from_date)?.day
+              }, ${getDateMonthYear(eventData?.from_date)?.year}`}
+            />
+            <Image
+              source={filledClock}
+              resizeMode="contain"
+              style={{...styles.eventCallImg, marginLeft: wp('4')}}
+            />
+            <TextComponent
+              text={
+                eventData?.start_time
+                  ? `${convertToLocalTime(eventData?.start_time)?.time} ${
+                      convertToLocalTime(eventData?.start_time)?.period
+                    }`
+                  : 'Not Confirmed'
+              }
+            />
+          </View>
+          <DividerLine
+            DividerLineStyle={{width: wp('95'), marginVertical: hp('2')}}
+          />
+          <View style={styles.eventTimeView}>
+            <TextComponent text={'Ends At'} fade />
+            <Image
+              source={filledCalender}
+              resizeMode="contain"
+              style={{
+                ...styles.eventCallImg,
+                marginLeft: wp('15'),
+              }}
+            />
+            <TextComponent
+              text={`${getDateMonthYear(eventData?.to_date)?.monthName} ${
+                getDateMonthYear(eventData?.to_date)?.day
+              }, ${getDateMonthYear(eventData?.to_date)?.year}`}
+            />
+            <Image
+              source={filledClock}
+              resizeMode="contain"
+              style={{...styles.eventCallImg, marginLeft: wp('4')}}
+            />
+            <TextComponent
+              text={
+                eventData?.end_time
+                  ? `${convertToLocalTime(eventData?.end_time)?.time} ${
+                      convertToLocalTime(eventData?.end_time)?.period
+                    }`
+                  : 'Not Confirmed'
+              }
+            />
+          </View>
+        </View>
+
+        {/* <MultiView
           viewStyle={{width: wp('98')}}
           data={centerView.filter(res =>
             checkParagraphForUndefined(res?.title),
           )}
           dividerStyles={{display: 'none'}}
-        />
+        /> */}
         <View style={styles.arryMainView}>
           <TextComponent text={'Event Type'} styles={{fontSize: hp('1.56')}} />
           <View style={styles.multiMainView}>
@@ -226,7 +312,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                 isDisable={true}
                 items={eventData?.event_types ?? []}
                 btnStyle={styles.selectedValStyle}
-                textStyle={{fontSize: hp('1.5'), color: Colors.primaryColor}}
+                textStyle={{fontSize: hp('1.5'), color: 'black'}}
               />
             ) : (
               <TextComponent
@@ -249,7 +335,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                 isDisable={true}
                 items={eventData?.associations ?? []}
                 btnStyle={styles.selectedValStyle}
-                textStyle={{fontSize: hp('1.5'), color: Colors.primaryColor}}
+                textStyle={{fontSize: hp('1.5'), color: 'black'}}
               />
             ) : (
               <TextComponent
@@ -269,7 +355,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                 isDisable={true}
                 items={eventData?.circuits ?? []}
                 btnStyle={styles.selectedValStyle}
-                textStyle={{fontSize: hp('1.5'), color: Colors.primaryColor}}
+                textStyle={{fontSize: hp('1.5'), color: 'black'}}
               />
             ) : (
               <TextComponent
