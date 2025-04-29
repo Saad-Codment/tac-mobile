@@ -5,6 +5,7 @@ import {Touchable} from './Touchable';
 import {arrow, arrowBack, arrowLeft} from '../Assets';
 import {hp, wp} from '../Config/responsive';
 import {Colors} from '../Theme/Variables';
+import NavigationService from '../Services/NavigationService';
 
 export const HeaderComponent = ({
   headerTitle,
@@ -29,7 +30,10 @@ export const HeaderComponent = ({
   return (
     <View style={[styles.TopHeader, {...style}]}>
       <View style={styles.HeaderLeft}>
-        <Touchable onPress={goBack} style={styles.backMain} disabled={!isBack}>
+        <Touchable
+          onPress={() => NavigationService.goBack()}
+          style={styles.backMain}
+          disabled={!isBack}>
           {isBack && (
             <Image
               source={arrowLeft}

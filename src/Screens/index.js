@@ -28,5 +28,6 @@ export {default as SyncPhonebookScreen} from './SyncPhonebookScreen';
 export {default as ProfileScreen} from './ProfileScreen';
 export {default as ChangePasswordScreen} from './ChangePasswordScreen';
 export {default as AccountPrivacyScreen} from './AccountPrivacyScreen';
+export {default as MyProfileScreen} from './MyProfileScreen';
 
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

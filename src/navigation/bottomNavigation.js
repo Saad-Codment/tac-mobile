@@ -23,6 +23,8 @@ import {
   searchBottom,
   searchFill,
   searchNormal,
+  userFill,
+  userBlack,
 } from '../Assets';
 import {types} from '../Redux/types';
 import useReduxStore from '../Hooks/UseReduxStore';
@@ -112,9 +114,9 @@ function MybottomTabs() {
         component={Screens.HomeScreen}
       />
       <Tab.Screen
-        name="SettingScreen"
-        options={tabarComponent(setting1, setting)}
-        component={Screens.SettingScreen}
+        name="MyProfileScreen"
+        options={tabarComponent(userFill, userBlack)}
+        component={Screens.MyProfileScreen}
       />
       {/* <Tab.Screen
         name="FavourateScreen"

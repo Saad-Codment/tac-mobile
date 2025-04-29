@@ -290,7 +290,7 @@ const SettingScreen = ({navigation}) => {
   return (
     // <ImageBackground source={stepBg} style={styles.container}>
     <View showsVerticalScrollIndicator={false} style={{flexGrow: 1}}>
-      <HeaderComponent headerTitle={'Settings'} />
+      <HeaderComponent headerTitle={'Settings'} isBack />
 
       <ScrollView
         showsVerticalScrollIndicator={false}

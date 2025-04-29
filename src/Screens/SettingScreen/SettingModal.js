@@ -230,7 +230,7 @@ const SettingModal = ({
                       image={
                         profileImg?.type
                           ? profileImg?.uri
-                          : imageUrl(profileImg?.uri)
+                          : imageUrl(profileImg)
                       }
                       styles={styles.profileView}
                       size={0.4}

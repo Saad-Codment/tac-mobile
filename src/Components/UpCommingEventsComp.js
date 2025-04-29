@@ -17,6 +17,7 @@ import {
 import {Colors} from '../Theme/Variables';
 import {MultiSelectButton} from './MultiSelectButton';
 import {
+  convertToArray,
   convertToCustomTimeFormat,
   convertToLocalTime,
   getDateMonthYear,
@@ -63,8 +64,6 @@ const UpcomingEventsComp = ({
     });
   };
 
-  console.log('sljdbvksbdklvbsdklbskldbvlksdbkvlsdbklvbds', item);
-
   return (
     <Pressable
       style={{...styles.mainView, ...mainViewStyle}}
@@ -85,7 +84,11 @@ const UpcomingEventsComp = ({
         </Pressable>
         <View style={styles.nameView}>
           <TextComponent
-            text={item?.title ?? 'System suggested '}
+            text={
+              item?.first_name
+                ? item?.first_name + ' ' + item?.last_name
+                : 'System suggested '
+            }
             styles={{fontWeight: 'bold', fontSize: hp('1.7')}}
             numberOfLines={1}
           />
@@ -116,8 +119,9 @@ const UpcomingEventsComp = ({
       </View>
       <View style={styles.priceMainView}>
         <TextComponent
-          text={'aMonte Vista.co.'}
-          styles={{fontWeight: 'bold'}}
+          text={item?.title}
+          styles={{fontWeight: 'bold', width: wp('70')}}
+          numberOfLines={1}
         />
         <View style={styles.priceView}>
           <Image
@@ -187,31 +191,42 @@ const UpcomingEventsComp = ({
       </View>
       <View style={styles.divider} />
 
-      <View style={styles.centerView}>
-        <TextComponent text={'Event types:'} styles={styles.leftText} />
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <MultiSelectButton
-            items={showFirstThreeAndCountRest([1, 2, 3, 4, 5])}
-            isDisable={true}
-            btnStyle={styles.tagsBtn}
-            textStyle={{fontSize: hp('1.5'), color: '#525252'}}
-          />
-        </View>
-      </View>
-      <View style={styles.divider} />
-
-      <View style={styles.centerView}>
-        <TextComponent text={'Associations:'} styles={styles.leftText} />
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <MultiSelectButton
-            items={showFirstThreeAndCountRest([1, 2, 3, 4, 5])}
-            isDisable={true}
-            btnStyle={styles.tagsBtn}
-            textStyle={{fontSize: hp('1.5'), color: '#525252'}}
-          />
-        </View>
-      </View>
-      <View style={styles.divider} />
+      {item?.event_types && (
+        <>
+          <View style={styles.centerView}>
+            <TextComponent text={'Event types:'} styles={styles.leftText} />
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <MultiSelectButton
+                items={showFirstThreeAndCountRest(
+                  convertToArray(item?.event_types),
+                )}
+                isDisable={true}
+                btnStyle={styles.tagsBtn}
+                textStyle={{fontSize: hp('1.5'), color: '#525252'}}
+              />
+            </View>
+          </View>
+          <View style={styles.divider} />
+        </>
+      )}
+      {item?.associations && (
+        <>
+          <View style={styles.centerView}>
+            <TextComponent text={'Associations:'} styles={styles.leftText} />
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <MultiSelectButton
+                items={showFirstThreeAndCountRest(
+                  convertToArray(item?.associations),
+                )}
+                isDisable={true}
+                btnStyle={styles.tagsBtn}
+                textStyle={{fontSize: hp('1.5'), color: '#525252'}}
+              />
+            </View>
+          </View>
+          <View style={styles.divider} />
+        </>
+      )}
 
       <View style={styles.bottomView}>
         <Touchable

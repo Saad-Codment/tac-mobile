@@ -54,8 +54,7 @@ const FriendsEventsScreen = ({navigation, route}) => {
             <FriendEventsComp
               item={item}
               index={index}
-              mainViewStyles={{width: wp('90')}}
-              upperImgStyle={{width: wp('90')}}
+              mainViewStyles={{width: wp('95')}}
               refetechKeys={['allFriendsEvents']}
               openBottomSheet={id => setModal(id)}
             />

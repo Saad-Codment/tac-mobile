@@ -12,6 +12,7 @@ export const TextComponent = ({
   isWhite,
   isThemeColor,
   isLightThemeColor,
+  isDarkTheme,
 }) => {
   return (
     <Text
@@ -28,6 +29,8 @@ export const TextComponent = ({
           ? Colors.yellowTextColor
           : isLightThemeColor
           ? Colors.primaryColor
+          : isDarkTheme
+          ? Colors.backgroundTheme
           : Colors.black,
         fontSize: hp('2'),
         ...styles,

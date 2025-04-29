@@ -73,6 +73,7 @@ export {default as syncContact} from './Icons/syncContact.png';
 export {default as horse} from './Icons/hourse.png';
 export {default as userEdit} from './Icons/userEdit.png';
 export {default as securityUser} from './Icons/securityUser.png';
+export {default as editProfileBlack} from './Icons/editProfileBlack.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';
@@ -176,6 +177,8 @@ export {default as infoIcon} from './Icons/infoIcon.png';
 export {default as privacyWithOutBg} from './Icons/receiptSearch.png';
 export {default as termNoBg} from './Icons/termNoBg.png';
 export {default as eventLogo} from './Icons/eventLogo.png';
+export {default as userFill} from './Icons/userFill.png';
+export {default as userBlack} from './Icons/userBlack.png';
 
 // Lotties files
 

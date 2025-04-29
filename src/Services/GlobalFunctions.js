@@ -920,6 +920,16 @@ function showFirstThreeAndCountRest(arr, startingCount) {
   // output: [1, 2, 3, "+2"]
 }
 
+function convertToArray(associations) {
+  // input: "NRHA"
+
+  if (associations) {
+    return associations.split(',').map(item => item.trim());
+  }
+  // Output: ["NRHA"]
+  return [];
+}
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -964,4 +974,5 @@ export {
   getLastNightDigit,
   checkMaleFemaleForImg,
   showFirstThreeAndCountRest,
+  convertToArray,
 };

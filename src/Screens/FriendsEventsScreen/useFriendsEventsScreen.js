@@ -7,7 +7,7 @@ import useReduxStore from '../../Hooks/UseReduxStore';
 import useFriendServices from '../../Services/FriendServices';
 
 const useFriendsEventsScreen = ({params}) => {
-  const {queryClient} = useReduxStore();
+  const {queryClient, getState} = useReduxStore();
   const [page, setPage] = useState(1); // Current page for pagination
   const [eventsList, setEventsList] = useState([]); // Combined list of events
   const [hasNextPage, setHasNextPage] = useState(true); // Flag to check if more data exists

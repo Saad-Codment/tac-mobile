@@ -222,30 +222,35 @@ const EventsDetailScreen = ({navigation, route}) => {
             <TextComponent
               text={eventData?.address}
               numberOfLines={3}
-              styles={{width: wp('60')}}
+              styles={{width: wp('60'), fontSize: hp('1.5')}}
             />
           </View>
           <TextComponent
             text={'View Location'}
-            styles={{color: Colors.lightBlueTextColor}}
+            styles={{color: Colors.lightBlueTextColor, fontSize: hp('1.5')}}
           />
         </View>
 
         <View style={styles.eventTimeViewGray}>
           <View style={styles.eventTimeView}>
-            <TextComponent text={'Starts At'} fade />
+            <TextComponent
+              text={'Starts At'}
+              styles={{fontSize: hp('1.5')}}
+              fade
+            />
             <Image
               source={filledCalender}
               resizeMode="contain"
               style={{
                 ...styles.eventCallImg,
-                marginLeft: wp('15'),
+                marginLeft: wp('30'),
               }}
             />
             <TextComponent
               text={`${getDateMonthYear(eventData?.from_date)?.monthName} ${
                 getDateMonthYear(eventData?.from_date)?.day
               }, ${getDateMonthYear(eventData?.from_date)?.year}`}
+              styles={{fontSize: hp('1.5')}}
             />
             <Image
               source={filledClock}
@@ -260,25 +265,31 @@ const EventsDetailScreen = ({navigation, route}) => {
                     }`
                   : 'Not Confirmed'
               }
+              styles={{fontSize: hp('1.5')}}
             />
           </View>
           <DividerLine
             DividerLineStyle={{width: wp('95'), marginVertical: hp('2')}}
           />
           <View style={styles.eventTimeView}>
-            <TextComponent text={'Ends At'} fade />
+            <TextComponent
+              text={'Ends At'}
+              fade
+              styles={{fontSize: hp('1.5')}}
+            />
             <Image
               source={filledCalender}
               resizeMode="contain"
               style={{
                 ...styles.eventCallImg,
-                marginLeft: wp('15'),
+                marginLeft: wp('32'),
               }}
             />
             <TextComponent
               text={`${getDateMonthYear(eventData?.to_date)?.monthName} ${
                 getDateMonthYear(eventData?.to_date)?.day
               }, ${getDateMonthYear(eventData?.to_date)?.year}`}
+              styles={{fontSize: hp('1.5')}}
             />
             <Image
               source={filledClock}
@@ -293,6 +304,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                     }`
                   : 'Not Confirmed'
               }
+              styles={{fontSize: hp('1.5')}}
             />
           </View>
         </View>
