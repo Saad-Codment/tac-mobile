@@ -40,7 +40,7 @@ const CommentScreen = ({navigation, route}) => {
     <KeyboardAvoidingView
       style={{flex: 1}}
       behavior={Platform.OS === 'ios' ? 'padding' : null}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? hp('20') : 0}>
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}>
       <HeaderComponent
         headerTitle={'Comments'}
         goBack={() => navigation.goBack()}

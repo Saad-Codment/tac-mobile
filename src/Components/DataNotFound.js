@@ -26,11 +26,13 @@ export const DataNotFound = ({
         />
       )}
       <TextComponent
-        text={title ?? 'Data not found'}
+        text={'Data not found'}
+        // text={title ?? 'Data not found'}
         styles={styles.noDataTitle}
       />
       <TextComponent
-        text={subTitle ?? 'No data, please try again later'}
+        text={'No data, please try again later'}
+        // text={subTitle ?? 'No data, please try again later'}
         styles={styles.noDataSubTitle}
       />
       {onpress && (

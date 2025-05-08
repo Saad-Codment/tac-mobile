@@ -44,7 +44,7 @@ const useAllEventsScreen = ({navigate, addListener}, {params}) => {
   //   return event;
   // });
 
-  const list = data?.pages.flatMap(page => page.data?.data) || null;
+  const list = data?.pages.flatMap(page => page.data?.data) || [];
 
   const functionToUpdateLike = index => {
     // setEventsList(list);
@@ -129,7 +129,7 @@ const useAllEventsScreen = ({navigate, addListener}, {params}) => {
     isPending,
     isFetching,
     refetch,
-    eventsList: list,
+    eventsList: list.filter(res => res != undefined) ?? [],
     onRefresh,
     title: params?.title,
     loadMoreData,

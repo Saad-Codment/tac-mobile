@@ -108,10 +108,11 @@ const PostViewComp = ({
   functionToUpdateLike,
   index,
   openBottomSheet,
+  mainViewStyle,
 }) => {
   const {likeAndDisLikeEvent, addLikeOnPost} = useFriendServices();
 
-  const {getState, dispatch} = useReduxStore();
+  const {getState, dispatch, queryClient} = useReduxStore();
 
   const onImagePress = () => {
     dispatch({
@@ -123,9 +124,13 @@ const PostViewComp = ({
   const {userData} = getState('Auth');
 
   return (
-    <View style={styles.mainView}>
+    <View style={{...styles.mainView, ...mainViewStyle}}>
       {/* Header Section */}
-      <View style={styles.upperView}>
+      <Pressable
+        style={styles.upperView}
+        onPress={() =>
+          NavigationService.navigate('FriendProfileScreen', {id: item?.user_id})
+        }>
         <CircleImage
           image={imageUrl(item?.profile_image ?? item?.user_image)}
           uri
@@ -152,7 +157,7 @@ const PostViewComp = ({
             />
           </Touchable>
         )}
-      </View>
+      </Pressable>
 
       {JSON.parse(item?.images)?.length > 0 ? (
         <View style={styles.contentView}>
@@ -188,6 +193,8 @@ const PostViewComp = ({
           onPress={async () => {
             functionToUpdateLike(index);
             await addLikeOnPost.mutateAsync(item?.id);
+            if (refetechKeys)
+              refetechKeys.map(res => queryClient.invalidateQueries([res]));
           }}>
           <Image
             source={item?.is_liked ? heartFilledLike : heartTheme}

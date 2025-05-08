@@ -48,7 +48,15 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     textTransform: 'capitalize',
   },
-
+  upComingFlatlistView: {
+    paddingBottom: hp('15'),
+    flexGrow: 1,
+    // paddingTop: hp('2'),
+    alignItems: 'center',
+    // alignSelf: 'center',
+    backgroundColor: 'yellow',
+    paddingTop: hp('2'),
+  },
   searchTextStyle: {
     fontSize: FontSize.scale15,
     fontWeight: '500',
@@ -206,5 +214,21 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 15,
     alignItems: 'center',
+  },
+  cardStyles: {
+    width: wp('95'),
+    // marginVertical: hp('0.5'),
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+    overflow: 'hidden',
+    marginVertical: hp('1'),
   },
 });

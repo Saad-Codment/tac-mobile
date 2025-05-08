@@ -170,7 +170,8 @@ const App = () => {
       {isVisible === true ? Splash_Screen : <MainNavigator />}
       {modalType && <ImagePreviewComp visible={modalType} images={image} />}
       {isloading &&
-        Boolean(getNameFunc?.getCurrentRoute()?.name != 'AllEventsScreen') && (
+        Boolean(getNameFunc?.getCurrentRoute()?.name != 'AllEventsScreen') &&
+        Boolean(getNameFunc?.getCurrentRoute()?.name != 'HomeScreen') && (
           <Overlay />
         )}
       {/* <StackNavigatior />; */}
