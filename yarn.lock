@@ -8877,6 +8877,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-clone-referenced-element@npm:^1.0.1":
+  version: 1.1.1
+  resolution: "react-clone-referenced-element@npm:1.1.1"
+  checksum: aa2432be46f99f50b4b611b93a333a6300699f8b53fd41b66f76a354fce8c512fd3432cdf919f06fba49987d64bc243d219204f879bd25c58b9f57a1b0e6b260
+  languageName: node
+  linkType: hard
+
 "react-devtools-core@npm:^5.0.0":
   version: 5.3.1
   resolution: "react-devtools-core@npm:5.3.1"
@@ -9179,6 +9186,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-infinite-scroll-view@npm:^0.4.5":
+  version: 0.4.5
+  resolution: "react-native-infinite-scroll-view@npm:0.4.5"
+  dependencies:
+    prop-types: ^15.6.2
+    react-clone-referenced-element: ^1.0.1
+    react-native-scrollable-mixin: ^1.0.0
+  checksum: fe92b368f1ac87d92df74f4486aad713f1ba20801812bcad8d6ce9b30c79a411947f6b65e2b20e563264d6a458e55f6bbde16a0dcb4cc1adf9875c25ff102e46
+  languageName: node
+  linkType: hard
+
 "react-native-iphone-screen-helper@npm:^2.0.2":
   version: 2.1.1
   resolution: "react-native-iphone-screen-helper@npm:2.1.1"
@@ -9384,6 +9402,13 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: afcb93e9cd48d5071278213bbc4ddc18112dbdbd16c11e3c7129368614396d8aae13fd70bb299f3c84f52a28e34af06ccdc514de1e97a99f4197069301dab136
+  languageName: node
+  linkType: hard
+
+"react-native-scrollable-mixin@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "react-native-scrollable-mixin@npm:1.0.1"
+  checksum: 9017d908a93b314099cceff41344981ab0dd510b983e2655e189a79eda960bd7efe93e180b016c198d940e6a2706e0f50640abfd39830725959d2464cd537fea
   languageName: node
   linkType: hard
 
@@ -10640,6 +10665,7 @@ __metadata:
     react-native-get-random-values: ^1.11.0
     react-native-google-places-autocomplete: ^2.5.1
     react-native-image-crop-picker: ^0.41.4
+    react-native-infinite-scroll-view: ^0.4.5
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-maps: 1.10.3
     react-native-maps-directions: ^1.9.0

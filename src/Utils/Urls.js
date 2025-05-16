@@ -75,6 +75,10 @@ export const sendUpdatedAtUrl = '/contacts/match-data';
 export const isPrivateUrl = '/privacy';
 export const homeTimeLineUrl = '/home/timeline?page=';
 export const homeUpcomingEventsUrl = '/home/upcoming-events-home';
+export const sharePostUrl = '/posts/share';
+export const shareEventUrl = '/events/share';
+export const updateEventUrl = '/events/update/';
+export const updatePostUrl = '/posts/update/';
 
 export const fcmTokenUrl = 'add-fcm-token';
 export const deleteAccUrl = 'auth/account-delete';

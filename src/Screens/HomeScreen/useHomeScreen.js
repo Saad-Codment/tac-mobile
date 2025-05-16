@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {TextComponent} from '../../Components/TextComponent';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import useFriendServices from '../../Services/FriendServices';
@@ -11,6 +11,8 @@ import {
   homeUpcomingEventsUrl,
 } from '../../Utils/Urls';
 import {loadingFalse} from '../../Redux/Action/isloadingAction';
+import {hp} from '../../Config/responsive';
+import {debounce} from 'lodash'; // or your preferred debounce utility
 
 const HomeScreen = ({navigate}) => {
   const [search, setSearch] = useState('');
@@ -66,9 +68,9 @@ const HomeScreen = ({navigate}) => {
   //   });
   //   return event;
   // });
-  console.log('ljskdvhjklsdbvjkbsdkvbsdkjvbksdbvsdbjk', data?.pages);
 
   const list = data?.pages?.flatMap(page => page.data?.data) || [];
+  console.log('ljskdvhjklsdbvjkbsdkvbsdkjvbksdbvsdbjk', list);
 
   const onRefresh = useCallback(() => {
     setRefresh(true);
@@ -90,6 +92,67 @@ const HomeScreen = ({navigate}) => {
 
   const dynamicRoute = (routeName, params) => navigate(routeName, params);
 
+  const [hasMoreData, setHasMoreData] = useState(true);
+
+  // Inside your fetch function:
+  const fetchData = async () => {
+    if (!hasMoreData || isFetchingNextPage) return;
+
+    const newData = await fetchNextPage();
+    if (newData.length === 0) {
+      setHasMoreData(false);
+    }
+  };
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [isNearEnd, setIsNearEnd] = useState(false);
+
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  const handleLoadMore = async () => {
+    // Double lock to prevent duplicates
+    if (isRefetching || list.length < 9) return;
+    else await fetchNextPage();
+  };
+
+  // useEffect(() => {
+  //   handleLoadMore();
+  // }, [isNearEnd]); // React to scroll position changes
+
+  const handleScroll = nativeEvent => {
+    console.log('Full nativeEvent:', nativeEvent);
+    // const {contentOffset, contentSize, layoutMeasurement} = nativeEvent;
+
+    // // Calculate distance from end in PIXELS
+    // const distanceFromEnd =
+    //   contentSize.height - (contentOffset.y + layoutMeasurement.height);
+
+    // // Trigger only if <30% from end, not already fetching, and data exists
+    // if (distanceFromEnd < paddingToBottom && !isFetching && list.length > 0) {
+    //   isFetching.current = true;
+    //   console.log('Fetching next page!');
+    //   fetchNextPage();
+    // }
+  };
+
+  // 2. Debounced version (Instagram's secret sauce)
+  const loadMoreDebounced = useMemo(
+    () => debounce(handleLoadMore, 50), // 50ms delay after scrolling stops
+    [handleLoadMore],
+  );
+
+  useEffect(() => {
+    return () => {
+      loadMoreDebounced.cancel(); // Important!
+    };
+  }, [loadMoreDebounced]);
+
+  console.log(
+    'ksdhvklsdbvlksbdkvlbskldvbklsdbvlsbdvlksdbvlksd',
+    upComingEvents?.data?.data?.suggested_events,
+  );
+
   return {
     search,
     setSearch,
@@ -98,7 +161,7 @@ const HomeScreen = ({navigate}) => {
     suggestedFriends: suggestedFriends?.data?.data ?? [],
     userData,
     homeTimeLine: list ?? [],
-    upcommingEvents: upComingEvents?.data?.data ?? [],
+    upcommingEvents: upComingEvents?.data?.data?.suggested_events ?? [],
     loadMoreData,
     isRefetching,
     isFetching,
@@ -115,6 +178,13 @@ const HomeScreen = ({navigate}) => {
     refreshing: refesh,
     isEndReachedCalledDuringMomentum,
     setIsEndReachedCalledDuringMomentum,
+    fetchData,
+    handleLoadMore,
+    isLoading,
+    handleScroll,
+    isRefetching,
+    loadMoreDebounced,
+    hasNextPage,
     sendReq: async id => {
       await sendFriendReq.mutateAsync(id);
       queryClient.invalidateQueries({queryKey: ['myFriends']});

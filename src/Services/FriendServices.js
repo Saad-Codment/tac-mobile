@@ -10,6 +10,8 @@ import {
   rejectFriendReqUrl,
   removeFriendUrl,
   sendFriendReqUrl,
+  shareEventUrl,
+  sharePostUrl,
 } from '../Utils/Urls';
 import {errorMessage, successMessage} from '../Config/NotificationMessage';
 import {store} from '../Redux/Reducer';
@@ -167,6 +169,39 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     },
   });
 
+  const sharePost = useMutation({
+    mutationFn: data => {
+      return API.post(sharePostUrl, data);
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
+  const shareEvent = useMutation({
+    mutationFn: data => {
+      return API.post(shareEventUrl, data);
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
+
   return {
     sendFriendReq,
     acceptFriendReq,
@@ -176,6 +211,8 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     removeFriend,
     addLikeOnPost,
     addCommentOnPost,
+    sharePost,
+    shareEvent,
   };
 };
 

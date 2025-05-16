@@ -50,10 +50,11 @@ import {
   allEventCircuitUrl,
   allEventTypeUrl,
   getAllTypeUrl,
+  imageUrl,
 } from '../../Utils/Urls';
 import {InfoModal} from '../../Components/InfoModalComp';
 
-const CreateEventsScreen = ({navigation}) => {
+const CreateEventsScreen = ({navigation, route}) => {
   const {
     currentDate,
     datePicker,
@@ -61,6 +62,7 @@ const CreateEventsScreen = ({navigation}) => {
     control,
     perfEventListArry,
     modalVisible,
+    isEditEvnet,
     setModalVisible,
     createEventFun,
     handleSubmit,
@@ -71,7 +73,9 @@ const CreateEventsScreen = ({navigation}) => {
     register,
     toggleDate,
     dynamicRoute,
-  } = useCreateEventsScreen(navigation);
+  } = useCreateEventsScreen(navigation, route);
+
+  console.log('errorserrorserrorserrorserrorserrorserrorserrorserrors', errors);
 
   const TitleInputView = ({
     title,
@@ -131,7 +135,11 @@ const CreateEventsScreen = ({navigation}) => {
 
   return (
     <View style={{flexGrow: 1}}>
-      <HeaderComponent headerTitle={'Create Event'} />
+      <HeaderComponent
+        headerTitle={isEditEvnet ? 'Update Event' : 'Create Event'}
+        isBack
+        goBack={() => navigation.goback()}
+      />
 
       <KeyBoardWrapper
         styles={styles.scrollView}
@@ -210,7 +218,15 @@ const CreateEventsScreen = ({navigation}) => {
                       );
                     }}>
                     <Image
-                      source={value?.uri ? {uri: value?.uri} : uploadImgView}
+                      source={
+                        value?.uri
+                          ? {
+                              uri: value?.isEdit
+                                ? imageUrl(value?.uri)
+                                : value?.uri,
+                            }
+                          : uploadImgView
+                      }
                       style={styles.uploadImg}
                     />
                   </Touchable>
@@ -843,7 +859,7 @@ const CreateEventsScreen = ({navigation}) => {
           }
         />
         <ThemeButton
-          title={'Create Event'}
+          title={isEditEvnet ? 'Update Event' : 'Create Event'}
           isYellowTheme
           style={styles.createBtnStyle}
           onPress={handleSubmit(createEventFun)}

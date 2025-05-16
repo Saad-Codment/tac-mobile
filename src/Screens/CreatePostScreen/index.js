@@ -25,9 +25,9 @@ import {
 import BlurImage from '../../Components/BlurImage';
 import {Touchable} from '../../Components/Touchable';
 
-const CreatePostScreen = ({navigation}) => {
-  const {userData, postImgs, postText, onChangeVal, createPost} =
-    useCreatePostScreen(navigation);
+const CreatePostScreen = ({navigation, route}) => {
+  const {userData, postImgs, postText, onChangeVal, createPost, isEditPost} =
+    useCreatePostScreen(navigation, route);
 
   console.log('postImgspostImgspostImgspostImgs', postImgs);
 
@@ -38,7 +38,7 @@ const CreatePostScreen = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
       <HeaderComponent
-        headerTitle={'Create Post'}
+        headerTitle={isEditPost ? 'Update Post' : 'Create Post'}
         style={{backgroundColor: 'transparent'}}
         titleStyle={{color: 'black'}}
         isBack
@@ -54,14 +54,20 @@ const CreatePostScreen = ({navigation}) => {
                 text: 'Camera',
                 onPress: async () => {
                   const images = await uploadFromCamera(true);
-                  onChangeVal('postImgs', [images]);
+                  onChangeVal(
+                    'postImgs',
+                    isEditPost ? [...postImgs, images] : [images],
+                  );
                 },
               },
               {
                 text: 'Gallery', // Just a dismissal button
                 onPress: async () => {
                   const images = await uploadFromGalary(true);
-                  onChangeVal('postImgs', images);
+                  onChangeVal(
+                    'postImgs',
+                    isEditPost ? [...postImgs, ...images] : images,
+                  );
                 },
               },
             ],
@@ -94,7 +100,7 @@ const CreatePostScreen = ({navigation}) => {
           {postImgs.map((res, index) => {
             return (
               <ImageBackground
-                source={{uri: res?.uri}}
+                source={{uri: res?.isEdit ? imageUrl(res?.uri) : res?.uri}}
                 style={{
                   ...styles.bgImg(Boolean(postImgs.length > 1)),
                   ...imgHeight[postImgs.length],

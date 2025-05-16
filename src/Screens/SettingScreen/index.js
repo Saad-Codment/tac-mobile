@@ -238,16 +238,22 @@ const SettingScreen = ({navigation}) => {
     ],
   };
   const AboutApp = {
-    title: 'About App',
+    title: 'About TAC',
     arryView: [
       {
-        title: `Help Centre`,
+        title: `Help Center`,
         leftIcon: helpCircle,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
       },
       {
         title: 'Feedback Submission',
+        leftIcon: likeTag,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+      },
+      {
+        title: 'Contact Us',
         leftIcon: likeTag,
         rightIcon: arrRight,
         rightIconColor: Colors.black,

@@ -29,7 +29,10 @@ const useMyEventScreen = ({navigate}) => {
     onSuccess: ({ok, data}) => {
       if (ok) {
         setBottomData(data?.data);
-      } else errorMessage(data?.message);
+      } else {
+        console.log('datadatadatadatadatadatadatadata', data?.message);
+        errorMessage(data?.message);
+      }
     },
   });
 

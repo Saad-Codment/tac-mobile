@@ -1,4 +1,4 @@
-import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {Alert, Image, Pressable, StyleSheet, View} from 'react-native';
 import {hp, wp} from '../Config/responsive';
 import BlurImage from './BlurImage';
 import {CircleImage} from './CircleImage';
@@ -7,6 +7,7 @@ import {
   blackLock,
   calendar,
   dollarCircle,
+  dotsVertical,
   eventLogo,
   heartFilledLike,
   heartTheme,
@@ -29,6 +30,12 @@ import {imageUrl} from '../Utils/Urls';
 import useFriendServices from '../Services/FriendServices';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {types} from '../Redux/types';
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuTrigger,
+} from 'react-native-popup-menu';
 
 const tags = [
   {
@@ -51,7 +58,7 @@ const UpcomingEventsComp = ({
   afterLikeFun,
   openBottomSheet,
 }) => {
-  const {likeAndDisLikeEvent} = useFriendServices();
+  const {likeAndDisLikeEvent, shareEvent} = useFriendServices();
 
   const {queryClient, getState, dispatch} = useReduxStore();
 
@@ -64,6 +71,30 @@ const UpcomingEventsComp = ({
     });
   };
 
+  const onEditPost = item => {
+    // Navigate to edit screen or open modal
+    NavigationService.navigate('CreateEventsScreen', {event: item});
+  };
+
+  const onDeletePost = item => {
+    // Show confirmation and then delete
+    Alert.alert(
+      'Confirm Delete',
+      'Are you sure you want to delete this post?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            // Call your delete mutation here
+            // deletePost.mutateAsync(item?.id);
+          },
+        },
+      ],
+    );
+  };
+
   return (
     <Pressable
       style={{...styles.mainView, ...mainViewStyle}}
@@ -73,7 +104,7 @@ const UpcomingEventsComp = ({
       <View style={styles.upperImage}>
         <Pressable onPress={onImagePress}>
           <CircleImage
-            size={0.15}
+            size={0.12}
             image={
               Boolean(item?.user_image ?? item?.profile_image)
                 ? imageUrl(item?.user_image ?? item?.profile_image)
@@ -89,7 +120,7 @@ const UpcomingEventsComp = ({
                 ? item?.first_name + ' ' + item?.last_name
                 : 'System suggested '
             }
-            styles={{fontWeight: 'bold', fontSize: hp('1.7')}}
+            styles={{fontWeight: 'bold', fontSize: hp('1.5')}}
             numberOfLines={1}
           />
           <View style={styles.locationView}>
@@ -101,12 +132,12 @@ const UpcomingEventsComp = ({
             />
             <TextComponent
               text={item?.address}
-              styles={{fontSize: hp('1.7')}}
+              styles={{fontSize: hp('1.5')}}
               numberOfLines={1}
             />
           </View>
         </View>
-        {userData?.id != item?.user_id && (
+        {userData?.id != item?.user_id ? (
           <TextComponent
             text={'Report'}
             fade
@@ -115,12 +146,26 @@ const UpcomingEventsComp = ({
               if (userData?.id != item?.user_id) openBottomSheet(item?.id);
             }}
           />
+        ) : (
+          <Menu>
+            <MenuTrigger>
+              <Image
+                source={dotsVertical}
+                resizeMode="contain"
+                style={{width: wp('7'), height: hp('5'), marginLeft: wp('8')}}
+              />
+            </MenuTrigger>
+            <MenuOptions>
+              <MenuOption onSelect={() => onEditPost(item)} text="Edit" />
+              <MenuOption onSelect={() => onDeletePost(item)} text="Delete" />
+            </MenuOptions>
+          </Menu>
         )}
       </View>
       <View style={styles.priceMainView}>
         <TextComponent
           text={item?.title}
-          styles={{fontWeight: 'bold', width: wp('70')}}
+          styles={{fontWeight: 'bold', width: wp('70'), fontSize: hp('1.5')}}
           numberOfLines={1}
         />
         <View style={styles.priceView}>
@@ -133,8 +178,11 @@ const UpcomingEventsComp = ({
           <TextComponent text={item?.added_money ?? 0} styles={styles.price} />
         </View>
       </View>
-      <View style={styles.centerView}>
-        <TextComponent text={'Starts at'} styles={styles.leftText} />
+      <View style={{...styles.centerView}}>
+        <TextComponent
+          text={`Starts at:`}
+          styles={{...styles.leftText, width: 'auto'}}
+        />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image
             source={calendar}
@@ -148,21 +196,29 @@ const UpcomingEventsComp = ({
             }, ${getDateMonthYear(item?.from_date)?.year}`}
             styles={{fontSize: hp('1.7')}}
           />
+        </View>
+        <TextComponent
+          text={`Ends at:`}
+          styles={{...styles.leftText, width: 'auto'}}
+        />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image
             source={calendar}
             resizeMode="contain"
             tintColor={'black'}
-            style={{...styles.calenderIcon, marginLeft: wp('2')}}
+            style={styles.calenderIcon}
           />
           <TextComponent
-            text={convertToCustomTimeFormat(item?.start_time)}
+            text={`${getDateMonthYear(item?.from_date)?.monthName} ${
+              getDateMonthYear(item?.from_date)?.day
+            }, ${getDateMonthYear(item?.from_date)?.year}`}
             styles={{fontSize: hp('1.7')}}
           />
         </View>
       </View>
-      <View style={styles.divider} />
+      {/* <View style={styles.divider} /> */}
 
-      <View style={styles.centerView}>
+      {/* <View style={styles.centerView}>
         <TextComponent text={'Ends at'} styles={styles.leftText} />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image
@@ -188,7 +244,7 @@ const UpcomingEventsComp = ({
             styles={{fontSize: hp('1.7')}}
           />
         </View>
-      </View>
+      </View> */}
       <View style={styles.divider} />
 
       {item?.event_types && (
@@ -212,7 +268,7 @@ const UpcomingEventsComp = ({
       {item?.associations && (
         <>
           <View style={styles.centerView}>
-            <TextComponent text={'Associations:'} styles={styles.leftText} />
+            <TextComponent text={'assoc:'} styles={styles.leftText} />
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <MultiSelectButton
                 items={showFirstThreeAndCountRest(
@@ -254,7 +310,11 @@ const UpcomingEventsComp = ({
             }}
           />
         </Touchable>
-        <View style={styles.leftRightView}>
+        <Touchable
+          style={styles.leftRightView}
+          onPress={() => {
+            shareEvent.mutateAsync({event_id: item?.id});
+          }}>
           <Image
             source={shareTheme}
             resizeMode="contain"
@@ -268,7 +328,7 @@ const UpcomingEventsComp = ({
               fontSize: hp('1.5'),
             }}
           />
-        </View>
+        </Touchable>
       </View>
     </Pressable>
   );
@@ -458,7 +518,12 @@ const styles = StyleSheet.create({
     marginLeft: wp('-0.5'),
     marginRight: wp('1'),
   },
-  reportText: {fontSize: hp('1.8'), top: hp('-2')},
+  reportText: {
+    fontSize: hp('1.5'),
+    top: hp('-2'),
+    textAlign: 'right',
+    // right: wp('-2'),
+  },
   priceMainView: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -472,7 +537,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   dollarIcon: {width: wp('4'), height: hp('3')},
-  price: {fontWeight: 'bold', marginLeft: wp('1')},
+  price: {fontWeight: 'bold', marginLeft: wp('1'), fontSize: hp('1.5')},
   centerView: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Alert, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {TextComponent} from './TextComponent';
 import {hp, wp} from '../Config/responsive';
 import {CircleImage} from './CircleImage';
@@ -19,6 +19,13 @@ import useReduxStore from '../Hooks/UseReduxStore';
 import {imageUrl} from '../Utils/Urls';
 import {formatDateToCustomFormat} from '../Services/GlobalFunctions';
 import {types} from '../Redux/types';
+// somewhere in your app
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
 
 const images = [
   'https://images.pexels.com/photos/27305813/pexels-photo-27305813/free-photo-of-a-woman-taking-a-photo-with-her-camera.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
@@ -109,8 +116,9 @@ const PostViewComp = ({
   index,
   openBottomSheet,
   mainViewStyle,
+  refetch,
 }) => {
-  const {likeAndDisLikeEvent, addLikeOnPost} = useFriendServices();
+  const {likeAndDisLikeEvent, addLikeOnPost, sharePost} = useFriendServices();
 
   const {getState, dispatch, queryClient} = useReduxStore();
 
@@ -119,6 +127,30 @@ const PostViewComp = ({
       payload: JSON.parse(item?.images),
       type: types.openModal,
     });
+  };
+
+  const onEditPost = item => {
+    // Navigate to edit screen or open modal
+    NavigationService.navigate('CreatePostScreen', {post: item, refetch});
+  };
+
+  const onDeletePost = item => {
+    // Show confirmation and then delete
+    Alert.alert(
+      'Confirm Delete',
+      'Are you sure you want to delete this post?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            // Call your delete mutation here
+            // deletePost.mutateAsync(item?.id);
+          },
+        },
+      ],
+    );
   };
 
   const {userData} = getState('Auth');
@@ -145,7 +177,7 @@ const PostViewComp = ({
             styles={styles.postTime}
           />
         </View>
-        {userData?.id != item?.user_id && (
+        {userData?.id != item?.user_id ? (
           <Touchable
             onPress={() => {
               if (userData?.id != item?.user_id) openBottomSheet(item?.id);
@@ -156,6 +188,20 @@ const PostViewComp = ({
               style={{width: wp('7'), height: hp('5')}}
             />
           </Touchable>
+        ) : (
+          <Menu>
+            <MenuTrigger>
+              <Image
+                source={dotsVertical}
+                resizeMode="contain"
+                style={{width: wp('7'), height: hp('5')}}
+              />
+            </MenuTrigger>
+            <MenuOptions>
+              <MenuOption onSelect={() => onEditPost(item)} text="Edit" />
+              <MenuOption onSelect={() => onDeletePost(item)} text="Delete" />
+            </MenuOptions>
+          </Menu>
         )}
       </Pressable>
 
@@ -233,7 +279,9 @@ const PostViewComp = ({
             }}
           />
         </Touchable>
-        <View style={styles.leftRightView}>
+        <Touchable
+          style={styles.leftRightView}
+          onPress={() => sharePost.mutate({post_id: item?.id})}>
           <Image
             source={shareTheme}
             resizeMode="contain"
@@ -248,7 +296,7 @@ const PostViewComp = ({
               fontSize: hp('1.5'),
             }}
           />
-        </View>
+        </Touchable>
       </View>
     </View>
   );

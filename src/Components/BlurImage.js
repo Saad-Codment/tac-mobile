@@ -19,11 +19,6 @@ const BlurImage = ({
     return /^https?:\/\//i.test(url);
   }
 
-  console.log(
-    'defaultSourcedefaultSourcedefaultSourcedefaultSource',
-    defaultSource,
-  );
-
   // const imageSource = uri
   //   ? {uri, priority: FastImage.priority.normal}
   //   : background;

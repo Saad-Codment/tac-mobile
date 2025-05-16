@@ -9,6 +9,8 @@ import {keyExtractor} from '../../Utils';
 import SmallEventCardsComp from '../../Components/SmallEventCardsComp';
 import {styles} from './styles';
 import {DataNotFound} from '../../Components/DataNotFound';
+import {CircleImage} from '../../Components/CircleImage';
+import {addcircle} from '../../Assets';
 
 function MyEventScreen({navigation}) {
   const {eventDate, eventsByDate, activeButton, onSelectVal} =
@@ -29,8 +31,8 @@ function MyEventScreen({navigation}) {
     <View style={{flex: 1}}>
       <HeaderComponent
         headerTitle={'Events'}
-        goBack={() => navigation.goBack()}
-        isBack
+        rightIconImg={addcircle}
+        onRightPress={() => navigation.navigate('CreateEventsScreen')}
       />
       <View style={styles.innerView}>
         <UseCalendar

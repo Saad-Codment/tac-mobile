@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   upComingFlatlistView: {
-    paddingBottom: hp('15'),
+    // paddingBottom: hp('15'),
     flexGrow: 1,
     // paddingTop: hp('2'),
     alignItems: 'center',

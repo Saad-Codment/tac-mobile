@@ -20,6 +20,7 @@ import ErrorInputComponent from '../../Components/ErrorInputComponent';
 import {MultiSelectButton} from '../../Components/MultiSelectButton';
 import {
   formatDateToCustomFormat,
+  sortByNameAlphabetically,
   uploadFromGalary,
 } from '../../Services/GlobalFunctions';
 import {imageUrl} from '../../Utils/Urls';
@@ -140,7 +141,7 @@ const SettingModal = ({
       title: 'Update Associations',
       renderView: (
         <MultiSelectButton
-          items={allData}
+          items={sortByNameAlphabetically(allData)}
           isMultipule
           selectedAlter={associations}
           btnStyle={{height: 'auto', paddingVertical: hp('1')}}

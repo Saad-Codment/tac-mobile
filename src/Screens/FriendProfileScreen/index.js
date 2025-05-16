@@ -45,11 +45,6 @@ const FriendProfileScreen = ({navigation, route}) => {
     refetch,
     functionToUpdateLike,
   } = useFriendProfileScreen(navigation, route);
-  console.log(
-    'slkdbvlkbsdlkvbklsdbvklsddsfsdfsdbkvlblsdv',
-    eventsList,
-    userData,
-  );
 
   return (
     <View style={{flex: 1}}>
@@ -109,24 +104,30 @@ const FriendProfileScreen = ({navigation, route}) => {
             InnerCompnonet={(item, index) => {
               return (
                 <View style={{marginVertical: hp('1')}}>
-                  {item.type == 2 ? (
-                    <UpcomingEventsComp
-                      item={item}
-                      index={index}
-                      mainViewStyle={{width: wp('95')}}
-                      upperImgStyle={{width: wp('95')}}
-                      functionToUpdateLike={functionToUpdateLike}
-                      openBottomSheet={id => setModal(id)}
-                      // likePost={likePost}
-                    />
-                  ) : (
-                    <PostViewComp
-                      item={item}
-                      index={index}
-                      functionToUpdateLike={functionToUpdateLike}
-                      openBottomSheet={id => setModal(id)}
-                    />
-                  )}
+                  {item?.type == 2 ||
+                    item?.type == 4 ||
+                    item?.type == 5 ||
+                    (item?.type == 6 && (
+                      <UpcomingEventsComp
+                        item={item}
+                        index={index}
+                        mainViewStyle={{width: wp('95')}}
+                        upperImgStyle={{width: wp('95')}}
+                        functionToUpdateLike={functionToUpdateLike}
+                        openBottomSheet={id => setModal(id)}
+                        // likePost={likePost}
+                      />
+                    ))}
+
+                  {item?.type == 3 ||
+                    (item?.type == 1 && (
+                      <PostViewComp
+                        item={item}
+                        index={index}
+                        functionToUpdateLike={functionToUpdateLike}
+                        openBottomSheet={id => setModal(id)}
+                      />
+                    ))}
                 </View>
               );
             }}

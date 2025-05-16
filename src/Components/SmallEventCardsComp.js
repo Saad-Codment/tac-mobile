@@ -2,14 +2,18 @@ import {Image, StyleSheet, View} from 'react-native';
 import {hp, wp} from '../Config/responsive';
 import {Colors} from '../Theme/Variables';
 import {TextComponent} from './TextComponent';
-import {calendar, calender, clock, location} from '../Assets';
+import {calendar, calender, clock, dollarCircle, location} from '../Assets';
 import {
+  convertToArray,
   convertToLocalTime,
   getDateMonthYear,
+  showFirstThreeAndCountRest,
 } from '../Services/GlobalFunctions';
 import {Touchable} from './Touchable';
+import {MultiSelectButton} from './MultiSelectButton';
 
 const SmallEventCardsComp = ({item, onPress}) => {
+  console.log('lkjsdbvklsbdlkvbklsdbvlsbdkvbksldvksd', item);
   return (
     <Touchable onPress={onPress} style={styles.mainView}>
       <View style={styles.dateView}>
@@ -26,34 +30,6 @@ const SmallEventCardsComp = ({item, onPress}) => {
       </View>
       <View style={styles.secondView}>
         <TextComponent text={item?.title} styles={styles.titleStyle} />
-        <View style={styles.centerView}>
-          {/* <Image
-            source={calender}
-            resizeMode="contain"
-            style={styles.calendarStyle}
-          />
-          <TextComponent
-            text={`${getDateMonthYear(item?.from_date)?.dayName}. ${
-              getDateMonthYear(item?.from_date)?.monthName
-            } ${getDateMonthYear(item?.from_date)?.day} - ${
-              getDateMonthYear(item?.from_date)?.year
-            }`}
-            styles={{fontSize: hp('1.5')}}
-            fade
-          /> */}
-          <Image
-            source={clock}
-            resizeMode="contain"
-            style={styles.clockStyle}
-          />
-          <TextComponent
-            text={`${convertToLocalTime(item?.start_time)?.time} - ${
-              convertToLocalTime(item?.end_time)?.time
-            } ${convertToLocalTime(item?.end_time)?.period}`}
-            styles={{fontSize: hp('1.5')}}
-            fade
-          />
-        </View>
         <View style={styles.bottomView}>
           <Image
             source={location}
@@ -66,6 +42,53 @@ const SmallEventCardsComp = ({item, onPress}) => {
             fade
             numberOfLines={1}
           />
+
+          <Image
+            source={dollarCircle}
+            resizeMode="contain"
+            style={styles.locationIcon}
+            tintColor={'black'}
+          />
+          <TextComponent
+            text={item?.added_money ?? 0}
+            styles={styles.locationText}
+            fade
+            numberOfLines={1}
+          />
+        </View>
+        <View style={styles.centerView}>
+          {item?.event_types && (
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TextComponent
+                text={'Event types: '}
+                styles={{fontSize: hp('1.5'), marginVertical: hp('1')}}
+              />
+              <MultiSelectButton
+                items={showFirstThreeAndCountRest(
+                  convertToArray(item?.event_types),
+                )}
+                isDisable={true}
+                btnStyle={styles.tagsBtn}
+                textStyle={{fontSize: hp('1.5'), color: '#525252'}}
+              />
+            </View>
+          )}
+          {item?.associations && (
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TextComponent
+                text={'Association types: '}
+                styles={{fontSize: hp('1.5'), marginVertical: hp('1')}}
+              />
+              <MultiSelectButton
+                items={showFirstThreeAndCountRest(
+                  convertToArray(item?.associations),
+                )}
+                isDisable={true}
+                btnStyle={styles.tagsBtn}
+                textStyle={{fontSize: hp('1.2'), color: '#525252'}}
+              />
+            </View>
+          )}
         </View>
       </View>
     </Touchable>
@@ -91,7 +114,7 @@ const styles = StyleSheet.create({
     // paddingVertical: hp('1.5'),
   },
   monthText: {
-    fontSize: hp('2.5'),
+    fontSize: hp('2'),
     fontWeight: 'bold',
     color: Colors.darkThemeTextColor,
   },
@@ -100,13 +123,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Colors.darkThemeTextColor,
   },
-  secondView: {paddingVertical: hp('1'), paddingHorizontal: wp('2')},
-  titleStyle: {color: Colors.darkThemeTextColor, fontWeight: 'bold'},
-  centerView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: hp('4'),
+  secondView: {
+    paddingVertical: hp('1'),
+    paddingHorizontal: wp('2'),
   },
+  titleStyle: {color: Colors.darkThemeTextColor, fontWeight: 'bold'},
+  centerView: {},
   calendarStyle: {
     width: wp('4'),
     marginRight: wp('1'),
@@ -117,7 +139,22 @@ const styles = StyleSheet.create({
     // marginLeft: wp('2'),
     marginRight: wp('1'),
   },
-  bottomView: {flexDirection: 'row', alignItems: 'center'},
+  tagsBtn: {
+    width: 'auto',
+    paddingHorizontal: wp('1'),
+    backgroundColor: 'transparent',
+    overflow: 'hidden',
+    height: 'auto',
+    paddingVertical: hp('0.5'),
+    borderWidth: 1,
+    borderColor: Colors.primaryColor,
+    marginTop: hp('0.5'),
+  },
+  bottomView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: hp('1.5'),
+  },
   locationIcon: {width: wp('4'), height: hp('2'), marginRight: wp('1')},
-  locationText: {fontSize: hp('1.5'), width: wp('65')},
+  locationText: {fontSize: hp('1.5'), width: wp('30')},
 });

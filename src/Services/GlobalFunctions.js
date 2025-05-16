@@ -930,6 +930,16 @@ function convertToArray(associations) {
   return [];
 }
 
+function sortByNameAlphabetically(data) {
+  return data.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function isFutureOrNow(dateString) {
+  const inputDate = new Date(dateString.replace(' ', 'T')); // Convert to ISO format
+  const now = new Date();
+  return inputDate >= now;
+}
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -975,4 +985,6 @@ export {
   checkMaleFemaleForImg,
   showFirstThreeAndCountRest,
   convertToArray,
+  sortByNameAlphabetically,
+  isFutureOrNow,
 };

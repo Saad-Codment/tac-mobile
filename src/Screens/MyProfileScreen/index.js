@@ -44,7 +44,7 @@ const MyProfileScreen = ({navigation}) => {
               text={userData?.event_count}
               styles={styles.statNumber}
             />
-            <TextComponent text={' Evnets'} styles={styles.statLabel} />
+            <TextComponent text={' Events'} styles={styles.statLabel} />
           </View>
         </View>
         <View style={styles.statItem}>
@@ -103,7 +103,15 @@ const MyProfileScreen = ({navigation}) => {
           InnerCompnonet={(item, index) => {
             return (
               <View style={{marginVertical: hp('1')}}>
-                {item.type == 2 ? (
+                {item?.type == 3 || item?.type == 1 ? (
+                  <PostViewComp
+                    item={item}
+                    index={index}
+                    functionToUpdateLike={functionToUpdateLike}
+                    openBottomSheet={id => setModal(id)}
+                    refetch={refetch}
+                  />
+                ) : (
                   <UpcomingEventsComp
                     item={item}
                     index={index}
@@ -112,13 +120,6 @@ const MyProfileScreen = ({navigation}) => {
                     functionToUpdateLike={functionToUpdateLike}
                     openBottomSheet={id => setModal(id)}
                     // likePost={likePost}
-                  />
-                ) : (
-                  <PostViewComp
-                    item={item}
-                    index={index}
-                    functionToUpdateLike={functionToUpdateLike}
-                    openBottomSheet={id => setModal(id)}
                   />
                 )}
               </View>

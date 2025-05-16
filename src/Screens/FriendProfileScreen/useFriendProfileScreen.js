@@ -74,6 +74,8 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
 
   const openBottomSheet = () => {};
 
+  console.log('skldvklsbdklvbskdlvbklsdbvbksd', eventsList);
+
   return {
     userData: data?.data,
     loadMoreData,

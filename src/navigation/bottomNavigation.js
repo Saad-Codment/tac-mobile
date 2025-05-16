@@ -25,6 +25,9 @@ import {
   searchNormal,
   userFill,
   userBlack,
+  unfilledCalender,
+  groupBlack,
+  circleCalFilled,
 } from '../Assets';
 import {types} from '../Redux/types';
 import useReduxStore from '../Hooks/UseReduxStore';
@@ -33,20 +36,28 @@ import {fetchGetWithToken} from '../Utils/helperFunc';
 
 globalStyles = {};
 const isIOS = Boolean(Platform.OS == 'ios');
-const tabarComponent = (activeImage, unActiveImage, ImageStyle) => {
+const tabarComponent = (activeImage, unActiveImage, ImageStyle, notUseTint) => {
   return {
-    tabBarIcon: ({focused}) => (
-      <View style={styles.tabarView}>
-        <Image
-          style={{
-            ...styles.imgstyle,
-            ...ImageStyle,
+    tabBarIcon: ({focused}) => {
+      const tintColor = !notUseTint
+        ? {
             tintColor: focused ? Colors.primaryColor : Colors.backgroundTheme,
-          }}
-          source={focused ? activeImage : unActiveImage}
-        />
-      </View>
-    ),
+          }
+        : {};
+
+      return (
+        <View style={styles.tabarView}>
+          <Image
+            style={{
+              ...styles.imgstyle,
+              ...ImageStyle,
+              ...tintColor,
+            }}
+            source={focused ? activeImage : unActiveImage}
+          />
+        </View>
+      );
+    },
     title: '',
     tabBarLabelStyle: styles.tabarTitle,
   };
@@ -100,13 +111,18 @@ function MybottomTabs() {
       />
       <Tab.Screen
         name="HomeScreen1"
-        options={tabarComponent(searchNormal, searchBottom)}
+        options={tabarComponent(groupBlack, groupBlack)}
         component={Screens.SearchScreen}
       />
       <Tab.Screen
-        name="HomeScreen2"
-        options={tabarComponent(addcircle, addcircle)}
-        component={Screens.CreateEventsScreen}
+        name="MyEventScreen"
+        options={tabarComponent(
+          circleCalFilled,
+          unfilledCalender,
+          {width: wp('10')},
+          true,
+        )}
+        component={Screens.MyEventScreen}
       />
       <Tab.Screen
         name="HomeScreen4"

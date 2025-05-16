@@ -74,6 +74,9 @@ export {default as horse} from './Icons/hourse.png';
 export {default as userEdit} from './Icons/userEdit.png';
 export {default as securityUser} from './Icons/securityUser.png';
 export {default as editProfileBlack} from './Icons/editProfileBlack.png';
+export {default as unfilledCalender} from './Icons/unfilledCalender.png';
+export {default as groupBlack} from './Icons/groupBlack.png';
+export {default as circleCalFilled} from './Icons/circleCalFilled.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';

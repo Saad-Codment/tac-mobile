@@ -131,7 +131,7 @@ const HomeHeader = ({
           textStyle={{fontSize: hp('1.5')}}
           onPress={() => NavigationService.navigate('CreatePostScreen')}
         />
-        <ThemeButton
+        {/* <ThemeButton
           image={galleryYellow}
           style={{
             ...styles.upperBtn,
@@ -144,7 +144,7 @@ const HomeHeader = ({
           imageStyle={styles.imgStyle}
           textStyle={{marginLeft: wp('0.2')}}
           onPress={() => NavigationService.navigate('CreatePostScreen')}
-        />
+        /> */}
       </View>
     </View>
   );
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   upperBtn: {
-    width: wp('80'),
+    width: wp('92'),
     borderRadius: 30,
     height: hp('5'),
     borderWidth: 0.5,

@@ -1,27 +1,95 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Schemas from '../../Utils/Validation';
 import useFormHook from '../../Hooks/UseFormHooks';
 import {useFieldArray, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import RNCalendarEvents from 'react-native-calendar-events';
-import {useMutation} from '@tanstack/react-query';
-import {createEventUrl} from '../../Utils/Urls';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {
+  createEventUrl,
+  getEventDetailsUrl,
+  updateEventUrl,
+} from '../../Utils/Urls';
 import API, {formDataFunc} from '../../Utils/helperFunc';
 import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import {
   convertDateFormat,
   convertDateString,
+  convertToArray,
   convertToCustomTimeFormat,
   formatDateToCustomFormat,
   getCalenderPerComfirm,
   getIdsFromArry,
+  isFutureOrNow,
 } from '../../Services/GlobalFunctions';
 import useReduxStore from '../../Hooks/UseReduxStore';
 
-const useCreateEventsScreen = ({navigate}) => {
+const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
+  const {event} = params?.event ? params : {event: null};
+
+  const isEditEvnet = Boolean(event?.created_at);
+
   var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const currentDate = new Date();
   const nextDay = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // Adds 1 day in milliseconds
+
+  const {data} = useQuery({
+    queryKey: ['eventDetailForEdit'],
+    queryFn: async () => {
+      const allProps = await API.get(getEventDetailsUrl + event?.id);
+      if (allProps?.ok) {
+        const res = allProps.data;
+
+        setValue('eventTitle', res?.title || '');
+        setValue(
+          'eventImg',
+          res?.images
+            ? {
+                uri: JSON.parse(res.images)[0],
+                type: 'image/jpeg',
+                name: JSON.parse(res.images)[0].split('/').pop(),
+                isEdit: true,
+              }
+            : {},
+        );
+        setValue('eventPrice', res?.added_money || '');
+        setValue('perfEventList', []); // set if you have event list data
+        setValue('privateEvent', res?.private || 0);
+        setValue('evnetTour', res?.tour?.id || 1);
+        setValue('eventType', res?.event_types ?? null);
+        setValue('eventAssociation', res?.associations ?? null);
+        setValue('eventCircuit', res?.circuits ?? null);
+        setValue('eventConfirm', res?.is_confirmed ?? null);
+        setValue('eventLocation', {
+          locationName: res?.address,
+          coords: {
+            latitude: res?.latitude,
+            longitude: res?.longitude,
+          },
+        });
+
+        setValue(
+          'eventStartDate',
+          res?.from_date ? new Date(res.from_date) : new Date(),
+        );
+        setValue(
+          'eventStartTime',
+          res?.start_time ? new Date(res.start_time) : new Date(),
+        );
+        setValue(
+          'eventEndDate',
+          isFutureOrNow(res?.to_date) ? new Date(res.to_date) : nextDay,
+        );
+        setValue(
+          'eventEndTime',
+          isFutureOrNow(res?.end_time) ? new Date(res.end_time) : nextDay,
+        );
+      }
+      return allProps;
+    },
+  });
+
+  console.log('jkdbflksfblksblksblkdfklbnlkdfnbkldfnklbndfb', data?.data);
 
   const {
     control,
@@ -41,15 +109,17 @@ const useCreateEventsScreen = ({navigate}) => {
     errors,
   } = useFormHook(Schemas.eventCreate, {
     perfEventList: [], // Initial empty event
-    privateEvent: 0,
-    evnetTour: 1,
-    eventStartDate: currentDate,
-    eventStartTime: currentDate,
-    eventEndDate: nextDay,
-    eventEndTime: nextDay,
+    eventStartDate: new Date(data?.data?.from_date) ?? currentDate,
+    eventStartTime: new Date(data?.data?.start_time) ?? currentDate,
+    eventEndDate: new Date(data?.data?.to_date) ?? nextDay,
+    eventEndTime: new Date(data?.data?.end_time) ?? nextDay,
   });
 
   const {queryClient} = useReduxStore();
+
+  useEffect(() => {
+    return () => reset();
+  }, []);
 
   // Initialize useFieldArray for perfEventList
   const {fields, append, remove, update} = useFieldArray({
@@ -117,9 +187,14 @@ const useCreateEventsScreen = ({navigate}) => {
         tour_id: evnetTour,
         private: privateEvent ? 1 : 0,
         is_confirmed: eventConfirm ? 1 : 0,
-        'images[]': eventImg,
+        'images[]': isEditEvnet
+          ? !eventImg.isEdit
+            ? eventImg
+            : null
+          : eventImg,
         timezone: timeZone,
         added_money: eventPrice,
+        images_array: eventImg.isEdit ? JSON.stringify(eventImg?.uri) : null,
         // 'performances[]':
         //   fields.length > 0
         //     ? fields.map(res => ({
@@ -131,7 +206,11 @@ const useCreateEventsScreen = ({navigate}) => {
         //     : null,
       };
       console.log('After hit api ', JSON.stringify(body));
-      const {ok, data} = await formDataFunc(createEventUrl, body, 'images[]');
+      const {ok, data} = await formDataFunc(
+        isEditEvnet ? updateEventUrl + event?.id : createEventUrl,
+        body,
+        'images[]',
+      );
       if (ok) {
         if (eventSync) {
           await RNCalendarEvents.checkPermissions();
@@ -152,10 +231,18 @@ const useCreateEventsScreen = ({navigate}) => {
           console.log('propropropropropropro', pro);
         }
         reset();
+        if (isEditEvnet) queryClient.invalidateQueries(['profilePosts']);
         queryClient.invalidateQueries({queryKey: ['getEventDate']});
-        successMessage('Event created successfully');
-        navigate('MyEventScreen');
-      } else errorMessage('Error on creating event');
+        successMessage(
+          isEditEvnet
+            ? 'Event updated successfully'
+            : 'Event created successfully',
+        );
+        goBack();
+      } else
+        errorMessage(
+          isEditEvnet ? 'rror on updating event' : 'Error on creating event',
+        );
     } catch (error) {
       console.log('lsidgvlkbsdklvbsdklbvklsdbkvlsdbklvbsdkl', error);
     }
@@ -178,6 +265,7 @@ const useCreateEventsScreen = ({navigate}) => {
     createEventFun,
     modalVisible,
     setModalVisible,
+    isEditEvnet,
   };
 };
 export default useCreateEventsScreen;
