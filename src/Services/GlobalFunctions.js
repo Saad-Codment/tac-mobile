@@ -940,6 +940,20 @@ function isFutureOrNow(dateString) {
   return inputDate >= now;
 }
 
+function mergeIds(id1, id2) {
+  const num1 = Number(id1);
+  const num2 = Number(id2);
+
+  if (isNaN(num1) || isNaN(num2)) {
+    throw new Error('Both IDs must be numeric or numeric strings.');
+  }
+
+  // Merge with the smaller number first
+  const merged = num1 < num2 ? `${num1}${num2}` : `${num2}${num1}`;
+
+  return merged;
+}
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -987,4 +1001,5 @@ export {
   convertToArray,
   sortByNameAlphabetically,
   isFutureOrNow,
+  mergeIds,
 };

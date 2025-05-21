@@ -41,7 +41,6 @@ const useMyProfileScreen = ({navigate}) => {
       } else errorMessage('Error on fetching data!');
       return response?.data;
     },
-    keepPreviousData: true, // Preserve old data while fetching new
   });
 
   const loadMoreData = useCallback(
@@ -71,6 +70,12 @@ const useMyProfileScreen = ({navigate}) => {
     });
   };
 
+  const functionToDelete = index => {
+    setEventsList(prev => {
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
   const openBottomSheet = () => {};
 
   return {
@@ -87,6 +92,7 @@ const useMyProfileScreen = ({navigate}) => {
     modal,
     setModal,
     openBottomSheet,
+    functionToDelete,
   };
 };
 

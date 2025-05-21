@@ -42,7 +42,6 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
       } else errorMessage('Error on fetching data!');
       return response?.data;
     },
-    keepPreviousData: true, // Preserve old data while fetching new
   });
 
   const loadMoreData = useCallback(
@@ -71,6 +70,11 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
       return prev;
     });
   };
+  const functionToDelete = index => {
+    setEventsList(prev => {
+      return prev.filter((_, i) => i !== index);
+    });
+  };
 
   const openBottomSheet = () => {};
 
@@ -90,6 +94,7 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
     modal,
     setModal,
     openBottomSheet,
+    functionToDelete,
   };
 };
 

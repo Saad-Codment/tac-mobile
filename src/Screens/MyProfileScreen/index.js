@@ -1,5 +1,5 @@
 import {View, Text, Image, StyleSheet, ActivityIndicator} from 'react-native';
-import React, {memo} from 'react';
+import React, {memo, useCallback} from 'react';
 import ProfileHeader from '../../Components/ProfileHeader';
 import {hp, wp} from '../../Config/responsive';
 import {Colors} from '../../Theme/Variables';
@@ -29,9 +29,42 @@ const MyProfileScreen = ({navigation}) => {
     loadMoreData,
     refetch,
     functionToUpdateLike,
+    functionToDelete,
   } = useMyProfileScreen(navigation);
 
   console.log('lkdbkldbfklbdfklbkldfbl;kdbsf;b;ldflnb;df', myUserData);
+
+  const renderItem = useCallback(
+    (item, index) => {
+      return (
+        <View style={{marginVertical: hp('1')}}>
+          {item?.type == 3 || item?.type == 1 ? (
+            <PostViewComp
+              item={item}
+              index={index}
+              functionToUpdateLike={functionToUpdateLike}
+              openBottomSheet={id => setModal(id)}
+              refetch={refetch}
+              functionToDelete={functionToDelete}
+            />
+          ) : (
+            <UpcomingEventsComp
+              item={item}
+              index={index}
+              mainViewStyle={{width: wp('95')}}
+              upperImgStyle={{width: wp('95')}}
+              functionToUpdateLike={functionToUpdateLike}
+              openBottomSheet={id => setModal(id)}
+              functionToDelete={functionToDelete}
+
+              // likePost={likePost}
+            />
+          )}
+        </View>
+      );
+    },
+    [refetch, isRefetching, eventsList, isRefetching],
+  );
 
   return (
     <View style={styles.container}>
@@ -101,29 +134,7 @@ const MyProfileScreen = ({navigation}) => {
               )), // Show loading spinner at the bottom
           }}
           InnerCompnonet={(item, index) => {
-            return (
-              <View style={{marginVertical: hp('1')}}>
-                {item?.type == 3 || item?.type == 1 ? (
-                  <PostViewComp
-                    item={item}
-                    index={index}
-                    functionToUpdateLike={functionToUpdateLike}
-                    openBottomSheet={id => setModal(id)}
-                    refetch={refetch}
-                  />
-                ) : (
-                  <UpcomingEventsComp
-                    item={item}
-                    index={index}
-                    mainViewStyle={{width: wp('95')}}
-                    upperImgStyle={{width: wp('95')}}
-                    functionToUpdateLike={functionToUpdateLike}
-                    openBottomSheet={id => setModal(id)}
-                    // likePost={likePost}
-                  />
-                )}
-              </View>
-            );
+            return renderItem(item, index);
           }}
         />
       )}

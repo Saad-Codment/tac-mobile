@@ -29,5 +29,7 @@ export {default as ProfileScreen} from './ProfileScreen';
 export {default as ChangePasswordScreen} from './ChangePasswordScreen';
 export {default as AccountPrivacyScreen} from './AccountPrivacyScreen';
 export {default as MyProfileScreen} from './MyProfileScreen';
+export {default as ChatScreen} from './ChatScreen';
+export {default as ChatUsersScreen} from './ChatUsersScreen';
 
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

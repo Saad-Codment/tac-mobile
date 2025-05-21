@@ -125,9 +125,9 @@ function MybottomTabs() {
         component={Screens.MyEventScreen}
       />
       <Tab.Screen
-        name="HomeScreen4"
+        name="ChatUsersScreen"
         options={tabarComponent(messages, messageOut)}
-        component={Screens.HomeScreen}
+        component={Screens.ChatUsersScreen}
       />
       <Tab.Screen
         name="MyProfileScreen"

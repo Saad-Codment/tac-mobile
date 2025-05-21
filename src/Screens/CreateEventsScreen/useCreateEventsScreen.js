@@ -194,7 +194,7 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
           : eventImg,
         timezone: timeZone,
         added_money: eventPrice,
-        images_array: eventImg.isEdit ? JSON.stringify(eventImg?.uri) : null,
+        images_array: eventImg.isEdit ? JSON.stringify([eventImg?.uri]) : null,
         // 'performances[]':
         //   fields.length > 0
         //     ? fields.map(res => ({

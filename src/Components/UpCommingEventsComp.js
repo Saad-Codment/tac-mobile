@@ -36,6 +36,7 @@ import {
   MenuOptions,
   MenuTrigger,
 } from 'react-native-popup-menu';
+import {useState} from 'react';
 
 const tags = [
   {
@@ -57,8 +58,12 @@ const UpcomingEventsComp = ({
   functionToUpdateLike,
   afterLikeFun,
   openBottomSheet,
+  refetch,
+  functionToDelete,
 }) => {
-  const {likeAndDisLikeEvent, shareEvent} = useFriendServices();
+  const {likeAndDisLikeEvent, shareEvent, deleteEvent} = useFriendServices();
+
+  const [dummy, setDummy] = useState(1);
 
   const {queryClient, getState, dispatch} = useReduxStore();
 
@@ -86,7 +91,11 @@ const UpcomingEventsComp = ({
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => {
+          onPress: async () => {
+            await deleteEvent.mutateAsync(item?.id);
+            functionToDelete(index);
+            // setTimeout(() => {
+            // }, 500);
             // Call your delete mutation here
             // deletePost.mutateAsync(item?.id);
           },

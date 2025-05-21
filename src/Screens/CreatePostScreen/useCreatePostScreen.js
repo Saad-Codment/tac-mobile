@@ -42,7 +42,7 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
       if (ok) {
         successMessage('Post Created.');
         goBack();
-        navigate('FriendProfileScreen', {id: userData?.id});
+        navigate('MyProfileScreen', {id: userData?.id});
       } else {
         errorMessage(data?.message);
       }

@@ -78,7 +78,9 @@ export const homeUpcomingEventsUrl = '/home/upcoming-events-home';
 export const sharePostUrl = '/posts/share';
 export const shareEventUrl = '/events/share';
 export const updateEventUrl = '/events/update/';
+export const deleteEventUrl = '/events/delete/';
 export const updatePostUrl = '/posts/update/';
+export const deletePostUrl = '/posts/delete/';
 
 export const fcmTokenUrl = 'add-fcm-token';
 export const deleteAccUrl = 'auth/account-delete';

@@ -1,7 +1,7 @@
 import {ActivityIndicator, Image, View} from 'react-native';
 import {Colors} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
-import {memo} from 'react';
+import {memo, useCallback} from 'react';
 import {CircleImage} from '../../Components/CircleImage';
 import {TextComponent} from '../../Components/TextComponent';
 import {
@@ -44,7 +44,46 @@ const FriendProfileScreen = ({navigation, route}) => {
     loadMoreData,
     refetch,
     functionToUpdateLike,
+    functionToDelete,
   } = useFriendProfileScreen(navigation, route);
+
+  const renderItem = useCallback(
+    (item, index) => {
+      return (
+        <View style={{marginVertical: hp('1')}}>
+          {item?.type == 2 ||
+            item?.type == 4 ||
+            item?.type == 5 ||
+            (item?.type == 6 && (
+              <UpcomingEventsComp
+                item={item}
+                index={index}
+                mainViewStyle={{width: wp('95')}}
+                upperImgStyle={{width: wp('95')}}
+                functionToUpdateLike={functionToUpdateLike}
+                openBottomSheet={id => setModal(id)}
+                refetch={refetch}
+                functionToDelete={functionToDelete}
+                // likePost={likePost}
+              />
+            ))}
+
+          {item?.type == 3 ||
+            (item?.type == 1 && (
+              <PostViewComp
+                item={item}
+                index={index}
+                functionToUpdateLike={functionToUpdateLike}
+                openBottomSheet={id => setModal(id)}
+                refetch={refetch}
+                functionToDelete={functionToDelete}
+              />
+            ))}
+        </View>
+      );
+    },
+    [refetch, isRefetching],
+  );
 
   return (
     <View style={{flex: 1}}>
@@ -102,34 +141,7 @@ const FriendProfileScreen = ({navigation, route}) => {
                 )), // Show loading spinner at the bottom
             }}
             InnerCompnonet={(item, index) => {
-              return (
-                <View style={{marginVertical: hp('1')}}>
-                  {item?.type == 2 ||
-                    item?.type == 4 ||
-                    item?.type == 5 ||
-                    (item?.type == 6 && (
-                      <UpcomingEventsComp
-                        item={item}
-                        index={index}
-                        mainViewStyle={{width: wp('95')}}
-                        upperImgStyle={{width: wp('95')}}
-                        functionToUpdateLike={functionToUpdateLike}
-                        openBottomSheet={id => setModal(id)}
-                        // likePost={likePost}
-                      />
-                    ))}
-
-                  {item?.type == 3 ||
-                    (item?.type == 1 && (
-                      <PostViewComp
-                        item={item}
-                        index={index}
-                        functionToUpdateLike={functionToUpdateLike}
-                        openBottomSheet={id => setModal(id)}
-                      />
-                    ))}
-                </View>
-              );
+              return renderItem(item, index);
             }}
           />
         )

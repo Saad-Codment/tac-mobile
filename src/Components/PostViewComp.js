@@ -117,8 +117,10 @@ const PostViewComp = ({
   openBottomSheet,
   mainViewStyle,
   refetch,
+  functionToDelete,
 }) => {
-  const {likeAndDisLikeEvent, addLikeOnPost, sharePost} = useFriendServices();
+  const {likeAndDisLikeEvent, addLikeOnPost, sharePost, deletePost} =
+    useFriendServices();
 
   const {getState, dispatch, queryClient} = useReduxStore();
 
@@ -144,7 +146,10 @@ const PostViewComp = ({
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => {
+          onPress: async () => {
+            await deletePost.mutateAsync(item?.id);
+            refetch();
+            functionToDelete(index);
             // Call your delete mutation here
             // deletePost.mutateAsync(item?.id);
           },

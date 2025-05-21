@@ -4,6 +4,8 @@ import {
   acceptFriendReqUrl,
   acceptRejectFriendReqUrl,
   addCommentOnPostUrl,
+  deleteEventUrl,
+  deletePostUrl,
   likeUnlikeUrl,
   postCommentUrl,
   postLikeUrl,
@@ -201,6 +203,38 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
       errorMessage('Network request failed.');
     },
   });
+  const deleteEvent = useMutation({
+    mutationFn: data => {
+      return API.delete(deleteEventUrl + data, {});
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
+  const deletePost = useMutation({
+    mutationFn: data => {
+      return API.delete(deletePostUrl + data, {});
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
 
   return {
     sendFriendReq,
@@ -213,6 +247,8 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     addCommentOnPost,
     sharePost,
     shareEvent,
+    deletePost,
+    deleteEvent,
   };
 };
 
