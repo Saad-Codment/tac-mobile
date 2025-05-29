@@ -103,7 +103,7 @@ const JustTextRenderPost = ({title}) => {
       <TextComponent
         text={title}
         numberOfLines={100}
-        styles={{fontSize: hp('1.8')}}
+        styles={{fontSize: hp('1.5')}}
       />
     </View>
   );

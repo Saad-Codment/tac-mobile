@@ -173,6 +173,7 @@ function MainNavigator() {
               name="FriendProfileScreen"
               component={Screens.FriendProfileScreen}
             />
+            <Stack.Screen name="ChatScreen" component={Screens.ChatScreen} />
             {/* <Stack.Screen
               name="SkeletonScreen"
               component={Screens.SkeletonScreen}

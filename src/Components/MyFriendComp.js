@@ -117,6 +117,7 @@ const MyFriendComp = ({
           style={{width: wp('15'), height: hp('4')}}
           imageStyle={{width: wp('3.5')}}
           textStyle={{fontSize: hp('1.5'), marginLeft: wp('-0.5')}}
+          onPress={() => NavigationService.navigate('ChatScreen', item)}
         />
       )}
     </Touchable>

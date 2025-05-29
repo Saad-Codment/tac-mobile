@@ -176,6 +176,9 @@ const HeaderComp = ({userData, myUserData}) => {
                 textStyle={{color: Colors.textGray, fontSize: hp('1.5')}}
                 isYellowTheme={Boolean(userData?.friends == 1)}
                 isDisable={Boolean(userData?.friends == 0)}
+                onPress={() =>
+                  NavigationService.navigate('ChatScreen', userData)
+                }
               />
             </View>
           ) : (

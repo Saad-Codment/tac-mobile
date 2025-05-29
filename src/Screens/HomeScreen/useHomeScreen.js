@@ -13,6 +13,7 @@ import {
 import {loadingFalse} from '../../Redux/Action/isloadingAction';
 import {hp} from '../../Config/responsive';
 import {debounce} from 'lodash'; // or your preferred debounce utility
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = ({navigate}) => {
   const [search, setSearch] = useState('');
@@ -115,6 +116,10 @@ const HomeScreen = ({navigate}) => {
     if (isRefetching || list.length < 9) return;
     else await fetchNextPage();
   };
+
+  useEffect(() => {
+    AsyncStorage.setItem('userData', JSON.stringify(userData));
+  }, []);
 
   // useEffect(() => {
   //   handleLoadMore();

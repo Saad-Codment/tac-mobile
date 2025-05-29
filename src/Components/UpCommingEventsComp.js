@@ -1,4 +1,11 @@
-import {Alert, Image, Pressable, StyleSheet, View} from 'react-native';
+import {
+  Alert,
+  Image,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {hp, wp} from '../Config/responsive';
 import BlurImage from './BlurImage';
 import {CircleImage} from './CircleImage';
@@ -174,7 +181,7 @@ const UpcomingEventsComp = ({
       <View style={styles.priceMainView}>
         <TextComponent
           text={item?.title}
-          styles={{fontWeight: 'bold', width: wp('70'), fontSize: hp('1.5')}}
+          styles={{fontWeight: 'bold', width: wp('70'), fontSize: hp('1.8')}}
           numberOfLines={1}
         />
         <View style={styles.priceView}>
@@ -190,9 +197,18 @@ const UpcomingEventsComp = ({
       <View style={{...styles.centerView}}>
         <TextComponent
           text={`Starts at:`}
-          styles={{...styles.leftText, width: 'auto'}}
+          styles={{
+            ...styles.leftText,
+            width: Platform.OS == 'ios' ? wp('13.8') : wp('12'),
+            // backgroundColor: 'red',
+          }}
         />
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginLeft: wp('-3'),
+          }}>
           <Image
             source={calendar}
             resizeMode="contain"
@@ -203,14 +219,19 @@ const UpcomingEventsComp = ({
             text={`${getDateMonthYear(item?.from_date)?.monthName} ${
               getDateMonthYear(item?.from_date)?.day
             }, ${getDateMonthYear(item?.from_date)?.year}`}
-            styles={{fontSize: hp('1.7')}}
+            styles={{fontSize: hp('1.5')}}
           />
         </View>
         <TextComponent
           text={`Ends at:`}
           styles={{...styles.leftText, width: 'auto'}}
         />
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginLeft: wp('-3'),
+          }}>
           <Image
             source={calendar}
             resizeMode="contain"
@@ -221,7 +242,7 @@ const UpcomingEventsComp = ({
             text={`${getDateMonthYear(item?.from_date)?.monthName} ${
               getDateMonthYear(item?.from_date)?.day
             }, ${getDateMonthYear(item?.from_date)?.year}`}
-            styles={{fontSize: hp('1.7')}}
+            styles={{fontSize: hp('1.5')}}
           />
         </View>
       </View>
@@ -260,7 +281,11 @@ const UpcomingEventsComp = ({
         <>
           <View style={styles.centerView}>
             <TextComponent text={'Event types:'} styles={styles.leftText} />
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
               <MultiSelectButton
                 items={showFirstThreeAndCountRest(
                   convertToArray(item?.event_types),
@@ -278,7 +303,11 @@ const UpcomingEventsComp = ({
         <>
           <View style={styles.centerView}>
             <TextComponent text={'assoc:'} styles={styles.leftText} />
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
               <MultiSelectButton
                 items={showFirstThreeAndCountRest(
                   convertToArray(item?.associations),
@@ -546,15 +575,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   dollarIcon: {width: wp('4'), height: hp('3')},
-  price: {fontWeight: 'bold', marginLeft: wp('1'), fontSize: hp('1.5')},
+  price: {fontWeight: 'bold', marginLeft: wp('1'), fontSize: hp('1.8')},
   centerView: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: hp('1'),
+    alignContent: 'center',
+    paddingVertical: hp('0.5'),
+    // marginTop: hp('1'),
   },
-  leftText: {width: wp('30'), fontSize: hp('1.7')},
-  calenderIcon: {width: wp('4'), height: hp('3'), marginRight: wp('1')},
+  leftText: {width: wp('30'), fontSize: hp('1.5')},
+  calenderIcon: {
+    width: wp('4'),
+    height: hp('3'),
+    marginRight: wp('1'),
+    // backgroundColor: 'red',
+  },
   innerMainView: {
     // alignSelf: 'center',
     marginTop: hp('1'),
@@ -596,9 +632,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     overflow: 'hidden',
     height: 'auto',
-    paddingVertical: hp('0.5'),
-    borderWidth: 1,
+    paddingVertical: hp('0.1'),
+    borderWidth: 0.5,
     borderColor: Colors.primaryColor,
+    marginBottom: 0,
   },
   divider: {
     borderBottomColor: 'black',
@@ -609,7 +646,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: hp('1'),
+    marginTop: hp('0.4'),
     // marginVertical: hp('-1.5'),
   },
   leftRightView: {

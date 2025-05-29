@@ -182,6 +182,7 @@ export {default as termNoBg} from './Icons/termNoBg.png';
 export {default as eventLogo} from './Icons/eventLogo.png';
 export {default as userFill} from './Icons/userFill.png';
 export {default as userBlack} from './Icons/userBlack.png';
+export {default as trashWhite} from './Icons/trashWhite.png';
 
 // Lotties files
 

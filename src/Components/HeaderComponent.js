@@ -26,6 +26,7 @@ export const HeaderComponent = ({
   isSearch,
   searchVal,
   setSearchVal,
+  searchBoxPlaceholder,
 }) => {
   return (
     <View style={[styles.TopHeader, {...style}]}>
@@ -56,7 +57,7 @@ export const HeaderComponent = ({
           <View style={styles.inputView}>
             <TextInput
               style={{flex: 1, color: 'white'}}
-              placeholder="Search for friends"
+              placeholder={searchBoxPlaceholder ?? 'Search for friends'}
               placeholderTextColor={'gray'}
               value={searchVal}
               onChangeText={e => setSearchVal(e)}

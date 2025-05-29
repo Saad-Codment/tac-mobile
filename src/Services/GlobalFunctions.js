@@ -941,11 +941,13 @@ function isFutureOrNow(dateString) {
 }
 
 function mergeIds(id1, id2) {
+  const {userData} = store.getState('Auth');
+
   const num1 = Number(id1);
-  const num2 = Number(id2);
+  const num2 = Number(id2 ?? userData?.id);
 
   if (isNaN(num1) || isNaN(num2)) {
-    throw new Error('Both IDs must be numeric or numeric strings.');
+    console.log('Both IDs must be numeric or numeric strings.', id1, id2);
   }
 
   // Merge with the smaller number first
