@@ -1,4 +1,4 @@
-import {memo} from 'react';
+import {memo, useCallback} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import useCommentScreen from './useCommentScreen';
 import {
@@ -32,9 +32,12 @@ const CommentScreen = ({navigation, route}) => {
     sendMessage,
   } = useCommentScreen(navigation, route);
 
-  const renderItem = ({item, index}) => {
-    return <CommentComp item={item} />;
-  };
+  const renderItem = useCallback(
+    ({item, index}) => {
+      return <CommentComp item={item} />;
+    },
+    [commentsList],
+  );
 
   return (
     <KeyboardAvoidingView

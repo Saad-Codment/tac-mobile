@@ -118,6 +118,7 @@ const PostViewComp = ({
   mainViewStyle,
   refetch,
   functionToDelete,
+  functionToUpdateComment,
 }) => {
   const {likeAndDisLikeEvent, addLikeOnPost, sharePost, deletePost} =
     useFriendServices();
@@ -268,6 +269,9 @@ const PostViewComp = ({
               id: item?.id,
               refetechKeys,
               isPost: true,
+              refetch,
+              functionToUpdateComment,
+              index,
             })
           }>
           <Image

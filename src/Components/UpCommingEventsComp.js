@@ -195,55 +195,62 @@ const UpcomingEventsComp = ({
         </View>
       </View>
       <View style={{...styles.centerView}}>
-        <TextComponent
-          text={`Starts at:`}
-          styles={{
-            ...styles.leftText,
-            width: Platform.OS == 'ios' ? wp('13.8') : wp('12'),
-            // backgroundColor: 'red',
-          }}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginLeft: wp('-3'),
-          }}>
-          <Image
-            source={calendar}
-            resizeMode="contain"
-            tintColor={'black'}
-            style={styles.calenderIcon}
-          />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <TextComponent
-            text={`${getDateMonthYear(item?.from_date)?.monthName} ${
-              getDateMonthYear(item?.from_date)?.day
-            }, ${getDateMonthYear(item?.from_date)?.year}`}
-            styles={{fontSize: hp('1.5')}}
+            text={`Starts at:`}
+            styles={{
+              ...styles.leftText,
+              width: Platform.OS == 'ios' ? wp('13.8') : wp('12'),
+              // backgroundColor: 'red',
+            }}
           />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              // marginLeft: wp('-3'),
+            }}>
+            <Image
+              source={calendar}
+              resizeMode="contain"
+              tintColor={'black'}
+              style={styles.calenderIcon}
+            />
+            <TextComponent
+              text={`${getDateMonthYear(item?.from_date)?.monthName} ${
+                getDateMonthYear(item?.from_date)?.day
+              }, ${getDateMonthYear(item?.from_date)?.year}`}
+              styles={{fontSize: hp('1.5')}}
+            />
+          </View>
         </View>
-        <TextComponent
-          text={`Ends at:`}
-          styles={{...styles.leftText, width: 'auto'}}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginLeft: wp('-3'),
-          }}>
-          <Image
-            source={calendar}
-            resizeMode="contain"
-            tintColor={'black'}
-            style={styles.calenderIcon}
-          />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <TextComponent
-            text={`${getDateMonthYear(item?.from_date)?.monthName} ${
-              getDateMonthYear(item?.from_date)?.day
-            }, ${getDateMonthYear(item?.from_date)?.year}`}
-            styles={{fontSize: hp('1.5')}}
+            text={`Ends at:`}
+            styles={{
+              ...styles.leftText,
+              width: Platform.OS == 'ios' ? wp('12.8') : wp('11'),
+            }}
           />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              // marginLeft: wp('-3'),
+            }}>
+            <Image
+              source={calendar}
+              resizeMode="contain"
+              tintColor={'black'}
+              style={styles.calenderIcon}
+            />
+            <TextComponent
+              text={`${getDateMonthYear(item?.from_date)?.monthName} ${
+                getDateMonthYear(item?.from_date)?.day
+              }, ${getDateMonthYear(item?.from_date)?.year}`}
+              styles={{fontSize: hp('1.5')}}
+            />
+          </View>
         </View>
       </View>
       {/* <View style={styles.divider} /> */}

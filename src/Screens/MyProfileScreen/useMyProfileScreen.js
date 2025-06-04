@@ -60,6 +60,18 @@ const useMyProfileScreen = ({navigate}) => {
     // queryClient.invalidateQueries(['profilePosts']); // Refetch data
   }, [queryClient]);
 
+  const functionToUpdateComment = index => {
+    console.log(
+      'lskdvbklsdbvlksdbkvbsdkvbsdlkbvs',
+      index,
+      eventsList[index].comments_count,
+    );
+    setEventsList(prev => {
+      prev[index].comments_count = ++prev[index].comments_count;
+      return prev;
+    });
+  };
+
   const functionToUpdateLike = index => {
     setEventsList(prev => {
       prev[index].is_liked = !prev[index].is_liked;
@@ -93,6 +105,7 @@ const useMyProfileScreen = ({navigate}) => {
     setModal,
     openBottomSheet,
     functionToDelete,
+    functionToUpdateComment,
   };
 };
 

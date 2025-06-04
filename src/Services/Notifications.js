@@ -7,6 +7,7 @@ import notifee, {
 import {requestNotifications, openSettings} from 'react-native-permissions';
 import {useQueryClient} from '@tanstack/react-query';
 import {store} from '../Redux/Reducer';
+import {types} from '../Redux/types';
 // import {setNotificationLength} from '../Redux/Action/recentNotification';
 
 // const {dispatch} = useReduxStore();
@@ -53,6 +54,13 @@ const onNotificationNotiFee = async (data, appState) => {
   // ) {
   //   NavigationService.navigate('Congratulations', notificationObj || {});
   // }
+
+  if (
+    data?.notification?.body?.includes('has sent a message') ||
+    data?.notification?.title?.includes('has sent a message')
+  ) {
+    store.dispatch({type: types.isChatNotifyTrue});
+  } else store.dispatch({type: types.isNotifyTrue});
 };
 
 class FCMService {
@@ -141,8 +149,13 @@ class FCMService {
         console.log(data, 'eieiieieieieieiei', 'aklsdjalksjdlakjsdlajklkdjl');
 
         onNotificationNotiFee(data, appState);
+        if (
+          data?.notification?.body?.includes('has sent a message') ||
+          data?.notification?.title?.includes('has sent a message')
+        ) {
+          store.dispatch({type: types.isChatNotifyTrue});
+        } else store.dispatch({type: types.isNotifyTrue});
       },
-
       // {
       //   if (NavigationService.ref && appState == 'active') {
       //     NavigationService.navigate(

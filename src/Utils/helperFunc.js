@@ -184,7 +184,7 @@ const createFormData = (photos, imageKey, isArray) => {
   return data;
 };
 
-const fetchGetWithToken = async url => {
+const fetchGetWithToken = async (url, isUpdate) => {
   const {Auth} = store.getState('Auth');
   const fullUrl = baseURL + url;
   // console.log(Auth.token, Auth.userData, 'Auth Token', fullUrl);
@@ -204,11 +204,12 @@ const fetchGetWithToken = async url => {
       throw new Error('Network response was not ok.');
     } else if (response.ok) {
       const data = await response.json();
-
-      store.dispatch({
-        type: types.UpdateProfile,
-        payload: data?.user,
-      });
+      if (data?.user) {
+        store.dispatch({
+          type: types.UpdateProfile,
+          payload: data?.user,
+        });
+      }
 
       // console.log(data, 'alskdjfklajsdfkljadlsfjaklsdjfl2kds444ajf2lkdjs');
 

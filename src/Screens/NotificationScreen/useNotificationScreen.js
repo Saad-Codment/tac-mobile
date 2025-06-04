@@ -3,17 +3,17 @@ import useReduxStore from '../../Hooks/UseReduxStore';
 import useFriendServices from '../../Services/FriendServices';
 import API from '../../Utils/helperFunc';
 import {getAllNotificationsUrl} from '../../Utils/Urls';
-import {useCallback} from 'react';
+import {useCallback, useEffect, useLayoutEffect} from 'react';
+import {types} from '../../Redux/types';
 
 const useNotificationScreen = () => {
-  const {queryClient} = useReduxStore();
+  const {queryClient, dispatch} = useReduxStore();
   const {sendFriendReq, acceptFriendReq, rejectFriendReq} = useFriendServices();
 
   const {data, error} = useQuery({
     queryKey: ['allNotifications'],
     queryFn: () => API.get(getAllNotificationsUrl),
   });
-  console.log('ljskdvhjklsdbvjkbsdkvbsdkjvbksdbvsdbjk', data?.data);
 
   const onRefresh = useCallback(() => {
     queryClient.fetchQuery({
@@ -21,6 +21,12 @@ const useNotificationScreen = () => {
       staleTime: 1000,
     });
   }, []);
+
+  const clearNotification = () => {
+    dispatch({type: types.isNotifyFalse});
+  };
+
+  useEffect(clearNotification, []);
 
   return {
     notificationsList: data?.data?.data,

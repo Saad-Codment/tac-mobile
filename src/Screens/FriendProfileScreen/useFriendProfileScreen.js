@@ -36,6 +36,7 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
         if (page == response?.data?.total_pages) {
           setEventsList(response?.data?.data);
         } else {
+          // setEventsList(response?.data?.data);
           setEventsList(prev => [...prev, ...response?.data?.data]);
           setHasNextPage(response?.data?.total_pages); // Assuming the API provides this flag
         }
@@ -70,6 +71,19 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
       return prev;
     });
   };
+  const functionToUpdateComment = index => {
+    setEventsList(prev => {
+      prev[index].comments_count = prev[index].comments_count + 1;
+      return prev;
+    });
+    setTimeout(() => {
+      console.log(
+        'klsdbvklsdbvkldbvklsbdklvbsdklvbksdbvklsbvklsdbkvbklsdv',
+        eventsList,
+      );
+    }, 2000);
+  };
+
   const functionToDelete = index => {
     setEventsList(prev => {
       return prev.filter((_, i) => i !== index);
@@ -95,6 +109,7 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
     setModal,
     openBottomSheet,
     functionToDelete,
+    functionToUpdateComment,
   };
 };
 

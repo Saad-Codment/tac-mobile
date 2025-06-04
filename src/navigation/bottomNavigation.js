@@ -28,6 +28,8 @@ import {
   unfilledCalender,
   groupBlack,
   circleCalFilled,
+  chatDotFill,
+  chatDotTransparent,
 } from '../Assets';
 import {types} from '../Redux/types';
 import useReduxStore from '../Hooks/UseReduxStore';
@@ -67,6 +69,8 @@ const Tab = createBottomTabNavigator();
 
 function MybottomTabs() {
   const {getState, dispatch} = useReduxStore();
+
+  const {isChatNotify} = getState('isChatNotify');
 
   fetchGetWithToken(VerifyUserUrl);
 
@@ -126,7 +130,12 @@ function MybottomTabs() {
       />
       <Tab.Screen
         name="ChatUsersScreen"
-        options={tabarComponent(messages, messageOut)}
+        options={tabarComponent(
+          isChatNotify ? chatDotFill : messages,
+          isChatNotify ? chatDotTransparent : messageOut,
+          !isChatNotify ? {} : {width: wp('10')},
+          true,
+        )}
         component={Screens.ChatUsersScreen}
       />
       <Tab.Screen

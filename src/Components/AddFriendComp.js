@@ -38,7 +38,9 @@ const AddFriendComp = ({item, sendReq, mainViewStyle}) => {
         </Touchable>
         <TextComponent
           styles={styles.friendUserName}
-          text={item?.first_name + ' ' + item?.last_name}
+          text={
+            item?.first_name + ' ' + (item?.last_name ? item?.last_name : '')
+          }
         />
         <View style={styles.bottomView}>
           {/* <MutualFriends

@@ -25,4 +25,8 @@ export const types = {
   ClearContacts: 'ClearContacts',
   openModal: 'openModal',
   closeModal: 'closeModal',
+  isNotifyFalse: 'isNotifyFalse',
+  isNotifyTrue: 'isNotifyTrue',
+  isChatNotifyTrue: 'isChatNotifyTrue',
+  isChatNotifyFalse: 'isChatNotifyFalse',
 };

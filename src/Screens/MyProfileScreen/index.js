@@ -30,6 +30,7 @@ const MyProfileScreen = ({navigation}) => {
     refetch,
     functionToUpdateLike,
     functionToDelete,
+    functionToUpdateComment,
   } = useMyProfileScreen(navigation);
 
   console.log('lkdbkldbfklbdfklbkldfbl;kdbsf;b;ldflnb;df', myUserData);
@@ -44,8 +45,8 @@ const MyProfileScreen = ({navigation}) => {
               index={index}
               functionToUpdateLike={functionToUpdateLike}
               openBottomSheet={id => setModal(id)}
-              refetch={refetch}
               functionToDelete={functionToDelete}
+              functionToUpdateComment={() => functionToUpdateComment(index)}
             />
           ) : (
             <UpcomingEventsComp

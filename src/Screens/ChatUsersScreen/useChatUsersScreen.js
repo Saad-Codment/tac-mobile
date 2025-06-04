@@ -18,6 +18,8 @@ import {
 } from 'firebase/firestore';
 import {db} from '../../Services/FirebaseServicsConfig';
 import {mergeIds} from '../../Services/GlobalFunctions';
+import {store} from '../../Redux/Reducer';
+import {types} from '../../Redux/types';
 
 const useChatUserScreen = ({navigate, addListener}) => {
   const {data} = useQuery({
@@ -26,8 +28,6 @@ const useChatUserScreen = ({navigate, addListener}) => {
   });
 
   const [users, setUsers] = useState([]);
-  const [searchUsers, setSearchUsers] = useState(null);
-  const isUnreadRef = useRef(false);
 
   const {getState, dispatch, queryClient} = useReduxStore();
   const {userData} = getState('Auth');
@@ -82,10 +82,7 @@ const useChatUserScreen = ({navigate, addListener}) => {
   const fetchUsersAndMessages = async () => {
     try {
       const fetchedUsers = await fetchGetWithToken(GetChatListUrl);
-      console.log(
-        'fetchedUsersfetchedUsersfetchedUsersfetchedUsersfetchedUsers',
-        fetchedUsers,
-      );
+
       const unsubscribeFunctions = fetchedUsers.map(
         async (appointments, index) => {
           const chatroomDocRef = doc(
@@ -147,6 +144,13 @@ const useChatUserScreen = ({navigate, addListener}) => {
 
     return unsubscribe;
   };
+
+  const clearNotification = () => {
+    store.dispatch({type: types.isChatNotifyFalse});
+  };
+
+  useEffect(clearNotification, []);
+
   useEffect(() => {
     // Update unread count in Redux whenever unreadCount changes
     // dispatch(updateUnreadCount(unreadCount));

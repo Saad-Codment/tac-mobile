@@ -16,6 +16,8 @@ const CommentComp = ({item, index}) => {
       type: types.openModal,
     });
   };
+
+  console.log('itemitemitemitemitemitemitemitem', item?.last_name);
   return (
     <View style={styles.mainView}>
       <View style={styles.upperView}>
@@ -23,10 +25,15 @@ const CommentComp = ({item, index}) => {
           <CircleImage image={imageUrl(item?.profile_image)} size={0.12} uri />
         </Pressable>
         <TextComponent
-          text={`${item?.first_name} ${item?.last_name}`}
+          text={`${item?.first_name} ${
+            item?.last_name != null ? item?.last_name : ''
+          }`}
           styles={styles.nameText}
         />
-        <TextComponent text={convertToCustomTimeFormat(item?.created_at)} />
+        <TextComponent
+          text={convertToCustomTimeFormat(item?.created_at)}
+          styles={{fontSize: hp('1.5')}}
+        />
       </View>
       <TextComponent text={item?.text} styles={styles.descText} />
     </View>
@@ -35,13 +42,18 @@ const CommentComp = ({item, index}) => {
 export default CommentComp;
 
 const styles = StyleSheet.create({
-  mainView: {paddingHorizontal: wp('2'), marginVertical: hp('1')},
+  mainView: {
+    paddingHorizontal: wp('2'),
+    marginVertical: hp('0.5'),
+    backgroundColor: 'white',
+    paddingVertical: hp('1'),
+  },
   upperView: {flexDirection: 'row', alignItems: 'center'},
   nameText: {
     fontWeight: 'bold',
-    fontSize: hp('2.2'),
+    fontSize: hp('1.8'),
     width: wp('67'),
     marginLeft: wp('2'),
   },
-  descText: {marginTop: hp('0.5'), marginLeft: wp('2')},
+  descText: {marginTop: hp('0.5'), marginLeft: wp('2'), fontSize: hp('1.8')},
 });

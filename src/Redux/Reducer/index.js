@@ -12,6 +12,8 @@ import videoReducer from './videoReducer';
 import ContactsReducer from './ContactsReducer';
 import IsContactAllow from './IsContactAllow';
 import ImagePrevReducer from './ImagePrevReducer';
+import NotificationReducer from './NotificationReducer';
+import ChatNotifyReducer from './ChatNotifyReducer';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -36,12 +38,24 @@ const ContactPerConfig = {
   storage: AsyncStorage,
   whitelist: 'isContact',
 };
+const NotificationConfig = {
+  key: 'isNotification',
+  storage: AsyncStorage,
+  whitelist: 'isNotification',
+};
+const ChatNotifyConfig = {
+  key: 'isChatNotify',
+  storage: AsyncStorage,
+  whitelist: 'isChatNotify',
+};
 
 const reducers = {
   onboarding: persistReducer(onBoardPersistConfig, onboardingReducer),
   Auth: persistReducer(AuthPersistConfig, AuthReducer),
   isVideo: persistReducer(VideoPersistConfig, videoReducer),
   isContact: persistReducer(ContactPerConfig, IsContactAllow),
+  isNotification: persistReducer(NotificationConfig, NotificationReducer),
+  isChatNotify: persistReducer(ChatNotifyConfig, ChatNotifyReducer),
   isloading: loadingReducer,
   isAlert: AlertReucer,
   getCategory: getTrainingCatReducer,

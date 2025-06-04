@@ -17,6 +17,7 @@ import {
   handShake,
   handShakeLottie,
   notificationWhite,
+  redDotBell,
   settingWhite,
 } from '../Assets';
 import {Touchable} from '../Components/Touchable';
@@ -35,7 +36,9 @@ const HomeHeader = ({
   userDataImg,
   onProfilePress,
 }) => {
-  const {dispatch} = useReduxStore();
+  const {dispatch, getState} = useReduxStore();
+
+  const {isNotification} = getState('isNotification');
 
   const onImagePress = () => {
     dispatch({
@@ -104,12 +107,11 @@ const HomeHeader = ({
         </Touchable>
         <Touchable onPress={onNotificarioPress}>
           <Image
-            source={notificationWhite}
+            source={isNotification ? redDotBell : notificationWhite}
             resizeMode="contain"
             style={styles.notiIcon}
           />
         </Touchable>
-
         {/* <Touchable>
           <Image
             source={settingWhite}

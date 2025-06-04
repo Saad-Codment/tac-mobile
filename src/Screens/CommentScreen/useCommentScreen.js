@@ -2,28 +2,28 @@ import {useQuery} from '@tanstack/react-query';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import API from '../../Utils/helperFunc';
 import {getEventsCommentUrl, getPostCommentUrl} from '../../Utils/Urls';
-import {useCallback, useLayoutEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import useFriendServices from '../../Services/FriendServices';
 
 const useCommentScreen = ({navigate}, {params}) => {
   const {queryClient, getState} = useReduxStore();
 
   const [message, setMessage] = useState(null);
+  const [isComment, setIsComment] = useState(false);
 
   const {postComment, addCommentOnPost} = useFriendServices();
 
-  const {data, error} = useQuery({
-    queryKey: ['comments'],
+  const {data, error, refetch} = useQuery({
+    queryKey: [params?.isPost ? 'postComments' : 'eventComment'],
     queryFn: () =>
       API.get(
         (params?.isPost ? getPostCommentUrl : getEventsCommentUrl) + params?.id,
       ),
   });
-  console.log('ljskdvhjklsdbvjkbsdkvbsdkjvbksdbvssdfsfvgdfsdbjk', data?.data);
 
   const onRefresh = useCallback(() => {
     queryClient.fetchQuery({
-      queryKey: ['comments'],
+      queryKey: [params?.isPost ? 'postComments' : 'eventComment'],
       staleTime: 1000,
     });
   }, []);
@@ -54,7 +54,11 @@ const useCommentScreen = ({navigate}, {params}) => {
         });
       }
       setMessage(null);
-      queryClient.invalidateQueries(['comments']); // Refetch data
+      setIsComment(true);
+      params?.functionToUpdateComment(params?.index);
+      refetch();
+      params?.refetch();
+      // queryClient.invalidateQueries(['comments']); // Refetch data
       if (params?.refetechKeys) {
         params?.refetechKeys.map(res => {
           queryClient.invalidateQueries([res]); // Refetch data
@@ -62,6 +66,14 @@ const useCommentScreen = ({navigate}, {params}) => {
       }
     }
   };
+
+  useEffect(() => {
+    return () => {
+      setTimeout(() => {
+        params?.functionToUpdateComment(params?.index);
+      }, 200);
+    };
+  }, []);
 
   const dynamicRoute = (routeName, params) => navigate(routeName, params);
   return {

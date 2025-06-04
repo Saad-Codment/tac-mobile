@@ -42,12 +42,12 @@ const FriendReqComp = ({
           text={item?.sender?.first_name + ' ' + item?.sender?.last_name}
           styles={styles.titleStyle}
         />
-        <View style={styles.bottomView}>
+        {/* <View style={styles.bottomView}>
           <MutualFriends
             uri={'https://picsum.photos/200'}
             friends={[1, 2, 3, 4]}
           />
-        </View>
+        </View> */}
         <View style={styles.btnView}>
           <ThemeButton
             title={'Confirm'}

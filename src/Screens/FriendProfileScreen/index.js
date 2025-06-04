@@ -45,12 +45,13 @@ const FriendProfileScreen = ({navigation, route}) => {
     refetch,
     functionToUpdateLike,
     functionToDelete,
+    functionToUpdateComment,
   } = useFriendProfileScreen(navigation, route);
 
   const renderItem = useCallback(
     (item, index) => {
       return (
-        <View style={{marginVertical: hp('1')}}>
+        <View style={{marginVertical: hp('0.5')}}>
           {item?.type == 2 ||
             item?.type == 4 ||
             item?.type == 5 ||
@@ -75,14 +76,14 @@ const FriendProfileScreen = ({navigation, route}) => {
                 index={index}
                 functionToUpdateLike={functionToUpdateLike}
                 openBottomSheet={id => setModal(id)}
-                refetch={refetch}
+                functionToUpdateComment={() => functionToUpdateComment(index)}
                 functionToDelete={functionToDelete}
               />
             ))}
         </View>
       );
     },
-    [refetch, isRefetching],
+    [refetch, isRefetching, functionToUpdateComment, eventsList],
   );
 
   return (

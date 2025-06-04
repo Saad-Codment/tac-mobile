@@ -183,6 +183,9 @@ export {default as eventLogo} from './Icons/eventLogo.png';
 export {default as userFill} from './Icons/userFill.png';
 export {default as userBlack} from './Icons/userBlack.png';
 export {default as trashWhite} from './Icons/trashWhite.png';
+export {default as redDotBell} from './Icons/redDotBell.png';
+export {default as chatDotFill} from './Icons/chatDotFill.png';
+export {default as chatDotTransparent} from './Icons/chatDotTransparent.png';
 
 // Lotties files
 
