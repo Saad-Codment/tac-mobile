@@ -207,6 +207,12 @@ const usePorfileScreen = ({navigate, goBack}) => {
     activeTags,
     onPressKey: onPressKeyRef.current,
     allData: data?.data,
+    justUploadImg: img => {
+      mutateAsync({
+        profile_image: img,
+        first_name: userData?.first_name,
+      });
+    },
     privateTheProfile: () => {
       isPrivateFun.mutate();
     },

@@ -127,7 +127,9 @@ const HeaderComp = ({userData, myUserData}) => {
         </Pressable>
         <View style={styles.centerView}>
           <TextComponent
-            text={`${userData?.first_name} ${userData?.last_name}`}
+            text={`${userData?.first_name} ${
+              userData?.last_name ? userData?.last_name : ''
+            }`}
             isWhite
             styles={styles.nameText}
             numberOfLines={1}
@@ -155,7 +157,7 @@ const HeaderComp = ({userData, myUserData}) => {
                 isYellowTheme
                 style={styles.btnView}
                 imageStyle={styles.btnImg}
-                textStyle={{fontSize: hp('1.5')}}
+                textStyle={{fontSize: hp('1.2')}}
                 onPress={async () => {
                   if (userData?.friends == 0) {
                     await sendFriendReq.mutateAsync(userData?.id);
@@ -173,7 +175,7 @@ const HeaderComp = ({userData, myUserData}) => {
                 image={message}
                 style={{...styles.btnView, backgroundColor: 'white'}}
                 imageStyle={styles.btnImg}
-                textStyle={{color: Colors.textGray, fontSize: hp('1.5')}}
+                textStyle={{color: Colors.textGray, fontSize: hp('1.2')}}
                 isYellowTheme={Boolean(userData?.friends == 1)}
                 isDisable={Boolean(userData?.friends == 0)}
                 onPress={() =>

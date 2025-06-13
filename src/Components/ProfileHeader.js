@@ -115,6 +115,7 @@ const ProfileHeader = ({
                         const images = await uploadFromGalary();
                         mutateAsync({
                           profile_image: images,
+                          first_name: userData?.first_name,
                         });
                       },
                     },
@@ -197,8 +198,8 @@ const styles = StyleSheet.create({
     borderRadius: Math.round(
       Dimensions.get('window').width + Dimensions.get('window').height,
     ),
-    width: Dimensions.get('window').width * 0.18,
-    height: Dimensions.get('window').width * 0.18,
+    width: Dimensions.get('window').width * 0.15,
+    height: Dimensions.get('window').width * 0.15,
   },
   editIconTouchable: {
     position: 'absolute',
@@ -206,8 +207,8 @@ const styles = StyleSheet.create({
     right: wp('-2'),
   },
   editIcon: {
-    width: wp('6'),
-    height: hp('4'),
+    width: wp('5'),
+    height: hp('3'),
   },
   nameContainer: {
     flexDirection: 'row',
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
     marginTop: hp('5'),
   },
   nameText: {
-    fontSize: hp('2'),
+    fontSize: hp('1.5'),
     fontWeight: 'bold',
     color: Colors.white,
   },
@@ -225,16 +226,16 @@ const styles = StyleSheet.create({
     top: hp('0.5'),
   },
   securityIcon: {
-    width: wp('6'),
-    height: hp('3'),
+    width: wp('5'),
+    height: hp('2'),
   },
   accountTypeText: {
     color: Colors.textGray,
-    fontSize: hp('1.5'),
+    fontSize: hp('1.2'),
     marginLeft: wp('1'),
   },
   notiIcon: {
-    width: wp('7'),
+    width: wp('5'),
     marginTop: hp('1'),
   },
   setIcon: {
@@ -277,7 +278,7 @@ const styles = StyleSheet.create({
   },
   searchsetting: {
     resizeMode: 'contain',
-    width: wp('8'),
-    height: hp('5'),
+    width: wp('7'),
+    height: hp('4'),
   },
 });

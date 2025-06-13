@@ -148,7 +148,7 @@ const UpcomingEventsComp = ({
             />
             <TextComponent
               text={item?.address}
-              styles={{fontSize: hp('1.5')}}
+              styles={{fontSize: hp('1.2')}}
               numberOfLines={1}
             />
           </View>
@@ -181,7 +181,7 @@ const UpcomingEventsComp = ({
       <View style={styles.priceMainView}>
         <TextComponent
           text={item?.title}
-          styles={{fontWeight: 'bold', width: wp('70'), fontSize: hp('1.8')}}
+          styles={{fontWeight: 'bold', width: wp('70'), fontSize: hp('1.5')}}
           numberOfLines={1}
         />
         <View style={styles.priceView}>
@@ -195,12 +195,16 @@ const UpcomingEventsComp = ({
         </View>
       </View>
       <View style={{...styles.centerView}}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
           <TextComponent
             text={`Starts at:`}
             styles={{
               ...styles.leftText,
-              width: Platform.OS == 'ios' ? wp('13.8') : wp('12'),
+              width: wp('12'),
               // backgroundColor: 'red',
             }}
           />
@@ -220,7 +224,7 @@ const UpcomingEventsComp = ({
               text={`${getDateMonthYear(item?.from_date)?.monthName} ${
                 getDateMonthYear(item?.from_date)?.day
               }, ${getDateMonthYear(item?.from_date)?.year}`}
-              styles={{fontSize: hp('1.5')}}
+              styles={{fontSize: hp('1.2')}}
             />
           </View>
         </View>
@@ -229,7 +233,7 @@ const UpcomingEventsComp = ({
             text={`Ends at:`}
             styles={{
               ...styles.leftText,
-              width: Platform.OS == 'ios' ? wp('12.8') : wp('11'),
+              width: wp('11'),
             }}
           />
           <View
@@ -248,7 +252,7 @@ const UpcomingEventsComp = ({
               text={`${getDateMonthYear(item?.from_date)?.monthName} ${
                 getDateMonthYear(item?.from_date)?.day
               }, ${getDateMonthYear(item?.from_date)?.year}`}
-              styles={{fontSize: hp('1.5')}}
+              styles={{fontSize: hp('1.2')}}
             />
           </View>
         </View>
@@ -299,7 +303,7 @@ const UpcomingEventsComp = ({
                 )}
                 isDisable={true}
                 btnStyle={styles.tagsBtn}
-                textStyle={{fontSize: hp('1.5'), color: '#525252'}}
+                textStyle={{fontSize: hp('1.2'), color: '#525252'}}
               />
             </View>
           </View>
@@ -321,7 +325,7 @@ const UpcomingEventsComp = ({
                 )}
                 isDisable={true}
                 btnStyle={styles.tagsBtn}
-                textStyle={{fontSize: hp('1.5'), color: '#525252'}}
+                textStyle={{fontSize: hp('1.2'), color: '#525252'}}
               />
             </View>
           </View>
@@ -343,7 +347,7 @@ const UpcomingEventsComp = ({
             resizeMode="contain"
             tintColor={'rgba(255, 0, 55, 1)'}
             style={{
-              width: wp('5'),
+              width: wp('4'),
               marginRight: wp('1'),
               height: hp('3'),
             }}
@@ -351,7 +355,7 @@ const UpcomingEventsComp = ({
           <TextComponent
             text={`${item?.likes_count} Likes`}
             styles={{
-              fontSize: hp('1.5'),
+              fontSize: hp('1.2'),
             }}
           />
         </Touchable>
@@ -363,14 +367,14 @@ const UpcomingEventsComp = ({
           <Image
             source={shareTheme}
             resizeMode="contain"
-            style={{width: wp('5'), height: hp('3')}}
+            style={{width: wp('4'), height: hp('3')}}
             tintColor={'black'}
           />
           <TextComponent
             text={'Share'}
             styles={{
               marginLeft: wp('1'),
-              fontSize: hp('1.5'),
+              fontSize: hp('1.2'),
             }}
           />
         </Touchable>
@@ -564,9 +568,10 @@ const styles = StyleSheet.create({
     marginRight: wp('1'),
   },
   reportText: {
-    fontSize: hp('1.5'),
+    fontSize: hp('1.2'),
     top: hp('-2'),
     textAlign: 'right',
+    // marginLeft: hp('2'),
     // right: wp('-2'),
   },
   priceMainView: {
@@ -581,8 +586,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  dollarIcon: {width: wp('4'), height: hp('3')},
-  price: {fontWeight: 'bold', marginLeft: wp('1'), fontSize: hp('1.8')},
+  dollarIcon: {width: wp('3'), height: hp('2')},
+  price: {fontWeight: 'bold', marginLeft: wp('1'), fontSize: hp('1.5')},
   centerView: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -591,10 +596,10 @@ const styles = StyleSheet.create({
     paddingVertical: hp('0.5'),
     // marginTop: hp('1'),
   },
-  leftText: {width: wp('30'), fontSize: hp('1.5')},
+  leftText: {width: wp('30'), fontSize: hp('1.2')},
   calenderIcon: {
-    width: wp('4'),
-    height: hp('3'),
+    width: wp('3'),
+    height: hp('2'),
     marginRight: wp('1'),
     // backgroundColor: 'red',
   },

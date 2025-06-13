@@ -15,7 +15,10 @@ const AccountPrivacyScreen = () => {
     <View style={{flexGrow: 1}}>
       <HeaderComponent headerTitle={'Account Privacy'} isBack />
       <View style={styles.mainView}>
-        <TextComponent text={'Lock My Profile'} styles={{fontWeight: 'bold'}} />
+        <TextComponent
+          text={'Lock My Profile'}
+          styles={{fontWeight: 'bold', fontSize: hp('1.8')}}
+        />
         <Switch
           trackColor={{
             false: Colors.grayFaded,

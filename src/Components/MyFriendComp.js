@@ -49,7 +49,7 @@ const MyFriendComp = ({
       }>
       {!notShowProfile && (
         <Pressable onPress={onImagePress}>
-          <CircleImage image={imageUrl(item?.profile_image)} size={0.13} uri />
+          <CircleImage image={imageUrl(item?.profile_image)} size={0.11} uri />
         </Pressable>
       )}
       <View style={styles.titleView}>
@@ -114,9 +114,9 @@ const MyFriendComp = ({
           title={'Chat'}
           isYellowTheme
           image={chat}
-          style={{width: wp('15'), height: hp('4')}}
+          style={{width: wp('14'), height: hp('3'), borderRadius: 8}}
           imageStyle={{width: wp('3.5')}}
-          textStyle={{fontSize: hp('1.5'), marginLeft: wp('-0.5')}}
+          textStyle={{fontSize: hp('1.2'), marginLeft: wp('-0.5')}}
           onPress={() => NavigationService.navigate('ChatScreen', item)}
         />
       )}
@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
     // marginLeft: wp('1'),
     // marginTop: hp('0.5'),
     marginVertical: hp('0.5'),
+    fontSize: hp('1.2'),
   },
   des: {
     fontSize: FontSize.scale14,

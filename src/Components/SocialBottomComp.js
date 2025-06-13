@@ -40,5 +40,5 @@ const styles = StyleSheet.create({
     // marginTop: Platform.OS == 'ios' ? hp('5') : 0,
   },
 
-  imageStyle: {width: wp('30'), height: hp('15')},
+  imageStyle: {width: wp('25'), height: hp('10')},
 });

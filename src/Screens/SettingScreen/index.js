@@ -306,7 +306,7 @@ const SettingScreen = ({navigation}) => {
           <View style={styles.upperProfileView}>
             <Pressable onPress={onImagePress}>
               <CircleImage
-                size={Platform.OS == 'ios' ? 0.2 : 0.35}
+                size={Platform.OS == 'ios' ? 0.12 : 0.35}
                 image={imageUrl(userData?.profile_image)}
                 uri={true}
               />
@@ -314,11 +314,11 @@ const SettingScreen = ({navigation}) => {
             <View style={{marginLeft: wp('2')}}>
               <TextComponent
                 text={userData?.first_name + ' ' + userData?.last_name}
-                styles={{fontSize: hp('2.5'), fontWeight: 'bold'}}
+                styles={{fontSize: hp('2'), fontWeight: 'bold'}}
               />
               <TextComponent
                 text={userData?.email}
-                styles={{fontSize: hp('1.5')}}
+                styles={{fontSize: hp('1.2')}}
                 fade
               />
             </View>
@@ -328,7 +328,7 @@ const SettingScreen = ({navigation}) => {
               <Image
                 source={logout}
                 resizeMode="contain"
-                style={{width: wp('8'), height: wp('8')}}
+                style={{width: wp('6'), height: wp('6')}}
               />
             </Touchable>
           </View>
@@ -344,7 +344,9 @@ const SettingScreen = ({navigation}) => {
             <MultiView
               data={AccountInfo.arryView}
               viewStyle={{alignSelf: 'center', width: wp('95')}}
-              dividerStyles={{marginLeft: wp('12.4')}}
+              dividerStyles={{marginLeft: wp('8')}}
+              titleStyles={{fontSize: hp('1.2')}}
+              leftStyles={styles.leftIconStyle}
             />
           </View>
           <View style={styles.upperWhiteView}>
@@ -355,7 +357,9 @@ const SettingScreen = ({navigation}) => {
             <MultiView
               data={GeneralInfo.arryView}
               viewStyle={{alignSelf: 'center', width: wp('95')}}
-              dividerStyles={{marginLeft: wp('12.4')}}
+              dividerStyles={{marginLeft: wp('8')}}
+              leftStyles={styles.leftIconStyle}
+              titleStyles={{fontSize: hp('1.2')}}
             />
           </View>
           <View style={styles.upperWhiteView}>
@@ -366,7 +370,9 @@ const SettingScreen = ({navigation}) => {
             <MultiView
               data={FriendsInfo.arryView}
               viewStyle={{alignSelf: 'center', width: wp('95')}}
-              dividerStyles={{marginLeft: wp('12.4')}}
+              dividerStyles={{marginLeft: wp('8')}}
+              leftStyles={styles.leftIconStyle}
+              titleStyles={{fontSize: hp('1.2')}}
             />
           </View>
           <View style={styles.upperWhiteView}>
@@ -377,7 +383,9 @@ const SettingScreen = ({navigation}) => {
             <MultiView
               data={RodeosInfo.arryView}
               viewStyle={{alignSelf: 'center', width: wp('95')}}
-              dividerStyles={{marginLeft: wp('12.4')}}
+              dividerStyles={{marginLeft: wp('8')}}
+              leftStyles={styles.leftIconStyle}
+              titleStyles={{fontSize: hp('1.2')}}
             />
           </View>
           <View style={styles.upperWhiteView}>
@@ -388,7 +396,9 @@ const SettingScreen = ({navigation}) => {
             <MultiView
               data={CalenderInfo.arryView}
               viewStyle={{alignSelf: 'center', width: wp('95')}}
-              dividerStyles={{marginLeft: wp('12.4')}}
+              dividerStyles={{marginLeft: wp('8')}}
+              leftStyles={styles.leftIconStyle}
+              titleStyles={{fontSize: hp('1.2')}}
             />
           </View>
           <View style={styles.upperWhiteView}>
@@ -396,7 +406,9 @@ const SettingScreen = ({navigation}) => {
             <MultiView
               data={AboutApp.arryView}
               viewStyle={{alignSelf: 'center', width: wp('95')}}
-              dividerStyles={{marginLeft: wp('12.4')}}
+              dividerStyles={{marginLeft: wp('8')}}
+              leftStyles={styles.leftIconStyle}
+              titleStyles={{fontSize: hp('1.2')}}
             />
           </View>
           <View style={styles.upperWhiteView}>
@@ -407,7 +419,9 @@ const SettingScreen = ({navigation}) => {
             <MultiView
               data={SupportInfo.arryView}
               viewStyle={{alignSelf: 'center', width: wp('95')}}
-              dividerStyles={{marginLeft: wp('12.4')}}
+              dividerStyles={{marginLeft: wp('8')}}
+              leftStyles={styles.leftIconStyle}
+              titleStyles={{fontSize: hp('1.2')}}
             />
           </View>
         </View>

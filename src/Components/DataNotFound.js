@@ -39,8 +39,8 @@ export const DataNotFound = ({
         <ThemeButton
           title={btnTitle ?? 'Refresh'}
           onPress={onpress}
-          textStyle={{textAlign: 'center'}}
-          style={btnStyles}
+          textStyle={{textAlign: 'center', fontSize: hp('1.5')}}
+          style={{...styles.btnStyles, ...btnStyles}}
         />
       )}
     </View>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     // marginBottom: hp('2'),
   },
   noDataTitle: {
-    fontSize: hp('3'),
+    fontSize: hp('2'),
     textAlign: 'center',
     fontWeight: 600,
     color: Colors.primaryColor,
@@ -74,5 +74,9 @@ const styles = StyleSheet.create({
     color: Colors.textGray,
     marginBottom: hp('6'),
     marginTop: hp('1'),
+  },
+  btnStyles: {
+    width: wp('10'),
+    height: hp('5'),
   },
 });

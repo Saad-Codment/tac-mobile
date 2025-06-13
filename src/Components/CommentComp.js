@@ -22,7 +22,7 @@ const CommentComp = ({item, index}) => {
     <View style={styles.mainView}>
       <View style={styles.upperView}>
         <Pressable onPress={onImagePress}>
-          <CircleImage image={imageUrl(item?.profile_image)} size={0.12} uri />
+          <CircleImage image={imageUrl(item?.profile_image)} size={0.11} uri />
         </Pressable>
         <TextComponent
           text={`${item?.first_name} ${
@@ -32,7 +32,7 @@ const CommentComp = ({item, index}) => {
         />
         <TextComponent
           text={convertToCustomTimeFormat(item?.created_at)}
-          styles={{fontSize: hp('1.5')}}
+          styles={{fontSize: hp('1.2')}}
         />
       </View>
       <TextComponent text={item?.text} styles={styles.descText} />
@@ -51,9 +51,9 @@ const styles = StyleSheet.create({
   upperView: {flexDirection: 'row', alignItems: 'center'},
   nameText: {
     fontWeight: 'bold',
-    fontSize: hp('1.8'),
+    fontSize: hp('1.5'),
     width: wp('67'),
     marginLeft: wp('2'),
   },
-  descText: {marginTop: hp('0.5'), marginLeft: wp('2'), fontSize: hp('1.8')},
+  descText: {marginTop: hp('0.5'), marginLeft: wp('2'), fontSize: hp('1.5')},
 });

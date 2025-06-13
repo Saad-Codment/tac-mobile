@@ -14,6 +14,7 @@ const useMyEventScreen = ({navigate}) => {
     queryKey: ['getEventDate'],
     queryFn: async () => {
       const allProps = await API.get(getEventDatesUrl);
+      console.log('allPropsallPropsallProps', allProps?.data);
       if (allProps?.ok) {
         setActiveButton(activeButton ?? allProps?.data[0]);
         mutate({from_date: allProps?.data[0], page: 1});
@@ -27,6 +28,7 @@ const useMyEventScreen = ({navigate}) => {
       return API.post(getEventByDatesUrl, body);
     },
     onSuccess: ({ok, data}) => {
+      console.log('datadatadatadatadatadsdvsdvsatadatadata', data);
       if (ok) {
         setBottomData(data?.data);
       } else {
@@ -37,6 +39,7 @@ const useMyEventScreen = ({navigate}) => {
   });
 
   const onSelectVal = date => {
+    setBottomData([]);
     setActiveButton(date);
     mutate({from_date: date, page: 1});
   };

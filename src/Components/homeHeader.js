@@ -74,8 +74,8 @@ const HomeHeader = ({
                   Dimensions.get('window').width +
                     Dimensions.get('window').height,
                 ),
-                width: Dimensions.get('window').width * 0.14,
-                height: Dimensions.get('window').width * 0.14,
+                width: Dimensions.get('window').width * 0.11,
+                height: Dimensions.get('window').width * 0.11,
               }}
             />
           </Pressable>
@@ -90,7 +90,7 @@ const HomeHeader = ({
               <Lottie
                 source={handShakeLottie}
                 resizeMode="contain"
-                style={{width: wp('10')}}
+                style={{width: wp('8')}}
                 loop
                 autoPlay
               />
@@ -100,7 +100,7 @@ const HomeHeader = ({
               styles={{
                 top: hp('-0.7'),
                 color: Colors.textGray,
-                fontSize: hp('1.5'),
+                fontSize: hp('1.2'),
               }}
             />
           </View>
@@ -128,9 +128,9 @@ const HomeHeader = ({
             justifyContent: 'flex-start',
             paddingLeft: wp('5'),
           }}
-          imageStyle={{width: wp('5')}}
+          imageStyle={{width: wp('3')}}
           image={editYellow}
-          textStyle={{fontSize: hp('1.5')}}
+          textStyle={{fontSize: hp('1.2')}}
           onPress={() => NavigationService.navigate('CreatePostScreen')}
         />
         {/* <ThemeButton
@@ -157,9 +157,9 @@ const styles = StyleSheet.create({
   headerView: {
     backgroundColor: Colors.backgroundTheme,
     width: wp('100'),
-    paddingTop: hp('2'),
+    paddingTop: hp('1'),
     position: 'relative',
-    height: hp('22'),
+    height: hp('18'),
   },
   firstView: {
     flexDirection: 'row',
@@ -172,12 +172,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp('4'),
   },
   nameText: {
-    fontSize: hp('2'),
+    fontSize: hp('1.7'),
     fontWeight: 'bold',
     color: Colors.white,
     // marginTop: hp('2.5'),
   },
-  notiIcon: {width: wp('7'), marginTop: hp('1')},
+  notiIcon: {width: wp('5'), marginTop: hp('1')},
   setIcon: {width: wp('7')},
   headingView: {
     flexDirection: 'row',
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     marginTop: hp('3'),
   },
   searchComponent: {
-    marginTop: hp('-10.5'),
+    marginTop: hp('-12.5'),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   upperBtn: {
     width: wp('92'),
     borderRadius: 30,
-    height: hp('5'),
+    height: hp('4.5'),
     borderWidth: 0.5,
     borderColor: Colors.grayBorder,
   },

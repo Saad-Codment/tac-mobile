@@ -21,76 +21,20 @@ const NotificationComp = ({item, index, acceptReq, declineReq}) => {
     });
   };
 
-  const notificationsType = {
-    1: data => {
-      return (
-        <View style={styles.reqMainView}>
-          <Pressable>
-            <CircleImage image={null} uri={true} size={0.15} />
-          </Pressable>
-          <View style={{marginLeft: wp('2')}}>
-            <View style={styles.reqTitleView}>
-              <TextComponent
-                text={'Jess Lockwood'}
-                styles={{width: wp('64'), fontWeight: 'bold'}}
-              />
-              <TextComponent
-                text={convertToCustomTimeFormat(data?.created_at)}
-                styles={styles.reqTimeText}
-              />
-            </View>
-            <TextComponent text={data?.body} />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginVertical: hp('1.5'),
-                width: wp('70'),
-              }}>
-              <ThemeButton
-                title={'Accept'}
-                style={styles.acceptBtn}
-                textStyle={{
-                  color: 'white',
-                  fontSize: hp('1.5'),
-                }}
-                onPress={() => {
-                  //   onAcceptReq(item?.id);
-                }}
-              />
-              <ThemeButton
-                title={'Remove'}
-                style={styles.rejectBtn}
-                textStyle={{
-                  fontSize: hp('1.5'),
-                  color: 'black',
-                }}
-                onPress={() => {
-                  //   onCancelReq(item?.id);
-                }}
-              />
-            </View>
-          </View>
-        </View>
-      );
-    },
-  };
-
   return (
     <View style={styles.reqMainView}>
       <Pressable onPress={onImagePress}>
         <CircleImage
           image={imageUrl(item?.profile_image)}
           uri={true}
-          size={0.15}
+          size={0.12}
         />
       </Pressable>
       <View style={{marginLeft: wp('2')}}>
         <View style={styles.reqTitleView}>
           <TextComponent
             text={item?.first_name + ' ' + item?.last_name}
-            styles={{width: wp('64'), fontWeight: 'bold'}}
+            styles={{width: wp('64'), fontWeight: 'bold', fontSize: hp('1.7')}}
           />
           <TextComponent
             text={convertToCustomTimeFormat(item?.created_at)}
@@ -99,7 +43,7 @@ const NotificationComp = ({item, index, acceptReq, declineReq}) => {
         </View>
         <TextComponent
           text={item?.body}
-          styles={{fontSize: hp('1.5'), width: wp('75'), marginTop: hp('0.5')}}
+          styles={{fontSize: hp('1.2'), width: wp('75'), marginTop: hp('0.5')}}
         />
         {item?.notification_type_id == 1 && (
           <View style={styles.btnView}>
@@ -108,7 +52,7 @@ const NotificationComp = ({item, index, acceptReq, declineReq}) => {
               style={styles.acceptBtn}
               textStyle={{
                 color: 'white',
-                fontSize: hp('1.5'),
+                fontSize: hp('1.2'),
               }}
               onPress={() => {
                 acceptReq(item?.id);
@@ -118,7 +62,7 @@ const NotificationComp = ({item, index, acceptReq, declineReq}) => {
               title={'Remove'}
               style={styles.rejectBtn}
               textStyle={{
-                fontSize: hp('1.5'),
+                fontSize: hp('1.2'),
                 color: 'black',
               }}
               onPress={() => {
@@ -143,24 +87,24 @@ const styles = StyleSheet.create({
   },
   reqTitleView: {flexDirection: 'row', alignItems: 'center'},
   reqTimeText: {
-    fontSize: hp('1.7'),
-    marginLeft: Platform.OS == 'ios' ? 0 : wp('1'),
+    fontSize: hp('1.2'),
+    marginLeft: Platform.OS == 'ios' ? wp('3') : wp('1'),
   },
   btnView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: hp('1.5'),
+    marginTop: hp('1'),
     width: wp('70'),
   },
   acceptBtn: {
     backgroundColor: Colors.primaryColor,
-    height: hp('4'),
+    height: hp('3'),
     width: wp('30'),
   },
   rejectBtn: {
     backgroundColor: Colors.diableBtnCOlor,
-    height: hp('4'),
+    height: hp('3'),
     width: wp('30'),
   },
 });

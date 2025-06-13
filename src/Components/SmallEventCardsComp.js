@@ -58,10 +58,14 @@ const SmallEventCardsComp = ({item, onPress}) => {
         </View>
         <View style={styles.centerView}>
           {item?.event_types && (
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                // alignItems: 'center',
+              }}>
               <TextComponent
                 text={'Event types: '}
-                styles={{fontSize: hp('1.5'), marginVertical: hp('1')}}
+                styles={{fontSize: hp('1.2'), marginTop: hp('0.6')}}
               />
               <MultiSelectButton
                 items={showFirstThreeAndCountRest(
@@ -69,15 +73,15 @@ const SmallEventCardsComp = ({item, onPress}) => {
                 )}
                 isDisable={true}
                 btnStyle={styles.tagsBtn}
-                textStyle={{fontSize: hp('1.5'), color: '#525252'}}
+                textStyle={{fontSize: hp('1.2'), color: '#525252'}}
               />
             </View>
           )}
           {item?.associations && (
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{flexDirection: 'row'}}>
               <TextComponent
                 text={'Association types: '}
-                styles={{fontSize: hp('1.5'), marginVertical: hp('1')}}
+                styles={{fontSize: hp('1.2'), marginTop: hp('0.6')}}
               />
               <MultiSelectButton
                 items={showFirstThreeAndCountRest(
@@ -99,7 +103,7 @@ export default SmallEventCardsComp;
 const styles = StyleSheet.create({
   mainView: {
     width: wp('92'),
-    borderRadius: 20,
+    borderRadius: 10,
     flexDirection: 'row',
     backgroundColor: 'white',
     // alignItems: 'center',
@@ -111,24 +115,29 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.yellowBgColor,
     alignItems: 'center',
     justifyContent: 'center',
-    // paddingVertical: hp('1.5'),
+    paddingVertical: hp('0.3'),
   },
   monthText: {
-    fontSize: hp('2'),
+    fontSize: hp('1.5'),
     fontWeight: 'bold',
     color: Colors.darkThemeTextColor,
   },
   dateText: {
-    fontSize: hp('3.5'),
+    fontSize: hp('3'),
     fontWeight: 'bold',
     color: Colors.darkThemeTextColor,
   },
   secondView: {
-    paddingVertical: hp('1'),
+    paddingTop: hp('0.5'),
     paddingHorizontal: wp('2'),
   },
-  titleStyle: {color: Colors.darkThemeTextColor, fontWeight: 'bold'},
-  centerView: {},
+  titleStyle: {
+    color: Colors.darkThemeTextColor,
+    fontWeight: 'bold',
+    fontSize: hp('1.5'),
+    width: wp('70'),
+  },
+  centerView: {marginTop: hp('0.5')},
   calendarStyle: {
     width: wp('4'),
     marginRight: wp('1'),
@@ -141,20 +150,20 @@ const styles = StyleSheet.create({
   },
   tagsBtn: {
     width: 'auto',
-    paddingHorizontal: wp('1'),
+    paddingHorizontal: wp('1.5'),
     backgroundColor: 'transparent',
     overflow: 'hidden',
     height: 'auto',
     paddingVertical: hp('0.5'),
     borderWidth: 1,
     borderColor: Colors.primaryColor,
-    marginTop: hp('0.5'),
+    // marginTop: hp('0.5'),
   },
   bottomView: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: hp('1.5'),
+    marginTop: hp('0.5'),
   },
-  locationIcon: {width: wp('4'), height: hp('2'), marginRight: wp('1')},
-  locationText: {fontSize: hp('1.5'), width: wp('30')},
+  locationIcon: {width: wp('3'), height: hp('2'), marginRight: wp('1')},
+  locationText: {fontSize: hp('1.2'), width: wp('30')},
 });

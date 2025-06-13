@@ -61,12 +61,15 @@ const ChatScreen = ({navigation, route}) => {
     return !isSender ? (
       <View style={styles.senderView(isSender)}>
         <View style={styles.senderText(isSender)}>
-          <TextComponent text={item?.text} styles={{fontWeight: '300'}} />
+          <TextComponent
+            text={item?.text}
+            styles={{fontWeight: '300', fontSize: hp('1.5')}}
+          />
         </View>
         <TextComponent
           text={formattedTime}
           fade={true}
-          styles={{fontSize: hp('1.5'), marginLeft: wp('2')}}
+          styles={{fontSize: hp('1.2'), marginLeft: wp('2')}}
         />
       </View>
     ) : (
@@ -75,12 +78,12 @@ const ChatScreen = ({navigation, route}) => {
         <TextComponent
           text={formattedTime}
           fade={true}
-          styles={{fontSize: hp('1.5'), marginRight: wp('2')}}
+          styles={{fontSize: hp('1.2'), marginRight: wp('2')}}
         />
         <View style={styles.senderText(isSender)}>
           <TextComponent
             text={item?.text}
-            styles={{fontWeight: '300', color: 'white'}}
+            styles={{fontWeight: '300', color: 'white', fontSize: hp('1.5')}}
           />
         </View>
       </View>

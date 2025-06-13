@@ -65,7 +65,7 @@ const SearchScreen = ({navigation}) => {
           </View>
           <TextComponent
             text={'See all'}
-            styles={{marginRight: wp('2'), fontSize: hp('1.6')}}
+            styles={{marginRight: wp('2'), fontSize: hp('1.2')}}
             onPress={() =>
               navigation.navigate(
                 selectedVal.id == 'FriendRequests'

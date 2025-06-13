@@ -128,16 +128,16 @@ export const styles = StyleSheet.create({
   // },
   rightImgStyle: {
     width: wp('4'),
-    height: hp('4'),
+    height: hp('2'),
     tintColor: Colors.black,
     marginRight: wp('2'),
   },
   statusText: {
-    fontSize: hp('1.5'),
-    paddingVertical: hp('0.3'),
-    borderRadius: 12,
+    fontSize: hp('1'),
+    paddingVertical: hp('0.2'),
+    borderRadius: 5,
     borderWidth: 0.5,
-    paddingHorizontal: wp('2'),
+    paddingHorizontal: wp('1.5'),
     marginRight: wp('2'),
     borderColor: 'gray',
   },
@@ -183,16 +183,16 @@ export const styles = StyleSheet.create({
     height: hp('2'),
   },
   headingText: {
-    fontSize: hp('2'),
+    fontSize: hp('1.5'),
     fontWeight: 'bold',
     paddingLeft: wp('5'),
     marginBottom: hp('1'),
   },
   addIcon: {
     position: 'absolute',
-    right: wp('12'),
+    right: wp('15'),
     height: hp('6'),
-    top: hp('12'),
+    top: hp('8.8'),
   },
   whiteCircle: {
     // height: hp('22'),
@@ -212,7 +212,7 @@ export const styles = StyleSheet.create({
   },
   inputView: {
     width: wp('90'),
-    height: hp('6'),
+    height: hp('5'),
     borderRadius: 30,
     borderWidth: 0.5,
     borderColor: Colors.dkBorderColor,
@@ -225,10 +225,11 @@ export const styles = StyleSheet.create({
     marginTop: hp('3'),
   },
   modalBtn: {
-    width: wp('93'),
+    width: wp('50'),
     alignSelf: 'center',
     marginTop: hp('2'),
     marginBottom: hp('2'),
+    height: hp('4'),
   },
   textStyle: {
     fontSize: hp('1.5'),
@@ -236,5 +237,9 @@ export const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     paddingVertical: hp('2'),
+  },
+  leftIconStyle: {
+    width: wp('5'),
+    height: hp('2'),
   },
 });

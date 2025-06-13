@@ -191,7 +191,7 @@ const PostViewComp = ({
             <Image
               source={dotsVertical}
               resizeMode="contain"
-              style={{width: wp('7'), height: hp('5')}}
+              style={{width: wp('6'), height: hp('4')}}
             />
           </Touchable>
         ) : (
@@ -200,7 +200,7 @@ const PostViewComp = ({
               <Image
                 source={dotsVertical}
                 resizeMode="contain"
-                style={{width: wp('7'), height: hp('5')}}
+                style={{width: wp('6'), height: hp('4')}}
               />
             </MenuTrigger>
             <MenuOptions>
@@ -252,13 +252,13 @@ const PostViewComp = ({
             source={item?.is_liked ? heartFilledLike : heartTheme}
             resizeMode="contain"
             tintColor={Colors.yellowTextColor}
-            style={{width: wp('5'), marginRight: wp('1')}}
+            style={{width: wp('4'), marginRight: wp('1')}}
           />
           <TextComponent
             text={`${item?.likes_count} Likes`}
             isThemeColor={true}
             styles={{
-              fontSize: hp('1.5'),
+              fontSize: hp('1.3'),
             }}
           />
         </Touchable>
@@ -278,13 +278,13 @@ const PostViewComp = ({
             source={commentIcon}
             resizeMode="contain"
             tintColor={Colors.yellowTextColor}
-            style={{width: wp('5'), marginRight: wp('1')}}
+            style={{width: wp('4'), marginRight: wp('1')}}
           />
           <TextComponent
             text={`${item?.comments_count} Comment`}
             isThemeColor={true}
             styles={{
-              fontSize: hp('1.5'),
+              fontSize: hp('1.3'),
             }}
           />
         </Touchable>
@@ -295,14 +295,14 @@ const PostViewComp = ({
             source={shareTheme}
             resizeMode="contain"
             tintColor={Colors.yellowTextColor}
-            style={{width: wp('5')}}
+            style={{width: wp('4')}}
           />
           <TextComponent
             text={'Share'}
             isThemeColor={true}
             styles={{
               marginLeft: wp('1'),
-              fontSize: hp('1.5'),
+              fontSize: hp('1.3'),
             }}
           />
         </Touchable>
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 10,
-    paddingVertical: hp('2'),
+    paddingVertical: hp('1'),
   },
   upperView: {
     flexDirection: 'row',
@@ -338,10 +338,10 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontWeight: 'bold',
-    fontSize: wp('4'),
+    fontSize: wp('3'),
   },
   postTime: {
-    fontSize: wp('3.2'),
+    fontSize: wp('2.5'),
     color: 'gray',
   },
   contentView: {
@@ -425,7 +425,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // marginVertical: hp('-2'),
     height: hp('3'),
-    marginTop: hp('1.5'),
+    marginTop: hp('1'),
     paddingHorizontal: wp('3'),
     // width: wp('90'),
     // backgroundColor: 'red',

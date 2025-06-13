@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   },
   loginTop: {
     alignItems: 'flex-start',
-    marginTop: hp('20'),
+    marginTop: hp('-5'),
     marginBottom: hp('2'),
     paddingHorizontal: wp('1.5'),
   },
@@ -32,8 +32,8 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: hp('4'),
-    marginTop: hp('5'),
+    // marginVertical: hp('4'),
+    marginTop: hp('2'),
   },
   barLine: {
     width: wp('28'),
@@ -44,6 +44,7 @@ export const styles = StyleSheet.create({
   barText: {
     paddingHorizontal: wp('4'),
     color: Colors.white,
+    fontSize: hp('1.5'),
   },
   social: {
     flexDirection: 'row',
@@ -81,7 +82,7 @@ export const styles = StyleSheet.create({
   signInText: {
     textAlign: 'left',
     marginTop: hp('-1.5'),
-    fontSize: hp('3.5'),
+    fontSize: hp('2.5'),
     fontWeight: '700',
     color: Colors.white,
   },
@@ -93,7 +94,7 @@ export const styles = StyleSheet.create({
   rememberSec: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: hp('2'),
+    // marginTop: hp('1'),
   },
   rememberInner: {
     flexDirection: 'row',
@@ -113,17 +114,17 @@ export const styles = StyleSheet.create({
   },
   forgetText: {
     flex: 1,
-    textAlign: 'right',
-    fontSize: hp('1.8'),
+    textAlign: 'left',
+    fontSize: hp('1.5'),
     color: Colors.white,
   },
   lockstyle: {
-    flex: 0.5,
+    flex: 0.4,
   },
   dontHave: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: hp('8'),
+    // marginTop: hp('8'),
     alignItems: 'center',
     paddingBottom: hp('2'),
     // position: 'absolute',
@@ -132,19 +133,22 @@ export const styles = StyleSheet.create({
     // bottom: hp('2')
   },
   dontHaveText: {
-    fontSize: hp('2'),
+    fontSize: hp('1.5'),
     fontWeight: '400',
     color: Colors.white,
     marginRight: wp('4'),
   },
   signUpText: {
     color: Colors.primaryColor,
-    fontSize: hp('2'),
+    fontSize: hp('1.5'),
     fontWeight: '600',
   },
   imageStyle: {width: wp('30'), height: hp('15')},
   buttonStyle: {
     borderRadius: 30,
+    height: hp('5'),
+    width: wp('40'),
+    alignSelf: 'flex-end',
     // marginTop: hp('3'),
   },
 });

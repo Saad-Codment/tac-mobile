@@ -9,6 +9,7 @@ import {styles} from './styles';
 import {lock, locksetting, passwordIcon} from '../../Assets';
 import ThemeButton from '../../Components/ThemeButton';
 import {Colors} from '../../Theme/Variables';
+import {hp} from '../../Config/responsive';
 
 const ChangePasswordScreen = ({navigation}) => {
   const {
@@ -101,6 +102,7 @@ const ChangePasswordScreen = ({navigation}) => {
           title={'Save'}
           style={styles.saveBtn}
           onPress={handleSubmit(changePassword)}
+          textStyle={styles.saveText}
         />
       </KeyBoardWrapper>
     </View>

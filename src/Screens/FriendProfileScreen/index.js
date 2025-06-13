@@ -136,8 +136,13 @@ const FriendProfileScreen = ({navigation, route}) => {
                 ) : (
                   <ThemeButton
                     title={'Load More'}
-                    style={{marginTop: hp('2'), width: wp('40')}}
+                    style={{
+                      marginTop: hp('2'),
+                      width: wp('30'),
+                      height: hp('4'),
+                    }}
                     onPress={() => loadMoreData()}
+                    textStyle={{fontSize: hp('1.5')}}
                   />
                 )), // Show loading spinner at the bottom
             }}

@@ -61,6 +61,7 @@ export const styles = StyleSheet.create({
   eventTimeView: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   eventCallImg: {
     width: wp('6'),

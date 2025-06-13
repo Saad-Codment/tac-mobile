@@ -238,35 +238,41 @@ const EventsDetailScreen = ({navigation, route}) => {
               styles={{fontSize: hp('1.5')}}
               fade
             />
-            <Image
-              source={filledCalender}
-              resizeMode="contain"
+            <View
               style={{
-                ...styles.eventCallImg,
-                marginLeft: wp('30'),
-              }}
-            />
-            <TextComponent
-              text={`${getDateMonthYear(eventData?.from_date)?.monthName} ${
-                getDateMonthYear(eventData?.from_date)?.day
-              }, ${getDateMonthYear(eventData?.from_date)?.year}`}
-              styles={{fontSize: hp('1.5')}}
-            />
-            <Image
-              source={filledClock}
-              resizeMode="contain"
-              style={{...styles.eventCallImg, marginLeft: wp('4')}}
-            />
-            <TextComponent
-              text={
-                eventData?.start_time
-                  ? `${convertToLocalTime(eventData?.start_time)?.time} ${
-                      convertToLocalTime(eventData?.start_time)?.period
-                    }`
-                  : 'Not Confirmed'
-              }
-              styles={{fontSize: hp('1.5')}}
-            />
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={filledCalender}
+                resizeMode="contain"
+                style={{
+                  ...styles.eventCallImg,
+                  // marginLeft: wp('20'),
+                }}
+              />
+              <TextComponent
+                text={`${getDateMonthYear(eventData?.from_date)?.monthName} ${
+                  getDateMonthYear(eventData?.from_date)?.day
+                }, ${getDateMonthYear(eventData?.from_date)?.year}`}
+                styles={{fontSize: hp('1.5')}}
+              />
+              <Image
+                source={filledClock}
+                resizeMode="contain"
+                style={{...styles.eventCallImg, marginLeft: wp('4')}}
+              />
+              <TextComponent
+                text={
+                  eventData?.start_time
+                    ? `${convertToLocalTime(eventData?.start_time)?.time} ${
+                        convertToLocalTime(eventData?.start_time)?.period
+                      }`
+                    : 'Not Confirmed'
+                }
+                styles={{fontSize: hp('1.5')}}
+              />
+            </View>
           </View>
           <DividerLine
             DividerLineStyle={{width: wp('95'), marginVertical: hp('2')}}
@@ -277,35 +283,41 @@ const EventsDetailScreen = ({navigation, route}) => {
               fade
               styles={{fontSize: hp('1.5')}}
             />
-            <Image
-              source={filledCalender}
-              resizeMode="contain"
+            <View
               style={{
-                ...styles.eventCallImg,
-                marginLeft: wp('32'),
-              }}
-            />
-            <TextComponent
-              text={`${getDateMonthYear(eventData?.to_date)?.monthName} ${
-                getDateMonthYear(eventData?.to_date)?.day
-              }, ${getDateMonthYear(eventData?.to_date)?.year}`}
-              styles={{fontSize: hp('1.5')}}
-            />
-            <Image
-              source={filledClock}
-              resizeMode="contain"
-              style={{...styles.eventCallImg, marginLeft: wp('4')}}
-            />
-            <TextComponent
-              text={
-                eventData?.end_time
-                  ? `${convertToLocalTime(eventData?.end_time)?.time} ${
-                      convertToLocalTime(eventData?.end_time)?.period
-                    }`
-                  : 'Not Confirmed'
-              }
-              styles={{fontSize: hp('1.5')}}
-            />
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={filledCalender}
+                resizeMode="contain"
+                style={{
+                  ...styles.eventCallImg,
+                  marginLeft: wp('32'),
+                }}
+              />
+              <TextComponent
+                text={`${getDateMonthYear(eventData?.to_date)?.monthName} ${
+                  getDateMonthYear(eventData?.to_date)?.day
+                }, ${getDateMonthYear(eventData?.to_date)?.year}`}
+                styles={{fontSize: hp('1.5')}}
+              />
+              <Image
+                source={filledClock}
+                resizeMode="contain"
+                style={{...styles.eventCallImg, marginLeft: wp('4')}}
+              />
+              <TextComponent
+                text={
+                  eventData?.end_time
+                    ? `${convertToLocalTime(eventData?.end_time)?.time} ${
+                        convertToLocalTime(eventData?.end_time)?.period
+                      }`
+                    : 'Not Confirmed'
+                }
+                styles={{fontSize: hp('1.5')}}
+              />
+            </View>
           </View>
         </View>
 

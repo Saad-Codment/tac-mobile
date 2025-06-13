@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     paddingVertical: hp('2'),
   },
   fadeText: {
-    fontSize: hp('1.8'),
+    fontSize: hp('1.5'),
     marginTop: hp('1'),
     paddingHorizontal: wp('2'),
   },

@@ -81,6 +81,7 @@ const HomeScreen = ({navigation}) => {
         functionToUpdateLike={() => {}}
         openBottomSheet={id => setModal(id)}
         mainViewStyle={{width: wp('90'), marginLeft: wp('2')}}
+        refetechKeys={['homeSuggestedFriends']}
       />
     );
   }, []);
@@ -229,10 +230,12 @@ const HomeScreen = ({navigation}) => {
                 title={'Load More'}
                 style={{
                   marginTop: hp('2'),
-                  width: wp('40'),
+                  width: wp('30'),
+                  height: hp('4'),
                   alignSelf: 'center',
                   marginBottom: hp('5'),
                 }}
+                textStyle={{fontSize: hp('1.5')}}
                 onPress={async () => {
                   await fetchNextPage();
                   afterFetchNextPage();

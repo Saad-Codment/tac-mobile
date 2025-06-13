@@ -98,8 +98,8 @@ function MybottomTabs() {
           shadowOpacity: 0,
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
-          height: hp('10'),
-          paddingBottom: hp('0'),
+          height: hp('8'),
+          paddingBottom: hp('1.5'),
           // bottom: Platform.OS == 'ios' ? hp('1.7') : hp('1.5'),
           width: wp('100'),
           alignSelf: 'center',
@@ -123,7 +123,7 @@ function MybottomTabs() {
         options={tabarComponent(
           circleCalFilled,
           unfilledCalender,
-          {width: wp('10')},
+          {width: wp('9')},
           true,
         )}
         component={Screens.MyEventScreen}
@@ -133,7 +133,7 @@ function MybottomTabs() {
         options={tabarComponent(
           isChatNotify ? chatDotFill : messages,
           isChatNotify ? chatDotTransparent : messageOut,
-          !isChatNotify ? {} : {width: wp('10')},
+          !isChatNotify ? {} : {width: wp('8')},
           true,
         )}
         component={Screens.ChatUsersScreen}
@@ -201,6 +201,6 @@ const styles = StyleSheet.create({
 
   imgstyle: {
     resizeMode: 'contain',
-    width: wp('7'),
+    width: wp('5'),
   },
 });

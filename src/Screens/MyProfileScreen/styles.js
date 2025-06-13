@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingVertical: hp('2'),
     backgroundColor: 'white',
-    paddingHorizontal: wp('2'),
+    paddingHorizontal: wp('4'),
   },
   statItem: {
     paddingHorizontal: wp('2'),
@@ -26,8 +26,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   statIcon: {
-    width: wp('4'),
-    height: hp('3'),
+    width: wp('3'),
+    height: hp('2.5'),
   },
   statTextContainer: {
     flexDirection: 'row',
@@ -37,17 +37,17 @@ export const styles = StyleSheet.create({
   },
   statNumber: {
     fontWeight: 'bold',
-    fontSize: hp('1.5'),
+    fontSize: hp('1.2'),
   },
   statLabel: {
-    fontSize: hp('1.5'),
+    fontSize: hp('1.2'),
   },
   upComingFlatlistView: {
     paddingBottom: hp('15'),
     flexGrow: 1,
     // paddingTop: hp('2'),
     alignItems: 'center',
-    paddingTop: hp('2'),
+    // paddingTop: hp('1'),
     // backgroundColor: '#fff',
 
     // alignSelf: 'center',

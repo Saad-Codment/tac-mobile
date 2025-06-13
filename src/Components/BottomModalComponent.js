@@ -132,17 +132,19 @@ const BottomModalComponent = ({
               }}>
               <ThemeButton
                 title={'Cancel'}
-                style={{width: wp('40'), height: hp('5')}}
+                style={{width: wp('40'), height: hp('4')}}
                 onPress={onClose}
+                textStyle={{fontSize: hp('1.2')}}
               />
               <ThemeButton
                 title={'Submit'}
                 isYellowTheme
-                style={{width: wp('40'), height: hp('5')}}
+                style={{width: wp('40'), height: hp('4')}}
                 onPress={() => {
                   onClose();
                   mutate();
                 }}
+                textStyle={{fontSize: hp('1.2')}}
               />
             </View>
           </KeyBoardWrapper>
@@ -162,13 +164,17 @@ const BottomModalComponent = ({
 export default BottomModalComponent;
 
 const styles = StyleSheet.create({
-  modalHeading: {alignSelf: 'center', fontWeight: 'bold'},
-  innerHeading: {fontWeight: 'bold', marginVertical: hp('5')},
+  modalHeading: {alignSelf: 'center', fontWeight: 'bold', fontSize: hp('1.5')},
+  innerHeading: {
+    fontWeight: 'bold',
+    marginVertical: hp('3'),
+    fontSize: hp('1.5'),
+  },
   viewFlex: {flexDirection: 'row'},
   textStyle: {fontSize: hp('1.5')},
-  leftViewImg: {width: wp('7'), height: hp('5')},
+  leftViewImg: {width: wp('5'), height: hp('3')},
   reportMessStyle: {
-    fontSize: hp('1.5'),
+    fontSize: hp('1.2'),
     marginLeft: wp('2'),
     maxWidth: wp('80'),
   },

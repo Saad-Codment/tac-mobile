@@ -16,16 +16,24 @@ function MyEventScreen({navigation}) {
   const {eventDate, eventsByDate, activeButton, onSelectVal} =
     useMyEventScreen(navigation);
 
-  const renderItem = useCallback(({item, index}) => {
-    return (
-      <SmallEventCardsComp
-        item={item}
-        onPress={() =>
-          navigation.navigate('EventsDetailScreen', {id: item?.id})
-        }
-      />
-    );
-  }, []);
+  const renderItem = useCallback(
+    ({item, index}) => {
+      return (
+        <SmallEventCardsComp
+          item={item}
+          onPress={() =>
+            navigation.navigate('EventsDetailScreen', {id: item?.id})
+          }
+        />
+      );
+    },
+    [eventDate, eventsByDate],
+  );
+
+  console.log(
+    'datadatadatadatadatadsdvdsdvsvsvsdsdvsatadatadata',
+    eventsByDate,
+  );
 
   return (
     <View style={{flex: 1}}>
@@ -33,6 +41,7 @@ function MyEventScreen({navigation}) {
         headerTitle={'Events'}
         rightIconImg={addcircle}
         onRightPress={() => navigation.navigate('CreateEventsScreen')}
+        isBack
       />
       <View style={styles.innerView}>
         <UseCalendar
@@ -48,7 +57,10 @@ function MyEventScreen({navigation}) {
           keyExtractor={keyExtractor}
           data={eventsByDate}
           renderItem={renderItem}
-          contentContainerStyle={{alignItems: 'center'}}
+          contentContainerStyle={{
+            alignItems: 'center',
+            paddingBottom: hp('10'),
+          }}
           onRefresh={() => onSelectVal(eventDate[0])}
           refreshing={false}
           ListEmptyComponent={

@@ -11,6 +11,9 @@ export const MultiView = ({
   viewStyle,
   dividerStyles,
   rightTextStyles,
+  titleStyles,
+  leftStyles,
+  rightStyles,
 }) => {
   const renderItem = ({item}) => {
     return (
@@ -30,6 +33,9 @@ export const MultiView = ({
           onPress={item?.onPress}
           rightTextStyles={item?.rightTextStyles ?? rightTextStyles}
           rightChilderView={item?.rightChilderView}
+          textStyle={titleStyles}
+          leftStyle={leftStyles}
+          rightStyle={rightStyles}
         />
       </Touchable>
     );

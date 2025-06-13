@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: 'white',
   },
-  titleText: {fontWeight: '600', fontSize: hp('1.6')},
+  titleText: {fontWeight: '600', fontSize: hp('1.3')},
   upComingFlatlistView: {
     paddingBottom: hp('15'),
     flexGrow: 1,

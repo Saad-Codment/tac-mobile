@@ -31,6 +31,7 @@ const ChatUsersScreen = ({navigation}) => {
       style={{
         width: '98%',
         alignSelf: 'center',
+        height: hp('2'),
       }}>
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}

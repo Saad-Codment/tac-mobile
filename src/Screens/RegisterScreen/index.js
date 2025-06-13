@@ -78,6 +78,8 @@ const RegisterScreen = ({navigation}) => {
               reset,
               control,
               getValues,
+              viewStyle: {height: hp('5')},
+              inputIconStyle: {flex: 0.5},
             }}
           />
           <InputComponent
@@ -91,6 +93,8 @@ const RegisterScreen = ({navigation}) => {
               placeholder: 'Last Name',
               defaultValue: __DEV__ ? 'last' : '',
               isImage: user,
+              viewStyle: {height: hp('5')},
+              inputIconStyle: {flex: 0.5},
             }}
           />
 
@@ -105,6 +109,8 @@ const RegisterScreen = ({navigation}) => {
               placeholder: 'Email Address',
               isImage: sms,
               defaultValue: '',
+              viewStyle: {height: hp('5')},
+              inputIconStyle: {flex: 0.5},
             }}
           />
           <InputComponent
@@ -120,6 +126,8 @@ const RegisterScreen = ({navigation}) => {
               defaultValue: __DEV__ ? 'Test@123' : '',
               isSecure: true,
               inputIconStyle: styles.lockstyle,
+              viewStyle: {height: hp('5')},
+              inputIconStyle: {flex: 0.4},
             }}
           />
           <InputComponent
@@ -135,6 +143,8 @@ const RegisterScreen = ({navigation}) => {
               defaultValue: __DEV__ ? 'Test@123' : '',
               isSecure: true,
               inputIconStyle: styles.lockstyle,
+              viewStyle: {height: hp('5')},
+              inputIconStyle: {flex: 0.4},
             }}
           />
           <View style={{paddingTop: hp('3')}}>
@@ -143,6 +153,7 @@ const RegisterScreen = ({navigation}) => {
               onPress={handleSubmit(signUpButton)}
               style={styles.buttonStyle}
               isYellowTheme={true}
+              textStyle={{fontSize: hp('1.5')}}
             />
           </View>
           <View style={styles.barMain}>

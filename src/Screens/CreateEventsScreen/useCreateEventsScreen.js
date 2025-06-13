@@ -109,10 +109,16 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
     errors,
   } = useFormHook(Schemas.eventCreate, {
     perfEventList: [], // Initial empty event
-    eventStartDate: new Date(data?.data?.from_date) ?? currentDate,
-    eventStartTime: new Date(data?.data?.start_time) ?? currentDate,
-    eventEndDate: new Date(data?.data?.to_date) ?? nextDay,
-    eventEndTime: new Date(data?.data?.end_time) ?? nextDay,
+    eventStartDate: data?.data?.from_date
+      ? new Date(data?.data?.from_date)
+      : currentDate,
+    eventStartTime: data?.data?.start_time
+      ? new Date(data?.data?.start_time)
+      : currentDate,
+    eventEndDate: data?.data?.to_date ? new Date(data?.data?.to_date) : nextDay,
+    eventEndTime: data?.data?.end_time
+      ? new Date(data?.data?.end_time)
+      : nextDay,
   });
 
   const {queryClient} = useReduxStore();

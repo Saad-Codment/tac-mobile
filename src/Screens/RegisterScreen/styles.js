@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   signInText: {
     textAlign: 'left',
     marginTop: hp('-1.5'),
-    fontSize: hp('3.5'),
+    fontSize: hp('2.5'),
     fontWeight: '700',
     color: Colors.white,
   },
@@ -62,10 +62,13 @@ export const styles = StyleSheet.create({
   },
   buttonStyle: {
     borderRadius: 30,
+    height: hp('5'),
+    width: wp('40'),
+    alignSelf: 'flex-end',
     // marginTop: hp('3'),
   },
   lockstyle: {
-    flex: 0.5,
+    flex: 0.3,
   },
 
   userIconStyle: {
@@ -81,14 +84,14 @@ export const styles = StyleSheet.create({
     marginBottom: hp('1'),
   },
   dontHaveText: {
-    fontSize: hp('2'),
+    fontSize: hp('1.5'),
     fontWeight: '400',
     color: Colors.white,
     marginRight: wp('4'),
   },
   signUpText: {
     color: Colors.primaryColor,
-    fontSize: hp('2'),
+    fontSize: hp('1.5'),
     fontWeight: '600',
   },
   lastNameSt: {
@@ -112,8 +115,8 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: hp('4'),
-    marginTop: hp('5'),
+    // marginVertical: hp('4'),
+    marginTop: hp('2'),
   },
   barLine: {
     width: wp('28'),
@@ -124,6 +127,7 @@ export const styles = StyleSheet.create({
   barText: {
     paddingHorizontal: wp('4'),
     color: Colors.white,
+    fontSize: hp('1.5'),
   },
   social: {
     flexDirection: 'row',

@@ -54,7 +54,7 @@ const FriendReqComp = ({
             style={styles.acceptBtn}
             textStyle={{
               color: 'white',
-              fontSize: hp('1.5'),
+              fontSize: hp('1.1'),
             }}
             onPress={async () => {
               await acceptFriendReq.mutateAsync(item?.id);
@@ -69,7 +69,7 @@ const FriendReqComp = ({
             title={'Delete'}
             style={styles.rejectBtn}
             textStyle={{
-              fontSize: hp('1.5'),
+              fontSize: hp('1.1'),
               color: 'black',
             }}
             onPress={async () => {
@@ -92,20 +92,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: hp('1'),
     paddingHorizontal: wp('3'),
-    // width: wp('98'),
+    backgroundColor: 'white',
+    borderRadius: 10,
+    width: wp('95'),
   },
   circleImg: {
-    width: Dimensions.get('window').width * 0.25,
-    height: Dimensions.get('window').width * 0.25,
+    width: Dimensions.get('window').width * 0.15,
+    height: Dimensions.get('window').width * 0.15,
   },
-  secView: {marginTop: hp('0.5'), marginLeft: wp('5')},
+  secView: {marginTop: hp('0.5'), marginLeft: wp('2')},
   bottomView: {
     flexDirection: 'row',
     marginTop: hp('1'),
     // alignItems: 'center',
     // justifyContent: 'center',
   },
-  titleStyle: {fontWeight: 'bold', fontSize: hp('2')},
+  titleStyle: {fontWeight: '400', fontSize: hp('1.5')},
   ratingText: {fontSize: hp('1.5'), marginTop: hp('0.5')},
   btnView: {
     flexDirection: 'row',
@@ -116,13 +118,15 @@ const styles = StyleSheet.create({
   },
   acceptBtn: {
     backgroundColor: Colors.primaryColor,
-    height: hp('4'),
+    height: hp('3'),
     width: wp('30'),
+    borderRadius: 5,
   },
   rejectBtn: {
     backgroundColor: Colors.diableBtnCOlor,
-    height: hp('4'),
+    height: hp('3'),
     width: wp('30'),
+    borderRadius: 5,
   },
 });
 

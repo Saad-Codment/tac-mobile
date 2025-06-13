@@ -106,9 +106,9 @@ export const styles = StyleSheet.create({
   upperWhiteView: {
     backgroundColor: 'white',
     width: wp('90'),
-    height: hp('36'),
+    height: hp('26'),
     borderRadius: 20,
-    marginTop: hp('10'),
+    marginTop: hp('7'),
     paddingTop: hp('10'),
     alignItems: 'center',
   },
@@ -116,13 +116,14 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     zIndex: 1,
-    top: hp('-9'),
+    top: hp('-7'),
   },
   bottomView: {
     paddingTop: hp('1.5'),
     paddingBottom: hp('1'),
-    height: hp('8'),
+    height: hp('5'),
     marginTop: hp('2'),
+    borderRadius: 587,
   },
   listView: {
     alignItems: 'center',
@@ -223,5 +224,9 @@ export const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     paddingVertical: hp('2'),
+  },
+  leftIconStyle: {
+    width: wp('5'),
+    height: hp('2'),
   },
 });

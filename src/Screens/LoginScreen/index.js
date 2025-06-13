@@ -64,6 +64,8 @@ const LoginScreen = ({navigation}) => {
               placeholder: 'Email',
               isImage: sms,
               defaultValue: __DEV__ ? 'iphonexr@gmail.com' : '',
+              viewStyle: {height: hp('5')},
+              inputIconStyle: {flex: 0.5},
             }}
           />
           <InputComponent
@@ -80,19 +82,19 @@ const LoginScreen = ({navigation}) => {
               isSecure: true,
               isImage: locksetting,
               inputIconStyle: styles.lockstyle,
+              viewStyle: {height: hp('5')},
+              inputIconStyle: {flex: 0.4},
             }}
           />
 
-          <View style={{paddingTop: hp('3')}}>
-            <ThemeButton
-              onPress={handleSubmit(loginUser)}
-              title={'Log In'}
-              isYellowTheme={true}
-              style={styles.buttonStyle}
-            />
-          </View>
-
-          <View style={styles.rememberSec}>
+          <View
+            style={{
+              paddingTop: hp('1'),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              // width: wp('90'),
+            }}>
             {/* <View style={styles.checkContainer}>
               <Touchable style={styles.checkContainer} onPress={handleClick}>
                 <Image
@@ -111,6 +113,13 @@ const LoginScreen = ({navigation}) => {
               text={'Forgot Password?'}
               styles={styles.forgetText}
               onPress={() => navigation.navigate('ForgotPasswordScreen')}
+            />
+            <ThemeButton
+              onPress={handleSubmit(loginUser)}
+              title={'Log In'}
+              isYellowTheme={true}
+              style={styles.buttonStyle}
+              textStyle={{fontSize: hp('1.5')}}
             />
           </View>
 

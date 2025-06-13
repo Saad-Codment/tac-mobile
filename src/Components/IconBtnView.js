@@ -77,8 +77,8 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     // flex: 0.08,
-    width: wp('7'),
-    height: hp('5'),
+    width: wp('6'),
+    height: hp('4'),
     resizeMode: 'contain',
     marginLeft: wp('2'),
     // backgroundColor: 'yellow',

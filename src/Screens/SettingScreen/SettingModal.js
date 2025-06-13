@@ -126,6 +126,12 @@ const SettingModal = ({
           isMultipule
           selectedAlter={eventType}
           selectedBgColor={Colors.backgroundTheme}
+          textStyle={{fontSize: hp('1.2')}}
+          btnStyle={{
+            height: 'auto',
+            paddingVertical: hp('0.5'),
+            paddingHorizontal: wp('2'),
+          }}
           onSelectVal={(objId, item) => {
             if (Boolean(eventType?.find(res => res?.id == item?.id))) {
               onChangeVal(
@@ -144,7 +150,11 @@ const SettingModal = ({
           items={sortByNameAlphabetically(allData)}
           isMultipule
           selectedAlter={associations}
-          btnStyle={{height: 'auto', paddingVertical: hp('1')}}
+          btnStyle={{
+            height: 'auto',
+            paddingVertical: hp('0.5'),
+            paddingHorizontal: wp('2'),
+          }}
           selectedBgColor={Colors.backgroundTheme}
           onSelectVal={(objId, item) => {
             if (Boolean(associations?.find(res => res?.id == item?.id))) {
@@ -168,7 +178,11 @@ const SettingModal = ({
               {id: 'other', name: 'Other'},
             ]}
             selectedAlter={userGender?.id ? userGender : {id: userGender}}
-            btnStyle={{width: wp('90'), paddingVertical: hp('1')}}
+            btnStyle={{
+              width: wp('90'),
+              paddingVertical: hp('0.5'),
+              paddingHorizontal: wp('2'),
+            }}
             selectedBgColor={Colors.backgroundTheme}
             onSelectVal={(objId, item) => {
               onChangeVal('userGender', item);
@@ -234,7 +248,7 @@ const SettingModal = ({
                           : imageUrl(profileImg)
                       }
                       styles={styles.profileView}
-                      size={0.4}
+                      size={0.3}
                       uri={true}
                     />
                     <Touchable
@@ -246,13 +260,13 @@ const SettingModal = ({
                       <Image
                         source={editPicBtn}
                         resizeMode="contain"
-                        style={{height: hp('6')}}
+                        style={{height: hp('4')}}
                       />
                     </Touchable>
                   </View>
                   <View style={styles.inputView}>
                     <TextInput
-                      style={{flex: 1, color: 'black'}}
+                      style={{flex: 1, color: 'black', fontSize: hp('1.5')}}
                       placeholder="Enter your first name"
                       placeholderTextColor={'gray'}
                       value={firstName}
@@ -262,7 +276,7 @@ const SettingModal = ({
                   </View>
                   <View style={styles.inputView}>
                     <TextInput
-                      style={{flex: 1, color: 'black'}}
+                      style={{flex: 1, color: 'black', fontSize: hp('1.5')}}
                       placeholder="Enter your last name"
                       placeholderTextColor={'gray'}
                       value={lastName}
@@ -282,6 +296,7 @@ const SettingModal = ({
                 onPress({...innerDataState, firstName, lastName}, true);
               }}
               isYellowTheme
+              textStyle={{fontSize: hp('1.5')}}
             />
             {/* )} */}
           </View>

@@ -9,13 +9,14 @@ export const styles = StyleSheet.create({
     marginTop: hp('2'),
   },
   title: {
-    fontSize: hp('3.5'),
+    fontSize: hp('2.5'),
     fontWeight: '700',
     color: Colors.primaryColor,
   },
   subTitle: {
     marginBottom: hp('3'),
     marginTop: hp('1'),
+    fontSize: hp('1.5'),
   },
   headerMain: {
     flexDirection: 'row',
@@ -29,7 +30,7 @@ export const styles = StyleSheet.create({
     height: hp('3'),
   },
   saveText: {
-    color: Colors.primaryColor,
+    fontSize: hp('1.5'),
   },
   lockstyle: {
     flex: 0.3,
@@ -50,9 +51,10 @@ export const styles = StyleSheet.create({
     // shadowRadius: 5.46,
     borderColor: Colors.black,
     elevation: 9,
+    height: hp('5'),
   },
   passText: {
-    fontSize: hp('2'),
+    fontSize: hp('1.5'),
     fontWeight: '600',
     color: Colors.black,
     marginTop: hp('5'),
@@ -62,5 +64,6 @@ export const styles = StyleSheet.create({
   saveBtn: {
     marginTop: hp('5'),
     marginBottom: hp('2'),
+    height: hp('5'),
   },
 });

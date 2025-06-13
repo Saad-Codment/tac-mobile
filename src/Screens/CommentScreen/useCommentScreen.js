@@ -69,9 +69,10 @@ const useCommentScreen = ({navigate}, {params}) => {
 
   useEffect(() => {
     return () => {
-      setTimeout(() => {
-        params?.functionToUpdateComment(params?.index);
-      }, 200);
+      if (params?.functionToUpdateComment)
+        setTimeout(() => {
+          params?.functionToUpdateComment(params?.index);
+        }, 200);
     };
   }, []);
 

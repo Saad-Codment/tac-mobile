@@ -36,6 +36,7 @@ import {
   profileCircle,
   userAdd,
   syncContact,
+  editPicBtn,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
@@ -48,6 +49,7 @@ import {AlertDesign} from '../../Components/AlertDesign';
 import {
   calculateAge,
   capitalizeFirstLetter,
+  uploadFromGalary,
 } from '../../Services/GlobalFunctions';
 import {getMyFriendsUrl, imageUrl} from '../../Utils/Urls';
 import useReduxStore from '../../Hooks/UseReduxStore';
@@ -67,6 +69,7 @@ const ProfileScreen = ({navigation}) => {
     toggleModal,
     setModalVal,
     privateTheProfile,
+    justUploadImg,
     activeTags,
     modalVal,
     deleteAlert,
@@ -125,29 +128,47 @@ const ProfileScreen = ({navigation}) => {
     <View showsVerticalScrollIndicator={false} style={{flexGrow: 1}}>
       <HeaderComponent headerTitle={'Profile'} isBack />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        bounces={false}
-        contentContainerStyle={{paddingBottom: hp('100')}}>
+      <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
         <View style={styles.mainBtn}>
           <View style={styles.upperWhiteView}>
             <Pressable style={styles.imgView} onPress={onImagePress}>
               <CircleImage
-                size={Platform.OS == 'ios' ? 0.4 : 0.35}
+                size={Platform.OS == 'ios' ? 0.3 : 0.35}
                 image={imageUrl(userData?.profile_image)}
                 uri={true}
               />
+              <Touchable
+                style={{
+                  position: 'absolute',
+                  right: wp('-14'),
+                  height: hp('6'),
+                  top: hp('9'),
+                }}
+                onPress={async () => {
+                  const img = await uploadFromGalary();
+                  justUploadImg(img);
+                }}>
+                <Image
+                  source={editPicBtn}
+                  resizeMode="contain"
+                  style={{height: hp('4')}}
+                />
+              </Touchable>
             </Pressable>
             <TextComponent
               text={userData?.first_name + ' ' + userData?.last_name}
-              styles={{fontSize: hp('3'), fontWeight: 'bold'}}
+              styles={{fontSize: hp('2'), fontWeight: 'bold'}}
             />
             <TextComponent
               text={userData?.email}
               styles={{fontSize: hp('1.5')}}
               fade
             />
-            <MultiView data={centerView} />
+            <MultiView
+              data={centerView}
+              titleStyles={{fontSize: hp('1.2')}}
+              leftStyles={styles.leftIconStyle}
+            />
           </View>
           <View
             style={{
@@ -163,6 +184,8 @@ const ProfileScreen = ({navigation}) => {
                 leftIcon={trashRed}
                 leftIconColor={'red'}
                 onPress={() => toggleAlert('deleteAlert')}
+                textStyle={{fontSize: hp('1.2')}}
+                leftStyle={styles.leftIconStyle}
               />
             </Touchable>
           </View>

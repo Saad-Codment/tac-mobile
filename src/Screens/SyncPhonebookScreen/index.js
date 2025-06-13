@@ -52,10 +52,14 @@ const SyncPhonebookScreen = ({navigation}) => {
       />
       <View style={styles.upperView}>
         <View>
-          <TextComponent text={'Phonebook'} styles={{fontWeight: 'bold'}} />
+          <TextComponent
+            text={'Phonebook'}
+            styles={{fontWeight: 'bold', fontSize: hp('1.8')}}
+          />
           <TextComponent
             text={`Sync turned ${isContact ? 'on' : 'off'}`}
             fade
+            styles={{fontSize: hp('1.5')}}
           />
         </View>
         <Switch

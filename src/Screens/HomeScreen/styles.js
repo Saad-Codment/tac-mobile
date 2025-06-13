@@ -206,7 +206,7 @@ export const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    marginTop: hp('2'),
+    // marginTop: hp('2'),
     paddingBottom: hp('30'),
   },
   innerView: {

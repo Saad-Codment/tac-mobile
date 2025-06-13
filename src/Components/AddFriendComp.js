@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
     marginVertical: hp('0.5'),
   },
   friendUserImage: {
-    width: Dimensions.get('window').width * 0.15,
-    height: Dimensions.get('window').width * 0.15,
+    width: Dimensions.get('window').width * 0.12,
+    height: Dimensions.get('window').width * 0.12,
     // alignSelf: 'center',
   },
   friendUserName: {
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     height: hp('3'),
     backgroundColor: Colors.backgroundTheme,
     marginTop: hp('1'),
-    width: wp('30'),
+    width: wp('25'),
     alignSelf: 'center',
     marginBottom: hp('0.5'),
   },
