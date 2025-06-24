@@ -37,7 +37,7 @@ const VerficationScreen = ({route, navigation}) => {
       <KeyBoardWrapper>
         <TextComponent
           text={'Verification Code'}
-          styles={{fontSize: hp('3'), fontWeight: 'bold', marginLeft: wp('5')}}
+          styles={{fontSize: hp('2'), fontWeight: 'bold', marginLeft: wp('5')}}
         />
         <TextComponent
           text={`An OTP has been sent to your number. Enter it below to continue.`}
@@ -63,7 +63,10 @@ const VerficationScreen = ({route, navigation}) => {
           )}
         />
         <View style={styles.otpSendView}>
-          <TextComponent text={"Didn't receive OTP? "} />
+          <TextComponent
+            text={"Didn't receive OTP? "}
+            styles={{fontSize: hp('1.5')}}
+          />
           <CountDownTimer
             ref={refTimer}
             timestamp={120}
@@ -80,6 +83,13 @@ const VerficationScreen = ({route, navigation}) => {
               text={'Resend OTP'}
               styles={{color: Colors.primaryColor}}
               onPress={resendOTP}
+              style={{
+                marginTop: hp('5'),
+                height: hp('4'),
+                width: wp('85'),
+                alignSelf: 'center',
+              }}
+              textStyle={{fontSize: hp('1.5')}}
             />
           )}
         </View>
@@ -88,6 +98,13 @@ const VerficationScreen = ({route, navigation}) => {
             <ThemeButton
               onPress={async () => await VerifyCode()}
               title={'Verify'}
+              style={{
+                marginTop: hp('5'),
+                height: hp('4'),
+                width: wp('85'),
+                alignSelf: 'center',
+              }}
+              textStyle={{fontSize: hp('1.5')}}
             />
           </View>
         )}

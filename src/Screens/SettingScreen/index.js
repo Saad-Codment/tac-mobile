@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   ImageBackground,
+  Linking,
   Platform,
   Pressable,
   ScrollView,
@@ -73,7 +74,13 @@ import {
   calculateAge,
   capitalizeFirstLetter,
 } from '../../Services/GlobalFunctions';
-import {getMyFriendsUrl, imageUrl} from '../../Utils/Urls';
+import {
+  aboutUrl,
+  getMyFriendsUrl,
+  imageUrl,
+  privacyUrl,
+  termsUrl,
+} from '../../Utils/Urls';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {types} from '../../Redux/types';
 import {Touchable} from '../../Components/Touchable';
@@ -160,7 +167,7 @@ const SettingScreen = ({navigation}) => {
     title: 'Friends',
     arryView: [
       {
-        title: `Friends list`,
+        title: `Friend list`,
         leftIcon: friendList,
         rightIcon: arrRight,
         onPress: () =>
@@ -257,6 +264,7 @@ const SettingScreen = ({navigation}) => {
         leftIcon: likeTag,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('ContactUsScreen'),
       },
     ],
   };
@@ -268,18 +276,21 @@ const SettingScreen = ({navigation}) => {
         leftIcon: infoIcon,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
+        onPress: () => Linking.openURL(aboutUrl),
       },
       {
         title: 'Privacy Policy',
         leftIcon: privacyWithOutBg,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
+        onPress: () => Linking.openURL(privacyUrl),
       },
       {
         title: 'Terms and Conditions',
         leftIcon: termNoBg,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
+        onPress: () => Linking.openURL(termsUrl),
       },
     ],
   };

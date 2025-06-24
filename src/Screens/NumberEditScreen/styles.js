@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   des: {
     marginLeft: wp('5'),
     marginVertical: hp('2'),
-    fontSize: hp('1.5'),
+    fontSize: hp('1.2'),
     color: 'gray',
   },
   fieldView: {
@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: wp('90'),
     borderWidth: 0.5,
+    height: hp('6'),
   },
   numberView: {
     width: wp('89'),

@@ -123,6 +123,11 @@ const ProfileScreen = ({navigation}) => {
     });
   };
 
+  console.log(
+    'sljkdvblksdbvlbsdklvblskdbvklsdbvlksbdvbsd',
+    userData?.profile_image,
+  );
+
   return (
     // <ImageBackground source={stepBg} style={styles.container}>
     <View showsVerticalScrollIndicator={false} style={{flexGrow: 1}}>

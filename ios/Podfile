@@ -63,6 +63,7 @@ target 'tac' do
   pod 'GoogleUtilities', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
   pod 'react-native-contacts', :path => '../node_modules/react-native-contacts' 
+  pod 'RNPurchases', :path => '../node_modules/react-native-purchases', :inhibit_warnings => true
   #  pod 'RNFBMessaging', :path => '../node_modules/@react-native-firebase/messaging'
   #  pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
   #  pod 'lottie-ios', '~> 4.2.0'         # Version should match your setup

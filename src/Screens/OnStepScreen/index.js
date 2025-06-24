@@ -50,7 +50,7 @@ const OnStepScreen = ({navigation}) => {
       return (
         <>
           <TextComponent
-            text={'What year were \n you born ?'}
+            text={'What year were you born ?'}
             styles={styles.tagline}
           />
           {/* <TextComponent
@@ -319,6 +319,7 @@ const OnStepScreen = ({navigation}) => {
             text={'Skip'}
             fade
             onPress={() => handleNextStep[step]()}
+            styles={{fontSize: hp('1.8')}}
           />
         </View>
         <View
@@ -343,7 +344,7 @@ const OnStepScreen = ({navigation}) => {
             textStyle={{...styles.themeButton}}
             style={{
               borderRadius: 40,
-              height: hp('6'),
+              height: hp('5'),
               width: wp('42'),
             }}
           />
@@ -355,7 +356,7 @@ const OnStepScreen = ({navigation}) => {
           style={{
             backgroundColor: Colors.primaryColor,
             borderRadius: 40,
-            height: hp('6'),
+            height: hp('5'),
             width: wp(step == 1 ? '90' : '42'),
           }}
         />

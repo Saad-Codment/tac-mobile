@@ -13,6 +13,7 @@ import {Colors} from '../../Theme/Variables';
 const NotificationScreen = ({navigation}) => {
   const {notificationsList, onRefresh, acceptReq, declineReq} =
     useNotificationScreen(navigation);
+
   return (
     <>
       <HeaderComponent
@@ -42,8 +43,8 @@ const NotificationScreen = ({navigation}) => {
           <NotificationComp
             item={item}
             index={index}
-            acceptReq={acceptReq}
-            declineReq={declineReq}
+            acceptReq={() => acceptReq(item?.data)}
+            declineReq={() => declineReq(item?.data)}
           />
         )}
       />

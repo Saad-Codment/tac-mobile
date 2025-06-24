@@ -74,7 +74,7 @@ const SearchScreen = ({navigation}) => {
                 {
                   url: getMyFriendsUrl,
                   key: 'myFriends',
-                  title: 'Friends list',
+                  title: 'Friend list',
                 },
               )
             }
@@ -94,16 +94,16 @@ const SearchScreen = ({navigation}) => {
               <DataNotFound
                 btnStyles={{width: wp('85')}}
                 imgStyles={{width: wp('30')}}
-                title={
-                  selectedVal.id == 'YourFriends'
-                    ? 'No Rodeo Crew Yet'
-                    : 'The Stable’s Quiet – No Requests'
-                }
-                subTitle={
-                  selectedVal.id == 'YourFriends'
-                    ? 'Search for friends or sync your contacts to see which rodeo enthusiasts are already on TAC.'
-                    : 'Looks like no new friend requests for now. Keep the rodeo spirit alive and grow your TAC crew!'
-                }
+                // title={
+                //   selectedVal.id == 'YourFriends'
+                //     ? 'No Rodeo Crew Yet'
+                //     : 'The Stable’s Quiet – No Requests'
+                // }
+                // subTitle={
+                //   selectedVal.id == 'YourFriends'
+                //     ? 'Search for friends or sync your contacts to see which rodeo enthusiasts are already on TAC.'
+                //     : 'Looks like no new friend requests for now. Keep the rodeo spirit alive and grow your TAC crew!'
+                // }
                 mainViewStyles={{
                   flex: 1,
                   paddingTop: hp('10'),

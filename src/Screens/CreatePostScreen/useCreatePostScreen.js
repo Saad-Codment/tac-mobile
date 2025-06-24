@@ -64,9 +64,11 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
       if (ok) {
         successMessage('Post Updated.');
         goBack();
-        setTimeout(() => {
-          params?.refetch();
-        }, 1500);
+        if (params?.refetch()) {
+          setTimeout(() => {
+            params?.refetch();
+          }, 1500);
+        }
       } else {
         errorMessage(data?.message);
       }

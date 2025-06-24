@@ -173,7 +173,7 @@ const CreateEventsScreen = ({navigation, route}) => {
               render={({field: {onChange, value}}) => (
                 <TextComponent
                   text={`${value.length}/50`}
-                  styles={{fontSize: hp('1.5')}}
+                  styles={{fontSize: hp('1.2')}}
                 />
               )}
             />
@@ -568,7 +568,7 @@ const CreateEventsScreen = ({navigation, route}) => {
                 <Image
                   source={questionMark}
                   resizeMode="contain"
-                  style={{width: wp('5'), height: hp('3')}}
+                  style={{width: wp('3.5'), height: hp('2')}}
                 />
               </Touchable>
             }
@@ -611,6 +611,10 @@ const CreateEventsScreen = ({navigation, route}) => {
                       ios_backgroundColor="#EAF6ED"
                       onValueChange={e => onChange(e ? 1 : 0)}
                       value={Boolean(value == 1)}
+                      style={{
+                        transform: [{scaleX: 0.7}, {scaleY: 0.7}],
+                        left: wp('2'),
+                      }}
                     />
                   );
                 }}
@@ -764,6 +768,11 @@ const CreateEventsScreen = ({navigation, route}) => {
                       ios_backgroundColor="#EAF6ED"
                       onValueChange={e => onChange(e ? 7 : 1)}
                       value={Boolean(value == 7)}
+                      style={{
+                        transform: [{scaleX: 0.7}, {scaleY: 0.7}],
+                        left: wp('2'),
+                      }}
+                      // style={{width:wp('5')}}
                     />
                   );
                 }}
@@ -863,6 +872,7 @@ const CreateEventsScreen = ({navigation, route}) => {
           isYellowTheme
           style={styles.createBtnStyle}
           onPress={handleSubmit(createEventFun)}
+          textStyle={{fontSize: hp('1.5')}}
         />
         {datePicker.alertVal && (
           <Controller

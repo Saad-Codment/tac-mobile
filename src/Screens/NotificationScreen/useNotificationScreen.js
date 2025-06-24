@@ -10,7 +10,7 @@ const useNotificationScreen = () => {
   const {queryClient, dispatch} = useReduxStore();
   const {sendFriendReq, acceptFriendReq, rejectFriendReq} = useFriendServices();
 
-  const {data, error} = useQuery({
+  const {data, error, refetch} = useQuery({
     queryKey: ['allNotifications'],
     queryFn: () => API.get(getAllNotificationsUrl),
   });
@@ -33,12 +33,14 @@ const useNotificationScreen = () => {
     onRefresh,
     acceptReq: async id => {
       await acceptFriendReq.mutateAsync(id);
-      queryClient.invalidateQueries({queryKey: ['allNotifications']});
+      refetch();
+      // queryClient.invalidateQueries({queryKey: ['allNotifications']});
       queryClient.invalidateQueries({queryKey: ['friendRequests']});
     },
     declineReq: async id => {
       await rejectFriendReq.mutateAsync(id);
-      queryClient.invalidateQueries({queryKey: ['allNotifications']});
+      refetch();
+      // queryClient.invalidateQueries({queryKey: ['allNotifications']});
       queryClient.invalidateQueries({queryKey: ['friendRequests']});
     },
   };

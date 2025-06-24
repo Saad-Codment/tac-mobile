@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
     paddingTop: hp(Platform.OS == 'android' ? '27' : '25'),
     // paddingBottom: hp('3'),
     textAlign: 'center',
-    fontSize: FontSize.scale30,
+    fontSize: hp('2'),
     fontWeight: 700,
     marginBottom: hp('2'),
   },
@@ -99,11 +99,11 @@ export const styles = StyleSheet.create({
     borderRadius: 30,
     paddingHorizontal: wp('4'),
     width: wp('92'),
-    height: hp('6'),
+    height: hp('5'),
     fontSize: hp('1.5'),
   },
   btnTextTwo: {
-    fontSize: hp('1.5'),
+    fontSize: hp('1.2'),
     color: 'white',
   },
   inputImage: {
@@ -112,7 +112,7 @@ export const styles = StyleSheet.create({
     marginRight: wp('0'),
   },
   arrowImage: {
-    width: wp('5'),
+    width: wp('3'),
     resizeMode: 'contain',
     marginRight: wp('1'),
     tintColor: Colors.backgroundTheme,
@@ -150,14 +150,15 @@ export const styles = StyleSheet.create({
     borderRadius: 50,
     width: wp('92'),
     paddingHorizontal: wp('4'),
-    paddingVertical: hp('2'),
+    paddingVertical: hp('1.5'),
     alignItems: 'center',
     marginBottom: hp('3.5'),
     backgroundColor: selectedGender ? Colors.black : 'transparent',
+    // height: hp('3'),
   }),
   genderTitle: selectedGender => ({
     fontWeight: '400',
-    fontSize: FontSize.scale16,
+    fontSize: hp('1.5'),
     color: selectedGender ? Colors.white : Colors.textGray,
   }),
   catImage: selectedGender => ({
@@ -181,6 +182,8 @@ export const styles = StyleSheet.create({
   },
   themeButton: {
     color: Colors.white,
+
+    fontSize: hp('1.5'),
   },
   selectedValStyle: {
     paddingHorizontal: wp('2'),
@@ -266,11 +269,11 @@ export const styles = StyleSheet.create({
     marginVertical: hp('.5'),
   },
   textStyle: {
-    fontSize: hp('1.5'),
+    fontSize: hp('1.2'),
     textAlign: 'center',
-    borderRadius: 25,
+    borderRadius: 15,
     borderWidth: 1,
-    paddingVertical: hp('2'),
+    paddingVertical: hp('1.5'),
     backgroundColor: Colors.backgroundTheme,
     overflow: 'hidden',
     color: 'white',

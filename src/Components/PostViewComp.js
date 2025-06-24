@@ -251,7 +251,7 @@ const PostViewComp = ({
           <Image
             source={item?.is_liked ? heartFilledLike : heartTheme}
             resizeMode="contain"
-            tintColor={Colors.yellowTextColor}
+            tintColor={'rgba(255, 0, 55, 1)'}
             style={{width: wp('4'), marginRight: wp('1')}}
           />
           <TextComponent

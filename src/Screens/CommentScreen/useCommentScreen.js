@@ -55,7 +55,7 @@ const useCommentScreen = ({navigate}, {params}) => {
       }
       setMessage(null);
       setIsComment(true);
-      params?.functionToUpdateComment(params?.index);
+      params?.functionToUpdateComment(params?.index, true);
       refetch();
       params?.refetch();
       // queryClient.invalidateQueries(['comments']); // Refetch data
@@ -71,7 +71,7 @@ const useCommentScreen = ({navigate}, {params}) => {
     return () => {
       if (params?.functionToUpdateComment)
         setTimeout(() => {
-          params?.functionToUpdateComment(params?.index);
+          params?.functionToUpdateComment(params?.index, isComment);
         }, 200);
     };
   }, []);

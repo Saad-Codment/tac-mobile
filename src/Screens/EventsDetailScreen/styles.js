@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
   scrollView: {flexGrow: 1, paddingBottom: hp('20')},
   imgStyle: {
     width: wp('95'),
-    height: hp('20'),
+    height: hp('15'),
     alignSelf: 'center',
     marginTop: hp('1'),
     borderRadius: 15,
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: hp('1'),
   },
-  tacImg: {width: wp('10'), marginRight: wp('2')},
+  tacImg: {width: wp('7'), height: hp('4'), marginRight: wp('2')},
   followView: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -28,14 +28,15 @@ export const styles = StyleSheet.create({
     // width: wp('50'),
   },
   checkImg: {
-    width: wp('8'),
+    width: wp('6'),
     height: hp('3'),
+    marginRight: wp('2'),
     // marginRight: wp('-2'),
   },
   titleStyle: {
     fontWeight: 'bold',
     marginLeft: wp('3'),
-    fontSize: hp('2.5'),
+    fontSize: hp('1.8'),
   },
   bottomView: {
     flexDirection: 'row',
@@ -51,7 +52,7 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: hp('2'),
   },
-  locationImg: {width: wp('5'), height: hp('3'), marginRight: wp('2')},
+  locationImg: {width: wp('3.5'), height: hp('2'), marginRight: wp('2')},
   eventTimeViewGray: {
     backgroundColor: Colors.bgGray,
     paddingVertical: hp('2'),
@@ -78,7 +79,7 @@ export const styles = StyleSheet.create({
     marginVertical: hp('2'),
   },
   typeHeading: {fontWeight: 'bold', fontSize: hp('1.5')},
-  typeStyle: {fontSize: hp('1.5')},
+  typeStyle: {fontSize: hp('1.3')},
   multiViewStyle: {
     width: wp('98'),
     backgroundColor: Colors.lightInnerColor,
@@ -88,9 +89,10 @@ export const styles = StyleSheet.create({
   dividerStyle: {width: wp('95'), marginLeft: wp('1.5')},
   btnStyle: {
     marginTop: hp('4'),
-    width: wp('90'),
+    width: wp('85'),
     alignSelf: 'center',
     borderRadius: 30,
+    height: hp('5'),
   },
   selectedValStyle: {
     paddingHorizontal: wp('2.5'),

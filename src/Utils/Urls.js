@@ -25,6 +25,11 @@ export const imageUrl = url => {
   // : 'https://res.cloudinary.com/dd6tdswt5/image/upload/v1684830799/UserImages/mhysa2zj0sbmvnw69b35.jpg';
 };
 
+export const privacyUrl = 'https://tecweb.staginganideos.com/privacy_policy';
+export const termsUrl =
+  'https://tecweb.staginganideos.com/terms_and_conditions ';
+export const aboutUrl = 'https://tecweb.staginganideos.com/about_us';
+
 export const MapAPIKey = 'AIzaSyAu-nEBbiOahfUyeMc8Lc1gTTKfete_wnQ';
 
 export const registerUrl = '/signup';
@@ -84,6 +89,10 @@ export const deletePostUrl = '/posts/delete/';
 export const GetChatListUrl = '/chat/users';
 export const SendChatNotificationUrl = '/chat/notification';
 export const WhenUserInAndOutChatUrl = '/chat/user-in-chat';
+export const contactFormUrl = '/inquiry/store';
+export const getInquiryUrl = '/inquiry/terms';
+export const AfterSubBuyUrl = '/subscriptions/validate-receipt';
+export const StartTrialUrl = '/subscriptions/trial-start';
 
 export const fcmTokenUrl = 'add-fcm-token';
 export const deleteAccUrl = 'auth/account-delete';

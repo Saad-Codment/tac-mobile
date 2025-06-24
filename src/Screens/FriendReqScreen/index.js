@@ -29,10 +29,10 @@ const FriendReqScreen = ({navigation}) => {
             <DataNotFound
               onpress={onRefresh}
               btnStyles={{width: wp('80')}}
-              title={'The Stable’s Quiet – No Requests'}
-              subTitle={
-                'Looks like no new friend requests for now. Keep the rodeo spirit alive and grow your TAC crew!'
-              }
+              // title={'The Stable’s Quiet – No Requests'}
+              // subTitle={
+              //   'Looks like no new friend requests for now. Keep the rodeo spirit alive and grow your TAC crew!'
+              // }
             />
           ),
         }}

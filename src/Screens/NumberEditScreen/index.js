@@ -1,6 +1,6 @@
 import {View, Text, ImageBackground} from 'react-native';
 import React, {memo} from 'react';
-import {stepBg} from '../../Assets';
+import {heart, stepBg} from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {InputComponent} from '../../Components/InputComponent';
 import ThemeButton from '../../Components/ThemeButton';
@@ -43,7 +43,11 @@ const NumberEditScreen = ({navigation}) => {
       <KeyBoardWrapper>
         <TextComponent
           text={(edit ? 'Enter Your' : 'Confirm Your') + ' Number'}
-          styles={{fontSize: hp('3'), fontWeight: 'bold', marginLeft: wp('5')}}
+          styles={{
+            fontSize: hp('1.8'),
+            fontWeight: 'bold',
+            marginLeft: wp('5'),
+          }}
         />
         <TextComponent
           text={'Please enter you phone number for verfication purposes.'}
@@ -102,7 +106,13 @@ const NumberEditScreen = ({navigation}) => {
             onPress={sendVerficationCode}
             title={'Send'}
             isYellowTheme
-            style={{marginTop: hp('5')}}
+            style={{
+              marginTop: hp('5'),
+              height: hp('4'),
+              width: wp('85'),
+              alignSelf: 'center',
+            }}
+            textStyle={{fontSize: hp('1.5')}}
           />
           {/* {edit && !isVerified && (
             <Touchable onPress={skipVerification}>

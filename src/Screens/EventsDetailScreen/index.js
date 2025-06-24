@@ -177,8 +177,8 @@ const EventsDetailScreen = ({navigation, route}) => {
                 : 'System suggested'
             }
             styles={{
-              fontSize: hp('1.8'),
-              width: wp('56'),
+              fontSize: hp('1.5'),
+              width: wp('61'),
             }}
           />
           {userData?.id != eventData?.user?.id && (
@@ -222,12 +222,12 @@ const EventsDetailScreen = ({navigation, route}) => {
             <TextComponent
               text={eventData?.address}
               numberOfLines={3}
-              styles={{width: wp('60'), fontSize: hp('1.5')}}
+              styles={{width: wp('60'), fontSize: hp('1.2')}}
             />
           </View>
           <TextComponent
             text={'View Location'}
-            styles={{color: Colors.lightBlueTextColor, fontSize: hp('1.5')}}
+            styles={{color: Colors.lightBlueTextColor, fontSize: hp('1.2')}}
           />
         </View>
 
@@ -235,13 +235,14 @@ const EventsDetailScreen = ({navigation, route}) => {
           <View style={styles.eventTimeView}>
             <TextComponent
               text={'Starts At'}
-              styles={{fontSize: hp('1.5')}}
+              styles={{fontSize: hp('1.2')}}
               fade
             />
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
+                justifyContent: 'flex-end',
               }}>
               <Image
                 source={filledCalender}
@@ -255,7 +256,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                 text={`${getDateMonthYear(eventData?.from_date)?.monthName} ${
                   getDateMonthYear(eventData?.from_date)?.day
                 }, ${getDateMonthYear(eventData?.from_date)?.year}`}
-                styles={{fontSize: hp('1.5')}}
+                styles={{fontSize: hp('1.2')}}
               />
               <Image
                 source={filledClock}
@@ -270,7 +271,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                       }`
                     : 'Not Confirmed'
                 }
-                styles={{fontSize: hp('1.5')}}
+                styles={{fontSize: hp('1.2')}}
               />
             </View>
           </View>
@@ -281,7 +282,7 @@ const EventsDetailScreen = ({navigation, route}) => {
             <TextComponent
               text={'Ends At'}
               fade
-              styles={{fontSize: hp('1.5')}}
+              styles={{fontSize: hp('1.2')}}
             />
             <View
               style={{
@@ -300,7 +301,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                 text={`${getDateMonthYear(eventData?.to_date)?.monthName} ${
                   getDateMonthYear(eventData?.to_date)?.day
                 }, ${getDateMonthYear(eventData?.to_date)?.year}`}
-                styles={{fontSize: hp('1.5')}}
+                styles={{fontSize: hp('1.2')}}
               />
               <Image
                 source={filledClock}
@@ -315,7 +316,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                       }`
                     : 'Not Confirmed'
                 }
-                styles={{fontSize: hp('1.5')}}
+                styles={{fontSize: hp('1.2')}}
               />
             </View>
           </View>
@@ -329,63 +330,60 @@ const EventsDetailScreen = ({navigation, route}) => {
           dividerStyles={{display: 'none'}}
         /> */}
         <View style={styles.arryMainView}>
-          <TextComponent text={'Event Type'} styles={{fontSize: hp('1.56')}} />
+          <TextComponent text={'Event Type'} styles={{fontSize: hp('1.2')}} />
           <View style={styles.multiMainView}>
             {eventData?.event_types?.length > 0 ? (
               <MultiSelectButton
                 isDisable={true}
                 items={eventData?.event_types ?? []}
                 btnStyle={styles.selectedValStyle}
-                textStyle={{fontSize: hp('1.5'), color: 'black'}}
+                textStyle={{fontSize: hp('1.2'), color: 'black'}}
               />
             ) : (
               <TextComponent
                 text={'Event types are not selected.'}
                 fade
-                styles={{fontSize: hp('1.5')}}
+                styles={{fontSize: hp('1.2')}}
               />
             )}
           </View>
           <DividerLine
             DividerLineStyle={{width: wp('95'), marginVertical: hp('2')}}
           />
-          <TextComponent
-            text={'Associations'}
-            styles={{fontSize: hp('1.56')}}
-          />
+          <TextComponent text={'Associations'} styles={{fontSize: hp('1.2')}} />
           <View style={styles.multiMainView}>
             {eventData?.associations?.length > 0 ? (
               <MultiSelectButton
                 isDisable={true}
                 items={eventData?.associations ?? []}
                 btnStyle={styles.selectedValStyle}
-                textStyle={{fontSize: hp('1.5'), color: 'black'}}
+                textStyle={{fontSize: hp('1.2'), color: 'black'}}
               />
             ) : (
               <TextComponent
                 text={'Associations are not selected.'}
                 fade
-                styles={{fontSize: hp('1.5')}}
+                styles={{fontSize: hp('1.2')}}
               />
             )}
           </View>
           <DividerLine
             DividerLineStyle={{width: wp('95'), marginVertical: hp('2')}}
           />
-          <TextComponent text={'Circuits'} styles={{fontSize: hp('1.56')}} />
+          <TextComponent text={'Circuits'} styles={{fontSize: hp('1.2')}} />
           <View style={styles.multiMainView}>
             {eventData?.circuits?.length > 0 ? (
               <MultiSelectButton
                 isDisable={true}
                 items={eventData?.circuits ?? []}
                 btnStyle={styles.selectedValStyle}
-                textStyle={{fontSize: hp('1.5'), color: 'black'}}
+                textStyle={{fontSize: hp('1.2'), color: 'black'}}
               />
             ) : (
               <TextComponent
                 text={'Circuits are not selected.'}
                 fade
-                styles={{fontSize: hp('1.5')}}
+                styles={{fontSize: hp('1.2')}}
               />
             )}
           </View>
@@ -394,6 +392,8 @@ const EventsDetailScreen = ({navigation, route}) => {
           viewStyle={styles.multiViewStyle}
           data={bottomView}
           dividerStyles={styles.dividerStyle}
+          titleStyles={{fontSize: hp('1.2')}}
+          rightTextStyles={{fontSize: hp('1.2')}}
         />
         {eventData?.performances && performanceArry.length > 0 && (
           <>
@@ -409,12 +409,15 @@ const EventsDetailScreen = ({navigation, route}) => {
               viewStyle={styles.multiViewStyle}
               data={performanceArry}
               dividerStyles={styles.dividerStyle}
+              titleStyles={{fontSize: hp('1.2')}}
+              rightTextStyles={{fontSize: hp('1.2')}}
             />
           </>
         )}
         <ThemeButton
           title={'View Event location on map'}
           style={styles.btnStyle}
+          textStyle={{fontSize: hp('1.2')}}
           isYellowTheme
           onPress={() =>
             Linking.openURL(

@@ -4,10 +4,10 @@ import {Colors} from '../../Theme/Variables';
 
 export const styles = StyleSheet.create({
   scrollView: {flexGrow: 1, paddingBottom: hp('15')},
-  inputStyle: {flex: 1, color: 'black'},
+  inputStyle: {flex: 1, color: 'black', fontSize: hp('1.2')},
   uploadImg: {
     width: wp('90'),
-    height: hp('17.5'),
+    height: hp('14'),
     paddingHorizontal: 0,
     // marginLeft: wp('-5'),
     marginBottom: hp('2'),
@@ -18,8 +18,8 @@ export const styles = StyleSheet.create({
     borderColor: Colors.dkBorderColor,
   },
   viewFlex: {flexDirection: 'row'},
-  textStyle: {fontSize: hp('1.5')},
-  leftViewImg: {width: wp('7'), height: hp('5')},
+  textStyle: {fontSize: hp('1.2')},
+  leftViewImg: {width: wp('5'), height: hp('3')},
   divider: {
     marginVertical: isIos ? hp('1') : hp('0'),
     width: wp('85'),
@@ -46,7 +46,12 @@ export const styles = StyleSheet.create({
   },
   addMoreImg: {width: wp('5'), height: hp('3')},
   addMoreTxt: {fontSize: hp('1.5'), marginLeft: wp('2')},
-  createBtnStyle: {width: wp('90'), alignSelf: 'center', borderRadius: 30},
+  createBtnStyle: {
+    width: wp('85'),
+    alignSelf: 'center',
+    borderRadius: 10,
+    height: hp('4.5'),
+  },
 
   perInnerViewExtra: {
     flexDirection: 'column',
@@ -71,7 +76,7 @@ export const styles = StyleSheet.create({
     marginBottom: hp('1'),
   },
   compTitle: {
-    fontSize: hp('1.5'),
+    fontSize: hp('1.2'),
     marginVertical: hp('1'),
   },
   innerView: {
@@ -81,7 +86,7 @@ export const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: Colors.dkBorderColor,
     backgroundColor: Colors.lightInnerColor,
-    height: hp('5'),
+    height: hp('4'),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

@@ -71,19 +71,20 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
       return prev;
     });
   };
-  const functionToUpdateComment = index => {
-    setEventsList(prev => {
-      prev[index].comments_count = prev[index].comments_count + 1;
-      return prev;
-    });
-    setTimeout(() => {
-      console.log(
-        'klsdbvklsdbvkldbvklsbdklvbsdklvbksdbvklsbvklsdbkvbklsdv',
-        eventsList,
+  const functionToUpdateComment = (index, isComment) => {
+    console.log('index', index, 'isComment', isComment);
+    if (isComment)
+      setEventsList(prev =>
+        prev.map((item, i) =>
+          i === index
+            ? {
+                ...item,
+                comments_count: item.comments_count + 1,
+              }
+            : item,
+        ),
       );
-    }, 2000);
   };
-
   const functionToDelete = index => {
     setEventsList(prev => {
       return prev.filter((_, i) => i !== index);

@@ -11,6 +11,8 @@ export const styles = StyleSheet.create({
     marginTop: hp('10'),
     width: wp('95'),
     alignSelf: 'center',
+    borderRadius: 30,
+    height: hp('5'),
   },
   skipBtn: {
     width: wp('19'),

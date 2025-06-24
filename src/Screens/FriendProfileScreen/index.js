@@ -76,7 +76,9 @@ const FriendProfileScreen = ({navigation, route}) => {
                 index={index}
                 functionToUpdateLike={functionToUpdateLike}
                 openBottomSheet={id => setModal(id)}
-                functionToUpdateComment={() => functionToUpdateComment(index)}
+                functionToUpdateComment={(i, isComment) =>
+                  functionToUpdateComment(index, isComment)
+                }
                 functionToDelete={functionToDelete}
               />
             ))}

@@ -14,7 +14,7 @@ import ThemeButton from '../../Components/ThemeButton';
 import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
 import PostViewComp from '../../Components/PostViewComp';
 
-const MyProfileScreen = ({navigation}) => {
+const MyProfileScreen = ({navigation, route}) => {
   const {
     userData,
     eventsList,
@@ -31,7 +31,7 @@ const MyProfileScreen = ({navigation}) => {
     functionToUpdateLike,
     functionToDelete,
     functionToUpdateComment,
-  } = useMyProfileScreen(navigation);
+  } = useMyProfileScreen(navigation, route);
 
   console.log('lkdbkldbfklbdfklbkldfbl;kdbsf;b;ldflnb;df', myUserData);
 
@@ -46,7 +46,9 @@ const MyProfileScreen = ({navigation}) => {
               functionToUpdateLike={functionToUpdateLike}
               openBottomSheet={id => setModal(id)}
               functionToDelete={functionToDelete}
-              functionToUpdateComment={() => functionToUpdateComment(index)}
+              functionToUpdateComment={(i, isComment) =>
+                functionToUpdateComment(index, isComment)
+              }
             />
           ) : (
             <UpcomingEventsComp
@@ -64,7 +66,16 @@ const MyProfileScreen = ({navigation}) => {
         </View>
       );
     },
-    [refetch, isRefetching, eventsList, isRefetching],
+    [
+      refetch,
+      isRefetching,
+      eventsList,
+      isRefetching,
+      functionToUpdateLike,
+      functionToUpdateComment,
+      functionToDelete,
+      setModal,
+    ],
   );
 
   return (

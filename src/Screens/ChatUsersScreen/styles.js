@@ -17,8 +17,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   trashIcon: {
-    width: wp('6'),
-    height: hp('6'),
+    width: wp('4'),
+    height: hp('4'),
   },
   listMain: {
     flex: 1,

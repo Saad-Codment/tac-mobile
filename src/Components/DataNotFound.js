@@ -21,18 +21,18 @@ export const DataNotFound = ({
     <View style={{...styles.mealInner, ...mainViewStyles}}>
       {!noImg && (
         <Image
-          source={centerImg ?? noDataImg}
+          source={noData ?? noDataImg}
           style={{...styles.noDataImage, ...imgStyles}}
         />
       )}
       <TextComponent
-        text={'Data not found'}
-        // text={title ?? 'Data not found'}
+        // text={'Data not found'}
+        text={title ?? 'Data not found'}
         styles={styles.noDataTitle}
       />
       <TextComponent
-        text={'No data, please try again later'}
-        // text={subTitle ?? 'No data, please try again later'}
+        // text={'No data, please try again later'}
+        text={subTitle ?? 'No data, please try again later'}
         styles={styles.noDataSubTitle}
       />
       {onpress && (

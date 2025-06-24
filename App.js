@@ -24,6 +24,7 @@ import Orientation from 'react-native-orientation-locker';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import ImagePreviewComp from './src/Components/ImagePreviewComp';
 // import {Settings} from 'react-native-fbsdk-next';
+import Purchases, {LOG_LEVEL} from 'react-native-purchases';
 
 const App = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -39,6 +40,19 @@ const App = () => {
   const isFetching = useIsFetching();
 
   console.log('load', isloading);
+
+  useEffect(() => {
+    Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+
+    if (Platform.OS === 'ios') {
+      Purchases.configure({apiKey: 'appl_FlnMxEBtfVpRzXrWhCyKvhcVQYs'});
+    } else if (Platform.OS === 'android') {
+      Purchases.configure({apiKey: ''});
+
+      // OR: if building for Amazon, be sure to follow the installation instructions then:
+    }
+  }, []);
+
   const time = () => {
     return 3000;
   };
@@ -62,6 +76,7 @@ const App = () => {
       }
     };
   }, [isLogin]);
+
   const onRegister = fcm_token => {
     console.log('fcm_token', Platform.OS, fcm_token);
     dispatch(fcmRegister(fcm_token));

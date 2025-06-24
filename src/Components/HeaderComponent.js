@@ -99,8 +99,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp('3.5'),
     paddingBottom: hp('3'),
     backgroundColor: Colors.headerBg,
-    paddingTop: Platform.OS == 'ios' ? hp('8') : hp('3'),
-    height: Platform.OS == 'ios' ? hp('12') : hp('8'),
+    paddingTop: Platform.OS == 'ios' ? hp('9') : hp('3'),
+    height: Platform.OS == 'ios' ? hp('10') : hp('8'),
     alignItems: 'center',
   },
 
@@ -116,9 +116,10 @@ const styles = StyleSheet.create({
     marginLeft: wp('1.5'),
     color: Colors.gray,
     fontSize: hp('2'),
+    top: hp('3'),
   },
   HeaderTitle: {
-    fontSize: hp('2.5'),
+    fontSize: hp('1.8'),
     color: Colors.white,
     fontWeight: '500',
     // width: wp('60'),
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'center',
     alignSelf: 'center',
-    width: wp('7'),
+    width: wp('6'),
   },
   filterIcon: {
     alignItems: 'center',

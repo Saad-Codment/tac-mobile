@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   des: {
     marginLeft: wp('5'),
     marginVertical: hp('2'),
-    fontSize: hp('1.5'),
+    fontSize: hp('1.2'),
     color: 'gray',
   },
 
@@ -40,10 +40,10 @@ export const styles = StyleSheet.create({
     marginTop: hp('1'),
     fontSize: hp('2.1'),
   },
-  codeFieldRoot: {marginTop: hp('10'), width: wp('90'), alignSelf: 'center'},
+  codeFieldRoot: {marginTop: hp('6'), width: wp('90'), alignSelf: 'center'},
   cell: {
     width: wp('10'),
-    height: 40,
+    height: hp('5'),
     lineHeight: 38,
     fontSize: 24,
     borderWidth: 2,
@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
     marginTop: hp('2'),
   },
   OtpTextStyle: {
-    fontSize: hp('2'),
+    fontSize: hp('1.5'),
     color: Colors.primaryColor,
     fontWeight: '500',
     letterSpacing: 0.25,

@@ -170,18 +170,20 @@ const HeaderComp = ({userData, myUserData}) => {
                   userData?.requested == 1 && userData?.friends == 0,
                 )}
               />
-              <ThemeButton
-                title={'Message'}
-                image={message}
-                style={{...styles.btnView, backgroundColor: 'white'}}
-                imageStyle={styles.btnImg}
-                textStyle={{color: Colors.textGray, fontSize: hp('1.2')}}
-                isYellowTheme={Boolean(userData?.friends == 1)}
-                isDisable={Boolean(userData?.friends == 0)}
-                onPress={() =>
-                  NavigationService.navigate('ChatScreen', userData)
-                }
-              />
+              {!Boolean(userData?.friends == 0) && (
+                <ThemeButton
+                  title={'Message'}
+                  image={message}
+                  style={{...styles.btnView, backgroundColor: 'white'}}
+                  imageStyle={styles.btnImg}
+                  textStyle={{color: Colors.textGray, fontSize: hp('1.2')}}
+                  isYellowTheme={Boolean(userData?.friends == 1)}
+                  isDisable={Boolean(userData?.friends == 0)}
+                  onPress={() =>
+                    NavigationService.navigate('ChatScreen', userData)
+                  }
+                />
+              )}
             </View>
           ) : (
             <>

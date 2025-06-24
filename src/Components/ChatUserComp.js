@@ -43,10 +43,12 @@ const ChatUserComp = ({mainViewStyles, item, index, userDataProp}) => {
           userId: userDataProp?.id ?? userData?.id ?? item?.user_id,
         });
       }}>
-      <CircleImage size={0.15} uri image={imageUrl(item?.profile_image)} />
+      <CircleImage size={0.1} uri image={imageUrl(item?.profile_image)} />
       <View style={styles.textWrapper}>
         <TextComponent
-          text={item?.first_name + ' ' + item?.last_name}
+          text={
+            item?.first_name + ' ' + (item?.last_name ? item?.last_name : '')
+          }
           styles={styles.nameText}
         />
         <TextComponent
@@ -70,24 +72,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp('3'),
     backgroundColor: 'white',
     borderRadius: 15,
-    paddingVertical: hp('1'),
+    // paddingVertical: hp('0.3'),
     marginVertical: hp('0.5'),
     width: wp('98'),
     alignSelf: 'center',
+    height: hp('6'),
   },
   textWrapper: {
-    width: wp('60'),
+    width: wp('67'),
     marginLeft: wp('2'),
   },
   nameText: {
     fontWeight: 'bold',
-    fontSize: hp('1.8'),
-  },
-  messageText: {
     fontSize: hp('1.5'),
   },
+  messageText: {
+    fontSize: hp('1.2'),
+  },
   timeText: {
-    fontSize: hp('1.6'),
+    fontSize: hp('1.2'),
     marginTop: hp('-1'),
   },
 });

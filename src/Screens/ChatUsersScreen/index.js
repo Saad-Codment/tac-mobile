@@ -31,10 +31,14 @@ const ChatUsersScreen = ({navigation}) => {
       style={{
         width: '98%',
         alignSelf: 'center',
-        height: hp('2'),
+        justifyContent: 'center', // Center the trash icon vertically
       }}>
       <TouchableOpacity
-        style={[styles.backRightBtn, styles.backRightBtnRight]}
+        style={[
+          styles.backRightBtn,
+          styles.backRightBtnRight,
+          {height: hp('6')},
+        ]} // Match height here
         onPress={() => deleteEntireChat(mergeIds(item.id, item?.user_id))}>
         <Image
           source={trashWhite}

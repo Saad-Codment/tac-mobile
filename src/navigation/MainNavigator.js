@@ -74,10 +74,20 @@ function MainNavigator() {
                 />
               </>
             )}
+            {!userData?.trial_start_at && (
+              <Stack.Screen
+                name="SubscribeScreen"
+                component={Screens.SubscribeScreen}
+              />
+            )}
             <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
             <Stack.Screen
               name="ListViewScreen"
               component={Screens.ListViewScreen}
+            />
+            <Stack.Screen
+              name="ContactUsScreen"
+              component={Screens.ContactUsScreen}
             />
 
             <Stack.Screen
@@ -137,10 +147,7 @@ function MainNavigator() {
               options={'EditProfileScreen'}
               component={Screens.EditProfileScreen}
             />
-            <Stack.Screen
-              name="SubscribeScreen"
-              component={Screens.SubscribeScreen}
-            />
+
             <Stack.Screen
               name="AllSuggestedFriendsScreen"
               component={Screens.AllSuggestedFriendsScreen}

@@ -33,7 +33,9 @@ const NotificationComp = ({item, index, acceptReq, declineReq}) => {
       <View style={{marginLeft: wp('2')}}>
         <View style={styles.reqTitleView}>
           <TextComponent
-            text={item?.first_name + ' ' + item?.last_name}
+            text={
+              item?.first_name + ' ' + (item?.last_name ? item?.last_name : '')
+            }
             styles={{width: wp('64'), fontWeight: 'bold', fontSize: hp('1.7')}}
           />
           <TextComponent

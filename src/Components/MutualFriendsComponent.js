@@ -15,7 +15,7 @@ const MutualFriends = ({friends, size, textAfterCount}) => {
           return (
             <Avatar
               rounded
-              size={size ?? 25}
+              size={size ?? 20}
               source={{
                 uri: res?.uri ?? 'https://picsum.photos/200',
               }}
@@ -30,7 +30,7 @@ const MutualFriends = ({friends, size, textAfterCount}) => {
       </View>
       <TextComponent
         text={' ' + friends.length + ' ' + textAfterCount ?? 'Mutual friends'}
-        styles={{fontSize: hp('1.5')}}
+        styles={{fontSize: hp('1.2')}}
       />
     </View>
   );

@@ -1,6 +1,6 @@
 import {View, Text, ImageBackground, Image} from 'react-native';
 import React, {memo} from 'react';
-import {arrowLeft, sms, stepBg} from '../../Assets';
+import {arrowLeft, heart, sms, stepBg} from '../../Assets';
 import {styles} from './styles';
 import {TextComponent} from '../../Components/TextComponent';
 import {hp, wp} from '../../Config/responsive';
@@ -43,7 +43,7 @@ const ForgotPasswordScreen = ({navigation}) => {
       </ImageBackground>
       <TextComponent
         text={'Forgot Password'}
-        styles={{fontSize: hp('3'), fontWeight: 'bold', marginLeft: wp('5')}}
+        styles={{fontSize: hp('2'), fontWeight: 'bold', marginLeft: wp('5')}}
       />
       <TextComponent
         text={
@@ -52,7 +52,7 @@ const ForgotPasswordScreen = ({navigation}) => {
         styles={{
           marginLeft: wp('5'),
           marginVertical: hp('2'),
-          fontSize: hp('1.5'),
+          fontSize: hp('1.2'),
           color: 'gray',
         }}
       />
@@ -75,19 +75,23 @@ const ForgotPasswordScreen = ({navigation}) => {
             width: wp('95'),
             alignSelf: 'center',
             marginTop: hp('2'),
+            height: hp('5'),
           },
           errorStyle: {
             color: Colors.themeRed,
           },
           textStyle: {
             color: 'black',
+            fontSize: hp('1.2'),
           },
+          inputIconStyle: {flex: 0.4},
         }}
       />
       <ThemeButton
         onPress={handleSubmit(forgotPassword)}
         title={'Send'}
         isYellowTheme
+        textStyle={{fontSize: hp('1.5')}}
         style={styles.buttonStyle}
       />
     </>

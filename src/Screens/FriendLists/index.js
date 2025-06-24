@@ -60,16 +60,16 @@ const FriendLists = ({navigation, route}) => {
               <DataNotFound
                 onpress={refetch}
                 btnStyles={{width: wp('80')}}
-                title={
-                  url == getMyFriendsUrl
-                    ? 'No Rodeo Crew Yet'
-                    : 'Data not found'
-                }
-                subTitle={
-                  url == getMyFriendsUrl
-                    ? 'Search for friends or sync your contacts to see which rodeo enthusiasts are already on TAC.'
-                    : 'No data, please try again later'
-                }
+                // title={
+                //   url == getMyFriendsUrl
+                //     ? 'No Rodeo Crew Yet'
+                //     : 'Data not found'
+                // }
+                // subTitle={
+                //   url == getMyFriendsUrl
+                //     ? 'Search for friends or sync your contacts to see which rodeo enthusiasts are already on TAC.'
+                //     : 'No data, please try again later'
+                // }
               />
             ),
             onEndReachedThreshold: 0.5, // Trigger fetch when 50% of the list is scrolled

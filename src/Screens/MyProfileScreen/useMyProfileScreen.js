@@ -4,14 +4,14 @@ import {
   getUserPostsUrl,
   getUserProfileUrl,
 } from '../../Utils/Urls';
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import API from '../../Utils/helperFunc';
 import {errorMessage} from '../../Config/NotificationMessage';
 import useFriendServices from '../../Services/FriendServices';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {loadingFalse} from '../../Redux/Action/isloadingAction';
 
-const useMyProfileScreen = ({navigate}) => {
+const useMyProfileScreen = ({navigate, addListener}, {params}) => {
   const [page, setPage] = useState(1); // Current page for pagination
   const [totalPages, setTotalPages] = useState(0); // Current page for pagination
   const [eventsList, setEventsList] = useState([]); // Combined list of events
@@ -41,6 +41,8 @@ const useMyProfileScreen = ({navigate}) => {
       } else errorMessage('Error on fetching data!');
       return response?.data;
     },
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   const loadMoreData = useCallback(
@@ -60,16 +62,19 @@ const useMyProfileScreen = ({navigate}) => {
     // queryClient.invalidateQueries(['profilePosts']); // Refetch data
   }, [queryClient]);
 
-  const functionToUpdateComment = index => {
-    console.log(
-      'lskdvbklsdbvlksdbkvbsdkvbsdlkbvs',
-      index,
-      eventsList[index].comments_count,
-    );
-    setEventsList(prev => {
-      prev[index].comments_count = ++prev[index].comments_count;
-      return prev;
-    });
+  const functionToUpdateComment = (index, isComment) => {
+    console.log('index', index, 'isComment', isComment);
+    if (isComment)
+      setEventsList(prev =>
+        prev.map((item, i) =>
+          i === index
+            ? {
+                ...item,
+                comments_count: item.comments_count + 1,
+              }
+            : item,
+        ),
+      );
   };
 
   const functionToUpdateLike = index => {
@@ -88,6 +93,12 @@ const useMyProfileScreen = ({navigate}) => {
     });
   };
 
+  useEffect(() => {
+    const event = addListener('focus', async () => {
+      if (params?.id) onRefresh();
+    });
+    return event;
+  }, []);
   const openBottomSheet = () => {};
 
   return {

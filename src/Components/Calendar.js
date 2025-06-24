@@ -75,7 +75,7 @@ const UseCalendar = ({onSelectVal, selectedVal, markedDates, dotCount}) => {
         marginLeft: wp('-1'),
         paddingBottom: wp('1'),
         paddingTop: 0,
-        paddingVertical: hp('2'),
+        paddingVertical: hp('0.5'),
         borderRadius: 10,
         shadowColor: '#181818',
         shadowOffset: {
@@ -97,8 +97,8 @@ const UseCalendar = ({onSelectVal, selectedVal, markedDates, dotCount}) => {
         monthTextColor: Colors.black,
         selectedDayTextColor: Colors.black,
         arrowColor: Colors.black,
-        textDayFontSize: hp('1.5'),
-        textMonthFontSize: hp('2'),
+        textDayFontSize: hp('1.2'),
+        textMonthFontSize: hp('1.8'),
         textDayStyle: {
           alignItems: 'center',
           alignSelf: 'center',
@@ -119,7 +119,7 @@ const UseCalendar = ({onSelectVal, selectedVal, markedDates, dotCount}) => {
             flexDirection: 'row',
             justifyContent: 'flex-end',
             paddingHorizontal: wp('0'),
-            marginTop: hp('2'),
+            // marginTop: hp('1'),
             alignItems: 'center',
           },
         },
