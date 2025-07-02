@@ -5,7 +5,7 @@ import {useState} from 'react';
 import {errorMessage} from '../../Config/NotificationMessage';
 
 const useMyEventScreen = ({navigate}) => {
-  const [bottomData, setBottomData] = useState([]);
+  const [bottomData, setBottomData] = useState(null);
 
   // if (!isLoading) mutate();
   const [activeButton, setActiveButton] = useState(null);
@@ -28,6 +28,7 @@ const useMyEventScreen = ({navigate}) => {
       return API.post(getEventByDatesUrl, body);
     },
     onSuccess: ({ok, data}) => {
+      setBottomData([]);
       console.log('datadatadatadatadatadsdvsdvsatadatadata', data);
       if (ok) {
         setBottomData(data?.data);

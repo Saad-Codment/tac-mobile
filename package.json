@@ -53,6 +53,7 @@
     "@tanstack/react-query": "^5.51.1",
     "firebase": "^10.14.1",
     "geolib": "^3.3.4",
+    "intl": "^1.2.5",
     "jetify": "^1.0.2",
     "libphonenumber-js": "^1.12.6",
     "lottie-ios": "3.4.1",

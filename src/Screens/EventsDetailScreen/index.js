@@ -181,7 +181,7 @@ const EventsDetailScreen = ({navigation, route}) => {
               width: wp('61'),
             }}
           />
-          {userData?.id != eventData?.user?.id && (
+          {/* {userData?.id != eventData?.user?.id && (
             <Touchable
               style={styles.followView}
               onPress={() => followUnFollowEvent(eventData?.id)}>
@@ -192,14 +192,17 @@ const EventsDetailScreen = ({navigation, route}) => {
               />
               <TextComponent text={'Follow Event'} styles={styles.typeStyle} />
             </Touchable>
-          )}
+          )} */}
         </View>
         <TextComponent text={eventData?.title} styles={styles.titleStyle} />
         {eventData?.likes_count > 0 && (
           <View style={styles.bottomView}>
             <MutualFriends
               uri={'https://picsum.photos/200'}
-              friends={[1, 2, 3, 4]}
+              friends={Array.from(
+                {length: eventData.likes_count},
+                (_, i) => i + 1,
+              )}
               textAfterCount={'peoples like this event.'}
             />
           </View>
@@ -228,6 +231,11 @@ const EventsDetailScreen = ({navigation, route}) => {
           <TextComponent
             text={'View Location'}
             styles={{color: Colors.lightBlueTextColor, fontSize: hp('1.2')}}
+            onPress={() =>
+              Linking.openURL(
+                `https://www.google.com/maps/search/?api=1&query=${eventData?.latitude}%2C${eventData?.longitude}`,
+              )
+            }
           />
         </View>
 
@@ -414,17 +422,19 @@ const EventsDetailScreen = ({navigation, route}) => {
             />
           </>
         )}
-        <ThemeButton
-          title={'View Event location on map'}
-          style={styles.btnStyle}
-          textStyle={{fontSize: hp('1.2')}}
-          isYellowTheme
-          onPress={() =>
-            Linking.openURL(
-              `https://www.google.com/maps/search/?api=1&query=${eventData?.latitude}%2C${eventData?.longitude}`,
-            )
-          }
-        />
+        {userData?.id != eventData?.user?.id && (
+          <ThemeButton
+            title={
+              eventData?.is_followed
+                ? 'Remove from my calender'
+                : 'Add to my calender'
+            }
+            style={styles.btnStyle}
+            textStyle={{fontSize: hp('1.2')}}
+            isYellowTheme
+            onPress={() => followUnFollowEvent(eventData?.id)}
+          />
+        )}
       </ScrollView>
     </View>
   );

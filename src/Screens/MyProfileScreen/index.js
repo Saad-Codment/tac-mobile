@@ -13,6 +13,8 @@ import {DataNotFound} from '../../Components/DataNotFound';
 import ThemeButton from '../../Components/ThemeButton';
 import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
 import PostViewComp from '../../Components/PostViewComp';
+import {Touchable} from '../../Components/Touchable';
+import {getMyFriendsUrl} from '../../Utils/Urls';
 
 const MyProfileScreen = ({navigation, route}) => {
   const {
@@ -106,7 +108,14 @@ const MyProfileScreen = ({navigation, route}) => {
             <TextComponent text={' Associations'} styles={styles.statLabel} />
           </View>
         </View>
-        <View style={styles.statItem}>
+        <Touchable
+          style={styles.statItem}
+          onPress={() =>
+            navigation.navigate('FriendLists', {
+              url: getMyFriendsUrl,
+              key: 'myFriends',
+            })
+          }>
           <Image
             source={friendReq}
             resizeMode="contain"
@@ -119,7 +128,7 @@ const MyProfileScreen = ({navigation, route}) => {
             />
             <TextComponent text={' Friends'} styles={styles.statLabel} />
           </View>
-        </View>
+        </Touchable>
       </View>
       {!isFetching && (
         <AniFlatOneByOne

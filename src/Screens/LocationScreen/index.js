@@ -134,7 +134,7 @@ const LocationScreen = ({route, navigation}) => {
             }}
             enablePoweredByContainer={false}
             query={{
-              key: 'AIzaSyBZbrelj6pX2E593uWnF8FIboHhwbFAcn',
+              key: 'AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY',
               // key: 'AIzaSyBZbrelj6pX2E593uWnF8FIboHhwbFAcnE',
               language: 'en',
             }}

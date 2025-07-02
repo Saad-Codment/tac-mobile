@@ -161,7 +161,7 @@ const ChatScreen = ({navigation, route}) => {
         {message != null && message != '' && regexp.test(message) && (
           <Touchable onPress={sendMessage} style={styles.sendBtnStyle}>
             <View style={styles.msgsRecieve}>
-              <TextComponent text={'Send'} styles={styles.sendTextStyle} />
+              {/* <TextComponent text={'Send'} styles={styles.sendTextStyle} /> */}
               <Image source={send} style={styles.sendIcon} />
             </View>
           </Touchable>

@@ -14,6 +14,8 @@
 #import <SafariServices/SafariServices.h>
 //#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
+#import <GoogleMaps/GoogleMaps.h>
+
 @implementation AppDelegate
 
 // ⬇️ Add this method before file @end
@@ -27,6 +29,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [FIRApp configure];
+  [GMSServices provideAPIKey:@"AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY"];
   self.moduleName = @"tac";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.

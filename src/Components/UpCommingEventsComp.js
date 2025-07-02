@@ -30,6 +30,7 @@ import {
   convertToLocalTime,
   getDateMonthYear,
   showFirstThreeAndCountRest,
+  formatPrice,
 } from '../Services/GlobalFunctions';
 import {Touchable} from './Touchable';
 import NavigationService from '../Services/NavigationService';
@@ -134,7 +135,7 @@ const UpcomingEventsComp = ({
             text={
               item?.first_name
                 ? item?.first_name + ' ' + item?.last_name
-                : 'System suggested '
+                : item?.title
             }
             styles={{fontWeight: 'bold', fontSize: hp('1.5')}}
             numberOfLines={1}
@@ -183,6 +184,7 @@ const UpcomingEventsComp = ({
           text={item?.title}
           styles={{fontWeight: 'bold', width: wp('70'), fontSize: hp('1.5')}}
           numberOfLines={1}
+          isWhite={item?.first_name ? false : true}
         />
         <View style={styles.priceView}>
           <Image
@@ -191,7 +193,10 @@ const UpcomingEventsComp = ({
             tintColor={'black'}
             style={styles.dollarIcon}
           />
-          <TextComponent text={item?.added_money ?? 0} styles={styles.price} />
+          <TextComponent
+            text={formatPrice(item?.added_money) ?? 0}
+            styles={styles.price}
+          />
         </View>
       </View>
       <View style={{...styles.centerView}}>

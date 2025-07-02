@@ -336,7 +336,7 @@ const CreateEventsScreen = ({navigation, route}) => {
               render={({field: {onChange, value}}) => (
                 <TextComponent
                   text={value?.locationName ?? 'Please select location.'}
-                  styles={styles.textStyle}
+                  styles={{...styles.textStyle, width: wp('80')}}
                   onPress={() =>
                     dynamicRoute('LocationScreen', (locationName, coords) => {
                       console.log(
@@ -531,7 +531,7 @@ const CreateEventsScreen = ({navigation, route}) => {
                     }
                     styles={{
                       ...styles.textStyle,
-                      color: value?.name ? Colors.black : Colors.grayFaded,
+                      color: value?.length ? Colors.black : Colors.grayFaded,
                       width: wp('30'),
                     }}
                     onPress={() =>
@@ -639,7 +639,7 @@ const CreateEventsScreen = ({navigation, route}) => {
                   }
                   styles={{
                     ...styles.textStyle,
-                    color: value?.name ? Colors.black : Colors.grayFaded,
+                    color: value?.length ? Colors.black : Colors.grayFaded,
                     width: wp('80'),
                   }}
                   onPress={() =>
@@ -701,7 +701,7 @@ const CreateEventsScreen = ({navigation, route}) => {
                     }
                     styles={{
                       ...styles.textStyle,
-                      color: value?.name ? Colors.black : Colors.grayFaded,
+                      color: value?.length ? Colors.black : Colors.grayFaded,
                       width: wp('30'),
                     }}
                     onPress={() =>

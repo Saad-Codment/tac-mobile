@@ -81,14 +81,14 @@ export const styles = StyleSheet.create({
   }),
   msgsRecieve: {
     paddingHorizontal: wp('2'),
-    flexDirection: 'row',
+    // flexDirection: 'row',
     alignItems: 'center',
   },
   sendIcon: {
     width: wp('3'),
     height: hp('2'),
     resizeMode: 'contain',
-    marginLeft: wp('1'),
+    // marginLeft: wp('1'),
   },
   searchMain: {
     flexDirection: 'row',
@@ -124,6 +124,10 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
     backgroundColor: Colors.primaryColor,
+    height: hp('3.5'),
+    width: wp('10'),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   sendTextStyle: {
     color: 'white',

@@ -43,6 +43,7 @@ const RenderImages = ({images, onImagePress}) => {
           uri={imageUrl(images[0])}
           isURI
           styles={styles.singleImage}
+          resizeMode={'contain'}
         />
       </Pressable>
     );
@@ -55,6 +56,7 @@ const RenderImages = ({images, onImagePress}) => {
             uri={imageUrl(img)}
             isURI
             styles={styles.twoImage}
+            resizeMode={'contain'}
           />
         ))}
       </Touchable>
@@ -68,6 +70,7 @@ const RenderImages = ({images, onImagePress}) => {
             uri={imageUrl(img)}
             isURI
             styles={styles.threeImage}
+            resizeMode={'contain'}
           />
         ))}
       </Touchable>
@@ -84,6 +87,7 @@ const RenderImages = ({images, onImagePress}) => {
                 ...styles.gridImage,
                 marginTop: index > 1 ? hp('0.5') : 0,
               }}
+              resizeMode={'contain'}
             />
             {index === 3 && images.length > 4 && (
               <View style={styles.overlay}>
@@ -354,7 +358,7 @@ const styles = StyleSheet.create({
   },
   textPostView: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: hp('2'),
     paddingHorizontal: wp('2'),
@@ -363,6 +367,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: hp('30'),
     borderRadius: wp('2'),
+    resizeMode: 'contain',
   },
   twoImagesContainer: {
     flexDirection: 'row',
@@ -382,6 +387,7 @@ const styles = StyleSheet.create({
     height: hp('20'),
     borderRadius: wp('2'),
     marginBottom: hp('1'),
+    resizeMode: 'contain',
   },
   gridContainer: {
     flexDirection: 'row',
@@ -399,6 +405,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: wp('2'),
+    resizeMode: 'contain',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,

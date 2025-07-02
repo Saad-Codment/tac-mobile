@@ -11,6 +11,7 @@ const BlurImage = ({
   children,
   isURI,
   defaultSource,
+  resizeMode,
 }) => {
   const [load, setLoad] = useState(Boolean(!defaultSource));
   const imageSource = {uri, priority: FastImage.priority.high};
@@ -34,7 +35,7 @@ const BlurImage = ({
         source={Boolean(hasHttpProtocol(uri) && isURI) ? imageSource : uri}
         defaultSource={defaultSource ? defaultSource() : null}
         onLoad={() => setLoad(false)}
-        // resizeMode="contain"
+        resizeMode={resizeMode ?? 'cover'}
       />
       {load && (
         <Blurhash

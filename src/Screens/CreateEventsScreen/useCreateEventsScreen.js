@@ -119,6 +119,8 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
     eventEndTime: data?.data?.end_time
       ? new Date(data?.data?.end_time)
       : nextDay,
+    evnetTour: 1,
+    privateEvent: 0,
   });
 
   const {queryClient} = useReduxStore();

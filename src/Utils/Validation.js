@@ -223,7 +223,7 @@ const eventCreateSchema = yup.object().shape({
     )
     .min(1, 'At least one event type is required'),
 
-  privateEvent: yup.boolean().required('Specify the event type'),
+  privateEvent: yup.mixed().required('Specify the event type').default(0),
   eventAssociation: yup.array().of(
     yup.object().shape({
       id: yup.string(),
@@ -239,7 +239,7 @@ const eventCreateSchema = yup.object().shape({
       }),
     )
     .min(1, 'At least one event circuit is required'),
-  evnetTour: yup.string().required('Specify the event tour'),
+  evnetTour: yup.mixed().required('Specify the event tour').default(1),
   eventConfirm: yup.boolean().required('Event confirmation is required'),
   eventSync: yup.boolean(),
   perfEventList: yup.array(),

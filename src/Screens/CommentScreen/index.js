@@ -80,7 +80,7 @@ const CommentScreen = ({navigation, route}) => {
         {message != null && message != '' && regexp.test(message) && (
           <Touchable onPress={sendMessage} style={styles.sendBtnStyle}>
             <View style={styles.msgsRecieve}>
-              <TextComponent text={'Post'} styles={styles.sendTextStyle} />
+              {/* <TextComponent text={'Post'} styles={styles.sendTextStyle} /> */}
               <Image source={send} style={styles.sendIcon} />
             </View>
           </Touchable>

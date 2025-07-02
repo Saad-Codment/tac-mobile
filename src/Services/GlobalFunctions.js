@@ -10,6 +10,7 @@ import AES from 'react-native-aes-crypto';
 import {randomBytes} from 'react-native-get-random-values';
 import {store} from '../Redux/Reducer';
 import {femaleImg, maleImg} from '../Assets';
+// import Intl from 'intl';
 
 const getSingleCharacter = text => {
   let letter = text?.charAt(0).toUpperCase();
@@ -956,6 +957,15 @@ function mergeIds(id1, id2) {
   return merged;
 }
 
+const formatPrice = (amount, locale = 'en-US', currency = 'USD') => {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+};
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -1004,4 +1014,5 @@ export {
   sortByNameAlphabetically,
   isFutureOrNow,
   mergeIds,
+  formatPrice,
 };

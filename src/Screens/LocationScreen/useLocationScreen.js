@@ -24,9 +24,7 @@ const useLocationScreen = ({navigate, addListener, params}) => {
     longitudeDelta: 0.0421,
   });
 
-  const [locationName, setLocationName] = useState(
-    '43 Brewster St, San Francisco, CA 94110, USA',
-  );
+  const [locationName, setLocationName] = useState();
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const handleLocationSelect = place => {
@@ -165,7 +163,7 @@ const useLocationScreen = ({navigate, addListener, params}) => {
 
   // Fetch place name using Google Maps API
   const getPlaceName = async (latitude, longitude) => {
-    const API_KEY = 'AIzaSyBZbrelj6pX2E593uWnF8FIboHhwbFAcn';
+    const API_KEY = 'AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY';
     const API_ENDPOINT = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`;
     try {
       const response = await fetch(API_ENDPOINT);
@@ -183,11 +181,11 @@ const useLocationScreen = ({navigate, addListener, params}) => {
   // Confirm location and call the external function
   const handleLocationConfirm = async () => {
     if (currentLocation) {
-      // const locationName = await getPlaceName(
-      //   currentLocation.latitude,
-      //   currentLocation.longitude,
-      // );
-      const locationName = '43 Brewster St, San Francisco, CA 94110, USA';
+      const locationName = await getPlaceName(
+        currentLocation.latitude,
+        currentLocation.longitude,
+      );
+      // const locationName = '43 Brewster St, San Francisco, CA 94110, USA';
       getLocationFunction(locationName, currentLocation);
     }
   };
