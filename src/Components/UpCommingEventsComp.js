@@ -134,7 +134,9 @@ const UpcomingEventsComp = ({
           <TextComponent
             text={
               item?.first_name
-                ? item?.first_name + ' ' + item?.last_name
+                ? item?.first_name +
+                  ' ' +
+                  (item?.last_name ? item?.last_name : '')
                 : item?.title
             }
             styles={{fontWeight: 'bold', fontSize: hp('1.5')}}

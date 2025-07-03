@@ -134,7 +134,11 @@ const ProfileHeader = ({
           <View>
             <View style={styles.nameContainer}>
               <TextComponent
-                text={userData?.first_name + ' ' + userData?.last_name}
+                text={
+                  userData?.first_name +
+                  ' ' +
+                  (userData?.last_name ? userData?.last_name : '')
+                }
                 styles={styles.nameText}
               />
             </View>
