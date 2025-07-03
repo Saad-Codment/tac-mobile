@@ -27,6 +27,7 @@ export const HeaderComponent = ({
   searchVal,
   setSearchVal,
   searchBoxPlaceholder,
+  isAnotherRightChildern,
 }) => {
   return (
     <View style={[styles.TopHeader, {...style}]}>
@@ -82,7 +83,7 @@ export const HeaderComponent = ({
             source={rightIconImg ?? saveReset}
             style={{...styles.filterIcon, rightIconStyle}}
           />
-
+          {isAnotherRightChildern}
           {/* <TextComponent
             text={saveReset}
             styles={{...styles.backBtn, ...saveResetStyle}}

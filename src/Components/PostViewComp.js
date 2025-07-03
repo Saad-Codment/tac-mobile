@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Alert, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {TextComponent} from './TextComponent';
 import {hp, wp} from '../Config/responsive';
@@ -17,7 +17,10 @@ import NavigationService from '../Services/NavigationService';
 import useFriendServices from '../Services/FriendServices';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {imageUrl} from '../Utils/Urls';
-import {formatDateToCustomFormat} from '../Services/GlobalFunctions';
+import {
+  checkImageOrientation,
+  formatDateToCustomFormat,
+} from '../Services/GlobalFunctions';
 import {types} from '../Redux/types';
 // somewhere in your app
 import {
@@ -36,14 +39,27 @@ const images = [
 ];
 
 const RenderImages = ({images, onImagePress}) => {
+  const [orientation, setOrientation] = useState('');
+
   if (images.length == 1) {
+    const handleOrientationCheck = async () => {
+      try {
+        const orientationType = await checkImageOrientation(
+          imageUrl(images[0]),
+        );
+        setOrientation(orientationType);
+      } catch (error) {
+        console.log('Error checking image orientation:', error);
+      }
+    };
+    handleOrientationCheck();
     return (
       <Pressable onPress={onImagePress}>
         <BlurImage
           uri={imageUrl(images[0])}
           isURI
-          styles={styles.singleImage}
-          resizeMode={'contain'}
+          styles={styles.singleImage(orientation)}
+          // resizeMode={'contain'}
         />
       </Pressable>
     );
@@ -51,28 +67,59 @@ const RenderImages = ({images, onImagePress}) => {
     return (
       <Touchable style={styles.twoImagesContainer} onPress={onImagePress}>
         {images.map((img, index) => (
-          <BlurImage
-            key={index}
-            uri={imageUrl(img)}
-            isURI
-            styles={styles.twoImage}
-            resizeMode={'contain'}
-          />
+          <BlurImage uri={imageUrl(img)} isURI styles={styles.twoImage} />
         ))}
       </Touchable>
     );
   } else if (images.length == 3) {
     return (
-      <Touchable style={styles.threeImagesContainer} onPress={onImagePress}>
-        {images.map((img, index) => (
+      <Touchable style={styles.twoImagesContainer} onPress={onImagePress}>
+        {images.slice(0, 1).map((img, index) => (
+          <BlurImage
+            uri={imageUrl(img)}
+            isURI
+            styles={{
+              width: wp('46'),
+              height: hp('40'),
+              // aspectRatio: 0,
+            }}
+            // resizeMode={'contain'}
+          />
+          // {/* {index === 3 && images.length > 4 && (
+          //   <View style={styles.overlay}>
+          //     <Text style={styles.overlayText}>+{images.length - 4}</Text>
+          //   </View>
+          // )} */}
+        ))}
+        <View style={{justifyContent: 'space-between'}}>
+          {images.slice(1, 3).map((img, index) => (
+            <BlurImage
+              uri={imageUrl(img)}
+              isURI
+              styles={{
+                width: wp('42'),
+                height: hp('19.8'),
+                // aspectRatio: 0,
+              }}
+              // resizeMode={'contain'}
+            />
+            // {/* {index === 3 && images.length > 4 && (
+            //   <View style={styles.overlay}>
+            //     <Text style={styles.overlayText}>+{images.length - 4}</Text>
+            //   </View>
+            // )} */}
+          ))}
+        </View>
+
+        {/* {images.map((img, index) => (
           <BlurImage
             key={index}
             uri={imageUrl(img)}
             isURI
             styles={styles.threeImage}
-            resizeMode={'contain'}
+            // resizeMode={'contain'}
           />
-        ))}
+        ))} */}
       </Touchable>
     );
   } else {
@@ -87,7 +134,7 @@ const RenderImages = ({images, onImagePress}) => {
                 ...styles.gridImage,
                 marginTop: index > 1 ? hp('0.5') : 0,
               }}
-              resizeMode={'contain'}
+              // resizeMode={'contain'}
             />
             {index === 3 && images.length > 4 && (
               <View style={styles.overlay}>
@@ -363,19 +410,20 @@ const styles = StyleSheet.create({
     paddingVertical: hp('2'),
     paddingHorizontal: wp('2'),
   },
-  singleImage: {
-    width: '100%',
-    height: hp('30'),
+  singleImage: orientationType => ({
+    width: wp('90'),
+    height: orientationType == 'portrait' ? hp('70') : hp('30'),
     borderRadius: wp('2'),
-    resizeMode: 'contain',
-  },
+    // aspectRatio: 1,
+  }),
   twoImagesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   twoImage: {
-    width: '48%',
-    height: hp('25'),
+    width: wp('44'),
+    height: hp('35'),
+    // aspectRatio: 1,
     borderRadius: wp('2'),
     backgroundColor: 'yellow',
   },
@@ -383,8 +431,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   threeImage: {
-    width: '100%',
-    height: hp('20'),
+    // width: '100%',
+    // height: hp('20'),
+    aspectRatio: 1,
     borderRadius: wp('2'),
     marginBottom: hp('1'),
     resizeMode: 'contain',
@@ -402,8 +451,9 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   gridImage: {
-    width: '100%',
-    height: '100%',
+    // width: '100%',
+    // height: '100%',
+    aspectRatio: 1,
     borderRadius: wp('2'),
     resizeMode: 'contain',
   },

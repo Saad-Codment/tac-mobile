@@ -1,10 +1,11 @@
 import {useQuery} from '@tanstack/react-query';
 import {
+  getMyAssociationsUrl,
   getReasonsUrl,
   getUserPostsUrl,
   getUserProfileUrl,
 } from '../../Utils/Urls';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import API from '../../Utils/helperFunc';
 import {errorMessage} from '../../Config/NotificationMessage';
 import useFriendServices from '../../Services/FriendServices';
@@ -95,11 +96,34 @@ const useMyProfileScreen = ({navigate, addListener}, {params}) => {
 
   useEffect(() => {
     const event = addListener('focus', async () => {
-      if (params?.id) onRefresh();
+      refetch();
+      // if (params?.id) onRefresh();
     });
     return event;
   }, []);
   const openBottomSheet = () => {};
+
+  const onPressKeyRef = useRef(null);
+
+  const [modalVal, setModalVal] = useState(false);
+
+  const onOpenModal = key => {
+    onPressKeyRef.current = key;
+    toggleModal();
+  };
+
+  const activeTags = {
+    event_association: {eventAssociations: []},
+  };
+
+  const toggleModal = (modalUpdateData, isSave) => {
+    setModalVal(!modalVal);
+  };
+
+  const associationsData = useQuery({
+    queryKey: ['myProfileAssociations'],
+    queryFn: () => API.get(getMyAssociationsUrl),
+  });
 
   return {
     userData: data?.data,
@@ -117,6 +141,13 @@ const useMyProfileScreen = ({navigate, addListener}, {params}) => {
     openBottomSheet,
     functionToDelete,
     functionToUpdateComment,
+
+    setModalVal,
+    activeTags,
+    onPressKey: onPressKeyRef.current,
+    allData: associationsData?.data?.data?.associations,
+    modalVal,
+    onOpenModal,
   };
 };
 

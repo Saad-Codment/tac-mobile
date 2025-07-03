@@ -167,6 +167,7 @@ export const styles = StyleSheet.create({
     height: 'auto',
     alignSelf: 'center',
     marginBottom: hp('-2.5'),
+
     // height: hp('40'),
   },
   upperIconView: {

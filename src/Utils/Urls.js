@@ -93,6 +93,8 @@ export const contactFormUrl = '/inquiry/store';
 export const getInquiryUrl = '/inquiry/terms';
 export const AfterSubBuyUrl = '/subscriptions/validate-receipt';
 export const StartTrialUrl = '/subscriptions/trial-start';
+export const getEventsUrl = '/events/get';
+export const getMyAssociationsUrl = '/get-associations';
 
 export const fcmTokenUrl = 'add-fcm-token';
 export const deleteAccUrl = 'auth/account-delete';

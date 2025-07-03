@@ -1437,15 +1437,53 @@ PODS:
   - RNGoogleSignin (12.2.1):
     - GoogleSignIn (~> 7.1)
     - React-Core
-  - RNImageCropPicker (0.41.4):
+  - RNImageCropPicker (0.50.1):
+    - DoubleConversion
+    - glog
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
     - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
     - React-RCTImage
-    - RNImageCropPicker/QBImagePickerController (= 0.41.4)
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - RNImageCropPicker/QBImagePickerController (= 0.50.1)
     - TOCropViewController (~> 2.7.4)
-  - RNImageCropPicker/QBImagePickerController (0.41.4):
+    - Yoga
+  - RNImageCropPicker/QBImagePickerController (0.50.1):
+    - DoubleConversion
+    - glog
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
     - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
     - React-RCTImage
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
     - TOCropViewController (~> 2.7.4)
+    - Yoga
   - RNNotifee (7.8.2):
     - React-Core
     - RNNotifee/NotifeeCore (= 7.8.2)
@@ -1916,7 +1954,7 @@ SPEC CHECKSUMS:
   RNFBAuth: 71ecb2cdb13dbcaf0f8453e5a6cd23340498cb53
   RNFBMessaging: 5ab773eae06da10716d17a5e8de915537043628c
   RNGoogleSignin: 629df9e1ea81e2a17c4db5aae0e8a98309e4723a
-  RNImageCropPicker: 16af7b83cc65b4ce992454bfb92a4af17d59ec42
+  RNImageCropPicker: 92694f9d36a64deef06b989071fa3eab28af8df5
   RNNotifee: 8768d065bf1e2f9f8f347b4bd79147431c7eacd6
   RNPermissions: d8586cf8c080e1dd995778d7523a58de579bf409
   RNPurchases: 3ff3901439eb08eaa433a5743c1f2a5bef0317f8

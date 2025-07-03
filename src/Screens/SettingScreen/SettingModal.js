@@ -144,12 +144,13 @@ const SettingModal = ({
       ),
     },
     event_association: {
-      title: 'Update Associations',
+      title: onPress ? 'Update Associations' : 'Associations',
       renderView: (
         <MultiSelectButton
           items={sortByNameAlphabetically(allData)}
           isMultipule
           selectedAlter={associations}
+          isDisable={Boolean(!onPress)}
           btnStyle={{
             height: 'auto',
             paddingVertical: hp('0.5'),
@@ -214,14 +215,19 @@ const SettingModal = ({
             flex: 1,
             justifyContent: 'flex-end',
           }}>
-          <View style={styles.modalData}>
+          <View
+            style={{
+              ...styles.modalData,
+              paddingBottom: !onPress ? hp('5') : 0,
+            }}>
             <View style={styles.upperIconView}>
               <Image
                 source={boldDivider}
                 resizeMode="contain"
                 style={styles.divider}
               />
-              <Touchable onPress={() => onPress({}, false)}>
+              <Touchable
+                onPress={() => (onPress ? onPress({}, false) : onBackPress())}>
                 <Image
                   source={crossWhite}
                   resizeMode="contain"
@@ -233,7 +239,6 @@ const SettingModal = ({
               text={renderObj[heading]?.title}
               styles={styles.headingText}
             />
-
             <ScrollView
               showsVerticalScrollIndicator={false}
               // keyboardShouldPersistTaps="always"
@@ -289,15 +294,17 @@ const SettingModal = ({
               {renderObj[heading]?.renderView}
             </ScrollView>
             {/* {firstHit && ( */}
-            <ThemeButton
-              title={'Save'}
-              style={styles.modalBtn}
-              onPress={() => {
-                onPress({...innerDataState, firstName, lastName}, true);
-              }}
-              isYellowTheme
-              textStyle={{fontSize: hp('1.5')}}
-            />
+            {onPress && (
+              <ThemeButton
+                title={'Save'}
+                style={styles.modalBtn}
+                onPress={() => {
+                  onPress({...innerDataState, firstName, lastName}, true);
+                }}
+                isYellowTheme
+                textStyle={{fontSize: hp('1.5')}}
+              />
+            )}
             {/* )} */}
           </View>
         </View>

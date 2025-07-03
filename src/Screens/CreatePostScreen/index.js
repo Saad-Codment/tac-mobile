@@ -24,6 +24,7 @@ import {
 } from '../../Services/GlobalFunctions';
 import BlurImage from '../../Components/BlurImage';
 import {Touchable} from '../../Components/Touchable';
+import {Colors} from '../../Theme/Variables';
 
 const CreatePostScreen = ({navigation, route}) => {
   const {userData, postImgs, postText, onChangeVal, createPost, isEditPost} =
@@ -45,6 +46,24 @@ const CreatePostScreen = ({navigation, route}) => {
         backIconStyle={{tintColor: 'black'}}
         goBack={() => navigation.goBack()}
         rightIconImg={uploadGallery}
+        isAnotherRightChildern={
+          <ThemeButton
+            title={'Post'}
+            style={{
+              width: wp('10'),
+              height: hp('3.5'),
+              marginLeft: wp('2'),
+              borderRadius: 8,
+              backgroundColor: 'transparent',
+            }}
+            textStyle={{
+              fontSize: hp('1.8'),
+              fontWeight: 'bold',
+              color: Colors.primaryColor,
+            }}
+            onPress={createPost}
+          />
+        }
         onRightPress={async () => {
           Alert.alert(
             'Pick to choose image',
@@ -122,12 +141,12 @@ const CreatePostScreen = ({navigation, route}) => {
         </View>
       </ScrollView>
 
-      <ThemeButton
+      {/* <ThemeButton
         title={'Post'}
         isYellowTheme
         style={styles.createBtnStyle}
         onPress={createPost}
-      />
+      /> */}
     </View>
   );
 };

@@ -77,6 +77,7 @@ export {default as editProfileBlack} from './Icons/editProfileBlack.png';
 export {default as unfilledCalender} from './Icons/unfilledCalender.png';
 export {default as groupBlack} from './Icons/groupBlack.png';
 export {default as circleCalFilled} from './Icons/circleCalFilled.png';
+export {default as userEditWhite} from './Icons/user-edit.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';

@@ -25,6 +25,7 @@ import {
   setting,
   setting1,
   settingWhite,
+  userEditWhite,
 } from '../Assets';
 import {Touchable} from '../Components/Touchable';
 import Lottie from 'lottie-react-native';
@@ -151,6 +152,14 @@ const ProfileHeader = ({
               />
             </View>
           </View>
+        </Touchable>
+        <Touchable onPress={() => NavigationService.navigate('ProfileScreen')}>
+          <Image
+            source={userEditWhite}
+            resizeMode="contain"
+            style={styles.notiIcon}
+            tintColor={'white'}
+          />
         </Touchable>
         <Touchable onPress={() => NavigationService.navigate('SettingScreen')}>
           <Image

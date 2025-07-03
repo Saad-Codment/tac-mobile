@@ -129,7 +129,7 @@ const useAllEventsScreen = ({navigate, addListener}, {params}) => {
     isPending,
     isFetching,
     refetch,
-    eventsList: list.filter(res => res != undefined) ?? [],
+    eventsList: list.filter(res => res != undefined),
     onRefresh,
     title: params?.title,
     loadMoreData,

@@ -83,7 +83,7 @@
     "react-native-geolocation-service": "^5.3.1",
     "react-native-get-random-values": "^1.11.0",
     "react-native-google-places-autocomplete": "^2.5.1",
-    "react-native-image-crop-picker": "^0.41.4",
+    "react-native-image-crop-picker": "^0.50.1",
     "react-native-infinite-scroll-view": "^0.4.5",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-maps": "1.10.3",

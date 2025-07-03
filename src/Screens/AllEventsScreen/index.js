@@ -70,11 +70,14 @@ const AllEventsScreen = ({navigation, route}) => {
           keyExtractor={keyExtractor}
           refreshing={false}
           ListEmptyComponent={
-            <DataNotFound
-              onpress={onRefresh}
-              btnStyles={{width: wp('80')}}
-              mainViewStyles={{alignSelf: 'center', marginTop: hp('20')}}
-            />
+            !isFetching &&
+            eventsList.length == 0 && (
+              <DataNotFound
+                onpress={onRefresh}
+                btnStyles={{width: wp('80')}}
+                mainViewStyles={{alignSelf: 'center', marginTop: hp('20')}}
+              />
+            )
           }
           renderItem={({item, index}) => (
             <RenderItem item={item} index={index} />

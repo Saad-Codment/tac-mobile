@@ -14,7 +14,8 @@ import ThemeButton from '../../Components/ThemeButton';
 import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
 import PostViewComp from '../../Components/PostViewComp';
 import {Touchable} from '../../Components/Touchable';
-import {getMyFriendsUrl} from '../../Utils/Urls';
+import {getEventsUrl, getMyFriendsUrl} from '../../Utils/Urls';
+import SettingModal from '../SettingScreen/SettingModal';
 
 const MyProfileScreen = ({navigation, route}) => {
   const {
@@ -25,6 +26,10 @@ const MyProfileScreen = ({navigation, route}) => {
     hasMoreData,
     myUserData,
     modal,
+    activeTags,
+    modalVal,
+    onPressKey,
+    allData,
     setModal,
     openBottomSheet,
     onRefresh,
@@ -33,6 +38,8 @@ const MyProfileScreen = ({navigation, route}) => {
     functionToUpdateLike,
     functionToDelete,
     functionToUpdateComment,
+    setModalVal,
+    onOpenModal,
   } = useMyProfileScreen(navigation, route);
 
   console.log('lkdbkldbfklbdfklbkldfbl;kdbsf;b;ldflnb;df', myUserData);
@@ -84,7 +91,15 @@ const MyProfileScreen = ({navigation, route}) => {
     <View style={styles.container}>
       <ProfileHeader />
       <View style={styles.statsContainer}>
-        <View style={styles.statItem}>
+        <Touchable
+          style={styles.statItem}
+          onPress={() => {
+            navigation.navigate('AllEventsScreen', {
+              url: getEventsUrl,
+              key: 'myProfileEvents',
+              title: 'Events',
+            });
+          }}>
           <Image source={flag} resizeMode="contain" style={styles.statIcon} />
           <View style={styles.statTextContainer}>
             <TextComponent
@@ -93,8 +108,10 @@ const MyProfileScreen = ({navigation, route}) => {
             />
             <TextComponent text={' Events'} styles={styles.statLabel} />
           </View>
-        </View>
-        <View style={styles.statItem}>
+        </Touchable>
+        <Touchable
+          style={styles.statItem}
+          onPress={() => onOpenModal('event_association')}>
           <Image
             source={assoicationIcon}
             resizeMode="contain"
@@ -107,7 +124,7 @@ const MyProfileScreen = ({navigation, route}) => {
             />
             <TextComponent text={' Associations'} styles={styles.statLabel} />
           </View>
-        </View>
+        </Touchable>
         <Touchable
           style={styles.statItem}
           onPress={() =>
@@ -158,6 +175,16 @@ const MyProfileScreen = ({navigation, route}) => {
           InnerCompnonet={(item, index) => {
             return renderItem(item, index);
           }}
+        />
+      )}
+      {modalVal && (
+        <SettingModal
+          activeTags={activeTags[onPressKey] ?? []}
+          allData={allData ?? []}
+          heading={onPressKey}
+          isModal={modalVal}
+          onSelect={() => {}}
+          onBackPress={() => setModalVal(false)}
         />
       )}
     </View>

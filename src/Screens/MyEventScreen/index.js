@@ -30,10 +30,7 @@ function MyEventScreen({navigation}) {
     [eventDate, eventsByDate],
   );
 
-  console.log(
-    'datadatadatadatadatadsdvdsdvsvsvsdsdvsatadatadata',
-    eventsByDate,
-  );
+  console.log('datadatadatadatadatadsdvdsdvsvsvsdsdvsatadatadata', eventDate);
 
   return (
     <View style={{flex: 1}}>
@@ -52,7 +49,7 @@ function MyEventScreen({navigation}) {
         />
       </View>
       <TextComponent text={'Events'} styles={styles.heading} />
-      {eventDate && (
+      {eventDate.length > 0 ? (
         <FlatList
           data={eventsByDate}
           keyExtractor={keyExtractor}
@@ -76,6 +73,17 @@ function MyEventScreen({navigation}) {
             )
           }
         />
+      ) : (
+        eventsByDate != null && (
+          <DataNotFound
+            onpress={() => onSelectVal(eventDate[0])}
+            btnStyles={{marginTop: hp('-2'), width: wp('50')}}
+            noImg={true}
+            mainViewStyles={{marginTop: hp('-5')}}
+            title={'Events not found'}
+            subTitle={'No events for the selected date!'}
+          />
+        )
       )}
     </View>
   );

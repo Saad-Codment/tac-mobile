@@ -1,4 +1,10 @@
-import {Alert, Linking, PermissionsAndroid, Platform} from 'react-native';
+import {
+  Alert,
+  Image,
+  Linking,
+  PermissionsAndroid,
+  Platform,
+} from 'react-native';
 import Geolocationios from '@react-native-community/geolocation';
 import Geolocation from 'react-native-geolocation-service';
 import ImageCropPicker from 'react-native-image-crop-picker';
@@ -526,70 +532,86 @@ const getIdsFromArry = (arry, key) => {
 //GET IMAGE From Mobile
 const uploadFromGalary = async isMulti => {
   const imageData = await ImageCropPicker.openPicker({
-    width: 500,
-    height: 400,
     cropping: true,
     multiple: isMulti,
-    avoidEmptySpaceAroundImage: true,
-    enableRotationGesture: true,
   });
-  console.log('imagefjshavckajkcbadsjkvbsdjkvbkjsdbksdbvkldskvlsd', imageData);
-  const {
-    height,
-    width,
-    size,
-    path,
-    filename,
-    sourceURL,
-    localIdentifier,
-    mime,
-  } = imageData;
-  const uri = Platform.OS === 'ios' ? sourceURL : path;
-  const fileName = filename || 'photo.jpg';
-  return Array.isArray(imageData)
-    ? imageData.map(res => ({
-        uri: Platform.OS === 'ios' ? res?.sourceURL : res?.path,
-        name: res?.filename,
-        type: res?.mime,
-      }))
-    : {
-        uri,
-        name: fileName,
-        type: mime,
-      };
+
+  const getOrientation = (width, height) => {
+    if (width > height) return 'landscape';
+    if (height > width) return 'portrait';
+    return 'square';
+  };
+
+  if (Array.isArray(imageData)) {
+    return imageData.map(res => ({
+      uri: Platform.OS === 'ios' ? res?.sourceURL : res?.path,
+      name: res?.filename || 'photo.jpg',
+      type: res?.mime,
+      orientation: getOrientation(res?.width, res?.height),
+    }));
+  } else {
+    const {
+      height,
+      width,
+      size,
+      path,
+      filename,
+      sourceURL,
+      localIdentifier,
+      mime,
+    } = imageData;
+    const uri = Platform.OS === 'ios' ? sourceURL : path;
+    const fileName = filename || 'photo.jpg';
+
+    return {
+      uri,
+      name: fileName,
+      type: mime,
+      orientation: getOrientation(width, height),
+    };
+  }
 };
+
 //GET IMAGE From Mobile
 const uploadFromCamera = async isMulti => {
   const imageData = await ImageCropPicker.openCamera({
-    width: 500,
-    height: 400,
-    cropping: true,
     multiple: isMulti,
   });
-  console.log('imagefjshavckajkcbadsjkvbsdjkvbkjsdbksdbvkldskvlsd', imageData);
-  const {
-    height,
-    width,
-    size,
-    path,
-    filename,
-    sourceURL,
-    localIdentifier,
-    mime,
-  } = imageData;
-  const uri = Platform.OS === 'ios' ? path : sourceURL;
-  const fileName = filename || 'photo.jpg';
-  return Array.isArray(imageData)
-    ? imageData.map(res => ({
-        uri: Platform.OS === 'ios' ? res?.path : res?.sourceURL,
-        name: res?.filename,
-        type: res?.mime,
-      }))
-    : {
-        uri,
-        name: fileName,
-        type: mime,
-      };
+
+  const checkOrientation = img => {
+    return img.height >= img.width ? 'portrait' : 'landscape';
+  };
+
+  if (Array.isArray(imageData)) {
+    return imageData.map(res => ({
+      uri: Platform.OS === 'ios' ? res?.path : res?.sourceURL,
+      name: res?.filename || 'photo.jpg',
+      type: res?.mime,
+      orientation: checkOrientation(res),
+    }));
+  } else {
+    const {
+      height,
+      width,
+      size,
+      path,
+      filename,
+      sourceURL,
+      localIdentifier,
+      mime,
+    } = imageData;
+
+    const uri = Platform.OS === 'ios' ? path : sourceURL;
+    const fileName = filename || 'photo.jpg';
+    const orientation = checkOrientation(imageData);
+
+    return {
+      uri,
+      name: fileName,
+      type: mime,
+      orientation,
+    };
+  }
 };
 
 function formatDateToCustomFormat(isoDate) {
@@ -966,6 +988,28 @@ const formatPrice = (amount, locale = 'en-US', currency = 'USD') => {
   }).format(amount);
 };
 
+const checkImageOrientation = imageUrl => {
+  return new Promise((resolve, reject) => {
+    Image.getSize(
+      imageUrl,
+      (width, height) => {
+        if (width > height) {
+          resolve('landscape');
+        } else if (height > width) {
+          resolve('portrait');
+        } else {
+          resolve('square');
+        }
+      },
+      error => {
+        console.error('Failed to get image size:', error);
+        reject(error);
+      },
+    );
+  });
+};
+// Example usage:
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -1015,4 +1059,5 @@ export {
   isFutureOrNow,
   mergeIds,
   formatPrice,
+  checkImageOrientation,
 };
