@@ -533,7 +533,7 @@ const getIdsFromArry = (arry, key) => {
 const uploadFromGalary = async isMulti => {
   const imageData = await ImageCropPicker.openPicker({
     cropping: true,
-    multiple: isMulti,
+    multiple: isMulti ?? false,
   });
 
   const getOrientation = (width, height) => {
@@ -575,7 +575,8 @@ const uploadFromGalary = async isMulti => {
 //GET IMAGE From Mobile
 const uploadFromCamera = async isMulti => {
   const imageData = await ImageCropPicker.openCamera({
-    multiple: isMulti,
+    cropping: true,
+    multiple: isMulti ?? false,
   });
 
   const checkOrientation = img => {
