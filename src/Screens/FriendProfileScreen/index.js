@@ -62,7 +62,7 @@ const FriendProfileScreen = ({navigation, route}) => {
                 mainViewStyle={{width: wp('95')}}
                 upperImgStyle={{width: wp('95')}}
                 functionToUpdateLike={functionToUpdateLike}
-                openBottomSheet={id => setModal(id)}
+                openBottomSheet={id => setModal({id, type: 'event'})}
                 refetch={refetch}
                 functionToDelete={functionToDelete}
                 // likePost={likePost}
@@ -75,7 +75,7 @@ const FriendProfileScreen = ({navigation, route}) => {
                 item={item}
                 index={index}
                 functionToUpdateLike={functionToUpdateLike}
-                openBottomSheet={id => setModal(id)}
+                openBottomSheet={id => setModal({id, type: 'post'})}
                 functionToUpdateComment={(i, isComment) =>
                   functionToUpdateComment(index, isComment)
                 }
@@ -159,7 +159,8 @@ const FriendProfileScreen = ({navigation, route}) => {
         <BottomModalComponent
           isVisible={Boolean(modal != null)}
           isReport
-          event_id={modal}
+          id={modal?.id}
+          type={modal?.type}
           onClose={() => setModal(null)}
         />
       )}

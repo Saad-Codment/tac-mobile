@@ -50,6 +50,7 @@ const AllEventsScreen = ({navigation, route}) => {
         key={index}
         functionToUpdateLike={() => {}}
         openBottomSheet={id => setModal(id)}
+        refetch={refetch}
       />
     );
   }, []);
@@ -146,7 +147,8 @@ const AllEventsScreen = ({navigation, route}) => {
         <BottomModalComponent
           isVisible={Boolean(modal != null)}
           isReport
-          event_id={modal}
+          id={modal}
+          // type={"even"}
           onClose={() => setModal(null)}
         />
       )}

@@ -18,7 +18,9 @@ import {
   convertToArray,
   convertToCustomTimeFormat,
   formatDateToCustomFormat,
+  formatDateToYMD,
   getCalenderPerComfirm,
+  getFormattedTime,
   getIdsFromArry,
   isFutureOrNow,
 } from '../../Services/GlobalFunctions';
@@ -178,14 +180,14 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
     perfEventList,
     eventPrice,
   }) => {
-    console.log('slkdklsdbklv');
+    console.log('Creating event...');
     try {
       const body = {
         title: eventTitle,
-        from_date: convertDateFormat(eventStartDate),
-        start_time: convertDateString(eventStartTime),
-        to_date: convertDateFormat(eventEndDate),
-        end_time: convertDateString(eventEndTime),
+        from_date: formatDateToYMD(eventStartDate),
+        start_time: getFormattedTime(eventStartTime),
+        to_date: formatDateToYMD(eventEndDate),
+        end_time: getFormattedTime(eventEndTime),
         latitude: eventLocation.coords.latitude,
         longitude: eventLocation.coords.longitude,
         address: eventLocation.locationName,
@@ -202,57 +204,74 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
           : eventImg,
         timezone: timeZone,
         added_money: eventPrice,
-        images_array: eventImg.isEdit ? JSON.stringify([eventImg?.uri]) : null,
-        // 'performances[]':
-        //   fields.length > 0
-        //     ? fields.map(res => ({
-        //         title: res?.title,
-        //         date: convertDateFormat(res?.date),
-        //         start_time: convertDateString(res?.startTime),
-        //         end_time: convertDateString(res?.endTime),
-        //       }))
-        //     : null,
+        images_array: eventImg?.isEdit ? JSON.stringify([eventImg?.uri]) : null,
       };
-      console.log('After hit api ', JSON.stringify(body));
+
+      console.log('Request Body:', JSON.stringify(body));
+
       const {ok, data} = await formDataFunc(
         isEditEvnet ? updateEventUrl + event?.id : createEventUrl,
         body,
         'images[]',
       );
+
+      console.log('API Response:', data);
+
       if (ok) {
         if (eventSync) {
-          await RNCalendarEvents.checkPermissions();
-          await RNCalendarEvents.requestPermissions();
-          await getCalenderPerComfirm();
-          const pro = await RNCalendarEvents.saveEvent(
-            {title: eventTitle},
-            {
-              calendarId: data?.id,
-              startDate: eventStartDate.toISOString(),
-              endDate: eventEndDate.toISOString(),
-              location: eventLocation.locationName,
-              notes: eventLocation.locationName,
-              timeZone,
-            },
-            {exceptionDate: data?.from_date},
+          const permission = await RNCalendarEvents.checkPermissions();
+          if (permission !== 'authorized') {
+            await RNCalendarEvents.requestPermissions();
+          }
+
+          await getCalenderPerComfirm(); // assuming this fetches a valid calendar list
+
+          // Get all calendars
+          const calendars = await RNCalendarEvents.findCalendars();
+          const modifiableCalendar = calendars.find(
+            cal => cal.allowsModifications,
           );
-          console.log('propropropropropropro', pro);
+
+          const calendarId = modifiableCalendar?.id || calendars[0]?.id;
+
+          if (!calendarId) {
+            console.warn('No writable calendar found.');
+          }
+
+          const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+          const eventId = await RNCalendarEvents.saveEvent(eventTitle, {
+            calendarId,
+            startDate: new Date(eventStartDate).toISOString(),
+            endDate: new Date(eventEndDate).toISOString(),
+            location: eventLocation.locationName,
+            notes: eventLocation.locationName,
+            timeZone,
+          });
+
+          console.log('Calendar Event Saved with ID:', eventId);
         }
-        reset();
+
+        // Post-save logic
+        if (params?.functionToUpdatePostOrEvent) {
+          params?.functionToUpdatePostOrEvent(data);
+        }
         if (isEditEvnet) queryClient.invalidateQueries(['profilePosts']);
         queryClient.invalidateQueries({queryKey: ['getEventDate']});
+
         successMessage(
           isEditEvnet
             ? 'Event updated successfully'
             : 'Event created successfully',
         );
         goBack();
-      } else
+      } else {
         errorMessage(
-          isEditEvnet ? 'rror on updating event' : 'Error on creating event',
+          isEditEvnet ? 'Error on updating event' : 'Error on creating event',
         );
+      }
     } catch (error) {
-      console.log('lsidgvlkbsdklvbsdklbvklsdbkvlsdbklvbsdkl', error);
+      console.log('Error creating event:', error);
     }
   };
 

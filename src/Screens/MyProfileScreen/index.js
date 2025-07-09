@@ -30,6 +30,8 @@ const MyProfileScreen = ({navigation, route}) => {
     modalVal,
     onPressKey,
     allData,
+    isSuccess,
+    isHitFirstTime,
     setModal,
     openBottomSheet,
     onRefresh,
@@ -40,6 +42,7 @@ const MyProfileScreen = ({navigation, route}) => {
     functionToUpdateComment,
     setModalVal,
     onOpenModal,
+    functionToUpdatePostOrEvent,
   } = useMyProfileScreen(navigation, route);
 
   console.log('lkdbkldbfklbdfklbkldfbl;kdbsf;b;ldflnb;df', myUserData);
@@ -58,6 +61,10 @@ const MyProfileScreen = ({navigation, route}) => {
               functionToUpdateComment={(i, isComment) =>
                 functionToUpdateComment(index, isComment)
               }
+              refetch={refetch}
+              functionToUpdatePostOrEvent={newItem =>
+                functionToUpdatePostOrEvent(index, newItem)
+              }
             />
           ) : (
             <UpcomingEventsComp
@@ -68,7 +75,10 @@ const MyProfileScreen = ({navigation, route}) => {
               functionToUpdateLike={functionToUpdateLike}
               openBottomSheet={id => setModal(id)}
               functionToDelete={functionToDelete}
-
+              refetch={refetch}
+              functionToUpdatePostOrEvent={newItem =>
+                functionToUpdatePostOrEvent(index, newItem)
+              }
               // likePost={likePost}
             />
           )}
@@ -80,10 +90,10 @@ const MyProfileScreen = ({navigation, route}) => {
       isRefetching,
       eventsList,
       isRefetching,
-      functionToUpdateLike,
-      functionToUpdateComment,
-      functionToDelete,
-      setModal,
+      // functionToUpdateLike,
+      // functionToUpdateComment,
+      // functionToDelete,
+      // setModal,
     ],
   );
 
@@ -147,7 +157,7 @@ const MyProfileScreen = ({navigation, route}) => {
           </View>
         </Touchable>
       </View>
-      {!isFetching && (
+      {isHitFirstTime && (
         <AniFlatOneByOne
           data={eventsList ?? []}
           flatViewStyle={styles.upComingFlatlistView}

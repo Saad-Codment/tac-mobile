@@ -1,10 +1,10 @@
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {searchDataUrl, searchScreenDataUrl} from '../../Utils/Urls';
 import API from '../../Utils/helperFunc';
 import useReduxStore from '../../Hooks/UseReduxStore';
 
-const useSearchScreen = ({navigate}) => {
+const useSearchScreen = ({navigate, addListener}) => {
   const {getState} = useReduxStore();
 
   const {userData} = getState('Auth');
@@ -26,16 +26,32 @@ const useSearchScreen = ({navigate}) => {
   } = useQuery({
     queryKey: ['searchScreenData'],
     queryFn: async () => API.get(searchScreenDataUrl),
+    refetchOnWindowFocus: true,
   });
 
+  const isSearch = Boolean(
+    searchVal == null || searchVal == '' || searchVal == undefined,
+  );
+
   const afterSearch = () => {
-    navigate('FriendLists', {
-      url: searchDataUrl + searchVal + '&',
-      key: 'searchResults',
-      title: 'Search Friends',
-    });
+    if (!isSearch) {
+      navigate('FriendLists', {
+        url: searchDataUrl + searchVal + '&',
+        key: 'searchResults',
+        title: 'Search Friends',
+      });
+    }
     // setSearchVal(null);
   };
+
+  useEffect(() => {
+    const event = addListener('focus', () => {
+      refetch();
+    });
+    return event;
+  }, []);
+
+  console.log('jksdbvbsdjkbvkjsdbjvbjsdbvksdvbsdkvbksdbvjkbsd', data?.data);
 
   return {
     selectedVal,
@@ -46,6 +62,7 @@ const useSearchScreen = ({navigate}) => {
     setSearchVal,
     searchVal,
     afterSearch,
+    isSearch,
   };
 };
 

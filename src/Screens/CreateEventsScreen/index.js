@@ -39,6 +39,10 @@ import useCreateEventsScreen from './useCreateEventsScreen';
 import {
   convertToCustomTimeFormat,
   formatDateToCustomFormat,
+  formatDateToLong,
+  formatDateToYMD,
+  getCustom12HourTime,
+  getFormattedTime,
   getOrdinal,
   uploadFromCamera,
   uploadFromGalary,
@@ -251,13 +255,16 @@ const CreateEventsScreen = ({navigation, route}) => {
                 control={control}
                 name="eventStartDate"
                 render={({field: {onChange, value}}) => (
-                  <TextComponent
-                    text={formatDateToCustomFormat(value ?? currentDate)}
+                  <Touchable
+                    style={styles.textTouchBtn}
                     onPress={() =>
                       toggleDate('eventStartDate', 'date', null, onChange)
-                    }
-                    styles={styles.textStyle}
-                  />
+                    }>
+                    <TextComponent
+                      text={formatDateToLong(value ?? currentDate)}
+                      styles={styles.textStyle}
+                    />
+                  </Touchable>
                 )}
               />
             }
@@ -271,13 +278,16 @@ const CreateEventsScreen = ({navigation, route}) => {
                 control={control}
                 name="eventStartTime"
                 render={({field: {onChange, value}}) => (
-                  <TextComponent
-                    text={convertToCustomTimeFormat(value ?? currentDate)}
+                  <Touchable
+                    style={styles.textTouchBtn}
                     onPress={() =>
                       toggleDate('eventStartTime', 'time', null, onChange)
-                    }
-                    styles={styles.textStyle}
-                  />
+                    }>
+                    <TextComponent
+                      text={getCustom12HourTime(value ?? currentDate)}
+                      styles={styles.textStyle}
+                    />
+                  </Touchable>
                 )}
               />
             }
@@ -293,13 +303,16 @@ const CreateEventsScreen = ({navigation, route}) => {
                 control={control}
                 name="eventEndDate"
                 render={({field: {onChange, value}}) => (
-                  <TextComponent
-                    text={formatDateToCustomFormat(value ?? currentDate)}
+                  <Touchable
+                    style={styles.textTouchBtn}
                     onPress={() =>
                       toggleDate('eventEndDate', 'date', null, onChange)
-                    }
-                    styles={styles.textStyle}
-                  />
+                    }>
+                    <TextComponent
+                      text={formatDateToLong(value ?? currentDate)}
+                      styles={styles.textStyle}
+                    />
+                  </Touchable>
                 )}
               />
             }
@@ -313,13 +326,16 @@ const CreateEventsScreen = ({navigation, route}) => {
                 control={control}
                 name="eventEndTime"
                 render={({field: {onChange, value}}) => (
-                  <TextComponent
-                    text={convertToCustomTimeFormat(value ?? currentDate)}
+                  <Touchable
+                    style={styles.textTouchBtn}
                     onPress={() =>
                       toggleDate('eventEndTime', 'time', null, onChange)
-                    }
-                    styles={styles.textStyle}
-                  />
+                    }>
+                    <TextComponent
+                      text={getCustom12HourTime(value ?? currentDate)}
+                      styles={styles.textStyle}
+                    />
+                  </Touchable>
                 )}
               />
             }
@@ -334,23 +350,21 @@ const CreateEventsScreen = ({navigation, route}) => {
               control={control}
               name="eventLocation"
               render={({field: {onChange, value}}) => (
-                <TextComponent
-                  text={value?.locationName ?? 'Please select location.'}
-                  styles={{...styles.textStyle, width: wp('80')}}
+                <Touchable
+                  style={styles.textTouchBtn}
                   onPress={() =>
                     dynamicRoute('LocationScreen', (locationName, coords) => {
-                      console.log(
-                        'locationNamelocationNamelocationNamelocationNamelocationNamelocationName',
-                        locationName,
-                        coords,
-                      );
                       onChange({
                         locationName: locationName,
                         coords: coords,
                       });
                     })
-                  }
-                />
+                  }>
+                  <TextComponent
+                    text={value?.locationName ?? 'Please select location.'}
+                    styles={{...styles.textStyle, width: wp('80')}}
+                  />
+                </Touchable>
               )}
             />
           }
@@ -516,24 +530,15 @@ const CreateEventsScreen = ({navigation, route}) => {
         /> */}
         <View style={styles.viewFlex}>
           <TitleInputView
-            title={'Event Type *'}
+            title={'Event Type'}
             errorName={errors['eventType']?.name}
             innerLeftView={
               <Controller
                 control={control}
                 name={`eventType`}
                 render={({field: {onChange, value}}) => (
-                  <TextComponent
-                    text={
-                      value?.length
-                        ? value?.length + ' types is selected'
-                        : 'Event type'
-                    }
-                    styles={{
-                      ...styles.textStyle,
-                      color: value?.length ? Colors.black : Colors.grayFaded,
-                      width: wp('30'),
-                    }}
+                  <Touchable
+                    style={styles.textTouchBtn}
                     onPress={() =>
                       dynamicRoute('ListViewScreen', {
                         onSelectValue: res => onChange(res),
@@ -541,8 +546,20 @@ const CreateEventsScreen = ({navigation, route}) => {
                         urlName: allEventTypeUrl,
                         isMultiSelect: true,
                       })
-                    }
-                  />
+                    }>
+                    <TextComponent
+                      text={
+                        value?.length
+                          ? value?.length + ' type(s) selected'
+                          : 'Event type'
+                      }
+                      styles={{
+                        ...styles.textStyle,
+                        color: value?.length ? Colors.black : Colors.grayFaded,
+                        width: wp('30'),
+                      }}
+                    />
+                  </Touchable>
                 )}
               />
             }
@@ -631,17 +648,8 @@ const CreateEventsScreen = ({navigation, route}) => {
               control={control}
               name={`eventAssociation`}
               render={({field: {onChange, value}}) => (
-                <TextComponent
-                  text={
-                    value?.length
-                      ? value?.length + ' associations is selected'
-                      : 'No association'
-                  }
-                  styles={{
-                    ...styles.textStyle,
-                    color: value?.length ? Colors.black : Colors.grayFaded,
-                    width: wp('80'),
-                  }}
+                <Touchable
+                  style={styles.textTouchBtn}
                   onPress={() =>
                     dynamicRoute('ListViewScreen', {
                       onSelectValue: res => onChange(res),
@@ -649,8 +657,20 @@ const CreateEventsScreen = ({navigation, route}) => {
                       urlName: allAssociatesUrl,
                       isMultiSelect: true,
                     })
-                  }
-                />
+                  }>
+                  <TextComponent
+                    text={
+                      value?.length
+                        ? value?.length + ' association(s) selected'
+                        : 'No association'
+                    }
+                    styles={{
+                      ...styles.textStyle,
+                      color: value?.length ? Colors.black : Colors.grayFaded,
+                      width: wp('80'),
+                    }}
+                  />
+                </Touchable>
               )}
             />
           }
@@ -693,17 +713,8 @@ const CreateEventsScreen = ({navigation, route}) => {
                 control={control}
                 name={`eventCircuit`}
                 render={({field: {onChange, value}}) => (
-                  <TextComponent
-                    text={
-                      value?.length
-                        ? value?.length + ' circuits is selected'
-                        : 'No circuits'
-                    }
-                    styles={{
-                      ...styles.textStyle,
-                      color: value?.length ? Colors.black : Colors.grayFaded,
-                      width: wp('30'),
-                    }}
+                  <Touchable
+                    style={styles.textTouchBtn}
                     onPress={() =>
                       dynamicRoute('ListViewScreen', {
                         onSelectValue: res => onChange(res),
@@ -711,8 +722,20 @@ const CreateEventsScreen = ({navigation, route}) => {
                         urlName: allEventCircuitUrl,
                         isMultiSelect: true,
                       })
-                    }
-                  />
+                    }>
+                    <TextComponent
+                      text={
+                        value?.length
+                          ? value?.length + ' circuit(s) selected'
+                          : 'No circuits'
+                      }
+                      styles={{
+                        ...styles.textStyle,
+                        color: value?.length ? Colors.black : Colors.grayFaded,
+                        width: wp('30'),
+                      }}
+                    />
+                  </Touchable>
                 )}
               />
             }
@@ -836,7 +859,7 @@ const CreateEventsScreen = ({navigation, route}) => {
           />
         </View>
         <TitleInputView
-          title={'Want To Add In Calender?'}
+          title={'Want To Add To Calender?'}
           innerLeftView={
             <Controller
               control={control}
@@ -845,7 +868,11 @@ const CreateEventsScreen = ({navigation, route}) => {
               render={({field: {onChange, value}}) => (
                 <TextComponent
                   text={'Add To Calendar'}
-                  styles={styles.textStyle}
+                  styles={{
+                    ...styles.textStyle,
+                    width: wp('80'),
+                    paddingVertical: hp('1'),
+                  }}
                   onPress={() => onChange(!value)}
                 />
               )}
@@ -878,32 +905,45 @@ const CreateEventsScreen = ({navigation, route}) => {
           <Controller
             control={control}
             name={datePicker.stateName}
-            render={({field: {onChange, value}}) => (
-              <DatePicker
-                mode={datePicker.modalType}
-                open={datePicker.alertVal}
-                date={value ?? currentDate}
-                is24hourSource="device"
-                locale="en"
-                modal
-                onConfirm={e => {
-                  // if (datePicker.stateName == 'perfEventList') {
-                  //   datePicker.onChange();
-                  //   onSelectValueInList(
-                  //     datePicker?.index,
-                  //     datePicker.modalType ?? 'date',
-                  //     e,
-                  //   );
-                  //   toggleDate(null);
-                  // } else {
-                  onChange(e);
-                  // datePicker.onChange(e);
-                  // onSelectValue(datePicker.stateName, e);
-                  toggleDate(null);
-                  // }
-                }}
-              />
-            )}
+            render={({field: {onChange, value}}) => {
+              console.log('valuevaluevaluevaluevaluevaluevaluevalue', value);
+              return (
+                <DatePicker
+                  // mode={'datetime'}
+                  mode={datePicker.modalType}
+                  open={datePicker.alertVal}
+                  date={value ?? currentDate}
+                  // date={value ?? currentDate}
+                  is24hourSource="locale"
+                  locale="en"
+                  onCancel={() => toggleDate(null)}
+                  modal
+                  onConfirm={e => {
+                    console.log(
+                      'lksdbvlksbdlkvbsdlkbvlsdblvkbsdlvbsdkvsd',
+                      e,
+                      new Date(e.getTime() + 24 * 60 * 60 * 1000),
+                      e.toDateString(),
+                    );
+                    // if (datePicker.stateName == 'perfEventList') {
+                    //   datePicker.onChange();
+                    //   onSelectValueInList(
+                    //     datePicker?.index,
+                    //     datePicker.modalType ?? 'date',
+                    //     e,
+                    //   );
+                    //   toggleDate(null);
+                    // } else {
+                    onChange(e);
+                    // onChange(new Date(e.getTime() + 24 * 60 * 60 * 1000));
+                    // datePicker.onChange(e);
+                    // onSelectValue(datePicker.stateName, e);
+                    toggleDate(null);
+                    // }
+                  }}
+                />
+              );
+            }}
           />
         )}
         <InfoModal

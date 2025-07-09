@@ -72,6 +72,7 @@ export const searchScreenDataUrl = '/search-screen-data';
 export const searchDataUrl = '/user/search?search=';
 export const getReasonsUrl = '/reports/fetch-reasons';
 export const reportEventUrl = '/reports/report-event';
+export const reportPostUrl = '/reports/report-post';
 export const SavePhoneNumberUrl = '/contacts/save-user-phone';
 export const SendVerficatioUrl = '/contacts/send-verification-code';
 export const verifyNumberUrl = '/contacts/validate-verification-code';

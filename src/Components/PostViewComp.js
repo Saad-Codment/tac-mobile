@@ -170,6 +170,7 @@ const PostViewComp = ({
   refetch,
   functionToDelete,
   functionToUpdateComment,
+  functionToUpdatePostOrEvent,
 }) => {
   const {likeAndDisLikeEvent, addLikeOnPost, sharePost, deletePost} =
     useFriendServices();
@@ -185,7 +186,10 @@ const PostViewComp = ({
 
   const onEditPost = item => {
     // Navigate to edit screen or open modal
-    NavigationService.navigate('CreatePostScreen', {post: item, refetch});
+    NavigationService.navigate('CreatePostScreen', {
+      post: item,
+      functionToUpdatePostOrEvent: data => functionToUpdatePostOrEvent(data),
+    });
   };
 
   const onDeletePost = item => {

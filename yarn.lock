@@ -9792,22 +9792,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-calendars@npm:^1.1307.0":
-  version: 1.1307.0
-  resolution: "react-native-calendars@npm:1.1307.0"
+"react-native-calendars@npm:^1.1313.0":
+  version: 1.1313.0
+  resolution: "react-native-calendars@npm:1.1313.0"
   dependencies:
     hoist-non-react-statics: ^3.3.1
     lodash: ^4.17.15
     memoize-one: ^5.2.1
     moment: ^2.29.4
     prop-types: ^15.5.10
+    react-native-safe-area-context: 4.5.0
     react-native-swipe-gestures: ^1.0.5
     recyclerlistview: ^4.0.0
     xdate: ^0.8.0
   dependenciesMeta:
     moment:
       optional: true
-  checksum: 1fc559d66bf0c687c09ba9462f243051127154efb4e0e293ddbabdfe8a64523ca114c905d853a2b911626b32c2f25abdb1de39cd07e8865d8c6a970991175195
+  checksum: e598c5967c94255851dae6a1ce0ccaee3a249a1e76558fc71b5ea21402763ccc132785f9af2e52f994875acd6a6031bbf834d326dcf430e03b90ae6027ddd389
   languageName: node
   linkType: hard
 
@@ -9976,12 +9977,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-image-crop-picker@npm:^0.38.0":
-  version: 0.38.1
-  resolution: "react-native-image-crop-picker@npm:0.38.1"
+"react-native-image-crop-picker@npm:^0.50.1":
+  version: 0.50.1
+  resolution: "react-native-image-crop-picker@npm:0.50.1"
   peerDependencies:
-    react-native: ">=0.40.0"
-  checksum: e2705cfe5400cf30d372402e1d4933405aacc2cd07fd6fbd25a7a1b31f27ffefd5a033dd6dc71c0b40e62c5f1362919292327912315efc7dcd34bcdc49f1ee12
+    react: "*"
+    react-native: "*"
+  checksum: 35d4fae23e7da88da388fea740b39aeb2d5f9adecfd971a1efb04c8331e636dff777baedb4c94755a2ae18d9d43bacb68a25d39343e63c7dd14562c5d6934816
   languageName: node
   linkType: hard
 
@@ -10179,6 +10181,16 @@ __metadata:
   peerDependencies:
     react-native: ">=0.35"
   checksum: f854d42e2fdfde80f31b9d3eab3bc9665cf312e5b3953b4a14dc36dc27b2dbe03b8520880ea267376eea7b664af7eb900ae88ef4004a65820b48ad9ac2fc5feb
+  languageName: node
+  linkType: hard
+
+"react-native-safe-area-context@npm:4.5.0":
+  version: 4.5.0
+  resolution: "react-native-safe-area-context@npm:4.5.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 958df1d20492aa89c23d746f88409a3a3bd1b0d397c80310a4b0bbec9888cbbeb7579c9c92dad46841e2e6536491806206228ba009b7c8af970670aef8273a30
   languageName: node
   linkType: hard
 
@@ -10455,8 +10467,8 @@ __metadata:
   linkType: hard
 
 "recyclerlistview@npm:^4.0.0":
-  version: 4.2.1
-  resolution: "recyclerlistview@npm:4.2.1"
+  version: 4.2.3
+  resolution: "recyclerlistview@npm:4.2.3"
   dependencies:
     lodash.debounce: 4.0.8
     prop-types: 15.8.1
@@ -10464,7 +10476,7 @@ __metadata:
   peerDependencies:
     react: ">= 15.2.1"
     react-native: ">= 0.30.0"
-  checksum: 48e84937f803ac2acb510b2bc36b3ef1ea9c5383540a832f80c87d7e7f933b26c59e4ffc2d7de529be55e14a8d551c4f6660a450ad220142f351e6bf6e630450
+  checksum: 847c00bdc7e22178cc20b58b8da215fb2f3f69a4edffd41db97038d0f9eb1475340793e11025f6cc160d3452967ab5724db3896920ba77d2da5208276328254f
   languageName: node
   linkType: hard
 
@@ -11485,7 +11497,7 @@ __metadata:
     react-native-bcrypt: ^2.4.0
     react-native-blurhash: ^2.0.2
     react-native-calendar-events: ^2.2.0
-    react-native-calendars: ^1.1307.0
+    react-native-calendars: ^1.1313.0
     react-native-confirmation-code-field: ^7.4.0
     react-native-contacts: ^7.0.8
     react-native-countdown-timer-hooks: ^1.0.5
@@ -11499,7 +11511,7 @@ __metadata:
     react-native-geolocation-service: ^5.3.1
     react-native-get-random-values: ^1.11.0
     react-native-google-places-autocomplete: ^2.5.1
-    react-native-image-crop-picker: ^0.38.0
+    react-native-image-crop-picker: ^0.50.1
     react-native-infinite-scroll-view: ^0.4.5
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-maps: 1.10.3

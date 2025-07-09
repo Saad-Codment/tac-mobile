@@ -55,5 +55,5 @@ const styles = StyleSheet.create({
     width: wp('67'),
     marginLeft: wp('2'),
   },
-  descText: {marginTop: hp('0.5'), marginLeft: wp('2'), fontSize: hp('1.5')},
+  descText: {marginTop: hp('1'), marginLeft: wp('2'), fontSize: hp('1.5')},
 });

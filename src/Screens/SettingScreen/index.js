@@ -109,7 +109,7 @@ const SettingScreen = ({navigation}) => {
     title: 'Account',
     arryView: [
       {
-        title: `Edit information`,
+        title: `Edit Information`,
         leftIcon: userEdit,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
@@ -167,7 +167,7 @@ const SettingScreen = ({navigation}) => {
     title: 'Friends',
     arryView: [
       {
-        title: `Friend list`,
+        title: `Friend List`,
         leftIcon: friendList,
         rightIcon: arrRight,
         onPress: () =>
@@ -230,14 +230,14 @@ const SettingScreen = ({navigation}) => {
     title: 'Calender',
     arryView: [
       {
-        title: `My events`,
+        title: `My Events`,
         leftIcon: calender,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
         onPress: () => NavigationService.navigate('MyEventScreen'),
       },
       {
-        title: 'Event history',
+        title: 'Event History',
         leftIcon: eventHistory,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
@@ -286,7 +286,7 @@ const SettingScreen = ({navigation}) => {
         onPress: () => Linking.openURL(privacyUrl),
       },
       {
-        title: 'Terms and Conditions',
+        title: 'Terms And Conditions',
         leftIcon: termNoBg,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
@@ -324,7 +324,11 @@ const SettingScreen = ({navigation}) => {
             </Pressable>
             <View style={{marginLeft: wp('2')}}>
               <TextComponent
-                text={userData?.first_name + ' ' + userData?.last_name}
+                text={
+                  userData?.first_name +
+                  ' ' +
+                  (userData?.last_name ? userData?.last_name : '')
+                }
                 styles={{fontSize: hp('2'), fontWeight: 'bold'}}
               />
               <TextComponent

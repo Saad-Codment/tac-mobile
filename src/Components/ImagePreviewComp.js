@@ -52,7 +52,7 @@ const ImagePreviewComp = ({visible, onClose, images}) => {
       <View style={styles.modalContainer}>
         {/* Close button */}
         <TouchableOpacity style={styles.closeButton} onPress={onCloseModa}>
-          <Ionicons name="close" size={30} color="black" />
+          <Ionicons name="close" size={20} color="white" />
         </TouchableOpacity>
 
         {/* Main image content */}
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     top: 40,
     right: wp('2'),
     zIndex: 1,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     // width: wp('10'),
     height: hp('5'),
     justifyContent: 'center',
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     ),
     width: Dimensions.get('window').width * 0.11,
     height: Dimensions.get('window').width * 0.11,
+    // opacity: 0.5,
   },
   imageContainer: {
     flex: 1,

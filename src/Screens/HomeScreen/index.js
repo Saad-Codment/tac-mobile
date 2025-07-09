@@ -79,7 +79,7 @@ const HomeScreen = ({navigation}) => {
         item={item}
         index={index}
         functionToUpdateLike={() => {}}
-        openBottomSheet={id => setModal(id)}
+        openBottomSheet={id => setModal({id, type: 'event'})}
         mainViewStyle={{width: wp('90'), marginLeft: wp('2')}}
         refetechKeys={['homeSuggestedFriends']}
       />
@@ -262,7 +262,7 @@ const HomeScreen = ({navigation}) => {
                     refetechKeys={refetchKey}
                     mainViewStyle={styles.cardStyles}
                     functionToUpdateLike={() => {}}
-                    openBottomSheet={id => setModal(id)}
+                    openBottomSheet={id => setModal({id, type: 'post'})}
                   />
                 ) : (
                   <UpcomingEventsComp
@@ -271,7 +271,7 @@ const HomeScreen = ({navigation}) => {
                     refetechKeys={refetchKey}
                     mainViewStyle={styles.cardStyles}
                     functionToUpdateLike={() => {}}
-                    openBottomSheet={id => setModal(id)}
+                    openBottomSheet={id => setModal({id, type: 'event'})}
                   />
                 )}
               </>
@@ -325,7 +325,8 @@ const HomeScreen = ({navigation}) => {
         <BottomModalComponent
           isVisible={Boolean(modal != null)}
           isReport
-          event_id={modal}
+          id={modal?.id}
+          type={modal?.type}
           onClose={() => setModal(null)}
         />
       )}

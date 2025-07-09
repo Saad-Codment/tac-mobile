@@ -14,6 +14,7 @@ import FriendReqComp from '../../Components/FriendReqComp';
 import {styles} from './styles';
 import MyFriendComp from '../../Components/MyFriendComp';
 import {getMyFriendsUrl} from '../../Utils/Urls';
+import ThemeButton from '../../Components/ThemeButton';
 
 const SearchScreen = ({navigation}) => {
   const {
@@ -25,17 +26,20 @@ const SearchScreen = ({navigation}) => {
     setSearchVal,
     searchVal,
     afterSearch,
+    isSearch,
   } = useSearchScreen(navigation);
 
   return (
-    <View style={{flex: 1}}>
+    <View>
       <HeaderComponent
         headerTitle={'Search Friends'}
         rightIconImg={searchIcon}
         isSearch
         searchVal
         setSearchVal={setSearchVal}
-        onRightPress={() => afterSearch()}
+        onRightPress={() => {
+          if (!isSearch) afterSearch();
+        }}
       />
       <View style={styles.mainView}>
         <MultiSelectButton
@@ -56,8 +60,8 @@ const SearchScreen = ({navigation}) => {
             <TextComponent
               text={` ${
                 selectedVal.id == 'YourFriends'
-                  ? listData?.friends?.length ?? 0
-                  : listData?.request?.length ?? 0
+                  ? listData?.friendsCount ?? 0
+                  : listData?.requestCount ?? 0
               }`}
               styles={styles.titleText}
               isLightThemeColor
@@ -83,8 +87,12 @@ const SearchScreen = ({navigation}) => {
         <AniFlatOneByOne
           data={
             selectedVal.id == 'YourFriends'
-              ? listData?.friends
-              : listData?.request
+              ? Array.isArray(listData?.friends)
+                ? listData?.friends.slice(0, 7)
+                : []
+              : Array.isArray(listData?.request)
+              ? listData?.request.slice(0, 7)
+              : []
           }
           flatViewStyle={styles.upComingFlatlistView}
           onRefresh={refetch}
@@ -111,6 +119,38 @@ const SearchScreen = ({navigation}) => {
                 }}
               />
             ),
+            ListFooterComponent: (
+              <>
+                {selectedVal.id == 'YourFriends' &&
+                  listData?.friends?.length > 7 && (
+                    <ThemeButton
+                      title={`View All ${listData?.friendsCount} friend(s)`}
+                      style={{
+                        width: wp('95'),
+                        alignSelf: 'center',
+                        height: hp('5'),
+                        marginTop: hp('1'),
+                        marginBottom: hp('1'),
+                      }}
+                      textStyle={{fontSize: hp('1.5')}}
+                    />
+                  )}
+                {selectedVal.id == 'FriendRequests' &&
+                  listData?.request?.length > 7 && (
+                    <ThemeButton
+                      title={`View All ${listData?.request} request(s)`}
+                      style={{
+                        width: wp('95'),
+                        alignSelf: 'center',
+                        height: hp('5'),
+                        marginTop: hp('1'),
+                        marginBottom: hp('1'),
+                      }}
+                      textStyle={{fontSize: hp('1.5')}}
+                    />
+                  )}
+              </>
+            ),
           }}
           InnerCompnonet={(item, index) =>
             selectedVal.id == 'YourFriends' ? (
@@ -131,6 +171,7 @@ const SearchScreen = ({navigation}) => {
                   'myFriends',
                   'friendRequests',
                 ]}
+                refetch={refetch}
               />
             )
           }

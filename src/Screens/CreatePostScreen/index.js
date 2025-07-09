@@ -27,13 +27,25 @@ import {Touchable} from '../../Components/Touchable';
 import {Colors} from '../../Theme/Variables';
 
 const CreatePostScreen = ({navigation, route}) => {
-  const {userData, postImgs, postText, onChangeVal, createPost, isEditPost} =
-    useCreatePostScreen(navigation, route);
+  const {
+    userData,
+    postImgs,
+    postText,
+    onChangeVal,
+    createPost,
+    isEditPost,
+    orientation,
+    handleOrientationCheck,
+  } = useCreatePostScreen(navigation, route);
 
   console.log('postImgspostImgspostImgspostImgs', postImgs);
 
   const imgHeight = {
-    1: {width: wp('100'), height: hp('30')},
+    1: orientation => ({
+      width: wp('100'),
+      height: orientation == 'portrait' ? hp('80') : hp('30'),
+    }),
+    [postImgs.length > 1]: () => ({}),
   };
 
   return (
@@ -122,7 +134,11 @@ const CreatePostScreen = ({navigation, route}) => {
                 source={{uri: res?.isEdit ? imageUrl(res?.uri) : res?.uri}}
                 style={{
                   ...styles.bgImg(Boolean(postImgs.length > 1)),
-                  ...imgHeight[postImgs.length],
+                  ...(postImgs.length === 1
+                    ? imgHeight[postImgs.length](
+                        res?.orientation != null ? res?.orientation : '',
+                      )
+                    : {}),
                 }}>
                 <Touchable
                   onPress={() => {

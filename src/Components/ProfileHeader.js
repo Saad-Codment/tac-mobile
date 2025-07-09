@@ -51,10 +51,13 @@ const ProfileHeader = ({
   onProfilePress,
 }) => {
   const {dispatch, getState} = useReduxStore();
+  const {userData} = getState('Auth');
+
+  console.log('userData?.profile_image', imageUrl(userData?.profile_image));
 
   const onImagePress = () => {
     dispatch({
-      payload: userDataImg,
+      payload: userData?.profile_image,
       type: types.openModal,
     });
   };
@@ -78,8 +81,6 @@ const ProfileHeader = ({
       errorMessage('Problem occurred while uploading data.');
     },
   });
-
-  const {userData} = getState('Auth');
 
   return (
     <View style={styles.headerView}>

@@ -6,6 +6,7 @@ import {calendar, calender, clock, dollarCircle, location} from '../Assets';
 import {
   convertToArray,
   convertToLocalTime,
+  formatPrice,
   getDateMonthYear,
   showFirstThreeAndCountRest,
 } from '../Services/GlobalFunctions';
@@ -29,7 +30,22 @@ const SmallEventCardsComp = ({item, onPress}) => {
         />
       </View>
       <View style={styles.secondView}>
-        <TextComponent text={item?.title} styles={styles.titleStyle} />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <TextComponent
+            text={item?.title}
+            styles={styles.titleStyle}
+            numberOfLines={2}
+          />
+          <TextComponent
+            text={formatPrice(item?.added_money) ?? 0}
+            styles={{
+              ...styles.locationText,
+              width: wp('12'),
+              textAlign: 'right',
+            }}
+            numberOfLines={1}
+          />
+        </View>
         <View style={styles.bottomView}>
           <Image
             source={location}
@@ -38,19 +54,6 @@ const SmallEventCardsComp = ({item, onPress}) => {
           />
           <TextComponent
             text={item?.address}
-            styles={styles.locationText}
-            fade
-            numberOfLines={1}
-          />
-
-          <Image
-            source={dollarCircle}
-            resizeMode="contain"
-            style={styles.locationIcon}
-            tintColor={'black'}
-          />
-          <TextComponent
-            text={item?.added_money ?? 0}
             styles={styles.locationText}
             fade
             numberOfLines={1}
@@ -135,7 +138,7 @@ const styles = StyleSheet.create({
     color: Colors.darkThemeTextColor,
     fontWeight: 'bold',
     fontSize: hp('1.5'),
-    width: wp('70'),
+    width: wp('58'),
   },
   centerView: {marginTop: hp('0.5')},
   calendarStyle: {
@@ -165,5 +168,5 @@ const styles = StyleSheet.create({
     marginTop: hp('0.5'),
   },
   locationIcon: {width: wp('3'), height: hp('2'), marginRight: wp('1')},
-  locationText: {fontSize: hp('1.2'), width: wp('30')},
+  locationText: {fontSize: hp('1.2'), width: wp('65')},
 });

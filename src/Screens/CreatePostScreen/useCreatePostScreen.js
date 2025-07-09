@@ -4,6 +4,7 @@ import {useMutation} from '@tanstack/react-query';
 import {formDataFunc} from '../../Utils/helperFunc';
 import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import {createPostUrl, updatePostUrl} from '../../Utils/Urls';
+import {checkImageOrientation} from '../../Services/GlobalFunctions';
 
 const useCreatePostScreen = ({navigate, goBack}, {params}) => {
   const {post} = params?.post ? params : {post: null};
@@ -13,6 +14,8 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
   const isEditPost = Boolean(post?.created_at);
 
   const {getState, queryClient} = useReduxStore();
+
+  const [orientation, setOrientation] = useState('');
 
   const [postState, setPostState] = useState({
     postText: post?.title || null,
@@ -36,9 +39,11 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
 
   const {mutateAsync} = useMutation({
     mutationFn: data => {
+      console.log('dataldfknbkldnflbndklfbnldfnklb', data);
       return formDataFunc(createPostUrl, data, 'images', true);
     },
     onSuccess: ({ok, data}) => {
+      console.log('hjsvxjksdkjvkjsdvkjsdkjvkjsdjkvksjdvkjsdv', data);
       if (ok) {
         successMessage('Post Created.');
         goBack();
@@ -63,7 +68,12 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
       );
       if (ok) {
         successMessage('Post Updated.');
+
         goBack();
+        if (params?.functionToUpdatePostOrEvent) {
+          params?.functionToUpdatePostOrEvent(data);
+        }
+        queryClient.invalidateQueries(['myProfilePosts']);
         if (params?.refetch()) {
           setTimeout(() => {
             params?.refetch();
@@ -72,9 +82,7 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
       } else {
         errorMessage(data?.message);
       }
-    },
-    onError: ({message}) => {
-      errorMessage('Problem occurred while uploading data.');
+      console.log('klsdbvklsdbvklbsdklvbklsdbvklsldvs', data);
     },
   });
 
@@ -97,8 +105,26 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
     } else errorMessage('Please write or upload images to create post');
   };
 
+  const handleOrientationCheck = async images => {
+    // try {
+    //   const orientationType = await checkImageOrientation(imageUrl());
+    //   setOrientation(orientationType);
+    // } catch (error) {
+    //   console.log('Error checking image orientation:', error);
+    // }
+  };
+
   const {userData} = getState('Auth');
-  return {userData, onChangeVal, postImgs, postText, createPost, isEditPost};
+  return {
+    userData,
+    onChangeVal,
+    postImgs,
+    postText,
+    createPost,
+    isEditPost,
+    orientation,
+    handleOrientationCheck,
+  };
 };
 
 export default useCreatePostScreen;

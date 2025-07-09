@@ -254,6 +254,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     width: wp('92'),
+    paddingBottom: hp('20'),
   },
   allergiesBtns: {
     // backgroundColor: 'rgba(255, 255, 255, 0.3)',

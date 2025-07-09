@@ -13,8 +13,14 @@ import {CircleImage} from '../../Components/CircleImage';
 import {addcircle} from '../../Assets';
 
 function MyEventScreen({navigation}) {
-  const {eventDate, eventsByDate, activeButton, onSelectVal} =
-    useMyEventScreen(navigation);
+  const {
+    eventDate,
+    eventsByDate,
+    activeButton,
+    onSelectVal,
+    onMonthChange,
+    refetch,
+  } = useMyEventScreen(navigation);
 
   const renderItem = useCallback(
     ({item, index}) => {
@@ -42,14 +48,15 @@ function MyEventScreen({navigation}) {
       />
       <View style={styles.innerView}>
         <UseCalendar
-          markedDates={eventDate ?? []}
+          customMarkedDates={eventDate ?? []}
           onSelectVal={e => onSelectVal(e)}
-          dotCount={eventsByDate}
+          dotCount={eventsByDate?.length == 0 ? 1 : eventsByDate?.length}
+          onMonthChange={e => onMonthChange(e)}
           // selectedVal={activeButton}
         />
       </View>
       <TextComponent text={'Events'} styles={styles.heading} />
-      {eventDate.length > 0 ? (
+      {eventDate != null && eventDate.length > 0 ? (
         <FlatList
           data={eventsByDate}
           keyExtractor={keyExtractor}
@@ -63,7 +70,7 @@ function MyEventScreen({navigation}) {
           ListEmptyComponent={
             eventsByDate != null && (
               <DataNotFound
-                onpress={() => onSelectVal(eventDate[0])}
+                onpress={() => refetch()}
                 btnStyles={{marginTop: hp('-2'), width: wp('50')}}
                 noImg={true}
                 mainViewStyles={{marginTop: hp('10')}}
@@ -76,7 +83,7 @@ function MyEventScreen({navigation}) {
       ) : (
         eventsByDate != null && (
           <DataNotFound
-            onpress={() => onSelectVal(eventDate[0])}
+            onpress={() => refetch()}
             btnStyles={{marginTop: hp('-2'), width: wp('50')}}
             noImg={true}
             mainViewStyles={{marginTop: hp('-5')}}

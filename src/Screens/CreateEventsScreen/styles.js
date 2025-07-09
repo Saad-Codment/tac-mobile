@@ -19,6 +19,12 @@ export const styles = StyleSheet.create({
   },
   viewFlex: {flexDirection: 'row'},
   textStyle: {fontSize: hp('1.2')},
+  textTouchBtn: {
+    height: hp('3'),
+    marginTop: hp('1.5'),
+    // backgroundColor: 'blue',
+    width: wp('30'),
+  },
   leftViewImg: {width: wp('5'), height: hp('3')},
   divider: {
     marginVertical: isIos ? hp('1') : hp('0'),

@@ -58,14 +58,14 @@ const styles = StyleSheet.create({
     elevation: 9,
   },
   modalHd: {
-    fontSize: hp('3.5'),
+    fontSize: hp('2'),
     fontWeight: '700',
     color: Colors.primaryColor,
     textAlign: 'center',
     marginBottom: hp('1'),
   },
   modalText: {
-    fontSize: hp('1.8'),
+    fontSize: hp('1.2'),
     textAlign: 'center',
     marginHorizontal: wp('2'),
     lineHeight: 19,

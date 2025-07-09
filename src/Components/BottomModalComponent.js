@@ -13,7 +13,7 @@ import {TextComponent} from './TextComponent';
 import {Touchable} from './Touchable';
 import {radioCircle, radioCircleOn} from '../Assets';
 import {useMutation, useQuery} from '@tanstack/react-query';
-import {getReasonsUrl, reportEventUrl} from '../Utils/Urls';
+import {getReasonsUrl, reportEventUrl, reportPostUrl} from '../Utils/Urls';
 import API from '../Utils/helperFunc';
 import KeyBoardWrapper from './KeyBoardWrapper';
 import ThemeButton from './ThemeButton';
@@ -25,7 +25,8 @@ const BottomModalComponent = ({
   children,
   showCenter,
   isReport,
-  event_id,
+  id,
+  type,
 }) => {
   const {data} = useQuery({
     queryKey: ['reasons'],
@@ -38,10 +39,11 @@ const BottomModalComponent = ({
 
   const {mutate, mutateAsync} = useMutation({
     mutationFn: data => {
-      return API.post(reportEventUrl, {
-        event_id,
+      return API.post(type == 'post' ? reportPostUrl : reportEventUrl, {
+        event_id: id,
         reason_id: selectedVal.id,
         message,
+        post_id: id,
       });
     },
     onSuccess: ({ok, data}) => {

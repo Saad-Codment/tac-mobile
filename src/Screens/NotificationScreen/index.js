@@ -21,33 +21,35 @@ const NotificationScreen = ({navigation}) => {
         goBack={() => navigation.goBack()}
         isBack
       />
-      <AniFlatOneByOne
-        data={notificationsList}
-        flatViewStyle={styles.upComingFlatlistView}
-        onRefresh={onRefresh}
-        flatListProps={{
-          ListEmptyComponent: (
-            <DataNotFound onpress={onRefresh} btnStyles={{width: wp('80')}} />
-          ),
-          ItemSeparatorComponent: (
-            <View
-              style={{
-                borderBottomColor: Colors.textGray,
-                borderBottomWidth: StyleSheet.hairlineWidth,
-                marginVertical: hp('1'),
-              }}
+      {notificationsList != null && (
+        <AniFlatOneByOne
+          data={notificationsList}
+          flatViewStyle={styles.upComingFlatlistView}
+          onRefresh={onRefresh}
+          flatListProps={{
+            ListEmptyComponent: (
+              <DataNotFound onpress={onRefresh} btnStyles={{width: wp('80')}} />
+            ),
+            ItemSeparatorComponent: (
+              <View
+                style={{
+                  borderBottomColor: Colors.textGray,
+                  borderBottomWidth: StyleSheet.hairlineWidth,
+                  marginVertical: hp('1'),
+                }}
+              />
+            ),
+          }}
+          InnerCompnonet={(item, index) => (
+            <NotificationComp
+              item={item}
+              index={index}
+              acceptReq={() => acceptReq(item?.data)}
+              declineReq={() => declineReq(item?.data)}
             />
-          ),
-        }}
-        InnerCompnonet={(item, index) => (
-          <NotificationComp
-            item={item}
-            index={index}
-            acceptReq={() => acceptReq(item?.data)}
-            declineReq={() => declineReq(item?.data)}
-          />
-        )}
-      />
+          )}
+        />
+      )}
     </>
   );
 };

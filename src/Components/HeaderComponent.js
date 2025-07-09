@@ -28,6 +28,7 @@ export const HeaderComponent = ({
   setSearchVal,
   searchBoxPlaceholder,
   isAnotherRightChildern,
+  isAllowSearch,
 }) => {
   return (
     <View style={[styles.TopHeader, {...style}]}>

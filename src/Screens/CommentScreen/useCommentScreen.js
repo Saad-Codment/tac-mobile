@@ -55,15 +55,15 @@ const useCommentScreen = ({navigate}, {params}) => {
       }
       setMessage(null);
       setIsComment(true);
-      params?.functionToUpdateComment(params?.index, true);
       refetch();
-      params?.refetch();
-      // queryClient.invalidateQueries(['comments']); // Refetch data
       if (params?.refetechKeys) {
         params?.refetechKeys.map(res => {
           queryClient.invalidateQueries([res]); // Refetch data
         });
       }
+      params?.functionToUpdateComment(params?.index, true);
+      params?.refetch();
+      // queryClient.invalidateQueries(['comments']); // Refetch data
     }
   };
 

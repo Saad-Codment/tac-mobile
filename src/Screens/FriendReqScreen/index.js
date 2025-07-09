@@ -10,7 +10,7 @@ import {styles} from './styles';
 import FriendReqComp from '../../Components/FriendReqComp';
 
 const FriendReqScreen = ({navigation}) => {
-  const {acceptReq, declineReq, friendList, onRefresh} =
+  const {acceptReq, declineReq, friendList, onRefresh, refetch} =
     useFriendReqScreen(navigation);
   return (
     <>
@@ -41,6 +41,7 @@ const FriendReqScreen = ({navigation}) => {
             item={item}
             index={index}
             refetechKeys={['friendRequests']}
+            refetch={refetch}
           />
         )}
       />

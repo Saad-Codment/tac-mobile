@@ -9,6 +9,7 @@ export const CircleImage = ({
   uri,
   radius,
   defaultSource,
+  shiftY,
 }) => {
   return (
     <BlurImage
@@ -27,6 +28,7 @@ export const CircleImage = ({
         ...styles,
       }}
       isURI={uri}
+      shiftY={shiftY}
       radius={
         radius ??
         Math.round(

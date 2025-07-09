@@ -103,7 +103,7 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     },
     onSuccess: ({ok, data}) => {
       if (ok) {
-        successMessage(data?.message);
+        // successMessage(data?.message);
       } else {
         console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
         errorMessage(data?.message);
@@ -160,7 +160,7 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     },
     onSuccess: ({ok, data}) => {
       if (ok) {
-        successMessage(data?.message);
+        // successMessage(data?.message);
       } else {
         console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
         errorMessage(data?.message);

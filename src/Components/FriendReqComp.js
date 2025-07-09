@@ -16,6 +16,7 @@ const FriendReqComp = ({
   onAcceptReq,
   onCancelReq,
   refetechKeys,
+  refetch,
 }) => {
   const {acceptFriendReq, rejectFriendReq} = useFriendServices();
 
@@ -39,7 +40,11 @@ const FriendReqComp = ({
       </Pressable>
       <View style={styles.secView}>
         <TextComponent
-          text={item?.sender?.first_name + ' ' + item?.sender?.last_name}
+          text={
+            item?.sender?.first_name +
+            ' ' +
+            (item?.sender?.last_name ? item?.sender?.last_name : '')
+          }
           styles={styles.titleStyle}
         />
         {/* <View style={styles.bottomView}>
@@ -58,6 +63,7 @@ const FriendReqComp = ({
             }}
             onPress={async () => {
               await acceptFriendReq.mutateAsync(item?.id);
+              refetch();
               if (refetechKeys) {
                 refetechKeys.map(res => {
                   queryClient.invalidateQueries([res]); // Refetch data
@@ -74,6 +80,7 @@ const FriendReqComp = ({
             }}
             onPress={async () => {
               await rejectFriendReq.mutateAsync(item?.id);
+              refetch();
               if (refetechKeys) {
                 refetechKeys.map(res => {
                   queryClient.invalidateQueries([res]); // Refetch data

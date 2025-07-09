@@ -166,7 +166,7 @@ const ProfileScreen = ({navigation}) => {
             />
             <TextComponent
               text={userData?.email}
-              styles={{fontSize: hp('1.5')}}
+              styles={{fontSize: hp('1.2'), marginVertical: hp('0.5')}}
               fade
             />
             <MultiView

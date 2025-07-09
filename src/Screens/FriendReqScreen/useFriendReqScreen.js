@@ -34,6 +34,7 @@ const useFriendReqScreen = () => {
       queryClient.invalidateQueries({queryKey: ['friendRequests']});
     },
     onRefresh,
+    refetch,
   };
 };
 

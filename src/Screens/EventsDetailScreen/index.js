@@ -23,6 +23,7 @@ import useEventDetailScreen from './useEventsDetailScreen';
 import {
   checkParagraphForUndefined,
   convertToLocalTime,
+  formatPrice,
   getDateMonthYear,
 } from '../../Services/GlobalFunctions';
 import {imageUrl} from '../../Utils/Urls';
@@ -40,10 +41,14 @@ const EventsDetailScreen = ({navigation, route}) => {
 
   const {dispatch} = useReduxStore();
 
+  console.log('sjkdbvkjlsdbkjvbsdkbvsdbvksdlbvksdbvlsd', eventData?.images);
+
   const onImagePress = isEvent => {
     dispatch({
       payload: isEvent
-        ? JSON.parse(eventData?.images)[0]
+        ? eventData?.images
+          ? JSON.parse(eventData?.images)[0]
+          : ''
         : eventData?.user?.profile_image,
       type: types.openModal,
     });
@@ -96,7 +101,7 @@ const EventsDetailScreen = ({navigation, route}) => {
   const bottomView = [
     {
       title: 'Added Money',
-      rightText: `$ ${eventData?.added_money}` ?? 'Not Available',
+      rightText: `${formatPrice(eventData?.added_money)}` ?? 'Not Available',
       onPress: () => {},
       rightTextStyles: {color: Colors.primaryColor},
     },
@@ -173,7 +178,9 @@ const EventsDetailScreen = ({navigation, route}) => {
           <TextComponent
             text={
               eventData?.user?.first_name
-                ? `${eventData?.user?.first_name} ${eventData?.user?.last_name}`
+                ? `${eventData?.user?.first_name} ${
+                    eventData?.user?.last_name ? eventData?.user?.last_name : ''
+                  }`
                 : 'System suggested'
             }
             styles={{
@@ -203,7 +210,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                 {length: eventData.likes_count},
                 (_, i) => i + 1,
               )}
-              textAfterCount={'peoples like this event.'}
+              textAfterCount={'people(s) like this event.'}
             />
           </View>
         )}
@@ -228,15 +235,17 @@ const EventsDetailScreen = ({navigation, route}) => {
               styles={{width: wp('60'), fontSize: hp('1.2')}}
             />
           </View>
-          <TextComponent
-            text={'View Location'}
-            styles={{color: Colors.lightBlueTextColor, fontSize: hp('1.2')}}
-            onPress={() =>
-              Linking.openURL(
-                `https://www.google.com/maps/search/?api=1&query=${eventData?.latitude}%2C${eventData?.longitude}`,
-              )
-            }
-          />
+          {eventData?.latitude && (
+            <TextComponent
+              text={'View Location'}
+              styles={{color: Colors.lightBlueTextColor, fontSize: hp('1.2')}}
+              onPress={() =>
+                Linking.openURL(
+                  `https://www.google.com/maps/search/?api=1&query=${eventData?.latitude}%2C${eventData?.longitude}`,
+                )
+              }
+            />
+          )}
         </View>
 
         <View style={styles.eventTimeViewGray}>

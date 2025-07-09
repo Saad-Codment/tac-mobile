@@ -12,30 +12,35 @@ const BlurImage = ({
   isURI,
   defaultSource,
   resizeMode,
+  shiftY = 0, // NEW: shift image upward
 }) => {
   const [load, setLoad] = useState(Boolean(!defaultSource));
   const imageSource = {uri, priority: FastImage.priority.high};
+
   function hasHttpProtocol(url) {
-    // Check if the URL starts with http:// or https://
     return /^https?:\/\//i.test(url);
   }
 
-  // const imageSource = uri
-  //   ? {uri, priority: FastImage.priority.normal}
-  //   : background;
   return (
     <View
       style={{
         position: 'relative',
-        overflow: 'hidden',
+        overflow: 'hidden', // Ensure overflow is hidden to crop excess image
         borderRadius: radius ?? 10,
       }}>
       <FastImage
-        style={[styles, {zIndex: -1, position: 'relative'}]}
+        style={[
+          styles,
+          {
+            zIndex: -1,
+            position: 'relative',
+            transform: [{translateY: shiftY}], // shift image upward
+          },
+        ]}
         source={Boolean(hasHttpProtocol(uri) && isURI) ? imageSource : uri}
         defaultSource={defaultSource ? defaultSource() : null}
         onLoad={() => setLoad(false)}
-        resizeMode={resizeMode ?? 'cover'}
+        resizeMode={resizeMode ?? 'cover'} // cover mode with custom offset
       />
       {load && (
         <Blurhash

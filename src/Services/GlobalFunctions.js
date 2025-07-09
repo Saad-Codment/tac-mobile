@@ -533,6 +533,9 @@ const getIdsFromArry = (arry, key) => {
 const uploadFromGalary = async isMulti => {
   const imageData = await ImageCropPicker.openPicker({
     cropping: true,
+    width: 300, // set desired resolution
+    height: 300,
+    // compressImageQuality: 0.8,
     multiple: isMulti ?? false,
   });
 
@@ -1011,6 +1014,60 @@ const checkImageOrientation = imageUrl => {
 };
 // Example usage:
 
+function formatDateToYMD(dateStr) {
+  // input "Mon Jul 14 2025";
+
+  const date = new Date(dateStr);
+
+  if (isNaN(date)) return null; // invalid date
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+
+  // output: "2025-07-14"
+}
+
+function formatDateToLong(dateStr) {
+  // input "Mon Jul 14 2025";
+  const date = new Date(dateStr);
+
+  if (isNaN(date)) return null; // Invalid date
+
+  const options = {year: 'numeric', month: 'long', day: 'numeric'};
+  return date.toLocaleDateString('en-US', options); // "July 14, 2025"
+  // output: "July 14, 2025"
+}
+
+function getFormattedTime(dateStr) {
+  const date = new Date(dateStr);
+  if (isNaN(date)) return null;
+
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  return `${hours}:${minutes}:${seconds}`;
+  // output: "23:00:00"
+}
+
+function getCustom12HourTime(dateStr) {
+  const date = new Date(dateStr);
+  if (isNaN(date)) return null;
+
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const period = hours >= 12 ? 'pm' : 'am';
+
+  hours = hours % 12;
+  if (hours === 0) hours = 12; // 12 AM or 12 PM
+
+  return `${hours}:${minutes} ${period}`;
+  // output: "12.21 .AM"
+}
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -1061,4 +1118,8 @@ export {
   mergeIds,
   formatPrice,
   checkImageOrientation,
+  formatDateToYMD,
+  formatDateToLong,
+  getFormattedTime,
+  getCustom12HourTime,
 };

@@ -18,6 +18,8 @@ const useMyProfileScreen = ({navigate, addListener}, {params}) => {
   const [eventsList, setEventsList] = useState([]); // Combined list of events
   const [hasNextPage, setHasNextPage] = useState(true); // Flag to check if more data exists
   const [modal, setModal] = useState(null); // Flag to check if more data exists
+  const [isHitFirstTime, setIsHitFirstTime] = useState(false);
+
   const {queryClient, getState} = useReduxStore();
   const {userData} = getState('Auth');
   const {data} = useQuery({
@@ -25,12 +27,13 @@ const useMyProfileScreen = ({navigate, addListener}, {params}) => {
     queryFn: () => API.get(getUserProfileUrl + userData?.id),
   });
 
-  const {isFetching, isRefetching, refetch} = useQuery({
+  const {isFetching, isRefetching, refetch, isSuccess} = useQuery({
     queryKey: ['myProfilePosts', page],
     queryFn: async () => {
       const response = await API.get(
         `${getUserPostsUrl + userData?.id}?page=${page}`,
       );
+      setIsHitFirstTime(true);
       if (response.ok) {
         setTotalPages(response?.data?.total_pages);
         if (page == response?.data?.total_pages) {
@@ -75,6 +78,13 @@ const useMyProfileScreen = ({navigate, addListener}, {params}) => {
               }
             : item,
         ),
+      );
+  };
+  const functionToUpdatePostOrEvent = (index, newItem) => {
+    console.log('adjgvsjdbvsdbvkjsbdjvbsdkjvbsdbvsdbkvsd', index, newItem);
+    if (newItem)
+      setEventsList(prev =>
+        prev.map((item, i) => (i === index ? newItem : item)),
       );
   };
 
@@ -148,6 +158,9 @@ const useMyProfileScreen = ({navigate, addListener}, {params}) => {
     allData: associationsData?.data?.data?.associations,
     modalVal,
     onOpenModal,
+    functionToUpdatePostOrEvent,
+    isSuccess,
+    isHitFirstTime,
   };
 };
 

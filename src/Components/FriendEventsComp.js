@@ -20,6 +20,7 @@ import {Colors} from '../Theme/Variables';
 import {MultiSelectButton} from './MultiSelectButton';
 import {
   convertToCustomTimeFormat,
+  formatPrice,
   getDateMonthYear,
 } from '../Services/GlobalFunctions';
 import {Touchable} from './Touchable';
@@ -125,10 +126,13 @@ const FriendEventsComp = ({
           <Image
             source={dollarCircle}
             resizeMode="contain"
-            tintColor={'black'}
+            tintColor={'white'}
             style={styles.dollarIcon}
           />
-          <TextComponent text={item?.added_money ?? 0} styles={styles.price} />
+          <TextComponent
+            text={formatPrice(item?.added_money) ?? 0}
+            styles={styles.price}
+          />
         </View>
       </View>
       <View style={styles.centerView}>

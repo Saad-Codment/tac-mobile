@@ -68,6 +68,7 @@ const UpcomingEventsComp = ({
   openBottomSheet,
   refetch,
   functionToDelete,
+  functionToUpdatePostOrEvent,
 }) => {
   const {likeAndDisLikeEvent, shareEvent, deleteEvent} = useFriendServices();
 
@@ -86,7 +87,10 @@ const UpcomingEventsComp = ({
 
   const onEditPost = item => {
     // Navigate to edit screen or open modal
-    NavigationService.navigate('CreateEventsScreen', {event: item});
+    NavigationService.navigate('CreateEventsScreen', {
+      event: item,
+      functionToUpdatePostOrEvent: data => functionToUpdatePostOrEvent(data),
+    });
   };
 
   const onDeletePost = item => {
@@ -101,6 +105,7 @@ const UpcomingEventsComp = ({
           style: 'destructive',
           onPress: async () => {
             await deleteEvent.mutateAsync(item?.id);
+            refetch();
             functionToDelete(index);
             // setTimeout(() => {
             // }, 500);
@@ -156,30 +161,31 @@ const UpcomingEventsComp = ({
             />
           </View>
         </View>
-        {userData?.id != item?.user_id ? (
-          <TextComponent
-            text={'Report'}
-            fade
-            styles={styles.reportText}
-            onPress={() => {
-              if (userData?.id != item?.user_id) openBottomSheet(item?.id);
-            }}
-          />
-        ) : (
-          <Menu>
-            <MenuTrigger>
-              <Image
-                source={dotsVertical}
-                resizeMode="contain"
-                style={{width: wp('7'), height: hp('5'), marginLeft: wp('8')}}
-              />
-            </MenuTrigger>
-            <MenuOptions>
-              <MenuOption onSelect={() => onEditPost(item)} text="Edit" />
-              <MenuOption onSelect={() => onDeletePost(item)} text="Delete" />
-            </MenuOptions>
-          </Menu>
-        )}
+        {item?.first_name &&
+          (userData?.id != item?.user_id ? (
+            <TextComponent
+              text={'Report'}
+              fade
+              styles={styles.reportText}
+              onPress={() => {
+                if (userData?.id != item?.user_id) openBottomSheet(item?.id);
+              }}
+            />
+          ) : (
+            <Menu>
+              <MenuTrigger>
+                <Image
+                  source={dotsVertical}
+                  resizeMode="contain"
+                  style={{width: wp('7'), height: hp('5'), marginLeft: wp('8')}}
+                />
+              </MenuTrigger>
+              <MenuOptions>
+                <MenuOption onSelect={() => onEditPost(item)} text="Edit" />
+                <MenuOption onSelect={() => onDeletePost(item)} text="Delete" />
+              </MenuOptions>
+            </Menu>
+          ))}
       </View>
       <View style={styles.priceMainView}>
         <TextComponent
@@ -192,7 +198,7 @@ const UpcomingEventsComp = ({
           <Image
             source={dollarCircle}
             resizeMode="contain"
-            tintColor={'black'}
+            tintColor={'white'}
             style={styles.dollarIcon}
           />
           <TextComponent
@@ -672,5 +678,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // width: wp('63'),
     alignItems: 'center',
+    // backgroundColor: 'red',
+    paddingHorizontal: wp('1'),
   },
 });
