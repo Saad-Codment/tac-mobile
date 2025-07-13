@@ -108,6 +108,7 @@ const ProfileHeader = ({
                         const images = await uploadFromCamera();
                         mutateAsync({
                           profile_image: images,
+                          first_name: userData?.first_name,
                         });
                       },
                     },

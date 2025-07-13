@@ -31,10 +31,11 @@ import {
   getDateMonthYear,
   showFirstThreeAndCountRest,
   formatPrice,
+  getCalenderPerComfirm,
 } from '../Services/GlobalFunctions';
 import {Touchable} from './Touchable';
 import NavigationService from '../Services/NavigationService';
-import {imageUrl} from '../Utils/Urls';
+import {imageUrl, unFollowEventsUrl} from '../Utils/Urls';
 import useFriendServices from '../Services/FriendServices';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {types} from '../Redux/types';
@@ -45,6 +46,9 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 import {useState} from 'react';
+import {useMutation} from '@tanstack/react-query';
+import {errorMessage, successMessage} from '../Config/NotificationMessage';
+import ReactNativeCalendarEvents from 'react-native-calendar-events';
 
 const tags = [
   {
@@ -70,6 +74,40 @@ const UpcomingEventsComp = ({
   functionToDelete,
   functionToUpdatePostOrEvent,
 }) => {
+  const removeCalendarEvent = async () => {
+    try {
+      const permission = await ReactNativeCalendarEvents.checkPermissions();
+      if (permission !== 'authorized') {
+        await ReactNativeCalendarEvents.requestPermissions();
+      }
+
+      await getCalenderPerComfirm(); // assuming this fetches a valid calendar list
+
+      // Get all calendars
+      const calendars = await ReactNativeCalendarEvents.findCalendars();
+      const modifiableCalendar = calendars.find(cal => cal.allowsModifications);
+
+      const newCalendarId = modifiableCalendar?.id || calendars[0]?.id;
+      // if (data?.data?.calender_id != newCalendarId) {
+      //   Alert.alert(
+      //     'Calendar Mismatch',
+      //     'The event does not belong to the selected calendar.',
+      //   );
+      // }
+
+      const success = await ReactNativeCalendarEvents.removeEvent(
+        item?.record_id,
+      );
+      if (success) {
+        console.log('Event removed successfully');
+      } else {
+        console.log('Event removal failed');
+      }
+    } catch (error) {
+      console.log('Error removing event:', error);
+    }
+  };
+
   const {likeAndDisLikeEvent, shareEvent, deleteEvent} = useFriendServices();
 
   const [dummy, setDummy] = useState(1);
@@ -104,7 +142,9 @@ const UpcomingEventsComp = ({
           text: 'Delete',
           style: 'destructive',
           onPress: async () => {
+            console.log('klsdbvklsbdkvlbsdklvbksdbvlsd', item);
             await deleteEvent.mutateAsync(item?.id);
+            await removeCalendarEvent();
             refetch();
             functionToDelete(index);
             // setTimeout(() => {

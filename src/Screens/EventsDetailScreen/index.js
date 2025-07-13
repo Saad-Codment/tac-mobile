@@ -41,7 +41,7 @@ const EventsDetailScreen = ({navigation, route}) => {
 
   const {dispatch} = useReduxStore();
 
-  console.log('sjkdbvkjlsdbkjvbsdkbvsdbvksdlbvksdbvlsd', eventData?.images);
+  console.log('sjkdbvkjlsdbkjvbsdkbvsdbvksdlbvksdbvlsd', eventData);
 
   const onImagePress = isEvent => {
     dispatch({

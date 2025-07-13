@@ -7,6 +7,7 @@ import RNCalendarEvents from 'react-native-calendar-events';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   createEventUrl,
+  followEventsUrl,
   getEventDetailsUrl,
   updateEventUrl,
 } from '../../Utils/Urls';
@@ -162,6 +163,18 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
   const dynamicRoute = (screenName, screenData) =>
     navigate(screenName, screenData);
 
+  const {mutateAsync} = useMutation({
+    mutationFn: data => {
+      console.log('Following event with data:', data);
+      return API.post(followEventsUrl, {
+        event_id: data?.id,
+        calendar_id: data?.calender_id,
+        record_id: data?.record_id,
+      });
+    },
+    onSuccess: ({ok, data}) => {},
+  });
+
   const createEventFun = async ({
     eventTitle,
     eventImg,
@@ -240,7 +253,7 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
 
           const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-          const eventId = await RNCalendarEvents.saveEvent(eventTitle, {
+          const recordId = await RNCalendarEvents.saveEvent(eventTitle, {
             calendarId,
             startDate: new Date(eventStartDate).toISOString(),
             endDate: new Date(eventEndDate).toISOString(),
@@ -248,8 +261,11 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
             notes: eventLocation.locationName,
             timeZone,
           });
-
-          console.log('Calendar Event Saved with ID:', eventId);
+          await mutateAsync({
+            id: data?.id,
+            calender_id: calendarId,
+            record_id: recordId,
+          });
         }
 
         // Post-save logic
