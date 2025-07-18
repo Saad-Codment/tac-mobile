@@ -42,6 +42,8 @@
 			Contacts are securely uploaded on our server for you to see other users of the app.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>To track your location , you need to allow access to your location</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>To track your location , you need to allow access to your location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To add profile picture , you need to allow access to your photo gallery</string>
 	<key>NSRemindersUsageDescription</key>

@@ -461,6 +461,11 @@ export const step2 = [
     image: female,
     title: 'Female',
   },
+  {
+    id: 3,
+    image: female,
+    title: 'Prefer not to say',
+  },
 ];
 export const step3 = [
   {
@@ -479,3 +484,8 @@ export const step3 = [
     title: 'No',
   },
 ];
+
+export const allSubID = {
+  monthly_12062025: 'Monthly',
+  yearly_12062025: 'Yearly',
+};

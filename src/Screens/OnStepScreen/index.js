@@ -40,10 +40,15 @@ const OnStepScreen = ({navigation}) => {
     handleNextStep,
     transport,
     dynamicRoute,
-    currentDate,
+    // currentDate,
     modalState,
     setModalState,
   } = useOnStepScreen(navigation);
+
+  // Calculate 13 years ago from today
+  const currentDate = new Date();
+  const maxSelectableDate = new Date();
+  maxSelectableDate.setFullYear(currentDate.getFullYear() - 13);
 
   const renderSteps = {
     1: () => {
@@ -60,10 +65,40 @@ const OnStepScreen = ({navigation}) => {
           /> */}
 
           <TextComponent
-            text={formatDateToCustomFormat(age ?? currentDate)}
+            text={formatDateToCustomFormat(age ?? maxSelectableDate)}
             onPress={() => setModalState(true)}
-            styles={styles.textStyle}
+            styles={{
+              ...styles.textStyle,
+              borderRadius: 20,
+              paddingVertical: hp('1.6'),
+              backgroundColor: Boolean(age != null)
+                ? Colors.black
+                : 'transparent',
+              color: Boolean(age == null) ? Colors.black : 'white',
+            }}
           />
+
+          <Pressable
+            style={{
+              ...styles.gender(Boolean(age == null)),
+              marginTop: hp('2'),
+              justifyContent: 'center',
+            }}
+            // key={item?.id}
+            onPress={() => onSelectValue('age', null)}>
+            {/* <Image
+                  source={item?.image}
+                  style={styles.catImage(
+                    Boolean(onBoardData?.gender == item.title),
+                  )}
+                /> */}
+            <TextComponent
+              text={step2[2]?.title}
+              styles={{
+                ...styles.genderTitle(Boolean(age == null)),
+              }}
+            />
+          </Pressable>
 
           {modalState && (
             <View style={styles.agePicker}>
@@ -72,6 +107,7 @@ const OnStepScreen = ({navigation}) => {
                 open={modalState}
                 date={age ?? currentDate}
                 is24hourSource="device"
+                maximumDate={maxSelectableDate} // 👈 This prevents dates after 13 years ago
                 locale="en"
                 modal
                 onConfirm={e => {

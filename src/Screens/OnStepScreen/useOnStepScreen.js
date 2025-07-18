@@ -16,6 +16,7 @@ import {
   getIdsFromArry,
 } from '../../Services/GlobalFunctions';
 import {Alert} from 'react-native';
+import {step2} from '../../Utils/localDB';
 
 const useOnStepScreen = ({navigate}) => {
   const {dispatch} = useReduxStore();
@@ -49,7 +50,7 @@ const useOnStepScreen = ({navigate}) => {
 
   const [onBoardData, setOnboardData] = useState({
     age: null,
-    gender: null,
+    gender: step2[2]?.title,
     sport: [],
     ageRange: null,
     transport: null,
@@ -92,7 +93,7 @@ const useOnStepScreen = ({navigate}) => {
         association_ids: getIdsFromArry(association, 'id'),
         event_type_ids: getIdsFromArry(sport, 'id'),
         gender: gender && gender.toLowerCase(),
-        age: formatDate(age ?? currentDate),
+        age: age ? formatDate(age) : null,
         transport_id: 1,
       });
     },

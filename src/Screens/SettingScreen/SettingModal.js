@@ -2,6 +2,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   TextInput,
   View,
@@ -25,12 +26,12 @@ import {
 } from '../../Services/GlobalFunctions';
 import {imageUrl} from '../../Utils/Urls';
 import DatePicker from 'react-native-date-picker';
+import {step2} from '../../Utils/localDB';
 
 const ageRange = Array.from({length: 23}, (_, i) => {
   const age = 18 + i;
   return {label: String(age), value: String(age)};
 });
-const currentDate = new Date();
 const SettingModal = ({
   activeTags,
   isModal,
@@ -48,6 +49,11 @@ const SettingModal = ({
     eventType: activeTags?.eventTypes,
     associations: activeTags?.eventAssociations,
   });
+
+  // Calculate 13 years ago from today
+  const currentDate = new Date();
+  const maxSelectableDate = new Date();
+  maxSelectableDate.setFullYear(currentDate.getFullYear() - 13);
 
   const [modalState, setModalState] = useState(false);
 
@@ -75,18 +81,40 @@ const SettingModal = ({
         <View style={styles.ageViewModal}>
           <TextComponent
             text={formatDateToCustomFormat(
-              innerDataState?.userAge ?? currentDate,
+              innerDataState?.userAge ?? maxSelectableDate,
             )}
             onPress={() => setModalState(true)}
             styles={styles.textStyle}
           />
+
+          <Pressable
+            style={{
+              ...styles.gender(Boolean(innerDataState?.userAge == null)),
+              marginTop: hp('2'),
+              justifyContent: 'center',
+            }}
+            // key={item?.id}
+            onPress={() => onSelectValue('age', null)}>
+            {/* <Image
+                  source={item?.image}
+                  style={styles.catImage(
+                    Boolean(onBoardData?.gender == item.title),
+                  )}
+                /> */}
+            <TextComponent
+              text={step2[2]?.title}
+              styles={styles.genderTitle(
+                Boolean(innerDataState?.userAge == null),
+              )}
+            />
+          </Pressable>
 
           {modalState && (
             <View style={styles.agePicker}>
               <DatePicker
                 mode={'date'}
                 open={modalState}
-                date={new Date(innerDataState?.userAge) ?? currentDate}
+                date={new Date(innerDataState?.userAge) ?? maxSelectableDate}
                 is24hourSource="device"
                 locale="en"
                 modal
@@ -176,7 +204,7 @@ const SettingModal = ({
             items={[
               {id: 'male', name: 'Male'},
               {id: 'female', name: 'Female'},
-              {id: 'other', name: 'Other'},
+              {id: 'prefer not to say', name: 'Prefer not to say'},
             ]}
             selectedAlter={userGender?.id ? userGender : {id: userGender}}
             btnStyle={{

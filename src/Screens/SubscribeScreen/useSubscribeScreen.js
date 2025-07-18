@@ -37,7 +37,8 @@ const useSubscribeScreen = () => {
         // if (data?.start_trial_at) goBack();
       } else {
         dispatch(loadingFalse());
-        errorMessage(data?.message ?? data?.error ?? 'Some thing wrong');
+        console.log('lkndklsnkslndvklsdnkvnsdvkndvksd', data);
+        // errorMessage(data?.message ?? data?.error ?? 'Some thing wrong');
       }
     },
   });
@@ -81,13 +82,18 @@ const useSubscribeScreen = () => {
       const {customerInfo} = await Purchases.purchaseStoreProduct(
         PurchasesPackage,
       );
+      console.log(
+        'lkdbvklsbdklvbsdklbvlsdbvksdbvklsdbvlksdbvklsd',
+        customerInfo.entitlements.active,
+      );
 
       if (customerInfo?.originalAppUserId != null) {
         mutate({
           customer_id: customerInfo.originalAppUserId,
           identifier:
-            customerInfo.entitlements.active['AppStorePlans'].productIdentifier,
-          start_trial_at: formattedDate,
+            customerInfo.entitlements.active['Tac subscription group']
+              .productIdentifier,
+          trial_start_at: formattedDate,
         });
       }
     } catch (error) {
