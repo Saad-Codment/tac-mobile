@@ -27,9 +27,9 @@
       android:launchMode="singleTask"
       android:windowSoftInputMode="adjustResize"
       android:exported="true">
-      <activity
+      <!-- <activity
         android:name="com.your.Activity"
-        android:launchMode="standard" />  <!-- or singleTop -->
+        android:launchMode="standard" />  or singleTop -->
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

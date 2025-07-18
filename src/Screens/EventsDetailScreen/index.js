@@ -23,6 +23,7 @@ import useEventDetailScreen from './useEventsDetailScreen';
 import {
   checkParagraphForUndefined,
   convertToLocalTime,
+  formatDateToLong,
   formatPrice,
   getDateMonthYear,
 } from '../../Services/GlobalFunctions';
@@ -270,9 +271,10 @@ const EventsDetailScreen = ({navigation, route}) => {
                 }}
               />
               <TextComponent
-                text={`${getDateMonthYear(eventData?.from_date)?.monthName} ${
-                  getDateMonthYear(eventData?.from_date)?.day
-                }, ${getDateMonthYear(eventData?.from_date)?.year}`}
+                // text={`${getDateMonthYear(eventData?.from_date)?.monthName} ${
+                //   getDateMonthYear(eventData?.from_date)?.day
+                // }, ${getDateMonthYear(eventData?.from_date)?.year}`}
+                text={`${formatDateToLong(eventData?.from_date)}`}
                 styles={{fontSize: hp('1.2')}}
               />
               <Image
@@ -315,9 +317,10 @@ const EventsDetailScreen = ({navigation, route}) => {
                 }}
               />
               <TextComponent
-                text={`${getDateMonthYear(eventData?.to_date)?.monthName} ${
-                  getDateMonthYear(eventData?.to_date)?.day
-                }, ${getDateMonthYear(eventData?.to_date)?.year}`}
+                // text={`${getDateMonthYear(eventData?.to_date)?.monthName} ${
+                //   getDateMonthYear(eventData?.to_date)?.day
+                // }, ${getDateMonthYear(eventData?.to_date)?.year}`}
+                text={formatDateToLong(eventData?.to_date)}
                 styles={{fontSize: hp('1.2')}}
               />
               <Image

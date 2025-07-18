@@ -14,7 +14,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 
-const TieGuy = () => (
+const Tac = () => (
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
@@ -43,4 +43,4 @@ if (View.defaultProps == null) {
   View.defaultProps.allowFontScaling = false;
 }
 
-AppRegistry.registerComponent(appName, () => TieGuy);
+AppRegistry.registerComponent(appName, () => Tac);

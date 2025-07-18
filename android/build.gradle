@@ -1,21 +1,23 @@
 buildscript {
     ext {
-        buildToolsVersion = "34.0.0"
+        buildToolsVersion = "34.0.0" // This is fine, still compatible with compileSdk 35
         minSdkVersion = 23
-        compileSdkVersion = 34
-        targetSdkVersion = 34
+        compileSdkVersion = 35
+        targetSdkVersion = 35
         ndkVersion = "26.1.10909125"
         kotlinVersion = "1.9.22"
     }
+
     repositories {
         google()
         mavenCentral()
     }
+
     dependencies {
-        classpath("com.android.tools.build:gradle")
+        classpath("com.android.tools.build:gradle:8.6.0")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
-            classpath 'com.google.gms:google-services:4.4.2'
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22") // ✅ match your ext.kotlinVersion
+        classpath("com.google.gms:google-services:4.4.2")
     }
 }
 

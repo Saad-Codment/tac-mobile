@@ -1,153 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>TAC</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>CFBundleDevelopmentRegion</key>
-		<string>en</string>
-		<key>CFBundleDisplayName</key>
-		<string>TAC</string>
-		<key>CFBundleExecutable</key>
-		<string>$(EXECUTABLE_NAME)</string>
-		<key>CFBundleIdentifier</key>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-		<key>CFBundleInfoDictionaryVersion</key>
-		<string>6.0</string>
-		<key>CFBundleName</key>
-		<string>$(PRODUCT_NAME)</string>
-		<key>CFBundlePackageType</key>
-		<string>APPL</string>
-		<key>CFBundleShortVersionString</key>
-		<string>$(MARKETING_VERSION)</string>
-		<key>CFBundleSignature</key>
-		<string>????</string>
-		<key>CFBundleVersion</key>
-		<string>$(CURRENT_PROJECT_VERSION)</string>
-		<key>LSRequiresIPhoneOS</key>
-		<true />
-		<key>NSAppTransportSecurity</key>
-		<dict>
-			<key>NSAllowsArbitraryLoads</key>
-			<false />
-			<key>NSAllowsLocalNetworking</key>
-			<true />
-		</dict>
-		<key>NSCalendarsFullAccessUsageDescription</key>
-		<string>Your app requires access to the calendar for scheduling purposes.</string>
-		<key>NSCalendarsUsageDescription</key>
-		<string>Your app requires access to the calendar for scheduling purposes.</string>
-		<key>NSCameraUsageDescription</key>
-		<string>To add profile picture , you need to allow access to your photo camera</string>
-		<key>NSContactsUsageDescription</key>
-		<string>Get connected with your friends and family! Our app needs access to your contacts.
-			Contacts are securely uploaded on our server for you to see other users of the app.</string>
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string></string>
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>To add profile picture , you need to allow access to your photo gallery</string>
-		<key>NSRemindersUsageDescription</key>
-		<string>Your app requires access to reminders.</string>
-		<key>NSUserNotificationsUsageDescription</key>
-		<string>We use notifications to keep you updated with important alerts, reminders, and
-			personalized updates. Please enable notifications to stay informed!</string>
-		<key>UIAppFonts</key>
-		<array>
-			<string>Quicksand-Bold.ttf</string>
-			<string>Quicksand-Light.ttf</string>
-			<string>Quicksand-Medium.ttf</string>
-			<string>Quicksand-Regular.ttf</string>
-			<string>Quicksand-SemiBold.ttf</string>
-			<string>AntDesign.ttf</string>
-			<string>Entypo.ttf</string>
-			<string>EvilIcons.ttf</string>
-			<string>Feather.ttf</string>
-			<string>FontAwesome.ttf</string>
-			<string>FontAwesome5_Brands.ttf</string>
-			<string>FontAwesome5_Regular.ttf</string>
-			<string>FontAwesome5_Solid.ttf</string>
-			<string>Fontisto.ttf</string>
-			<string>Foundation.ttf</string>
-			<string>Ionicons.ttf</string>
-			<string>MaterialCommunityIcons.ttf</string>
-			<string>MaterialIcons.ttf</string>
-			<string>Octicons.ttf</string>
-			<string>SimpleLineIcons.ttf</string>
-			<string>Zocial.ttf</string>
-			<string>Rubik-Black.ttf</string>
-			<string>Rubik-BlackItalic.ttf</string>
-			<string>Rubik-Bold.ttf</string>
-			<string>Rubik-BoldItalic.ttf</string>
-			<string>Rubik-ExtraBold.ttf</string>
-			<string>Rubik-ExtraBoldItalic.ttf</string>
-			<string>Rubik-Italic.ttf</string>
-			<string>Rubik-Light.ttf</string>
-			<string>Rubik-LightItalic.ttf</string>
-			<string>Rubik-Medium.ttf</string>
-			<string>Rubik-MediumItalic.ttf</string>
-			<string>Rubik-Regular.ttf</string>
-			<string>Rubik-SemiBold.ttf</string>
-			<string>Rubik-SemiBoldItalic.ttf</string>
-			<string>ProximaNova-Regular.otf</string>
-			<string>Proxima-Nova-Thin.otf</string>
-			<string>Proxima-Nova-Extrabold.otf</string>
-			<string>Proxima-Nova-Bold.otf</string>
-			<string>Proxima-Nova-Black.otf</string>
-			<string>Proxima-Nova-Alt-Thin.otf</string>
-			<string>Proxima-Nova-Alt-Light.otf</string>
-			<string>Proxima-Nova-Alt-Bold.otf</string>
-		</array>
-		<key>UIBackgroundModes</key>
-		<array>
-			<string>fetch</string>
-			<string>remote-notification</string>
-		</array>
-		<key>UILaunchStoryboardName</key>
-		<string>LaunchScreen</string>
-		<key>UIRequiredDeviceCapabilities</key>
-		<array>
-			<string>arm64</string>
-		</array>
-		<key>UISupportedInterfaceOrientations</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-		</array>
-		<key>UISupportedInterfaceOrientations~ipad</key>
-		<array>
-			<string>UIInterfaceOrientationLandscapeLeft</string>
-			<string>UIInterfaceOrientationLandscapeRight</string>
-			<string>UIInterfaceOrientationPortrait</string>
-		</array>
-		<key>UIViewControllerBasedStatusBarAppearance</key>
-		<false />
-		<key>CFBundleURLTypes</key>
-		<array>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>fb1254157088825041</string>
-				</array>
-			</dict>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
-			</dict>
-			<dict>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>Tac</string>
-				</array>
-			</dict>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>com.googleusercontent.apps.433413678709-2dkgedloqvurj77k6474e09slpatdfta</string>
-				</array>
-			</dict>
-		</array>
-		<key>GIDClientID</key>
-		<string>433413678709-2dkgedloqvurj77k6474e09slpatdfta.apps.googleusercontent.com</string>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
 	</dict>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Your app requires access to the calendar for scheduling purposes.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Your app requires access to the calendar for scheduling purposes.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To add profile picture , you need to allow access to your photo camera</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Get connected with your friends and family! Our app needs access to your contacts.
+			Contacts are securely uploaded on our server for you to see other users of the app.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>To track your location , you need to allow access to your location</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To add profile picture , you need to allow access to your photo gallery</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Your app requires access to reminders.</string>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>We use notifications to keep you updated with important alerts, reminders, and
+			personalized updates. Please enable notifications to stay informed!</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Quicksand-Bold.ttf</string>
+		<string>Quicksand-Light.ttf</string>
+		<string>Quicksand-Medium.ttf</string>
+		<string>Quicksand-Regular.ttf</string>
+		<string>Quicksand-SemiBold.ttf</string>
+		<string>AntDesign.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Fontisto.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Zocial.ttf</string>
+		<string>Rubik-Black.ttf</string>
+		<string>Rubik-BlackItalic.ttf</string>
+		<string>Rubik-Bold.ttf</string>
+		<string>Rubik-BoldItalic.ttf</string>
+		<string>Rubik-ExtraBold.ttf</string>
+		<string>Rubik-ExtraBoldItalic.ttf</string>
+		<string>Rubik-Italic.ttf</string>
+		<string>Rubik-Light.ttf</string>
+		<string>Rubik-LightItalic.ttf</string>
+		<string>Rubik-Medium.ttf</string>
+		<string>Rubik-MediumItalic.ttf</string>
+		<string>Rubik-Regular.ttf</string>
+		<string>Rubik-SemiBold.ttf</string>
+		<string>Rubik-SemiBoldItalic.ttf</string>
+		<string>ProximaNova-Regular.otf</string>
+		<string>Proxima-Nova-Thin.otf</string>
+		<string>Proxima-Nova-Extrabold.otf</string>
+		<string>Proxima-Nova-Bold.otf</string>
+		<string>Proxima-Nova-Black.otf</string>
+		<string>Proxima-Nova-Alt-Thin.otf</string>
+		<string>Proxima-Nova-Alt-Light.otf</string>
+		<string>Proxima-Nova-Alt-Bold.otf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb1254157088825041</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>Tac</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.433413678709-2dkgedloqvurj77k6474e09slpatdfta</string>
+			</array>
+		</dict>
+	</array>
+	<key>GIDClientID</key>
+	<string>433413678709-2dkgedloqvurj77k6474e09slpatdfta.apps.googleusercontent.com</string>
+</dict>
 </plist>

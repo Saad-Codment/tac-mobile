@@ -72,7 +72,7 @@ export const onBoardingData = [
     id: 0,
     heading: 'Find Your\nRodeo Family',
     description:
-      'Join a vibrant community of rodeo lovers, riders,\nand fans. Make new friends who share your passion!',
+      'Join a vibrant community of rodeo athletes \nand fans. Make connections with others new who share your passion!',
     image: splashOne,
     splashImage: splashMarine,
   },
@@ -80,14 +80,14 @@ export const onBoardingData = [
     id: 1,
     heading: 'Discover and Attend Events',
     description:
-      'Explore rodeo events near you or hosted by friends. Create your own events and sync them with your calendar effortlessly!',
+      'Explore rodeo events near you or near the next event. Find and Create events and sync them with your calendar!',
     image: splashTwo,
     splashImage: splashLand,
   },
   {
     id: 2,
     heading: `Post, Engage, and Stay Connected`,
-    description: `Share your best rodeo moments with photos, videos, and stories. Like, comment, and interact with fellow enthusiasts!`,
+    description: `Share your best rodeo moments with photos, videos, and stories. Like, comment, and interact with friends!`,
     image: splashThree,
     splashImage: splashIndustrial,
   },
