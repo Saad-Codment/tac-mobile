@@ -9819,6 +9819,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-checkbox@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "react-native-checkbox@npm:2.0.0"
+  dependencies:
+    prop-types: ^15.5.10
+  checksum: b09f2ef292afc3bbfdfc914be5cc7010f82bbf6c4b97206d8e55b3715be14ea2bf564b44eca5a289168e610f1805848944e71fa5c8ee004724498c9093ed1f39
+  languageName: node
+  linkType: hard
+
 "react-native-confirmation-code-field@npm:^7.4.0":
   version: 7.4.0
   resolution: "react-native-confirmation-code-field@npm:7.4.0"
@@ -11506,6 +11515,7 @@ __metadata:
     react-native-blurhash: ^2.0.2
     react-native-calendar-events: ^2.2.0
     react-native-calendars: ^1.1313.0
+    react-native-checkbox: ^2.0.0
     react-native-confirmation-code-field: ^7.4.0
     react-native-contacts: ^7.0.8
     react-native-countdown-timer-hooks: ^1.0.5

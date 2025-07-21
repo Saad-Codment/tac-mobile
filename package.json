@@ -71,6 +71,7 @@
     "react-native-blurhash": "^2.0.2",
     "react-native-calendar-events": "^2.2.0",
     "react-native-calendars": "^1.1313.0",
+    "react-native-checkbox": "^2.0.0",
     "react-native-confirmation-code-field": "^7.4.0",
     "react-native-contacts": "^7.0.8",
     "react-native-countdown-timer-hooks": "^1.0.5",

@@ -165,7 +165,13 @@ const MyProfileScreen = ({navigation, route}) => {
           flatListProps={{
             ListEmptyComponent:
               eventsList != null && eventsList?.length == 0 ? (
-                <DataNotFound btnStyles={{width: wp('80')}} />
+                <DataNotFound
+                  btnStyles={{width: wp('80')}}
+                  title={'Your Profile is Waiting for Your First Post'}
+                  subTitle={
+                    'Share a story, photo, or video to start building your rodeo legacy.'
+                  }
+                />
               ) : null,
             ListFooterComponent:
               eventsList != null &&

@@ -127,7 +127,13 @@ const FriendProfileScreen = ({navigation, route}) => {
             flatListProps={{
               ListEmptyComponent:
                 eventsList != null && eventsList?.length == 0 ? (
-                  <DataNotFound btnStyles={{width: wp('80')}} />
+                  <DataNotFound
+                    btnStyles={{width: wp('80')}}
+                    title={'No Posts Yet'}
+                    subTitle={
+                      'This user hasn’t shared any posts or events yet. Check back soon to see their rodeo journey!'
+                    }
+                  />
                 ) : null,
               ListFooterComponent:
                 eventsList != null &&

@@ -67,8 +67,8 @@ export const styles = StyleSheet.create({
     textAlign: 'left',
   },
   monthlyTextBold: {
-    fontWeight: '500',
-    fontSize: FontSize.scale12,
+    fontWeight: 'bols',
+    fontSize: FontSize.scale18,
     color: Colors.white,
   },
   textDes: {

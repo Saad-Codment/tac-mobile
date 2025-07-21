@@ -230,7 +230,9 @@ const PostViewComp = ({
         />
         <View style={styles.userDetails}>
           <TextComponent
-            text={item?.first_name + ' ' + item?.last_name}
+            text={
+              item?.first_name + ' ' + (item?.last_name ? item?.last_name : '')
+            }
             styles={styles.userName}
           />
           <TextComponent

@@ -80,6 +80,10 @@ function MainNavigator() {
                 component={Screens.SubscribeScreen}
               />
             )}
+            {/* <Stack.Screen
+              name="SubscribeScreen"
+              component={Screens.SubscribeScreen}
+            /> */}
             <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
             <Stack.Screen
               name="ListViewScreen"

@@ -91,7 +91,7 @@ const SyncPhonebookScreen = ({navigation}) => {
           'Tac needs access to your contacts to help you easily find and invite friends to the app.'
         }
         cancelText={'Not Now'}
-        confirmText={'Enable'}
+        confirmText={'Continue'}
         msgStyle={{textAlign: 'center'}}
         onCancel={toggleAlert}
         onConfirm={onChangeToggle}
