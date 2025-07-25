@@ -1,17 +1,18 @@
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {
+  blockUserUrl,
   getReasonsUrl,
   getUserPostsUrl,
   getUserProfileUrl,
 } from '../../Utils/Urls';
 import {useCallback, useState} from 'react';
 import API from '../../Utils/helperFunc';
-import {errorMessage} from '../../Config/NotificationMessage';
+import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import useFriendServices from '../../Services/FriendServices';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {loadingFalse} from '../../Redux/Action/isloadingAction';
 
-const useFriendProfileScreen = ({navigate}, {params}) => {
+const useFriendProfileScreen = ({navigate, goBack}, {params}) => {
   const {data} = useQuery({
     queryKey: ['getProfileData'],
     queryFn: () => API.get(getUserProfileUrl + params?.id),
@@ -24,6 +25,7 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
   const [modal, setModal] = useState(null); // Flag to check if more data exists
   const {queryClient, getState} = useReduxStore();
   const {userData} = getState('Auth');
+  const [isHitFirstTime, setIsHitFirstTime] = useState(false);
 
   const {isFetching, isRefetching, refetch} = useQuery({
     queryKey: ['profilePosts', page],
@@ -31,6 +33,7 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
       const response = await API.get(
         `${getUserPostsUrl + params?.id}?page=${page}`,
       );
+      setIsHitFirstTime(true);
       if (response.ok) {
         setTotalPages(response?.data?.total_pages);
         if (page == response?.data?.total_pages) {
@@ -95,6 +98,23 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
 
   console.log('skldvklsbdklvbskdlvbklsdbvbksd', eventsList);
 
+  const {mutate} = useMutation({
+    mutationFn: data => {
+      return API.post(blockUserUrl, {user_id: params?.id});
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage('User blocked succesfully');
+        goBack();
+      } else {
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
+
   return {
     userData: data?.data,
     loadMoreData,
@@ -111,6 +131,8 @@ const useFriendProfileScreen = ({navigate}, {params}) => {
     openBottomSheet,
     functionToDelete,
     functionToUpdateComment,
+    isHitFirstTime,
+    blockUser: () => mutate(),
   };
 };
 

@@ -29,8 +29,9 @@ const MyFriendComp = ({
   mainViewStyles,
   isDisable,
   notShowProfile,
+  isBlocked,
 }) => {
-  const {sendFriendReq} = useFriendServices();
+  const {sendFriendReq, unblockUser} = useFriendServices();
   const {dispatch} = useReduxStore();
 
   const onImagePress = () => {
@@ -66,7 +67,20 @@ const MyFriendComp = ({
           </View>
         )}
       </View>
-      {item?.isInvited ? (
+      {isBlocked ? (
+        <ThemeButton
+          title={'UnBlock'}
+          isYellowTheme
+          // image={chat}
+          style={{width: wp('14'), height: hp('3'), borderRadius: 8}}
+          imageStyle={{width: wp('3.5')}}
+          textStyle={{fontSize: hp('1.2'), marginLeft: wp('-0.5')}}
+          onPress={async () => {
+            await unblockUser.mutateAsync(item?.user_id);
+            refetch();
+          }}
+        />
+      ) : item?.isInvited ? (
         <ThemeButton
           title={'Invite'}
           isYellowTheme

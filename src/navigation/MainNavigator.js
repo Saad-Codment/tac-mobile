@@ -80,14 +80,18 @@ function MainNavigator() {
                 component={Screens.SubscribeScreen}
               />
             )}
-            {/* <Stack.Screen
-              name="SubscribeScreen"
-              component={Screens.SubscribeScreen}
-            /> */}
             <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
+            <Stack.Screen
+              name="SubscriptionScreen"
+              component={Screens.SubscribeScreen}
+            />
             <Stack.Screen
               name="ListViewScreen"
               component={Screens.ListViewScreen}
+            />
+            <Stack.Screen
+              name="BlockedUserScreen"
+              component={Screens.BlockedUserScreen}
             />
             <Stack.Screen
               name="ContactUsScreen"

@@ -51,6 +51,7 @@ import {
   infoIcon,
   privacyWithOutBg,
   termNoBg,
+  blockUser,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
@@ -143,6 +144,13 @@ const SettingScreen = ({navigation}) => {
         rightIconColor: Colors.black,
         onPress: () => NavigationService.navigate('ChangePasswordScreen'),
       },
+      {
+        title: 'Blocked User',
+        leftIcon: blockUser,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('BlockedUserScreen'),
+      },
     ],
   };
   const GeneralInfo = {
@@ -153,6 +161,7 @@ const SettingScreen = ({navigation}) => {
         leftIcon: medalstar,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('SubscriptionScreen'),
       },
       {
         title: 'Notifications',

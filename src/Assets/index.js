@@ -79,6 +79,8 @@ export {default as groupBlack} from './Icons/groupBlack.png';
 export {default as circleCalFilled} from './Icons/circleCalFilled.png';
 export {default as userEditWhite} from './Icons/user-edit.png';
 
+export {default as blockUser} from './Icons/blockUser.png';
+
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';
 export {default as sms} from './Icons/sms.png';

@@ -11,6 +11,7 @@ import ThemeButton from '../../Components/ThemeButton';
 import {keyExtractor} from '../../Utils';
 import Overlay from '../../Components/Overlay';
 import BottomModalComponent from '../../Components/BottomModalComponent';
+import {TextComponent} from '../../Components/TextComponent';
 
 const AllEventsScreen = ({navigation, route}) => {
   const {
@@ -62,6 +63,17 @@ const AllEventsScreen = ({navigation, route}) => {
         goBack={() => navigation.goBack()}
         isBack
       />
+      {route?.params?.key == 'suggestedEvents' && (
+        <TextComponent
+          text={'Mentioned events are gathered by public sources only'}
+          styles={{
+            fontSize: hp('1.5'),
+            fontWeight: 'bold',
+            marginVertical: hp('1'),
+            paddingHorizontal: wp('2'),
+          }}
+        />
+      )}
       {eventsList != null ? (
         <FlatList
           data={eventsList ?? []}
@@ -69,6 +81,7 @@ const AllEventsScreen = ({navigation, route}) => {
           contentContainerStylee={styles.upComingFlatlistView}
           onRefresh={onRefresh}
           keyExtractor={keyExtractor}
+          showsVerticalScrollIndicator={false}
           refreshing={false}
           ListEmptyComponent={
             !isFetching &&

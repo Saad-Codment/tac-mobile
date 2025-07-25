@@ -125,7 +125,7 @@ const HomeScreen = ({navigation}) => {
             <View style={styles.innerView}>
               <TextComponent
                 styles={{color: Colors.black, ...styles.upcoming}}
-                text={'Suggested Events'}
+                text={'Public Events Sourced by TAC'}
               />
               <TextComponent
                 styles={{color: Colors.black, ...styles.viewall}}
@@ -134,7 +134,7 @@ const HomeScreen = ({navigation}) => {
                   dynamicRoute('AllEventsScreen', {
                     url: allSuggestedEventsUrl,
                     key: 'suggestedEvents',
-                    title: 'Suggested Events',
+                    title: 'Public Events Sourced by TAC',
                   });
                 }}
               />

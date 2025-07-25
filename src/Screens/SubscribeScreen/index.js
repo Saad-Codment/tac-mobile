@@ -157,7 +157,7 @@ const SubscribeScreen = ({navigation}) => {
           children={() => <PlanCard plan={products[0]} isMonthly={false} />}
         />
       </Tab.Navigator>
-      {userData?.trial_start_at == null && (
+      {/* {userData?.trial_start_at == null && (
         <ThemeButton
           title={'Start free trial'}
           isYellowTheme
@@ -171,7 +171,7 @@ const SubscribeScreen = ({navigation}) => {
           }}
           onPress={startFreeTrial}
         />
-      )}
+      )} */}
     </View>
   );
 };

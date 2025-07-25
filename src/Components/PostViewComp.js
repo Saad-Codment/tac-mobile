@@ -241,17 +241,25 @@ const PostViewComp = ({
           />
         </View>
         {userData?.id != item?.user_id ? (
-          <Touchable
+          <TextComponent
+            text={'Report'}
+            fade
+            styles={styles.reportText}
             onPress={() => {
               if (userData?.id != item?.user_id) openBottomSheet(item?.id);
-            }}>
-            <Image
-              source={dotsVertical}
-              resizeMode="contain"
-              style={{width: wp('6'), height: hp('4')}}
-            />
-          </Touchable>
+            }}
+          />
         ) : (
+          // <Touchable
+          //   onPress={() => {
+          //     if (userData?.id != item?.user_id) openBottomSheet(item?.id);
+          //   }}>
+          //   <Image
+          //     source={dotsVertical}
+          //     resizeMode="contain"
+          //     style={{width: wp('6'), height: hp('4')}}
+          //   />
+          // </Touchable>
           <Menu>
             <MenuTrigger>
               <Image
@@ -497,5 +505,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // width: wp('31.5'),
     alignItems: 'center',
+  },
+  reportText: {
+    fontSize: hp('1.2'),
+    top: hp('-0.5'),
+    textAlign: 'right',
+    // marginLeft: hp('2'),
+    right: wp('2'),
   },
 });

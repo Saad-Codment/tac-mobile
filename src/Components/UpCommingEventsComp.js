@@ -201,31 +201,32 @@ const UpcomingEventsComp = ({
             />
           </View>
         </View>
-        {item?.first_name &&
-          (userData?.id != item?.user_id ? (
-            <TextComponent
-              text={'Report'}
-              fade
-              styles={styles.reportText}
-              onPress={() => {
-                if (userData?.id != item?.user_id) openBottomSheet(item?.id);
-              }}
-            />
-          ) : (
-            <Menu>
-              <MenuTrigger>
-                <Image
-                  source={dotsVertical}
-                  resizeMode="contain"
-                  style={{width: wp('7'), height: hp('5'), marginLeft: wp('8')}}
-                />
-              </MenuTrigger>
-              <MenuOptions>
-                <MenuOption onSelect={() => onEditPost(item)} text="Edit" />
-                <MenuOption onSelect={() => onDeletePost(item)} text="Delete" />
-              </MenuOptions>
-            </Menu>
-          ))}
+        {/* {item?.first_name && */}
+        {userData?.id != item?.user_id ? (
+          <TextComponent
+            text={'Report'}
+            fade
+            styles={styles.reportText}
+            onPress={() => {
+              if (userData?.id != item?.user_id) openBottomSheet(item?.id);
+            }}
+          />
+        ) : (
+          <Menu>
+            <MenuTrigger>
+              <Image
+                source={dotsVertical}
+                resizeMode="contain"
+                style={{width: wp('7'), height: hp('5'), marginLeft: wp('8')}}
+              />
+            </MenuTrigger>
+            <MenuOptions>
+              <MenuOption onSelect={() => onEditPost(item)} text="Edit" />
+              <MenuOption onSelect={() => onDeletePost(item)} text="Delete" />
+            </MenuOptions>
+          </Menu>
+        )}
+        {/* } */}
       </View>
       <View style={styles.priceMainView}>
         <TextComponent
@@ -625,7 +626,7 @@ const styles = StyleSheet.create({
     top: hp('-2'),
     textAlign: 'right',
     // marginLeft: hp('2'),
-    // right: wp('-2'),
+    right: wp('-6'),
   },
   priceMainView: {
     flexDirection: 'row',

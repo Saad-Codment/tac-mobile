@@ -8,6 +8,7 @@ import {
   addCircleWhite,
   backIcon,
   divider,
+  filledLocation,
   location,
   lockCircle,
   message,
@@ -38,7 +39,9 @@ const FriendProfileScreen = ({navigation, route}) => {
     hasMoreData,
     myUserData,
     modal,
+    isHitFirstTime,
     setModal,
+    blockUser,
     openBottomSheet,
     onRefresh,
     loadMoreData,
@@ -95,6 +98,17 @@ const FriendProfileScreen = ({navigation, route}) => {
         isBack
         backText={'Back'}
         backTextStyle={{color: Colors.textGray}}
+        isAnotherRightChildern={
+          <TextComponent
+            text={'Block User'}
+            isWhite
+            styles={{
+              height: hp('2'),
+              fontSize: hp('1.5'),
+            }}
+            onPress={() => blockUser()}
+          />
+        }
       />
       <HeaderComp userData={userData} myUserData={myUserData} />
       {userData?.privacy == 1 &&
@@ -119,7 +133,7 @@ const FriendProfileScreen = ({navigation, route}) => {
           </View>
         </View>
       ) : (
-        !isFetching && (
+        isHitFirstTime && (
           <AniFlatOneByOne
             data={eventsList ?? []}
             flatViewStyle={styles.upComingFlatlistView}

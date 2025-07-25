@@ -170,7 +170,9 @@ const RegisterScreen = ({navigation}) => {
               <TextComponent
                 styles={styles.termsLink}
                 onPress={() =>
-                  Linking.openURL('https://supportsnap.org/terms-of-use')
+                  Linking.openURL(
+                    'https://theappforcowboys.com/terms_and_conditions',
+                  )
                 }
                 text={` Terms of Use (EULA)`}
               />
@@ -180,7 +182,7 @@ const RegisterScreen = ({navigation}) => {
             <ThemeButton
               title={'Register'}
               onPress={() => {
-                if (isChecked) handleSubmit(signUpButton);
+                if (isChecked) handleSubmit(signUpButton)();
                 else Alert.alert('Please accept the terms and policy');
               }}
               style={styles.buttonStyle}
@@ -358,8 +360,10 @@ const RegisterScreen = ({navigation}) => {
                 <Text>
                   For questions or concerns about these Terms, please reach out
                   to us at{' '}
-                  <Text style={{fontWeight: '700'}}>info@tacapp.org</Text>.
-                  {'\n\n'}
+                  <Text style={{fontWeight: '700'}}>
+                    theappforcowboys@gmail.com
+                  </Text>
+                  .{'\n\n'}
                   By using TAC, you agree to these Terms and commit to fostering
                   a positive community. Thank you for being a valued member of
                   our platform!{'\n'}

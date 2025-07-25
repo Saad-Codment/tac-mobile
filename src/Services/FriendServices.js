@@ -14,6 +14,7 @@ import {
   sendFriendReqUrl,
   shareEventUrl,
   sharePostUrl,
+  unBlockUserUrl,
 } from '../Utils/Urls';
 import {errorMessage, successMessage} from '../Config/NotificationMessage';
 import {store} from '../Redux/Reducer';
@@ -235,6 +236,22 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
       errorMessage('Network request failed.');
     },
   });
+  const unblockUser = useMutation({
+    mutationFn: data => {
+      return API.post(unBlockUserUrl, {user_id: data});
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
 
   return {
     sendFriendReq,
@@ -249,6 +266,7 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     shareEvent,
     deletePost,
     deleteEvent,
+    unblockUser,
   };
 };
 
