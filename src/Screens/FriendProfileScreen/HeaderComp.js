@@ -1,4 +1,4 @@
-import {View, Text, Image, StyleSheet, Pressable} from 'react-native';
+import {View, Text, Image, StyleSheet, Pressable, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
@@ -15,7 +15,11 @@ import {
 import ThemeButton from '../../Components/ThemeButton';
 import {Touchable} from '../../Components/Touchable';
 import NavigationService from '../../Services/NavigationService';
-import {getUserFriendsUrl, imageUrl} from '../../Utils/Urls';
+import {
+  getMutalFriendsUrl,
+  getUserFriendsUrl,
+  imageUrl,
+} from '../../Utils/Urls';
 import useFriendServices from '../../Services/FriendServices';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {types} from '../../Redux/types';
@@ -71,6 +75,8 @@ const HeaderComp = ({userData, myUserData}) => {
         {
           num: userData?.event_count,
           title: 'Events',
+          onPress: () =>
+            NavigationService.navigate('MyEventScreen', userData?.id),
         },
         {
           num: userData?.friends_count,
@@ -84,6 +90,12 @@ const HeaderComp = ({userData, myUserData}) => {
         {
           num: userData?.mutual_count,
           title: 'Mutual',
+          onPress: () =>
+            NavigationService.navigate('FriendLists', {
+              url: getMutalFriendsUrl + userData?.id + '?',
+              key: 'userMutalFriends',
+              title: 'Mutal friends',
+            }),
         },
       ]);
     } else {
@@ -162,7 +174,20 @@ const HeaderComp = ({userData, myUserData}) => {
                   if (userData?.friends == 0) {
                     await sendFriendReq.mutateAsync(userData?.id);
                   } else {
-                    await removeFriend.mutateAsync(userData?.friends);
+                    Alert.alert(
+                      'Confirmation Alert',
+                      `Are you sure you want to remove ${userData?.first_name} as a friend?`,
+                      [
+                        {text: 'Cancel', style: 'cancel'},
+                        {
+                          text: 'Yes, Remove',
+                          style: 'destructive',
+                          onPress: async () => {
+                            await removeFriend.mutateAsync(userData?.friends);
+                          },
+                        },
+                      ],
+                    );
                   }
                   queryClient.invalidateQueries(['getProfileData']);
                 }}

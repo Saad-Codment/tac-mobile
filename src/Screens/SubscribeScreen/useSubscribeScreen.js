@@ -22,6 +22,7 @@ const useSubscribeScreen = () => {
 
   const {userData} = getState('Auth');
 
+  console.log('userDatauserDatauserDatauserDatauserData', userData);
   const {mutate} = useMutation({
     mutationFn: body => {
       return API.post(AfterSubBuyUrl, body);
@@ -31,7 +32,11 @@ const useSubscribeScreen = () => {
         dispatch(loadingFalse());
         dispatch({
           type: types.UpdateProfile,
-          payload: {...data, planName: allSubID[data?.identifier]},
+          payload: {
+            ...data,
+            planName: allSubID[data?.identifier],
+            identifier: data?.identifier,
+          },
         });
         successMessage('User subscribed successfully');
         // if (data?.start_trial_at) goBack();
@@ -136,6 +141,7 @@ const useSubscribeScreen = () => {
     startFreeTrial: () => mutateAsync(),
     userData,
     getProductsFromStore,
+    dispatch,
   };
 };
 

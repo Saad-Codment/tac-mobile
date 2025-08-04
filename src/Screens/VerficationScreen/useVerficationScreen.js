@@ -39,6 +39,8 @@ const useVerificationScreen = (
   });
   const timerOnProgressFunc = remainingTimeInSecs => {};
 
+  console.log('jsdbvklsbdklvbsdklbvklsdbvlksdbvs', params.item.original_phone);
+
   const VerifyCode = async () => {
     let url = verifyNumberUrl + params.item.phone + '/' + value;
     const {ok, data} = await API.get(url);
@@ -102,7 +104,7 @@ const useVerificationScreen = (
   });
 
   const sendVerfication = async num => {
-    const {ok, data} = await API.get(SendVerficatioUrl + num);
+    const {ok, data} = await API.post(SendVerficatioUrl, {original_phone: num});
     if (ok) successMessage('New OTP has been send your the number.');
     else errorMessage('Some error to send OTP!');
   };
@@ -177,6 +179,7 @@ const useVerificationScreen = (
     timerCallbackFunc,
     resendOTP,
     timerOnProgressFunc,
+    sendVerfication,
   };
 };
 

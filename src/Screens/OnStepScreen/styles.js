@@ -53,9 +53,11 @@ export const styles = StyleSheet.create({
   },
   skipBtn: {
     width: wp('100'),
-    alignItems: 'flex-end',
+    alignItems: 'center',
     paddingTop: Platform.OS == 'ios' ? hp('5') : hp('2'),
-    paddingRight: wp('3'),
+    paddingHorizontal: wp('3'),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   horse: {
     resizeMode: 'contain',

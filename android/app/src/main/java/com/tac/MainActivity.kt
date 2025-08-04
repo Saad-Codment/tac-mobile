@@ -1,4 +1,4 @@
-package com.tac
+package com.tac.codment
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

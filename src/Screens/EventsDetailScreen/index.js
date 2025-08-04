@@ -35,10 +35,18 @@ import {types} from '../../Redux/types';
 import {Text} from 'react-native';
 import {MultiSelectButton} from '../../Components/MultiSelectButton';
 import DividerLine from '../../Components/DividerLine';
+import CustomModalComp from '../../Components/CustomModalComp';
 
 const EventsDetailScreen = ({navigation, route}) => {
-  const {eventData, onRefresh, followUnFollowEvent, userData} =
-    useEventDetailScreen(navigation, route);
+  const {
+    eventData,
+    onRefresh,
+    followUnFollowEvent,
+    userData,
+    modalVisible,
+    setModalVisible,
+    isAleadyAddedToCalender,
+  } = useEventDetailScreen(navigation, route);
 
   const {dispatch} = useReduxStore();
 
@@ -211,7 +219,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                 {length: eventData.likes_count},
                 (_, i) => i + 1,
               )}
-              textAfterCount={'people(s) like this event.'}
+              textAfterCount={'people like this event.'}
             />
           </View>
         )}
@@ -434,6 +442,25 @@ const EventsDetailScreen = ({navigation, route}) => {
             />
           </>
         )}
+        <CustomModalComp
+          visible={modalVisible}
+          onCancel={() => setModalVisible(false)}
+          subtitle={
+            eventData?.is_followed
+              ? 'Are you sure you want to remove this from your calendar?'
+              : 'Are you sure you want to add this to your calendar?'
+          }
+          checkBoxText={
+            eventData?.is_followed
+              ? 'Want to remove this event to your calendar?'
+              : 'Want to add this event to your calendar?'
+          }
+          onConfirm={(checked, id) => {
+            console.log('User confirmed:', checked);
+            followUnFollowEvent(checked, eventData?.id);
+          }}
+          isAleadyAddedToCalender={isAleadyAddedToCalender}
+        />
         {userData?.id != eventData?.user?.id && (
           <ThemeButton
             title={
@@ -444,7 +471,7 @@ const EventsDetailScreen = ({navigation, route}) => {
             style={styles.btnStyle}
             textStyle={{fontSize: hp('1.2')}}
             isYellowTheme
-            onPress={() => followUnFollowEvent(eventData?.id)}
+            onPress={() => setModalVisible(true)}
           />
         )}
       </ScrollView>

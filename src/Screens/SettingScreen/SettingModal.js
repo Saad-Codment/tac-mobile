@@ -94,7 +94,7 @@ const SettingModal = ({
               justifyContent: 'center',
             }}
             // key={item?.id}
-            onPress={() => onSelectValue('age', null)}>
+            onPress={() => onChangeVal('userAge', null)}>
             {/* <Image
                   source={item?.image}
                   style={styles.catImage(

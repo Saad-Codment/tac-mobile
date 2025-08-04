@@ -1,4 +1,4 @@
-package com.tac
+package com.tac.codment
 
 import android.app.Application
 import com.facebook.react.PackageList

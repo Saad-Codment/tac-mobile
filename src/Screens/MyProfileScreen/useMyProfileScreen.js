@@ -11,14 +11,17 @@ import {errorMessage} from '../../Config/NotificationMessage';
 import useFriendServices from '../../Services/FriendServices';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {loadingFalse} from '../../Redux/Action/isloadingAction';
+import {useFocusEffect} from '@react-navigation/native';
 
-const useMyProfileScreen = ({navigate, addListener}, {params}) => {
+const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
   const [page, setPage] = useState(1); // Current page for pagination
   const [totalPages, setTotalPages] = useState(0); // Current page for pagination
   const [eventsList, setEventsList] = useState([]); // Combined list of events
   const [hasNextPage, setHasNextPage] = useState(true); // Flag to check if more data exists
   const [modal, setModal] = useState(null); // Flag to check if more data exists
   const [isHitFirstTime, setIsHitFirstTime] = useState(false);
+
+  console.log('paramsparamsparamsparamsparamsparamsparams', params);
 
   const {queryClient, getState} = useReduxStore();
   const {userData} = getState('Auth');
@@ -47,6 +50,7 @@ const useMyProfileScreen = ({navigate, addListener}, {params}) => {
     },
     refetchOnMount: true,
     refetchOnWindowFocus: true,
+    // enabled: false, // ❌ Disable auto-fetching
   });
 
   const loadMoreData = useCallback(
@@ -58,7 +62,6 @@ const useMyProfileScreen = ({navigate, addListener}, {params}) => {
     },
     [isFetching, hasNextPage],
   );
-
   const onRefresh = useCallback(() => {
     setPage(1); // Reset to the first page
     setEventsList([]); // Clear existing data
@@ -103,6 +106,41 @@ const useMyProfileScreen = ({navigate, addListener}, {params}) => {
       return prev.filter((_, i) => i !== index);
     });
   };
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     return () => {
+  //       setEventsList([]);
+  //       setPage(1);
+  //     };
+  //   }, []),
+  // );
+
+  useFocusEffect(
+    useCallback(() => {
+      // On screen focus
+      if (params?.id) {
+        setIsHitFirstTime(false);
+        setEventsList([]);
+        setPage(1);
+        refetch();
+      }
+
+      // On screen blur (unfocus)
+      return () => {
+        setParams({id: undefined});
+      };
+    }, [params?.id]),
+  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     return () => {
+  //       setIsHitFirstTime(false);
+  //       setEventsList([]);
+  //       setPage(1);
+  //     };
+  //   }, []),
+  // );
 
   useEffect(() => {
     const event = addListener('focus', async () => {

@@ -64,10 +64,12 @@ const usePorfileScreen = ({navigate, goBack}) => {
     onSuccess: ({ok, data}) => {
       if (ok) {
         successMessage('Your profile updated sucessfully!');
-        dispatch({
-          type: types.UpdateProfile,
-          payload: data.user,
-        });
+        if (data.user?.first_name || data?.user?.last_name) {
+          dispatch({
+            type: types.UpdateProfile,
+            payload: data.user,
+          });
+        }
       } else {
         errorMessage(data?.message);
       }
@@ -151,7 +153,9 @@ const usePorfileScreen = ({navigate, goBack}) => {
       mutateAsync({
         first_name: modalUpdateData?.firstName ?? userData?.first_name,
         last_name: modalUpdateData?.lastName ?? userData?.last_name,
-        age: formatDate(modalUpdateData?.userAge ?? userData?.age),
+        age: modalUpdateData?.userAge
+          ? formatDate(modalUpdateData?.userAge ?? userData?.age)
+          : '',
         gender: modalUpdateData?.userGender?.id ?? userData?.gender,
         profile_image: modalUpdateData?.profileImg?.type
           ? modalUpdateData?.profileImg

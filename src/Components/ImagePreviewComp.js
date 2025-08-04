@@ -14,6 +14,7 @@ import useReduxStore from '../Hooks/UseReduxStore';
 import {types} from '../Redux/types';
 import {imageUrl} from '../Utils/Urls';
 import {whp, p, hp, wp} from '../Config/responsive';
+import ImageZoom from 'react-native-image-pan-zoom'; // 🔼 Add this at the top
 
 const ImagePreviewComp = ({visible, onClose, images}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -72,11 +73,27 @@ const ImagePreviewComp = ({visible, onClose, images}) => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) => (
-              <Image
-                source={typeof item === 'string' ? {uri: imageUrl(item)} : item}
-                style={styles.image}
-                resizeMode="contain"
-              />
+              <View
+                style={{
+                  width: Dimensions.get('window').width,
+                  alignItems: 'center',
+                }}>
+                <ImageZoom
+                  cropWidth={Dimensions.get('window').width}
+                  cropHeight={hp('80')}
+                  imageWidth={Dimensions.get('window').width}
+                  imageHeight={hp('80')}
+                  enableCenterFocus
+                  enableDoubleClickZoom>
+                  <Image
+                    source={
+                      typeof item === 'string' ? {uri: imageUrl(item)} : item
+                    }
+                    style={styles.image}
+                    resizeMode="contain"
+                  />
+                </ImageZoom>
+              </View>
             )}
             onMomentumScrollEnd={e => {
               const index = Math.round(

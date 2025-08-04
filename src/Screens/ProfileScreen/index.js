@@ -88,7 +88,9 @@ const ProfileScreen = ({navigation}) => {
       onPress: () => onOpenModal('edit_profile'),
     },
     {
-      title: `${calculateAge(userData?.age) ?? 'Not Availabe'} Years`,
+      title: userData?.age
+        ? `${calculateAge(userData?.age || '')} Years`
+        : 'Not Available',
       leftIcon: ageIcon,
       rightText: 'Edit',
       onPress: () => onOpenModal('age_view'),
@@ -150,7 +152,7 @@ const ProfileScreen = ({navigation}) => {
                   top: hp('9'),
                 }}
                 onPress={async () => {
-                  const img = await uploadFromGalary();
+                  const img = await uploadFromGalary(false, true);
                   justUploadImg(img);
                 }}>
                 <Image

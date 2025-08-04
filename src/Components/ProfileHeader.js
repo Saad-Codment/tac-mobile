@@ -69,10 +69,16 @@ const ProfileHeader = ({
     onSuccess: ({ok, data}) => {
       if (ok) {
         successMessage('Your profile updated sucessfully!');
-        dispatch({
-          type: types.UpdateProfile,
-          payload: data.user,
-        });
+        if (data.user?.first_name || data?.user?.last_name) {
+          dispatch({
+            type: types.UpdateProfile,
+            payload: data.user,
+          });
+        }
+        // dispatch({
+        //   type: types.UpdateProfile,
+        //   payload: data.user,
+        // });
       } else {
         errorMessage(data?.message);
       }
@@ -105,7 +111,7 @@ const ProfileHeader = ({
                     {
                       text: 'Camera',
                       onPress: async () => {
-                        const images = await uploadFromCamera();
+                        const images = await uploadFromCamera(false, true);
                         mutateAsync({
                           profile_image: images,
                           first_name: userData?.first_name,
@@ -115,7 +121,7 @@ const ProfileHeader = ({
                     {
                       text: 'Gallery', // Just a dismissal button
                       onPress: async () => {
-                        const images = await uploadFromGalary();
+                        const images = await uploadFromGalary(false, true);
                         mutateAsync({
                           profile_image: images,
                           first_name: userData?.first_name,

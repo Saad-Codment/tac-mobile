@@ -95,6 +95,7 @@ export const AfterSubBuyUrl = '/subscriptions/validate-receipt';
 export const StartTrialUrl = '/subscriptions/trial-start';
 export const getEventsUrl = '/events/get';
 export const getMyAssociationsUrl = '/get-associations';
+export const getMutalFriendsUrl = '/user/mutual-list/';
 
 export const blockUserUrl = '/block/block-user';
 export const unBlockUserUrl = '/block/unblock-user';

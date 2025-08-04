@@ -8,7 +8,7 @@ import {SendVerficatioUrl} from '../../Utils/Urls';
 import {useMutation} from '@tanstack/react-query';
 
 const useNumberEditScreen = ({navigate, goBack}) => {
-  const {getState} = useReduxStore();
+  const {getState, dispatch} = useReduxStore();
   const {userData} = getState('Auth');
   const isVerified = Boolean(userData?.verified == 1);
   const isNumber = Boolean(
@@ -88,7 +88,7 @@ const useNumberEditScreen = ({navigate, goBack}) => {
       item: {
         ...userData,
         phone: number,
-        original_phone: number,
+        original_phone: formattedNumber,
       },
     });
   };
@@ -102,9 +102,12 @@ const useNumberEditScreen = ({navigate, goBack}) => {
   });
 
   const sendVerficationCode = () => {
-    if (edit && number != null && number != '') {
-      mutate(number);
+    if (edit && formattedNumber != null && formattedNumber != '') {
+      console.log('skljbdvklsdbkvsbdlkvsd', number);
+      mutate(formattedNumber);
     } else if (!edit) {
+      console.log('skljbdvklsdbkvsbdlkvsd', number);
+
       mutate(userData.original_phone);
       // navigate('VerficationScreen', {item: userData});
     }
@@ -129,6 +132,7 @@ const useNumberEditScreen = ({navigate, goBack}) => {
     handlePhoneNumberChange,
     validationError,
     maxLength,
+    dispatch,
   };
 };
 

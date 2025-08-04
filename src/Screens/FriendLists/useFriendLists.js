@@ -47,7 +47,10 @@ const useFriendLists = ({navigation, route}, {params}) => {
       // queryClient.resetQueries({queryKey: [params?.key]});
     }, [refetch]),
   );
-
+  console.log(
+    'datadatadatadatadatadatadatadata',
+    data?.pages?.flatMap(page => page.data?.data),
+  );
   const list = data?.pages?.flatMap(page => page.data?.data) || [];
 
   return {

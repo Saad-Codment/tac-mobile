@@ -3,26 +3,29 @@ import API from '../../Utils/helperFunc';
 import {getEventByDatesUrl, getEventDatesUrl} from '../../Utils/Urls';
 import {useEffect, useState} from 'react';
 import {errorMessage} from '../../Config/NotificationMessage';
+import useReduxStore from '../../Hooks/UseReduxStore';
 
-const useMyEventScreen = ({navigate, addListener}) => {
+const useMyEventScreen = ({navigate, addListener}, {params}) => {
   const [bottomData, setBottomData] = useState(null);
-
+  const {getState} = useReduxStore();
+  const {userData} = getState('Auth');
   // if (!isLoading) mutate();
   const [activeButton, setActiveButton] = useState(null);
 
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
 
-  console.log(
-    'lksdbvklbsdklvbskdlbvklsdbvkbsdkvbskdlvbklsdvbkds',
-    new Date().getMonth() + 1,
-  );
+  console.log('lksdbvklbsdklvbskdlbvklsdbvkbsdkvbskdlvbklsdvbkds', params);
   var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const {data, refetch} = useQuery({
     queryKey: ['getEventDate'],
     queryFn: async () => {
       const allProps = await API.get(
-        getEventDatesUrl + '?timezone=' + timeZone,
+        getEventDatesUrl +
+          '?timezone=' +
+          timeZone +
+          '&user_id=' +
+          (params || userData?.id),
       );
       console.log('allPropsallPropsallProps', allProps?.data);
       if (allProps?.ok) {
@@ -36,14 +39,18 @@ const useMyEventScreen = ({navigate, addListener}) => {
       return allProps;
     },
   });
-
+  console.log('datadatadatadatadatadata', data?.data);
   const {mutate} = useMutation({
     mutationFn: body => {
       console.log(
         'datadatadatadatadatadsdvsdvsatadatadatjhvdhjdshjvsdjhka',
         body,
       );
-      return API.post(getEventByDatesUrl, {...body, timeZone});
+      return API.post(getEventByDatesUrl, {
+        ...body,
+        timeZone,
+        user_id: params || userData?.id,
+      });
     },
     onSuccess: ({ok, data}) => {
       setBottomData([]);

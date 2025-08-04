@@ -149,6 +149,7 @@ const useOnStepScreen = ({navigate}) => {
     currentDate,
     modalState,
     setModalState,
+    dispatch,
   };
 };
 

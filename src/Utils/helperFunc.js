@@ -15,6 +15,8 @@ import {logOutUser} from '../Redux/Action/AuthAction';
 import {types} from '../Redux/types';
 import {logOutFirebase, logoutService} from '../Services/AuthServices';
 import {getFileNameFromURL} from '../Services/GlobalFunctions';
+import Purchases from 'react-native-purchases';
+import {allSubID} from './localDB';
 
 const API = create({
   baseURL,
@@ -184,6 +186,10 @@ const createFormData = (photos, imageKey, isArray) => {
   return data;
 };
 
+const getUserDataFromRevenewCat = async () => {
+  return await Purchases.getCustomerInfo();
+};
+
 const fetchGetWithToken = async (url, isUpdate) => {
   const {Auth} = store.getState('Auth');
   const fullUrl = baseURL + url;
@@ -205,6 +211,20 @@ const fetchGetWithToken = async (url, isUpdate) => {
     } else if (response.ok) {
       const data = await response.json();
       if (data?.user) {
+        const getData = await getUserDataFromRevenewCat();
+        const activeSubscriptions =
+          getData.entitlements.active['Tac subscription group'] ?? undefined;
+        if (activeSubscriptions != undefined) {
+          store.dispatch({
+            type: types.UpdateProfile,
+            payload: {
+              ...data,
+              planName:
+                allSubID[activeSubscriptions?.productIdentifier] ?? null,
+              identifier: activeSubscriptions?.productIdentifier,
+            },
+          });
+        }
         store.dispatch({
           type: types.UpdateProfile,
           payload: data?.user,

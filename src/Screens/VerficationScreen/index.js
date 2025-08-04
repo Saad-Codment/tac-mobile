@@ -27,6 +27,7 @@ const VerficationScreen = ({route, navigation}) => {
     timerCallbackFunc,
     resendOTP,
     timerOnProgressFunc,
+    sendVerfication,
   } = useVerificationScreen(navigation, route);
 
   return (
@@ -88,6 +89,7 @@ const VerficationScreen = ({route, navigation}) => {
                 height: hp('4'),
                 width: wp('85'),
                 alignSelf: 'center',
+                ontSize: hp('1.5'),
               }}
               textStyle={{fontSize: hp('1.5')}}
             />

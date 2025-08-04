@@ -77,6 +77,8 @@ import {
 } from '../../Services/GlobalFunctions';
 import {
   aboutUrl,
+  allAssociatesUrl,
+  allEventTypeUrl,
   getMyFriendsUrl,
   imageUrl,
   privacyUrl,
@@ -161,7 +163,7 @@ const SettingScreen = ({navigation}) => {
         leftIcon: medalstar,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
-        onPress: () => NavigationService.navigate('SubscriptionScreen'),
+        onPress: () => NavigationService.navigate('SubscriptionScreen', true),
       },
       {
         title: 'Notifications',
@@ -224,14 +226,31 @@ const SettingScreen = ({navigation}) => {
         leftIcon: racingIcon,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
-        onPress: () => onOpenModal('event_type'),
+        onPress: () =>
+          navigation.navigate('ListViewScreen', {
+            onSelectValue: res => {
+              toggleModal({eventType: res}, true);
+            },
+            selectedValue: activeTags?.event_type?.eventTypes,
+            urlName: allEventTypeUrl,
+            isMultiSelect: true,
+          }),
+        // onPress: () => onOpenModal('event_type'),
       },
       {
         title: 'Associations',
         leftIcon: assoicationIcon,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
-        onPress: () => onOpenModal('event_association'),
+        onPress: () =>
+          navigation.navigate('ListViewScreen', {
+            onSelectValue: res => {
+              toggleModal({associations: res}, true);
+            },
+            selectedValue: activeTags?.event_association?.eventAssociations,
+            urlName: allAssociatesUrl,
+            isMultiSelect: true,
+          }),
       },
     ],
   };
@@ -245,29 +264,29 @@ const SettingScreen = ({navigation}) => {
         rightIconColor: Colors.black,
         onPress: () => NavigationService.navigate('MyEventScreen'),
       },
-      {
-        title: 'Event History',
-        leftIcon: eventHistory,
-        rightIcon: arrRight,
-        rightIconColor: Colors.black,
-      },
+      // {
+      //   title: 'Event History',
+      //   leftIcon: eventHistory,
+      //   rightIcon: arrRight,
+      //   rightIconColor: Colors.black,
+      // },
     ],
   };
   const AboutApp = {
     title: 'About TAC',
     arryView: [
-      {
-        title: `Help Center`,
-        leftIcon: helpCircle,
-        rightIcon: arrRight,
-        rightIconColor: Colors.black,
-      },
-      {
-        title: 'Feedback Submission',
-        leftIcon: likeTag,
-        rightIcon: arrRight,
-        rightIconColor: Colors.black,
-      },
+      // {
+      //   title: `Help Center`,
+      //   leftIcon: helpCircle,
+      //   rightIcon: arrRight,
+      //   rightIconColor: Colors.black,
+      // },
+      // {
+      //   title: 'Feedback Submission',
+      //   leftIcon: likeTag,
+      //   rightIcon: arrRight,
+      //   rightIconColor: Colors.black,
+      // },
       {
         title: 'Contact Us',
         leftIcon: likeTag,
@@ -457,7 +476,11 @@ const SettingScreen = ({navigation}) => {
           heading={onPressKey}
           isModal={modalVal}
           onSelect={() => {}}
-          onPress={(e, isTrue) => toggleModal(e, isTrue)}
+          onPress={(e, isTrue) => {
+            setModalVal(!modalVal);
+
+            toggleModal(e, isTrue);
+          }}
           onBackPress={() => setModalVal(false)}
         />
       )}

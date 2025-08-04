@@ -6,8 +6,11 @@ import {TextComponent} from '../../Components/TextComponent';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Colors, FontSize} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
-import {heart, medalstar, tickCircle} from '../../Assets';
+import {backIcon, heart, logout, medalstar, tickCircle} from '../../Assets';
 import ThemeButton from '../../Components/ThemeButton';
+import {Touchable} from '../../Components/Touchable';
+import {types} from '../../Redux/types';
+import {logOutAuth} from '../../Redux/Action/AuthAction';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -15,7 +18,7 @@ const capitalizeFirstLetter = string => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-const SubscribeScreen = ({navigation}) => {
+const SubscribeScreen = ({navigation, route}) => {
   const {
     startTrial,
     products,
@@ -23,6 +26,7 @@ const SubscribeScreen = ({navigation}) => {
     startFreeTrial,
     userData,
     getProductsFromStore,
+    dispatch,
   } = useSubscribeScreen();
 
   const TickCircle = ({text, tintColor, TextColor}) => (
@@ -31,7 +35,7 @@ const SubscribeScreen = ({navigation}) => {
         flexDirection: 'row',
         alignItems: 'center',
         paddingLeft: wp('2'),
-        paddingTop: hp('0.5'),
+        paddingVertical: hp('1'),
       }}>
       <Image
         tintColor={tintColor}
@@ -66,25 +70,55 @@ const SubscribeScreen = ({navigation}) => {
             </View>
           </View>
         </View>
-        <View style={{marginTop: hp('1.5')}}>
-          <TickCircle text={'All location'} />
-          <TickCircle text={'No ads'} />
-          <TickCircle text={'Companionship'} />
-          <TickCircle text={'Transportation'} />
+        <View
+          style={{
+            marginTop: hp('1.5'),
+            width: wp('90'),
+          }}>
           <TickCircle
-            text={'Competition'}
-            tintColor={!isMonthly ? undefined : Colors.textGray}
-            TextColor={isMonthly}
+            text={
+              'Set up your own rodeo events or cowboy meetups with full control over dates, details, and invites.'
+            }
           />
           <TickCircle
-            text={'Socialization'}
-            tintColor={!isMonthly ? undefined : Colors.textGray}
-            TextColor={isMonthly}
+            text={
+              'Explore upcoming rodeo events pulled from reliable sources and tailored to your location.'
+            }
           />
           <TickCircle
-            text={'World from Horseback'}
-            tintColor={!isMonthly ? undefined : Colors.textGray}
-            TextColor={isMonthly}
+            text={
+              'Send friend requests, discover people with mutual interests, and build your rodeo network.'
+            }
+          />
+          <TickCircle
+            text={
+              'Share your rodeo moments with engaging photo, video, or text updates on your timeline.'
+            }
+          />
+          <TickCircle
+            text={
+              'React to your friends’ stories, show support, and keep the cowboy spirit alive through comments.'
+            }
+          />
+          <TickCircle
+            text={
+              'Get alerts when friends post, events go live, or new connections are found.'
+            }
+          />
+          <TickCircle
+            text={
+              'Sync your phone contacts to find friends already using the app or invite them to join the fun.'
+            }
+          />
+          <TickCircle
+            text={
+              'Track RSVPs, see who’s coming, and manage event updates all in one place.'
+            }
+          />
+          <TickCircle
+            text={
+              'Your data and privacy are always protected. You’re in control of who sees what.'
+            }
           />
         </View>
         <View style={styles.buyCont}>
@@ -106,7 +140,45 @@ const SubscribeScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.subsCon}>
-        <TextComponent text={'Subscription plan'} styles={styles.subs} />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignSelf: 'flex-end',
+            width: wp('92'),
+            // justifyContent: 'space-between',
+            marginBottom: hp('2'),
+            // backgroundColor: 'red',
+          }}>
+          {route?.params && (
+            <Touchable onPress={() => navigation.goBack()}>
+              <Image
+                source={backIcon}
+                resizeMode="contain"
+                style={{width: wp('5'), height: hp('3')}}
+                tintColor={'black'}
+              />
+            </Touchable>
+          )}
+          <TextComponent text={'Subscription plan'} styles={styles.subs} />
+
+          {!route?.params && (
+            <Touchable
+              style={{marginLeft: wp('22')}}
+              onPress={() => {
+                dispatch({
+                  type: types.restartOnboarding,
+                });
+                dispatch(logOutAuth());
+              }}>
+              <Image
+                source={logout}
+                resizeMode="contain"
+                style={{width: wp('6'), height: wp('6')}}
+              />
+            </Touchable>
+          )}
+        </View>
         {userData?.trial_start_at == null && (
           <Text style={styles.subsDes} numberOfLines={2}>
             Start with <Text style={styles.boldText}>30 day free trial</Text>{' '}

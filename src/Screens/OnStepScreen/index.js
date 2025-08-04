@@ -13,7 +13,13 @@ import {
 import React, {useEffect, useState} from 'react';
 import useOnStepScreen from './useOnStepScreen';
 import {styles} from './styles';
-import {arrowrightblack, arrRightPurple, horse, stepBg} from '../../Assets';
+import {
+  arrowrightblack,
+  arrRightPurple,
+  horse,
+  logout,
+  stepBg,
+} from '../../Assets';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
 import ThemeButton from '../../Components/ThemeButton';
@@ -25,7 +31,11 @@ import {Touchable} from '../../Components/Touchable';
 import {allAssociatesUrl, allEventTypeUrl} from '../../Utils/Urls';
 import {MultiSelectButton} from '../../Components/MultiSelectButton';
 import DatePicker from 'react-native-date-picker';
-import {formatDateToCustomFormat} from '../../Services/GlobalFunctions';
+import {
+  formatDateToCustomFormat,
+  formatDateToLong,
+} from '../../Services/GlobalFunctions';
+import {logOutAuth} from '../../Redux/Action/AuthAction';
 
 const OnStepScreen = ({navigation}) => {
   const {
@@ -43,6 +53,7 @@ const OnStepScreen = ({navigation}) => {
     // currentDate,
     modalState,
     setModalState,
+    dispatch,
   } = useOnStepScreen(navigation);
 
   // Calculate 13 years ago from today
@@ -65,7 +76,7 @@ const OnStepScreen = ({navigation}) => {
           /> */}
 
           <TextComponent
-            text={formatDateToCustomFormat(age ?? maxSelectableDate)}
+            text={formatDateToLong(age ?? maxSelectableDate)}
             onPress={() => setModalState(true)}
             styles={{
               ...styles.textStyle,
@@ -351,6 +362,16 @@ const OnStepScreen = ({navigation}) => {
     <>
       <ImageBackground source={stepBg} style={styles.container}>
         <View style={styles.skipBtn}>
+          <Touchable
+            onPress={() => {
+              dispatch(logOutAuth());
+            }}>
+            <Image
+              source={logout}
+              resizeMode="contain"
+              style={{width: wp('6'), height: wp('6')}}
+            />
+          </Touchable>
           <TextComponent
             text={'Skip'}
             fade

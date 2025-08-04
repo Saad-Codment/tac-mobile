@@ -5,7 +5,7 @@ import {
   unFollowEventsUrl,
 } from '../../Utils/Urls';
 import API from '../../Utils/helperFunc';
-import {useCallback, useRef} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import ReactNativeCalendarEvents from 'react-native-calendar-events';
@@ -19,6 +19,8 @@ const useEventDetailScreen = ({navigate}, {params}) => {
 
   const calendarIdRef = useRef(null);
   const recordIdRef = useRef(null);
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const {id} = params;
   const {data, error, refetch} = useQuery({
@@ -53,28 +55,32 @@ const useEventDetailScreen = ({navigate}, {params}) => {
   });
   const unfollowEvent = useMutation({
     mutationFn: data => {
-      return API.post(unFollowEventsUrl, {event_id: data?.id});
+      return API.post(unFollowEventsUrl, {
+        event_id: data?.id,
+        remove_from_calender: data?.isCalender,
+      });
     },
     onSuccess: async ({ok, data}) => {
       if (ok) {
         successMessage(data?.message);
         await refetch();
-        Alert.alert(`Want to remove this event to your calendar?`, '', [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'OK',
-            onPress: async () => {
-              console.log('Removing calendar event...', data);
-              await removeCalendarEvent(
-                data?.data?.calender_id,
-                data?.data?.record_id,
-              );
-            },
-          },
-        ]);
+
+        // Alert.alert(`Want to remove this event to your calendar?`, '', [
+        //   {
+        //     text: 'Cancel',
+        //     style: 'cancel',
+        //   },
+        //   {
+        //     text: 'OK',
+        //     onPress: async () => {
+        //       console.log('Removing calendar event...', data);
+        //       await removeCalendarEvent(
+        //         data?.data?.calender_id,
+        //         data?.data?.record_id,
+        //       );
+        //     },
+        //   },
+        // ]);
       } else {
         console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
         errorMessage(data?.message);
@@ -169,26 +175,37 @@ const useEventDetailScreen = ({navigate}, {params}) => {
     eventData: data?.data,
     onRefresh,
     userData,
-    followUnFollowEvent: async id => {
+    modalVisible,
+    setModalVisible,
+    isAleadyAddedToCalender: Boolean(
+      data?.data?.calender_id && !data?.data?.is_followed,
+    ),
+    followUnFollowEvent: async (isChecked, id) => {
+      setModalVisible(false);
       if (data?.data?.is_followed) {
-        await unfollowEvent.mutateAsync({id, url: unFollowEventsUrl});
+        await unfollowEvent.mutateAsync({
+          id,
+          url: unFollowEventsUrl,
+          isCalender: isChecked ? 1 : 0,
+        });
+        if (isChecked) await removeCalendarEvent();
         refetch();
       } else {
         await mutateAsync({id});
         await refetch();
-
-        Alert.alert(`Want to add this event to your calendar?`, '', [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'OK',
-            onPress: async () => {
-              await AaddtToMyDeviceCalendar();
-            },
-          },
-        ]);
+        if (isChecked) await AaddtToMyDeviceCalendar();
+        // Alert.alert(`Want to add this event to your calendar?`, '', [
+        //   {
+        //     text: 'Cancel',
+        //     style: 'cancel',
+        //   },
+        //   {
+        //     text: 'OK',
+        //     onPress: async () => {
+        //       await AaddtToMyDeviceCalendar();
+        //     },
+        //   },
+        // ]);
       }
     },
   };

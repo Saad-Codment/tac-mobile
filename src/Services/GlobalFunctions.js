@@ -530,13 +530,14 @@ const getIdsFromArry = (arry, key) => {
 };
 
 //GET IMAGE From Mobile
-const uploadFromGalary = async isMulti => {
+const uploadFromGalary = async (isMulti, isCircle) => {
   const imageData = await ImageCropPicker.openPicker({
     cropping: true,
     width: 300, // set desired resolution
     height: 300,
     // compressImageQuality: 0.8,
     multiple: isMulti ?? false,
+    cropperCircleOverlay: isCircle, // 👈 Enables circular cropping
   });
 
   const getOrientation = (width, height) => {
@@ -576,10 +577,11 @@ const uploadFromGalary = async isMulti => {
 };
 
 //GET IMAGE From Mobile
-const uploadFromCamera = async isMulti => {
+const uploadFromCamera = async (isMulti, isCircle) => {
   const imageData = await ImageCropPicker.openCamera({
     cropping: true,
     multiple: isMulti ?? false,
+    cropperCircleOverlay: isCircle, // 👈 Enables circular cropping
   });
 
   const checkOrientation = img => {

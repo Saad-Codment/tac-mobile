@@ -1,6 +1,6 @@
-import {View, Text, ImageBackground} from 'react-native';
+import {View, Text, ImageBackground, Image} from 'react-native';
 import React, {memo} from 'react';
-import {heart, stepBg} from '../../Assets';
+import {heart, logout, stepBg} from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {InputComponent} from '../../Components/InputComponent';
 import ThemeButton from '../../Components/ThemeButton';
@@ -13,6 +13,7 @@ import {Touchable} from '../../Components/Touchable';
 import {Colors} from '../../Theme/Variables';
 import KeyBoardWrapper from '../../Components/KeyBoardWrapper';
 import {parsePhoneNumberFromString} from 'libphonenumber-js';
+import {logOutAuth} from '../../Redux/Action/AuthAction';
 
 const NumberEditScreen = ({navigation}) => {
   const {
@@ -28,6 +29,7 @@ const NumberEditScreen = ({navigation}) => {
     validationError,
     maxLength,
     number,
+    dispatch,
   } = useNumberEditScreen(navigation);
 
   console.log(
@@ -37,9 +39,24 @@ const NumberEditScreen = ({navigation}) => {
 
   return (
     <>
-      <ImageBackground
-        source={stepBg}
-        style={styles.container}></ImageBackground>
+      <ImageBackground source={stepBg} style={styles.container}>
+        <Touchable
+          onPress={() => {
+            dispatch(logOutAuth());
+          }}>
+          <Image
+            source={logout}
+            resizeMode="contain"
+            style={{
+              width: wp('6'),
+              height: wp('6'),
+              marginTop: hp('8'),
+              alignSelf: 'flex-end',
+              marginRight: wp('2'),
+            }}
+          />
+        </Touchable>
+      </ImageBackground>
       <KeyBoardWrapper>
         <TextComponent
           text={(edit ? 'Enter Your' : 'Confirm Your') + ' Number'}

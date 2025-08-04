@@ -19,7 +19,8 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: FontSize.scale18,
     color: Colors.black,
-    marginBottom: hp('2'),
+    marginLeft: wp('24'),
+    // marginBottom: hp('2'),
   },
   subsDes: {
     fontWeight: '400',
@@ -84,9 +85,10 @@ export const styles = StyleSheet.create({
     marginLeft: wp('1.5'),
   },
   packText: {
-    fontWeight: '400',
+    fontWeight: '300',
     fontSize: FontSize.scale13,
     marginLeft: wp('1.5'),
+    width: wp('80'),
   },
   buyCont: {
     width: wp('35'),

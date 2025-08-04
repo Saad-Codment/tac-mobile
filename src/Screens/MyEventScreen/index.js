@@ -12,7 +12,7 @@ import {DataNotFound} from '../../Components/DataNotFound';
 import {CircleImage} from '../../Components/CircleImage';
 import {addcircle} from '../../Assets';
 
-function MyEventScreen({navigation}) {
+function MyEventScreen({navigation, route}) {
   const {
     eventDate,
     eventsByDate,
@@ -20,7 +20,7 @@ function MyEventScreen({navigation}) {
     onSelectVal,
     onMonthChange,
     refetch,
-  } = useMyEventScreen(navigation);
+  } = useMyEventScreen(navigation, route);
 
   const renderItem = useCallback(
     ({item, index}) => {
@@ -42,7 +42,7 @@ function MyEventScreen({navigation}) {
     <View style={{flex: 1}}>
       <HeaderComponent
         headerTitle={'Events'}
-        rightIconImg={addcircle}
+        rightIconImg={route?.params ? null : addcircle}
         onRightPress={() => navigation.navigate('CreateEventsScreen')}
         isBack
       />

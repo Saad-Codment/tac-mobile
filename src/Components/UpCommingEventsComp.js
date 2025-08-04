@@ -184,7 +184,12 @@ const UpcomingEventsComp = ({
                   (item?.last_name ? item?.last_name : '')
                 : item?.title
             }
-            styles={{fontWeight: 'bold', fontSize: hp('1.5')}}
+            styles={{
+              fontWeight: 'bold',
+              fontSize: hp('1.5'),
+              width: wp('62'),
+              // backgroundColor: 'red',
+            }}
             numberOfLines={1}
           />
           <View style={styles.locationView}>
@@ -624,9 +629,9 @@ const styles = StyleSheet.create({
   reportText: {
     fontSize: hp('1.2'),
     top: hp('-2'),
-    textAlign: 'right',
+    // textAlign: 'right',
     // marginLeft: hp('2'),
-    right: wp('-6'),
+    right: wp('-1'),
   },
   priceMainView: {
     flexDirection: 'row',

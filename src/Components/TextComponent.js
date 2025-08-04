@@ -13,6 +13,8 @@ export const TextComponent = ({
   isThemeColor,
   isLightThemeColor,
   isDarkTheme,
+  fontFamily,
+  size,
 }) => {
   return (
     <Text
@@ -32,7 +34,8 @@ export const TextComponent = ({
           : isDarkTheme
           ? Colors.backgroundTheme
           : Colors.black,
-        fontSize: hp('2'),
+        fontSize: size ?? hp('2'),
+        fontWeight: fontFamily ?? '200',
         ...styles,
       }}>
       {text}

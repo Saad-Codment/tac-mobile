@@ -74,7 +74,7 @@ function MainNavigator() {
                 />
               </>
             )}
-            {!userData?.trial_start_at && (
+            {!userData?.identifier && userData?.is_sub_granted != 1 && (
               <Stack.Screen
                 name="SubscribeScreen"
                 component={Screens.SubscribeScreen}

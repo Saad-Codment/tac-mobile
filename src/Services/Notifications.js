@@ -150,8 +150,8 @@ class FCMService {
 
         onNotificationNotiFee(data, appState);
         if (
-          data?.notification?.body?.includes('has sent a message') ||
-          data?.notification?.title?.includes('has sent a message')
+          data?.notification?.body?.includes('sent a new message') ||
+          data?.notification?.title?.includes('sent a new message')
         ) {
           store.dispatch({type: types.isChatNotifyTrue});
         } else store.dispatch({type: types.isNotifyTrue});
@@ -195,6 +195,15 @@ class FCMService {
         console.log(detail, 'alkjakljalkajlkajl11ajlajklajlajl');
         // const notificationdisplay = await notifee.getDisplayedNotifications();
 
+        const hitNotification = () => {
+          if (
+            detail?.notification?.body?.includes('sent a new message') ||
+            detail?.notification?.title?.includes('sent a new message')
+          ) {
+            store.dispatch({type: types.isChatNotifyTrue});
+          } else store.dispatch({type: types.isNotifyTrue});
+        };
+        hitNotification();
         const {notification} = detail;
         const isPressed = Boolean(
           type === EventType.ACTION_PRESS || type == EventType.PRESS,

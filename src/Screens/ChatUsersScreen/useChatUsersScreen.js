@@ -70,7 +70,7 @@ const useChatUserScreen = ({navigate, addListener}) => {
 
       // Delete the main document
       await deleteDoc(doc(db, 'messages', chatroomId));
-      initializeChat();
+      await initializeChat();
       // updateState({ messages: [] });
       return true;
     } catch (error) {

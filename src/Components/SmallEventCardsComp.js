@@ -24,7 +24,7 @@ const SmallEventCardsComp = ({item, onPress}) => {
           styles={styles.monthText}
         />
         <TextComponent
-          text={getDateMonthYear(item?.from_date)?.day}
+          text={getDateMonthYear(item?.from_date)?.day - 1}
           isThemeColor
           styles={styles.dateText}
         />
