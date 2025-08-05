@@ -238,7 +238,7 @@ const HomeScreen = ({navigation}) => {
                 textStyle={{fontSize: hp('1.5')}}
                 onPress={async () => {
                   await fetchNextPage();
-                  afterFetchNextPage();
+                  // afterFetchNextPage();
                 }}
               />
             )) // Show loading spinner at the bottom

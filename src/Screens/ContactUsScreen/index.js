@@ -22,7 +22,7 @@ const ContactUsScreen = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
       <HeaderComponent headerTitle={'Contact Us'} isBack />
-      <TextComponent text="Report" styles={styles.modalHeading} />
+      {/* <TextComponent text="Report" styles={styles.modalHeading} /> */}
       <View style={{width: wp('90'), alignSelf: 'center'}}>
         <TextComponent
           text="Why is this inappropriate?"

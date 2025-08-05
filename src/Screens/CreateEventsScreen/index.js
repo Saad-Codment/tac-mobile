@@ -8,6 +8,7 @@ import {
   Platform,
   Switch,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import React, {memo, useState} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
@@ -221,7 +222,7 @@ const CreateEventsScreen = ({navigation, route}) => {
                         {cancelable: true, onDismiss: () => {}},
                       );
                     }}>
-                    <Image
+                    <ImageBackground
                       source={
                         value?.uri
                           ? {
@@ -231,8 +232,29 @@ const CreateEventsScreen = ({navigation, route}) => {
                             }
                           : uploadImgView
                       }
-                      style={styles.uploadImg}
-                    />
+                      style={styles.uploadImg}>
+                      {value?.uri && (
+                        <Touchable
+                          onPress={() => onChange(null)}
+                          style={{
+                            with: wp('4'),
+                            height: hp('4'),
+                            paddingHorizontal: wp('2'),
+                            paddingVertical: hp('2'),
+                          }}>
+                          <Image
+                            source={crossWhite}
+                            resizeMode="contain"
+                            style={{
+                              width: wp('3'),
+                              height: hp('3'),
+                              right: wp('2'),
+                              position: 'absolute',
+                            }}
+                          />
+                        </Touchable>
+                      )}
+                    </ImageBackground>
                   </Touchable>
                   {errors['eventImg'] && (
                     <TextComponent

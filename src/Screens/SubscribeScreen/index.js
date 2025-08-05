@@ -63,10 +63,10 @@ const SubscribeScreen = ({navigation, route}) => {
                 {plan?.title} /
                 <Text style={styles.monthlyTextBold}>{plan?.priceString}</Text>
               </Text>
-              <TextComponent
+              {/* <TextComponent
                 styles={styles.textDes}
                 text={'Salungat sa kaalaman ng marami.'}
-              />
+              /> */}
             </View>
           </View>
         </View>

@@ -62,6 +62,7 @@ const usePorfileScreen = ({navigate, goBack}) => {
       return formDataFunc(editProfileUrl, data, 'profile_image');
     },
     onSuccess: ({ok, data}) => {
+      console.log('sldkbvklsdbvklsbdklvbskldbvsdkvbksd', data);
       if (ok) {
         successMessage('Your profile updated sucessfully!');
         if (data.user?.first_name || data?.user?.last_name) {
@@ -77,6 +78,7 @@ const usePorfileScreen = ({navigate, goBack}) => {
     onError: ({message}) => {
       errorMessage('Problem occurred while uploading data.');
     },
+    retry: true,
   });
 
   const [alertState, setAlertState] = useState({
@@ -212,6 +214,7 @@ const usePorfileScreen = ({navigate, goBack}) => {
     onPressKey: onPressKeyRef.current,
     allData: data?.data,
     justUploadImg: img => {
+      console.log('jkldbvkjlsbdklvbskldbvklsdbklvklsd', img);
       mutateAsync({
         profile_image: img,
         first_name: userData?.first_name,

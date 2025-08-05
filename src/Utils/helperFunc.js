@@ -306,6 +306,9 @@ const formDataFunc = (url, body, imageKey, isArray) => {
       console.log('testerr', err);
       store.dispatch(loadingFalse());
       return {data: err, ok: false};
+    })
+    .finally(() => {
+      store.dispatch(loadingFalse());
     });
 };
 

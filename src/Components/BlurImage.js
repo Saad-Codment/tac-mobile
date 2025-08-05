@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 import {Blurhash} from 'react-native-blurhash';
 import FastImage from 'react-native-fast-image';
 
@@ -28,7 +28,7 @@ const BlurImage = ({
         overflow: 'hidden', // Ensure overflow is hidden to crop excess image
         borderRadius: radius ?? 10,
       }}>
-      <FastImage
+      <Image
         style={[
           styles,
           {
