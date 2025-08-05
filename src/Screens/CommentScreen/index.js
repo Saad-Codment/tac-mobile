@@ -66,25 +66,53 @@ const CommentScreen = ({navigation, route}) => {
           />
         }
       />
-      <View style={styles.searchMain}>
-        <TextInput
-          enablesReturnKeyAutomatically
-          style={styles.searchinput}
-          onChangeText={e => setMessage(e)}
-          value={message}
-          placeholder={'Type a message'}
-          placeholderTextColor={Colors.grayFaded}
-          multiline
-        />
+      <View
+        style={{
+          width: wp('100'),
+          backgroundColor: 'white',
+          marginTop: hp('1'),
+          paddingTop: hp('1'),
+        }}>
+        <View
+          style={{
+            width: wp('85'),
+            // paddingHorizontal: wp('2'),
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignSelf: 'center',
+            backgroundColor: 'white',
+          }}>
+          <View style={{width: wp('70')}}>
+            <TextComponent text={'Replying to test'} size={hp('1.5')} />
+            <TextComponent
+              text={'Replying to test'}
+              fade
+              size={hp('1.2')}
+              numberOfLines={1}
+              styles={{width: wp('70'), marginVertical: hp('0.5')}}
+            />
+          </View>
+        </View>
+        <View style={styles.searchMain}>
+          <TextInput
+            enablesReturnKeyAutomatically
+            style={styles.searchinput}
+            onChangeText={e => setMessage(e)}
+            value={message}
+            placeholder={'Type a message'}
+            placeholderTextColor={Colors.grayFaded}
+            multiline
+          />
 
-        {message != null && message != '' && regexp.test(message) && (
-          <Touchable onPress={sendMessage} style={styles.sendBtnStyle}>
-            <View style={styles.msgsRecieve}>
-              {/* <TextComponent text={'Post'} styles={styles.sendTextStyle} /> */}
-              <Image source={send} style={styles.sendIcon} />
-            </View>
-          </Touchable>
-        )}
+          {message != null && message != '' && regexp.test(message) && (
+            <Touchable onPress={sendMessage} style={styles.sendBtnStyle}>
+              <View style={styles.msgsRecieve}>
+                {/* <TextComponent text={'Post'} styles={styles.sendTextStyle} /> */}
+                <Image source={send} style={styles.sendIcon} />
+              </View>
+            </Touchable>
+          )}
+        </View>
       </View>
     </KeyboardAvoidingView>
   );

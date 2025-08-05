@@ -80,6 +80,7 @@ export {default as circleCalFilled} from './Icons/circleCalFilled.png';
 export {default as userEditWhite} from './Icons/user-edit.png';
 
 export {default as blockUser} from './Icons/blockUser.png';
+export {default as replyIcon} from './Icons/replyIcon.png';
 
 export {default as username} from './Icons/username.png';
 export {default as user} from './Icons/user.png';
