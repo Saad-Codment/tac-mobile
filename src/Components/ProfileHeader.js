@@ -49,6 +49,7 @@ const ProfileHeader = ({
   onNotificarioPress,
   userDataImg,
   onProfilePress,
+  nextScreen,
 }) => {
   const {dispatch, getState} = useReduxStore();
   const {userData} = getState('Auth');
@@ -165,7 +166,11 @@ const ProfileHeader = ({
             </View>
           </View>
         </Touchable>
-        <Touchable onPress={() => NavigationService.navigate('ProfileScreen')}>
+        <Touchable
+          onPress={() => {
+            nextScreen('ProfileScreen');
+            NavigationService.navigate('ProfileScreen');
+          }}>
           <Image
             source={userEditWhite}
             resizeMode="contain"
@@ -173,7 +178,11 @@ const ProfileHeader = ({
             tintColor={'white'}
           />
         </Touchable>
-        <Touchable onPress={() => NavigationService.navigate('SettingScreen')}>
+        <Touchable
+          onPress={() => {
+            nextScreen('SettingScreen');
+            NavigationService.navigate('SettingScreen');
+          }}>
           <Image
             source={setting1}
             resizeMode="contain"

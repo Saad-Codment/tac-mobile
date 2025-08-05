@@ -11,7 +11,11 @@ import {errorMessage} from '../../Config/NotificationMessage';
 import useFriendServices from '../../Services/FriendServices';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {loadingFalse} from '../../Redux/Action/isloadingAction';
-import {useFocusEffect} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 
 const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
   const [page, setPage] = useState(1); // Current page for pagination
@@ -20,6 +24,14 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
   const [hasNextPage, setHasNextPage] = useState(true); // Flag to check if more data exists
   const [modal, setModal] = useState(null); // Flag to check if more data exists
   const [isHitFirstTime, setIsHitFirstTime] = useState(false);
+  const [afterLoadMoreHit, setAfterLoadMoreHit] = useState(false);
+  const [nextScreen, setNextScreen] = useState(null);
+  const [commentModal, setCommentModal] = useState(false);
+  const [stateForModalData, setStateForModalData] = useState(null);
+
+  const navigation = useNavigation();
+  const route = useRoute();
+  const idParam = route?.params?.id;
 
   console.log('paramsparamsparamsparamsparamsparamsparams', params);
 
@@ -38,23 +50,30 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
       );
       setIsHitFirstTime(true);
       if (response.ok) {
+        console.log(
+          'sjkdlksdbvlksbdvklbsdklvbskldvsd',
+          response?.data?.total_pages,
+        );
         setTotalPages(response?.data?.total_pages);
-        if (page == response?.data?.total_pages) {
+        if (page == response?.data?.total_pages || !afterLoadMoreHit) {
           setEventsList(response?.data?.data);
         } else {
+          console.log('pppppppppp');
           setEventsList(prev => [...prev, ...response?.data?.data]);
           setHasNextPage(response?.data?.total_pages); // Assuming the API provides this flag
+          setAfterLoadMoreHit(false);
         }
-      } else errorMessage('Error on fetching data!');
+      }
       return response?.data;
     },
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
+    staleTime: 0, // 👈 Treat data as stale immediately
+    cacheTime: 0, // 👈 Don't cache the data
     // enabled: false, // ❌ Disable auto-fetching
   });
 
   const loadMoreData = useCallback(
     isCurrent => {
+      setAfterLoadMoreHit(true);
       if (!isFetching && hasNextPage) {
         if (isCurrent) null;
         else setPage(prev => prev + 1); // Increment the page number
@@ -118,19 +137,24 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
 
   useFocusEffect(
     useCallback(() => {
-      // On screen focus
-      if (params?.id) {
+      if (idParam) {
         setIsHitFirstTime(false);
         setEventsList([]);
         setPage(1);
         refetch();
       }
 
-      // On screen blur (unfocus)
       return () => {
-        setParams({id: undefined});
+        setIsHitFirstTime(false);
+        setEventsList([]);
+        setPage(1);
+
+        // Reset params if navigation allows
+        if (navigation.setParams) {
+          navigation.setParams({id: undefined});
+        }
       };
-    }, [params?.id]),
+    }, [idParam]),
   );
   // useFocusEffect(
   //   useCallback(() => {
@@ -144,7 +168,7 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
 
   useEffect(() => {
     const event = addListener('focus', async () => {
-      refetch();
+      if (!params?.id) refetch();
       // if (params?.id) onRefresh();
     });
     return event;
@@ -199,6 +223,12 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
     functionToUpdatePostOrEvent,
     isSuccess,
     isHitFirstTime,
+    setAfterLoadMoreHit,
+    setNextScreen,
+    setCommentModal,
+    commentModal,
+    stateForModalData,
+    setStateForModalData,
   };
 };
 
