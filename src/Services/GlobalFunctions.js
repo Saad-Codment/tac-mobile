@@ -17,6 +17,7 @@ import {randomBytes} from 'react-native-get-random-values';
 import {store} from '../Redux/Reducer';
 import {femaleImg, maleImg} from '../Assets';
 // import Intl from 'intl';
+import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 const getSingleCharacter = text => {
   let letter = text?.charAt(0).toUpperCase();
@@ -529,6 +530,74 @@ const getIdsFromArry = (arry, key) => {
   return arry.map(res => res[key]);
 };
 
+/**
+ * Resizes an image to max 10MB with progressive compression
+ * @param {Object} image - Image object from ImageCropPicker
+ * @param {number} [targetWidth=800] - Max width after resize
+ * @param {number} [targetHeight=800] - Max height after resize
+ * @returns {Promise<Object>} Processed image object
+ */
+const resizeImage = async (image, targetWidth = 800, targetHeight = 800) => {
+  try {
+    // 1. Get original file info
+    const originalUri = image.uri;
+    const fileInfo = await RNFS.stat(originalUri);
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+
+    // 2. Skip if already under 10MB
+    if (fileInfo.size <= MAX_SIZE) {
+      return {
+        ...image,
+        uri: originalUri,
+        size: fileInfo.size,
+      };
+    }
+
+    // 3. Progressive compression (90% → 10%)
+    let quality = 90;
+    let compressedUri = originalUri;
+
+    while (quality >= 10) {
+      const result = await ImageResizer.createResizedImage(
+        originalUri,
+        targetWidth,
+        targetHeight,
+        'JPEG', // or 'PNG'
+        quality,
+        0, // rotation
+        null, // auto output path
+      );
+
+      const newInfo = await RNFS.stat(result.uri);
+
+      if (newInfo.size <= MAX_SIZE) {
+        compressedUri = result.uri;
+        break;
+      }
+
+      // Cleanup failed attempt
+      await RNFS.unlink(result.uri).catch(() => {});
+      quality -= 10;
+    }
+
+    // 4. Final check (if even 10% quality is >10MB)
+    const finalInfo = await RNFS.stat(compressedUri);
+    if (finalInfo.size > MAX_SIZE) {
+      throw new Error("Image couldn't be compressed under 10MB");
+    }
+
+    return {
+      ...image,
+      uri: compressedUri,
+      size: finalInfo.size,
+      type: 'image/jpeg', // Force JPEG after compression
+      name: image.name.replace(/\.[^/.]+$/, '.jpg'),
+    };
+  } catch (error) {
+    console.error('Resize error:', error);
+    return image; // Fallback to original if resize fails
+  }
+};
 //GET IMAGE From Mobile
 const uploadFromGalary = async (isMulti, isCircle) => {
   const imageData = await ImageCropPicker.openPicker({
@@ -547,12 +616,18 @@ const uploadFromGalary = async (isMulti, isCircle) => {
   };
 
   if (Array.isArray(imageData)) {
-    return imageData.map(res => ({
-      uri: Platform.OS === 'ios' ? res?.sourceURL : res?.path,
-      name: res?.filename || 'photo.jpg',
-      type: res?.mime,
-      orientation: getOrientation(res?.width, res?.height),
-    }));
+    const processedImages = await Promise.all(
+      imageData.map(async res => {
+        const baseImage = {
+          uri: Platform.OS === 'ios' ? res?.sourceURL : res?.path,
+          name: res?.filename || 'photo.jpg',
+          type: res?.mime,
+          orientation: getOrientation(res?.width, res?.height),
+        };
+        return await resizeImage(baseImage);
+      }),
+    );
+    return processedImages;
   } else {
     const {
       height,
@@ -565,14 +640,20 @@ const uploadFromGalary = async (isMulti, isCircle) => {
       mime,
     } = imageData;
     const uri = Platform.OS === 'ios' ? sourceURL : path;
-    const fileName = filename || 'photo.jpg';
-
-    return {
-      uri,
-      name: fileName,
+    const fileName = filename || 'photo.png';
+    const baseImage = {
+      uri: Platform.OS === 'ios' ? sourceURL : path,
+      name: filename || 'photo.jpg',
       type: mime,
       orientation: getOrientation(width, height),
     };
+    return await resizeImage(baseImage);
+    // return {
+    //   uri,
+    //   name: fileName,
+    //   type: mime,
+    //   orientation: getOrientation(width, height),
+    // };
   }
 };
 

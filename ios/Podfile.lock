@@ -1160,6 +1160,8 @@ PODS:
     - Google-Maps-iOS-Utils (= 4.2.2)
     - GoogleMaps (= 7.4.0)
     - React-Core
+  - react-native-image-resizer (3.0.11):
+    - React-Core
   - react-native-maps (1.10.3):
     - React-Core
   - react-native-orientation-locker (1.7.0):
@@ -1434,6 +1436,8 @@ PODS:
     - FirebaseCoreExtension
     - React-Core
     - RNFBApp
+  - RNFS (2.20.0):
+    - React-Core
   - RNGoogleSignin (12.2.1):
     - GoogleSignIn (~> 7.1)
     - React-Core
@@ -1597,6 +1601,7 @@ DEPENDENCIES:
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
+  - "react-native-image-resizer (from `../node_modules/@bam.tech/react-native-image-resizer`)"
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -1635,6 +1640,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - "RNNotifee (from `../node_modules/@notifee/react-native`)"
@@ -1756,6 +1762,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-get-random-values"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-image-resizer:
+    :path: "../node_modules/@bam.tech/react-native-image-resizer"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-orientation-locker:
@@ -1832,6 +1840,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/auth"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNGoogleSignin:
     :path: "../node_modules/@react-native-google-signin/google-signin"
   RNImageCropPicker:
@@ -1913,6 +1923,7 @@ SPEC CHECKSUMS:
   react-native-geolocation-service: 32b2c2a3b91e70ce2a8d0c684801aaeb0a07e0ec
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-google-maps: 98754480fbb4fd5ccd016d0f75a2168a6c84ebc5
+  react-native-image-resizer: 24c5d06fae2176dc0caed4b6396e02befb44064a
   react-native-maps: 6f92b1fd37f9421b171c977a42785270703875dc
   react-native-orientation-locker: cc6f357b289a2e0dd2210fea0c52cb8e0727fdaa
   react-native-pager-view: 6ea51e8d4143407691f75070a055ea72d0a5b838
@@ -1953,6 +1964,7 @@ SPEC CHECKSUMS:
   RNFBApp: 20bfba7e2a61a959518c1d57e5d48817c62ed3f6
   RNFBAuth: 71ecb2cdb13dbcaf0f8453e5a6cd23340498cb53
   RNFBMessaging: 5ab773eae06da10716d17a5e8de915537043628c
+  RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
   RNGoogleSignin: 629df9e1ea81e2a17c4db5aae0e8a98309e4723a
   RNImageCropPicker: 92694f9d36a64deef06b989071fa3eab28af8df5
   RNNotifee: 8768d065bf1e2f9f8f347b4bd79147431c7eacd6
@@ -1966,6 +1978,6 @@ SPEC CHECKSUMS:
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   Yoga: 04f1db30bb810187397fa4c37dd1868a27af229c
 
-PODFILE CHECKSUM: 5893a1d15bf99f95931ea5226d382ee4be23be1d
+PODFILE CHECKSUM: 9db7e6f73ee4faa67f0e73f8b1dc843c8f1f1c15
 
 COCOAPODS: 1.16.2

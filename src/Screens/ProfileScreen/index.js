@@ -1,4 +1,5 @@
 import {
+  Alert,
   Dimensions,
   FlatList,
   Image,
@@ -49,6 +50,7 @@ import {AlertDesign} from '../../Components/AlertDesign';
 import {
   calculateAge,
   capitalizeFirstLetter,
+  uploadFromCamera,
   uploadFromGalary,
 } from '../../Services/GlobalFunctions';
 import {getMyFriendsUrl, imageUrl} from '../../Utils/Urls';
@@ -152,8 +154,29 @@ const ProfileScreen = ({navigation}) => {
                   top: hp('9'),
                 }}
                 onPress={async () => {
-                  const img = await uploadFromGalary(false, true);
-                  justUploadImg(img);
+                  Alert.alert(
+                    'Pick to choose image',
+                    '',
+                    [
+                      {
+                        text: 'Camera',
+                        onPress: async () => {
+                          const img = await uploadFromCamera(false, true);
+                          justUploadImg(img);
+                        },
+                      },
+                      {
+                        text: 'Gallery', // Just a dismissal button
+                        onPress: async () => {
+                          const img = await uploadFromGalary(false, true);
+                          justUploadImg(img);
+                        },
+                      },
+                    ],
+                    {cancelable: true},
+                  );
+                  // const img = await uploadFromGalary(false, true);
+                  // justUploadImg(img);
                 }}>
                 <Image
                   source={editPicBtn}

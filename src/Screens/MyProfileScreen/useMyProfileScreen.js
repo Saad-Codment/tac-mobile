@@ -43,17 +43,14 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
   });
 
   const {isFetching, isRefetching, refetch, isSuccess} = useQuery({
-    queryKey: ['myProfilePosts', page],
+    queryKey: [`myProfilePosts${userData?.id}`, page],
     queryFn: async () => {
       const response = await API.get(
         `${getUserPostsUrl + userData?.id}?page=${page}`,
       );
       setIsHitFirstTime(true);
       if (response.ok) {
-        console.log(
-          'sjkdlksdbvlksbdvklbsdklvbskldvsd',
-          response?.data?.total_pages,
-        );
+        console.log('sjkdlksdbvlksbdvklbsdklvbskldvsd', response?.data);
         setTotalPages(response?.data?.total_pages);
         if (page == response?.data?.total_pages || !afterLoadMoreHit) {
           setEventsList(response?.data?.data);
@@ -66,8 +63,8 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
       }
       return response?.data;
     },
-    staleTime: 0, // 👈 Treat data as stale immediately
-    cacheTime: 0, // 👈 Don't cache the data
+    // staleTime: 0, // 👈 Treat data as stale immediately
+    // cacheTime: 0, // 👈 Don't cache the data
     // enabled: false, // ❌ Disable auto-fetching
   });
 
@@ -168,7 +165,8 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
 
   useEffect(() => {
     const event = addListener('focus', async () => {
-      if (!params?.id) refetch();
+      queryClient.invalidateQueries({queryKey: ['getMyProfileData']});
+      refetch();
       // if (params?.id) onRefresh();
     });
     return event;

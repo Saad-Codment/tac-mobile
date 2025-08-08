@@ -25,7 +25,7 @@ const ContactUsScreen = ({navigation}) => {
       {/* <TextComponent text="Report" styles={styles.modalHeading} /> */}
       <View style={{width: wp('90'), alignSelf: 'center'}}>
         <TextComponent
-          text="Why is this inappropriate?"
+          text="Have questions or feedback? Reach out — we’re here for every rodeo ride!"
           styles={styles.innerHeading}
         />
         {reasonList?.map(res => (

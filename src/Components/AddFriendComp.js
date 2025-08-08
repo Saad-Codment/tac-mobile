@@ -22,6 +22,10 @@ const AddFriendComp = ({item, sendReq, mainViewStyle}) => {
     });
   };
 
+  console.log(
+    'jkabsjkcsbacjbklcbaklscblkascbasbca',
+    imageUrl(item?.profile_image),
+  );
   return (
     <>
       <Touchable

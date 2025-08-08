@@ -43,7 +43,7 @@ const ImagePreviewComp = ({visible, onClose, images}) => {
     setCurrentIndex(newIndex);
     flatListRef.current?.scrollToIndex({index: newIndex, animated: true});
   };
-
+  console.log('imageArrayimageArrayimageArrayimageArrayimageArray', imageArray);
   return (
     <Modal
       visible={visible}
@@ -86,9 +86,10 @@ const ImagePreviewComp = ({visible, onClose, images}) => {
                   enableCenterFocus
                   enableDoubleClickZoom>
                   <Image
-                    source={
-                      typeof item === 'string' ? {uri: imageUrl(item)} : item
-                    }
+                    // source={
+                    //   typeof item === 'string' ? {uri: imageUrl(item)} : item
+                    // }
+                    source={{uri: imageUrl(item)}}
                     style={styles.image}
                     resizeMode="contain"
                   />

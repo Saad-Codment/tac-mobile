@@ -37,7 +37,7 @@ const SettingScreen = ({navigate, goBack}) => {
   const {isloading} = getState('isloading');
   const {isContact} = getState('isContact');
   const onPressKeyRef = useRef(null);
-  // console.log('userDatauserDatauserDatauserDatauserData', userData);
+  console.log('userDatauserDatauserDatauserDatauserData', userData);
   const apiDataType = {
     event_association: {
       queryName: 'allAssociate',
@@ -60,6 +60,7 @@ const SettingScreen = ({navigate, goBack}) => {
 
   const {mutateAsync} = useMutation({
     mutationFn: data => {
+      console.log('kjsdbflksdbfklsdbfklsdbflsdkb', data);
       return formDataFunc(editProfileUrl, data, 'profile_image');
     },
     onSuccess: ({ok, data}) => {
@@ -151,9 +152,7 @@ const SettingScreen = ({navigate, goBack}) => {
       mutateAsync({
         first_name: modalUpdateData?.firstName ?? userData?.first_name,
         last_name: modalUpdateData?.lastName ?? userData?.last_name,
-        age: modalUpdateData?.userAge
-          ? formatDate(modalUpdateData?.userAge ?? userData?.age)
-          : null,
+        age: userData?.age ?? '',
         gender: modalUpdateData?.userGender?.id ?? userData?.gender,
         profile_image: modalUpdateData?.profileImg?.type
           ? modalUpdateData?.profileImg
