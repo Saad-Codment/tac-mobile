@@ -7,6 +7,8 @@ import {
   deleteEventUrl,
   deletePostUrl,
   likeUnlikeUrl,
+  postCommentLikeUrl,
+  postCommentReplyUrl,
   postCommentUrl,
   postLikeUrl,
   rejectFriendReqUrl,
@@ -171,6 +173,43 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
       errorMessage('Network request failed.');
     },
   });
+  /* The `const addCommentOnPost` is defining a `useMutation` hook that handles making a POST request
+  to the `postLikeUrl` endpoint with the provided data. */
+  const addLikeOnCommentPost = useMutation({
+    mutationFn: data => {
+      return API.post(postCommentLikeUrl, data);
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        // successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
+
+  /* The `const addCommentOnPost` is defining a `useMutation` hook that handles making a POST request
+  to the `postLikeUrl` endpoint with the provided data. */
+  const addReplyOnCommentOnPost = useMutation({
+    mutationFn: data => {
+      return API.post(postCommentReplyUrl, data);
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        // successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
 
   const sharePost = useMutation({
     mutationFn: data => {
@@ -267,6 +306,8 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     deletePost,
     deleteEvent,
     unblockUser,
+    addReplyOnCommentOnPost,
+    addLikeOnCommentPost,
   };
 };
 

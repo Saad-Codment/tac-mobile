@@ -144,4 +144,29 @@ export const styles = StyleSheet.create({
     borderBottomColor: Colors.lightBlack,
     justifyContent: 'space-between',
   },
+
+  // new style
+
+  commentContainer: {
+    width: wp('85'),
+    // paddingHorizontal: wp('2'),
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    // backgroundColor: 'white',
+  },
+  mainInputContainer: {
+    width: wp('100'),
+    // backgroundColor: 'red',
+    // marginTop: hp('1'),
+    paddingTop: hp('1'),
+    borderTopWidth: 0.2,
+  },
+  cancelIcon: {
+    alignSelf: 'flex-end',
+    tintColor: 'black',
+    width: wp('5'),
+    height: hp('2'),
+    right: wp('5'),
+  },
 });

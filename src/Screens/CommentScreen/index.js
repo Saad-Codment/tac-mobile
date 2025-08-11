@@ -16,7 +16,7 @@ import {Touchable} from '../../Components/Touchable';
 import {keyExtractor} from '../../Utils';
 import {DataNotFound} from '../../Components/DataNotFound';
 import {styles} from './styles';
-import {send} from '../../Assets';
+import {crossWhite, send} from '../../Assets';
 import CommentComp from '../../Components/CommentComp';
 
 const CommentScreen = ({navigation, route}) => {
@@ -30,11 +30,38 @@ const CommentScreen = ({navigation, route}) => {
     message,
     setMessage,
     sendMessage,
+    commentReply,
+    setPostReplyId,
+    postReplyId,
+    getPostCommentReplies,
+    setCommentReply,
   } = useCommentScreen(navigation, route);
 
   const renderItem = useCallback(
     ({item, index}) => {
-      return <CommentComp item={item} />;
+      return (
+        <CommentComp
+          item={item}
+          replyArry={
+            Boolean(
+              item?.id == getPostCommentReplies.data?.data?.data[0]?.parent_id,
+            )
+              ? getPostCommentReplies.data?.data?.data
+              : []
+          }
+          onSwipeRight={() => setCommentReply(item)}
+          // onCommentLikePress={async () => {
+          //   await addLikeOnCommentPost.mutateAsync({comment_id: item?.id});
+          //   refetch();
+          // }}
+          onReplyPress={() => {
+            setPostReplyId(item?.id);
+            setTimeout(() => {
+              getPostCommentReplies.refetch();
+            }, 1000);
+          }}
+        />
+      );
     },
     [commentsList],
   );
@@ -66,33 +93,38 @@ const CommentScreen = ({navigation, route}) => {
           />
         }
       />
-      <View
-        style={{
-          width: wp('100'),
-          backgroundColor: 'white',
-          marginTop: hp('1'),
-          paddingTop: hp('1'),
-        }}>
-        <View
-          style={{
-            width: wp('85'),
-            // paddingHorizontal: wp('2'),
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignSelf: 'center',
-            backgroundColor: 'white',
-          }}>
-          <View style={{width: wp('70')}}>
-            <TextComponent text={'Replying to test'} size={hp('1.5')} />
-            <TextComponent
-              text={'Replying to test'}
-              fade
-              size={hp('1.2')}
-              numberOfLines={1}
-              styles={{width: wp('70'), marginVertical: hp('0.5')}}
-            />
+      <View style={styles.mainInputContainer}>
+        {commentReply && (
+          <View style={styles.commentContainer}>
+            <View style={{width: wp('70')}}>
+              <TextComponent
+                text={`Replying to ${commentReply?.user?.first_name}`}
+                size={hp('1.5')}
+              />
+              <TextComponent
+                text={commentReply?.text}
+                fade
+                size={hp('1.2')}
+                numberOfLines={1}
+                styles={{
+                  width: wp('70'),
+                  marginVertical: hp('0.5'),
+                }}
+              />
+            </View>
+            <Touchable onPress={() => setCommentReply(null)}>
+              <Image
+                source={crossWhite}
+                resizeMode="contain"
+                style={{
+                  ...styles.cancelIcon,
+                  right: wp('-10'),
+                  top: hp('-1'),
+                }}
+              />
+            </Touchable>
           </View>
-        </View>
+        )}
         <View style={styles.searchMain}>
           <TextInput
             enablesReturnKeyAutomatically

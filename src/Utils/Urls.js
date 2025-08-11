@@ -57,8 +57,16 @@ export const allFriendEventsUrl = '/home/friends-events';
 export const allSuggestedEventsUrl = '/home/suggested-events';
 export const likeUnlikeUrl = '/react/like/';
 export const getEventsCommentUrl = '/events/comments/';
-export const getPostCommentUrl = '/posts/comments/';
+// export const getPostCommentUrl = '/posts/comments/';
+
+export const getPostCommentUrl = '/v1/post-comments/?post_id=';
+export const getPostCommentRepliesUrl = '/v1/post-comments/replies?comment_id=';
+
 export const postCommentUrl = '/react/comment';
+export const postCommentReplyUrl = '/v1/post-comments/add-reply';
+
+export const postCommentLikeUrl = '/v1/post-comments/like?comment_id=';
+
 export const getUserProfileUrl = '/user/get/';
 export const getUserPostsUrl = '/user/posts-and-events/';
 export const removeFriendUrl = '/friends/remove/';

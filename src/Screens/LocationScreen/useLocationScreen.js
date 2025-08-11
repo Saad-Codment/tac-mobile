@@ -162,22 +162,52 @@ const useLocationScreen = ({navigate, addListener, params}) => {
   });
 
   // Fetch place name using Google Maps API
+  // const getPlaceName = async (latitude, longitude) => {
+  //   const API_KEY = 'AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY';
+  //   const API_ENDPOINT = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`;
+  //   try {
+  //     console.log('Location Datalksdnvklsdnklvnsdlkvnskld:', API_ENDPOINT);
+  //     const response = await fetch(API_ENDPOINT);
+  //     const data = await response.json();
+  //     const locationName =
+  //       data.results[0]?.formatted_address || 'Unknown Location';
+  //     console.log('Location Name:', locationName);
+  //     return locationName;
+  //   } catch (error) {
+  //     console.error('Error fetching location details:', error);
+  //     return null;
+  //   }
+  // };
+
   const getPlaceName = async (latitude, longitude) => {
+    // API key should ideally come from environment variables or backend
     const API_KEY = 'AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY';
     const API_ENDPOINT = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`;
+
     try {
+      console.log('Fetching location data for:', latitude, longitude);
       const response = await fetch(API_ENDPOINT);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
+
+      if (!data.results || data.results.length === 0) {
+        console.log('No location found for these coordinates');
+        return 'Unknown Location';
+      }
+
       const locationName =
         data.results[0]?.formatted_address || 'Unknown Location';
       console.log('Location Name:', locationName);
       return locationName;
     } catch (error) {
       console.error('Error fetching location details:', error);
-      return null;
+      return 'Unknown Location';
     }
   };
-
   // Confirm location and call the external function
   const handleLocationConfirm = async () => {
     if (currentLocation) {

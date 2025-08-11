@@ -10,7 +10,13 @@ import {
   View,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import {boldDivider, crossWhite, editPicBtn, send} from '../../Assets';
+import {
+  boldDivider,
+  crossWhite,
+  editPicBtn,
+  rightIos,
+  send,
+} from '../../Assets';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
 import ThemeButton from '../../Components/ThemeButton';
@@ -27,6 +33,7 @@ import {
 } from '../../Services/GlobalFunctions';
 import {
   getEventsCommentUrl,
+  getPostCommentRepliesUrl,
   getPostCommentUrl,
   imageUrl,
 } from '../../Utils/Urls';
@@ -53,14 +60,19 @@ const CommentModalComp = ({
   refetechKeys,
   index,
 }) => {
-  console.log('slkdbvklsbdklvbsdklvbklsdbvlksklvsd', index);
-
   const {queryClient, getState} = useReduxStore();
 
   const [message, setMessage] = useState(null);
-  const [isComment, setIsComment] = useState(false);
+  const [postReplyId, setPostReplyId] = useState(null);
 
-  const {postComment, addCommentOnPost} = useFriendServices();
+  const [commentReply, setCommentReply] = useState(null);
+
+  const {
+    postComment,
+    addCommentOnPost,
+    addReplyOnCommentOnPost,
+    addLikeOnCommentPost,
+  } = useFriendServices();
 
   const {data, error, refetch} = useQuery({
     queryKey: ['postComments' + id],
@@ -69,12 +81,18 @@ const CommentModalComp = ({
     cacheTime: 0, // 👈 Don't cache the data
   });
 
-  const onRefresh = useCallback(() => {
-    queryClient.fetchQuery({
-      queryKey: ['postComments'],
-      staleTime: 1000,
-    });
-  }, []);
+  const getPostCommentReplies = useQuery({
+    queryKey: ['postCommentReplies' + postReplyId],
+    queryFn: () => API.get(getPostCommentRepliesUrl + postReplyId),
+    staleTime: 0, // 👈 Treat data as stale immediately
+    cacheTime: 0, // 👈 Don't cache the data
+    enabled: false,
+  });
+
+  console.log(
+    'slkdbvklsbdklvbsdklvbklsdbvlksklvsd',
+    getPostCommentReplies.data?.data,
+  );
 
   const scrollViewRef = useRef();
   const handleAutoScroll = () => {
@@ -89,28 +107,57 @@ const CommentModalComp = ({
   let regexp = /^(?![\s\b]+$).+/gm;
 
   const sendMessage = async comment => {
-    if (message.trim()) {
-      await addCommentOnPost.mutateAsync({
-        post_id: id,
+    if (commentReply?.id) {
+      await addReplyOnCommentOnPost.mutateAsync({
+        comment_id: commentReply?.id,
         text: message,
       });
-
       setMessage(null);
-      setIsComment(true);
-      //   if (refetechKeys) {
-      //     refetechKeys.map(res => {
-      //       queryClient.invalidateQueries([res]); // Refetch data
-      //     });
-      //   }
-      functionToUpdateComment(index, true);
       refetch();
-      // queryClient.invalidateQueries(['comments']); // Refetch data
+      getPostCommentReplies.refetch();
+      setCommentReply(null);
+    } else {
+      if (message.trim()) {
+        await addCommentOnPost.mutateAsync({
+          post_id: id,
+          text: message,
+        });
+
+        setMessage(null);
+        functionToUpdateComment(index, true);
+        refetch();
+      }
     }
   };
 
-  const renderItem = useCallback(({item, index}) => {
-    return <CommentComp item={item} />;
-  }, []);
+  const renderItem = useCallback(
+    ({item, index}) => {
+      return (
+        <CommentComp
+          item={item}
+          replyArry={
+            Boolean(
+              item?.id == getPostCommentReplies.data?.data?.data[0]?.parent_id,
+            )
+              ? getPostCommentReplies.data?.data?.data
+              : []
+          }
+          onSwipeRight={() => setCommentReply(item)}
+          onCommentLikePress={async () => {
+            await addLikeOnCommentPost.mutateAsync({comment_id: item?.id});
+            refetch();
+          }}
+          onReplyPress={() => {
+            setPostReplyId(item?.id);
+            setTimeout(() => {
+              getPostCommentReplies.refetch();
+            }, 1000);
+          }}
+        />
+      );
+    },
+    [getPostCommentReplies.data?.data?.data, data?.data],
+  );
 
   return (
     <View style={styles.modalView}>
@@ -159,6 +206,7 @@ const CommentModalComp = ({
                 ref={scrollViewRef}
                 onContentSizeChange={handleAutoScroll}
                 showsVerticalScrollIndicator={false}
+                contentContainerStyle={{paddingHorizontal: wp('0.5')}}
                 ListEmptyComponent={
                   <DataNotFound
                     btnStyles={{width: wp('80')}}
@@ -168,7 +216,7 @@ const CommentModalComp = ({
                   />
                 }
               />
-              <View style={styles.searchMain}>
+              {/* <View style={styles.searchMain}>
                 <TextInput
                   enablesReturnKeyAutomatically
                   style={styles.searchinput}
@@ -182,11 +230,65 @@ const CommentModalComp = ({
                 {message != null && message != '' && regexp.test(message) && (
                   <Touchable onPress={sendMessage} style={styles.sendBtnStyle}>
                     <View style={styles.msgsRecieve}>
-                      {/* <TextComponent text={'Post'} styles={styles.sendTextStyle} /> */}
                       <Image source={send} style={styles.sendIcon} />
                     </View>
                   </Touchable>
                 )}
+              </View> */}
+              <View style={styles.mainInputContainer}>
+                {commentReply && (
+                  <View style={styles.commentContainer}>
+                    <View style={{width: wp('70')}}>
+                      <TextComponent
+                        text={`Replying to ${commentReply?.user?.first_name}`}
+                        size={hp('1.5')}
+                      />
+                      <TextComponent
+                        text={commentReply?.text}
+                        fade
+                        size={hp('1.2')}
+                        numberOfLines={1}
+                        styles={{
+                          width: wp('70'),
+                          marginVertical: hp('0.5'),
+                        }}
+                      />
+                    </View>
+                    <Touchable onPress={() => setCommentReply(null)}>
+                      <Image
+                        source={crossWhite}
+                        resizeMode="contain"
+                        style={{
+                          ...styles.cancelIcon,
+                          right: wp('-10'),
+                          top: hp('-1'),
+                        }}
+                      />
+                    </Touchable>
+                  </View>
+                )}
+                <View style={styles.searchMain}>
+                  <TextInput
+                    enablesReturnKeyAutomatically
+                    style={styles.searchinput}
+                    onChangeText={e => setMessage(e)}
+                    value={message}
+                    placeholder={'Type a message'}
+                    placeholderTextColor={Colors.grayFaded}
+                    multiline
+                  />
+
+                  {message != null && message != '' && regexp.test(message) && (
+                    <Touchable
+                      onPress={sendMessage}
+                      style={styles.sendBtnStyle}>
+                      <View style={styles.msgsRecieve}>
+                        {/* <TextComponent text={'Post'} styles={styles.sendTextStyle} /> */}
+                        <Image source={send} style={styles.sendIcon} />
+                      </View>
+                    </Touchable>
+                  )}
+                </View>
               </View>
             </KeyboardAvoidingView>
           </View>
@@ -218,7 +320,7 @@ styles = StyleSheet.create({
     shadowRadius: 7.68,
     elevation: 20,
     width: wp('100'),
-    paddingHorizontal: wp('5'),
+    // paddingHorizontal: wp('5'),
     height: hp('90'),
     alignSelf: 'center',
     marginBottom: hp('-2.5'),
@@ -231,12 +333,20 @@ styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'space-between',
   },
-  divider: {width: wp('15'), height: hp('5'), left: wp('40'), top: hp('1')},
+  divider: {width: wp('15'), height: hp('5'), left: wp('45'), top: hp('1')},
   cancelIcon: {
     alignSelf: 'flex-end',
     tintColor: 'black',
     width: wp('5'),
     height: hp('2'),
+    right: wp('5'),
+  },
+  mainInputContainer: {
+    width: wp('100'),
+    // backgroundColor: 'red',
+    // marginTop: hp('1'),
+    paddingTop: hp('1'),
+    borderTopWidth: 0.2,
   },
   headingText: {
     fontSize: hp('1.5'),
@@ -266,15 +376,7 @@ styles = StyleSheet.create({
     width: wp('90'),
     // paddingBottom: hp('5'), // Adjust as needed
   },
-  inputView: {
-    width: wp('90'),
-    height: hp('5'),
-    borderRadius: 30,
-    borderWidth: 0.5,
-    borderColor: Colors.dkBorderColor,
-    paddingHorizontal: wp('3'),
-    marginBottom: hp('5'),
-  },
+
   ageViewModal: {
     width: wp('90'),
     marginBottom: hp('20'),
@@ -401,6 +503,23 @@ styles = StyleSheet.create({
     height: hp('2'),
     resizeMode: 'contain',
     // marginLeft: wp('1'),
+  },
+  inputView: {
+    width: wp('90'),
+    height: hp('5'),
+    borderRadius: 30,
+    borderWidth: 0.5,
+    borderColor: Colors.dkBorderColor,
+    paddingHorizontal: wp('3'),
+    marginBottom: hp('5'),
+  },
+  commentContainer: {
+    width: wp('85'),
+    // paddingHorizontal: wp('2'),
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: 'white',
   },
   searchMain: {
     flexDirection: 'row',
