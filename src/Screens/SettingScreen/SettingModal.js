@@ -21,6 +21,7 @@ import ErrorInputComponent from '../../Components/ErrorInputComponent';
 import {MultiSelectButton} from '../../Components/MultiSelectButton';
 import {
   formatDateToCustomFormat,
+  formatDateToLong,
   sortByNameAlphabetically,
   uploadFromGalary,
 } from '../../Services/GlobalFunctions';
@@ -80,7 +81,7 @@ const SettingModal = ({
       <>
         <View style={styles.ageViewModal}>
           <TextComponent
-            text={formatDateToCustomFormat(
+            text={formatDateToLong(
               innerDataState?.userAge ?? maxSelectableDate,
             )}
             onPress={() => setModalState(true)}
@@ -114,7 +115,12 @@ const SettingModal = ({
               <DatePicker
                 mode={'date'}
                 open={modalState}
-                date={new Date(innerDataState?.userAge) ?? maxSelectableDate}
+                date={
+                  innerDataState?.userAge
+                    ? new Date(innerDataState?.userAge)
+                    : currentDate
+                }
+                maximumDate={maxSelectableDate} // 👈 This prevents dates after 13 years ago
                 is24hourSource="device"
                 locale="en"
                 modal
@@ -123,6 +129,9 @@ const SettingModal = ({
                   setModalState(false);
                   onChangeVal('userAge', e);
                   // }
+                }}
+                onCancel={() => {
+                  setModalState(false);
                 }}
               />
             </View>

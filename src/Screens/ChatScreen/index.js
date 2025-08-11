@@ -120,7 +120,11 @@ const ChatScreen = ({navigation, route}) => {
             uri={true}
           />
           <TextComponent
-            text={receiverData?.first_name + ' ' + receiverData?.last_name}
+            text={
+              receiverData?.first_name +
+              ' ' +
+              (receiverData?.last_name ? receiverData?.last_name : '')
+            }
             styles={{marginLeft: wp('2'), color: 'white', fontWeight: 'bold'}}
           />
         </Touchable>

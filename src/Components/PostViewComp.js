@@ -171,6 +171,7 @@ const PostViewComp = ({
   functionToDelete,
   functionToUpdateComment,
   functionToUpdatePostOrEvent,
+  setCommentModal,
 }) => {
   const {likeAndDisLikeEvent, addLikeOnPost, sharePost, deletePost} =
     useFriendServices();
@@ -329,16 +330,18 @@ const PostViewComp = ({
         </Touchable>
         <Touchable
           style={styles.leftRightView}
-          onPress={() =>
-            NavigationService.navigate('CommentScreen', {
-              id: item?.id,
-              refetechKeys,
-              isPost: true,
-              refetch,
-              functionToUpdateComment,
-              index,
-            })
-          }>
+          onPress={() => {
+            if (setCommentModal) setCommentModal(item?.id, item?.index);
+            else
+              NavigationService.navigate('CommentScreen', {
+                id: item?.id,
+                refetechKeys,
+                isPost: true,
+                refetch,
+                functionToUpdateComment,
+                index,
+              });
+          }}>
           <Image
             source={commentIcon}
             resizeMode="contain"

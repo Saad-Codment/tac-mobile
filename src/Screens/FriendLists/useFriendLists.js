@@ -54,7 +54,7 @@ const useFriendLists = ({navigation, route}, {params}) => {
   const list = data?.pages?.flatMap(page => page.data?.data) || [];
 
   return {
-    friendListData: list,
+    friendListData: list.filter(res => res != undefined),
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,

@@ -16,6 +16,7 @@ import PostViewComp from '../../Components/PostViewComp';
 import {Touchable} from '../../Components/Touchable';
 import {getEventsUrl, getMyFriendsUrl} from '../../Utils/Urls';
 import SettingModal from '../SettingScreen/SettingModal';
+import CommentModalComp from './CommentModalComp';
 
 const MyProfileScreen = ({navigation, route}) => {
   const {
@@ -32,6 +33,8 @@ const MyProfileScreen = ({navigation, route}) => {
     allData,
     isSuccess,
     isHitFirstTime,
+    commentModal,
+    setCommentModal,
     setModal,
     openBottomSheet,
     onRefresh,
@@ -43,9 +46,12 @@ const MyProfileScreen = ({navigation, route}) => {
     setModalVal,
     onOpenModal,
     functionToUpdatePostOrEvent,
+    setNextScreen,
+    stateForModalData,
+    setStateForModalData,
   } = useMyProfileScreen(navigation, route);
 
-  console.log('lkdbkldbfklbdfklbkldfbl;kdbsf;b;ldflnb;df', myUserData);
+  console.log('lkdbkldbfklbdfklbkldfbl;kdbsf;b;ldflnb;df', eventsList);
 
   const renderItem = useCallback(
     (item, index) => {
@@ -62,6 +68,10 @@ const MyProfileScreen = ({navigation, route}) => {
                 functionToUpdateComment(index, isComment)
               }
               refetch={refetch}
+              setCommentModal={id => {
+                setStateForModalData({id, index});
+                setCommentModal(true);
+              }}
               functionToUpdatePostOrEvent={newItem =>
                 functionToUpdatePostOrEvent(index, newItem)
               }
@@ -99,11 +109,12 @@ const MyProfileScreen = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <ProfileHeader />
+      <ProfileHeader nextScreen={screen => setNextScreen(screen)} />
       <View style={styles.statsContainer}>
         <Touchable
           style={styles.statItem}
           onPress={() => {
+            setNextScreen('AllEventsScreen');
             navigation.navigate('AllEventsScreen', {
               url: getEventsUrl,
               key: 'myProfileEvents',
@@ -137,12 +148,13 @@ const MyProfileScreen = ({navigation, route}) => {
         </Touchable>
         <Touchable
           style={styles.statItem}
-          onPress={() =>
+          onPress={() => {
+            setNextScreen('FriendLists');
             navigation.navigate('FriendLists', {
               url: getMyFriendsUrl,
               key: 'myFriends',
-            })
-          }>
+            });
+          }}>
           <Image
             source={friendReq}
             resizeMode="contain"
@@ -201,6 +213,17 @@ const MyProfileScreen = ({navigation, route}) => {
           isModal={modalVal}
           onSelect={() => {}}
           onBackPress={() => setModalVal(false)}
+        />
+      )}
+      {commentModal && (
+        <CommentModalComp
+          isModal={commentModal}
+          index={stateForModalData?.index}
+          id={stateForModalData?.id}
+          onBackPress={() => setCommentModal(false)}
+          functionToUpdateComment={(index, val) =>
+            functionToUpdateComment(index, val)
+          }
         />
       )}
     </View>
