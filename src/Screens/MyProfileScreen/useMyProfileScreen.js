@@ -28,6 +28,7 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
   const [nextScreen, setNextScreen] = useState(null);
   const [commentModal, setCommentModal] = useState(false);
   const [stateForModalData, setStateForModalData] = useState(null);
+  const [modalType, setModalType] = useState(false);
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -227,6 +228,8 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
     commentModal,
     stateForModalData,
     setStateForModalData,
+    modalType,
+    setModalType,
   };
 };
 

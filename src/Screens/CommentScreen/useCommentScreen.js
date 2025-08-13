@@ -2,6 +2,7 @@ import {useQuery} from '@tanstack/react-query';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import API from '../../Utils/helperFunc';
 import {
+  getEventsCommentRepliesUrl,
   getEventsCommentUrl,
   getPostCommentRepliesUrl,
   getPostCommentUrl,
@@ -20,6 +21,8 @@ const useCommentScreen = ({navigate}, {params}) => {
     addCommentOnPost,
     addReplyOnCommentOnPost,
     addLikeOnCommentPost,
+    addLikeOnCommentEvent,
+    addReplyOnCommentOnEvent,
   } = useFriendServices();
 
   const {data, error, refetch} = useQuery({
@@ -64,7 +67,7 @@ const useCommentScreen = ({navigate}, {params}) => {
           });
           // setMessage(null);
           // refetch();
-          getPostCommentReplies.refetch();
+          await getPostCommentReplies.refetch();
           setCommentReply(null);
         } else {
           await addCommentOnPost.mutateAsync({
@@ -77,10 +80,21 @@ const useCommentScreen = ({navigate}, {params}) => {
           // refetch();
         }
       } else {
-        await postComment.mutateAsync({
-          event_id: params?.id,
-          text: message,
-        });
+        if (commentReply?.id) {
+          await addReplyOnCommentOnEvent.mutateAsync({
+            comment_id: commentReply?.id,
+            text: message,
+          });
+          // setMessage(null);
+          // refetch();
+          await getPostCommentReplies.refetch();
+          setCommentReply(null);
+        } else {
+          await postComment.mutateAsync({
+            event_id: params?.id,
+            text: message,
+          });
+        }
       }
       setMessage(null);
       setIsComment(true);
@@ -105,6 +119,13 @@ const useCommentScreen = ({navigate}, {params}) => {
   const getPostCommentReplies = useQuery({
     queryKey: ['postCommentReplies' + postReplyId],
     queryFn: () => API.get(getPostCommentRepliesUrl + postReplyId),
+    staleTime: 0, // 👈 Treat data as stale immediately
+    cacheTime: 0, // 👈 Don't cache the data
+    enabled: false,
+  });
+  const getEventCommentReplies = useQuery({
+    queryKey: ['eventCommentReplies' + postReplyId],
+    queryFn: () => API.get(getEventsCommentRepliesUrl + postReplyId),
     staleTime: 0, // 👈 Treat data as stale immediately
     cacheTime: 0, // 👈 Don't cache the data
     enabled: false,
@@ -188,6 +209,10 @@ const useCommentScreen = ({navigate}, {params}) => {
     getPostCommentReplies,
     setCommentReply,
     commentReply,
+    addLikeOnCommentPost,
+    addLikeOnCommentEvent,
+    refetch,
+    getEventCommentReplies,
   };
 };
 

@@ -50,8 +50,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  addMoreImg: {width: wp('5'), height: hp('3')},
-  addMoreTxt: {fontSize: hp('1.5'), marginLeft: wp('2')},
+  addMoreImg: {width: wp('4'), height: hp('3')},
+  addMoreTxt: {marginLeft: wp('2')},
   createBtnStyle: {
     width: wp('85'),
     alignSelf: 'center',

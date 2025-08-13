@@ -32,6 +32,7 @@ import {
   uploadFromGalary,
 } from '../../Services/GlobalFunctions';
 import {
+  getEventsCommentRepliesUrl,
   getEventsCommentUrl,
   getPostCommentRepliesUrl,
   getPostCommentUrl,
@@ -59,6 +60,7 @@ const CommentModalComp = ({
   id,
   refetechKeys,
   index,
+  isPost,
 }) => {
   const {queryClient, getState} = useReduxStore();
 
@@ -72,11 +74,14 @@ const CommentModalComp = ({
     addCommentOnPost,
     addReplyOnCommentOnPost,
     addLikeOnCommentPost,
+    addLikeOnCommentEvent,
+    addReplyOnCommentOnEvent,
   } = useFriendServices();
 
   const {data, error, refetch} = useQuery({
-    queryKey: ['postComments' + id],
-    queryFn: () => API.get(getPostCommentUrl + id),
+    queryKey: [(isPost ? 'postComments' : 'eventComment') + id],
+    queryFn: () =>
+      API.get((isPost ? getPostCommentUrl : getEventsCommentUrl) + id),
     staleTime: 0, // 👈 Treat data as stale immediately
     cacheTime: 0, // 👈 Don't cache the data
   });
@@ -84,6 +89,14 @@ const CommentModalComp = ({
   const getPostCommentReplies = useQuery({
     queryKey: ['postCommentReplies' + postReplyId],
     queryFn: () => API.get(getPostCommentRepliesUrl + postReplyId),
+    staleTime: 0, // 👈 Treat data as stale immediately
+    cacheTime: 0, // 👈 Don't cache the data
+    enabled: false,
+  });
+
+  const getEventCommentReplies = useQuery({
+    queryKey: ['eventCommentReplies' + postReplyId],
+    queryFn: () => API.get(getEventsCommentRepliesUrl + postReplyId),
     staleTime: 0, // 👈 Treat data as stale immediately
     cacheTime: 0, // 👈 Don't cache the data
     enabled: false,
@@ -107,25 +120,49 @@ const CommentModalComp = ({
   let regexp = /^(?![\s\b]+$).+/gm;
 
   const sendMessage = async comment => {
-    if (commentReply?.id) {
-      await addReplyOnCommentOnPost.mutateAsync({
-        comment_id: commentReply?.id,
-        text: message,
-      });
-      setMessage(null);
-      refetch();
-      getPostCommentReplies.refetch();
-      setCommentReply(null);
-    } else {
-      if (message.trim()) {
-        await addCommentOnPost.mutateAsync({
-          post_id: id,
+    if (isPost) {
+      if (commentReply?.id) {
+        await addReplyOnCommentOnPost.mutateAsync({
+          comment_id: commentReply?.id,
           text: message,
         });
-
         setMessage(null);
-        functionToUpdateComment(index, true);
         refetch();
+        getPostCommentReplies.refetch();
+        setCommentReply(null);
+      } else {
+        if (message.trim()) {
+          await addCommentOnPost.mutateAsync({
+            post_id: id,
+            text: message,
+          });
+
+          setMessage(null);
+          functionToUpdateComment(index, true);
+          refetch();
+        }
+      }
+    } else {
+      if (commentReply?.id) {
+        await addReplyOnCommentOnEvent.mutateAsync({
+          comment_id: commentReply?.id,
+          text: message,
+        });
+        setMessage(null);
+        refetch();
+        getEventCommentReplies.refetch();
+        setCommentReply(null);
+      } else {
+        if (message.trim()) {
+          await postComment.mutateAsync({
+            event_id: id,
+            text: message,
+          });
+
+          setMessage(null);
+          functionToUpdateComment(index, true);
+          refetch();
+        }
       }
     }
   };
@@ -137,26 +174,54 @@ const CommentModalComp = ({
           item={item}
           replyArry={
             Boolean(
-              item?.id == getPostCommentReplies.data?.data?.data[0]?.parent_id,
+              item?.id ==
+                ((
+                  isPost
+                    ? getPostCommentReplies.data?.data?.data?.length
+                    : getEventCommentReplies.data?.data?.data?.length
+                )
+                  ? isPost
+                    ? getPostCommentReplies.data?.data?.data[0]?.parent_id
+                    : getEventCommentReplies.data?.data?.data[0]?.parent_id
+                  : 0),
             )
-              ? getPostCommentReplies.data?.data?.data
+              ? isPost
+                ? getPostCommentReplies.data?.data?.data
+                : getEventCommentReplies.data?.data?.data
               : []
           }
           onSwipeRight={() => setCommentReply(item)}
+          onCommentReplyLikePress={async id => {
+            if (isPost) {
+              await addLikeOnCommentPost.mutateAsync({comment_id: id});
+              getPostCommentReplies.refetch();
+            } else {
+              await addLikeOnCommentEvent.mutateAsync({comment_id: id});
+              getEventCommentReplies.refetch();
+            }
+          }}
           onCommentLikePress={async () => {
-            await addLikeOnCommentPost.mutateAsync({comment_id: item?.id});
+            if (isPost)
+              await addLikeOnCommentPost.mutateAsync({comment_id: item?.id});
+            else
+              await addLikeOnCommentEvent.mutateAsync({comment_id: item?.id});
             refetch();
           }}
           onReplyPress={() => {
             setPostReplyId(item?.id);
             setTimeout(() => {
-              getPostCommentReplies.refetch();
+              if (isPost) getPostCommentReplies.refetch();
+              else getEventCommentReplies.refetch();
             }, 1000);
           }}
         />
       );
     },
-    [getPostCommentReplies.data?.data?.data, data?.data],
+    [
+      getPostCommentReplies.data?.data?.data,
+      data?.data,
+      getEventCommentReplies.data?.data?.data,
+    ],
   );
 
   return (

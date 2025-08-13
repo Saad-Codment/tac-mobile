@@ -34,6 +34,8 @@ const MyProfileScreen = ({navigation, route}) => {
     isSuccess,
     isHitFirstTime,
     commentModal,
+    modalType,
+    setModalType,
     setCommentModal,
     setModal,
     openBottomSheet,
@@ -69,6 +71,7 @@ const MyProfileScreen = ({navigation, route}) => {
               }
               refetch={refetch}
               setCommentModal={id => {
+                setModalType(true);
                 setStateForModalData({id, index});
                 setCommentModal(true);
               }}
@@ -88,6 +91,14 @@ const MyProfileScreen = ({navigation, route}) => {
               refetch={refetch}
               functionToUpdatePostOrEvent={newItem =>
                 functionToUpdatePostOrEvent(index, newItem)
+              }
+              setCommentModal={id => {
+                setModalType(false);
+                setStateForModalData({id, index});
+                setCommentModal(true);
+              }}
+              functionToUpdateComment={(i, isComment) =>
+                functionToUpdateComment(index, isComment)
               }
               // likePost={likePost}
             />
@@ -221,6 +232,7 @@ const MyProfileScreen = ({navigation, route}) => {
           index={stateForModalData?.index}
           id={stateForModalData?.id}
           onBackPress={() => setCommentModal(false)}
+          isPost={modalType}
           functionToUpdateComment={(index, val) =>
             functionToUpdateComment(index, val)
           }

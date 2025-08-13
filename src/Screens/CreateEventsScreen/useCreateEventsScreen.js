@@ -218,6 +218,12 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
         timezone: timeZone,
         added_money: eventPrice,
         images_array: eventImg?.isEdit ? JSON.stringify([eventImg?.uri]) : null,
+        'performances[]': convertToArray(perfEventList).map(item => ({
+          title: item?.title,
+          start_time: getFormattedTime(item?.startTime),
+          end_time: getFormattedTime(item?.endTime),
+          date: formatDateToYMD(item?.date),
+        })),
       };
 
       console.log('Request Body:', JSON.stringify(body));

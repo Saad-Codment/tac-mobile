@@ -35,40 +35,80 @@ const CommentScreen = ({navigation, route}) => {
     postReplyId,
     getPostCommentReplies,
     setCommentReply,
+    addLikeOnCommentPost,
+    refetch,
+    addLikeOnCommentEvent,
+    getEventCommentReplies,
   } = useCommentScreen(navigation, route);
+
+  console.log(
+    'ldinlvksdosdhvisodvosidnvksdnvosdnvoisdnvionsdoiv',
+    getEventCommentReplies.data?.data?.data,
+  );
 
   const renderItem = useCallback(
     ({item, index}) => {
       return (
         <CommentComp
           item={item}
+          isPost={route?.params?.isPost}
           replyArry={
             Boolean(
-              item?.id == getPostCommentReplies.data?.data?.data[0]?.parent_id,
+              item?.id ==
+                ((
+                  route?.params?.isPost
+                    ? getPostCommentReplies.data?.data?.data?.length
+                    : getEventCommentReplies.data?.data?.data?.length
+                )
+                  ? route?.params?.isPost
+                    ? getPostCommentReplies.data?.data?.data[0]?.parent_id
+                    : getEventCommentReplies.data?.data?.data[0]?.parent_id
+                  : 0),
             )
-              ? getPostCommentReplies.data?.data?.data
+              ? route?.params?.isPost
+                ? getPostCommentReplies.data?.data?.data
+                : getEventCommentReplies.data?.data?.data
               : []
           }
           onSwipeRight={() => setCommentReply(item)}
-          // onCommentLikePress={async () => {
-          //   await addLikeOnCommentPost.mutateAsync({comment_id: item?.id});
-          //   refetch();
-          // }}
+          onCommentLikePress={async () => {
+            if (route?.params?.isPost) {
+              await addLikeOnCommentPost.mutateAsync({comment_id: item?.id});
+            } else {
+              await addLikeOnCommentEvent.mutateAsync({comment_id: item?.id});
+            }
+            refetch();
+          }}
+          onCommentReplyLikePress={async id => {
+            if (route?.params?.isPost) {
+              await addLikeOnCommentPost.mutateAsync({comment_id: id});
+              getPostCommentReplies.refetch();
+            } else {
+              await addLikeOnCommentEvent.mutateAsync({comment_id: id});
+              getEventCommentReplies.refetch();
+            }
+          }}
           onReplyPress={() => {
             setPostReplyId(item?.id);
             setTimeout(() => {
-              getPostCommentReplies.refetch();
+              if (route?.params?.isPost) {
+                getPostCommentReplies.refetch();
+              } else getEventCommentReplies.refetch();
             }, 1000);
           }}
         />
       );
     },
-    [commentsList],
+    [
+      commentsList,
+      getPostCommentReplies.data?.data?.data,
+      getEventCommentReplies.data?.data?.data,
+    ],
   );
 
   return (
     <KeyboardAvoidingView
-      style={{flex: 1}}
+      style={{flex: 1, backgroundColor: Colors.white}}
       behavior={Platform.OS === 'ios' ? 'padding' : null}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}>
       <HeaderComponent

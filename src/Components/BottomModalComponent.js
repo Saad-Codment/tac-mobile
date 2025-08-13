@@ -13,7 +13,13 @@ import {TextComponent} from './TextComponent';
 import {Touchable} from './Touchable';
 import {radioCircle, radioCircleOn} from '../Assets';
 import {useMutation, useQuery} from '@tanstack/react-query';
-import {getReasonsUrl, reportEventUrl, reportPostUrl} from '../Utils/Urls';
+import {
+  getReasonsUrl,
+  reportEventCommentUrl,
+  reportEventUrl,
+  reportPostCommentUrl,
+  reportPostUrl,
+} from '../Utils/Urls';
 import API from '../Utils/helperFunc';
 import KeyBoardWrapper from './KeyBoardWrapper';
 import ThemeButton from './ThemeButton';
@@ -39,11 +45,30 @@ const BottomModalComponent = ({
 
   const {mutate, mutateAsync} = useMutation({
     mutationFn: data => {
-      return API.post(type == 'post' ? reportPostUrl : reportEventUrl, {
+      let url;
+      switch (type) {
+        case 'post':
+          url = reportPostUrl;
+          break;
+        case 'event':
+          url = reportEventUrl;
+          break;
+        case 'eventComment':
+          url = reportEventCommentUrl;
+          break;
+        case 'postComment':
+          url = reportPostCommentUrl;
+          break;
+        default:
+          throw new Error('Invalid report type');
+      }
+
+      return API.post(url, {
         event_id: id,
         reason_id: selectedVal.id,
         message,
         post_id: id,
+        comment_id: id,
       });
     },
     onSuccess: ({ok, data}) => {

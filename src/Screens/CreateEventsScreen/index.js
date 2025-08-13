@@ -398,7 +398,7 @@ const CreateEventsScreen = ({navigation, route}) => {
             />
           }
         />
-        {/* <TitleInputView
+        <TitleInputView
           title={'Performances'}
           centerInnerView={
             <View
@@ -426,7 +426,12 @@ const CreateEventsScreen = ({navigation, route}) => {
                             placeholderTextColor={'gray'}
                             placeholder="Enter title"
                             value={value}
-                            style={{flex: 1, color: 'black', width: wp('50')}}
+                            style={{
+                              flex: 1,
+                              color: 'black',
+                              width: wp('50'),
+                              fontSize: hp('1.2'),
+                            }}
                             onChangeText={e =>
                               setValue(`perfEventList[${i}].title`, e)
                             }
@@ -466,6 +471,7 @@ const CreateEventsScreen = ({navigation, route}) => {
                             width: wp('85'),
                             alignSelf: 'center',
                             marginBottom: hp('1'),
+                            fontSize: hp('1.2'),
                           }}
                         />
                       )}
@@ -491,7 +497,10 @@ const CreateEventsScreen = ({navigation, route}) => {
                             text={convertToCustomTimeFormat(
                               value ?? currentDate,
                             )}
-                            styles={styles.perInnerText}
+                            styles={{
+                              ...styles.perInnerText,
+                              fontSize: hp('1.2'),
+                            }}
                           />
                         )}
                       />
@@ -512,7 +521,10 @@ const CreateEventsScreen = ({navigation, route}) => {
                             text={convertToCustomTimeFormat(
                               value ?? currentDate,
                             )}
-                            styles={styles.perInnerText}
+                            styles={{
+                              ...styles.perInnerText,
+                              fontSize: hp('1.2'),
+                            }}
                           />
                         )}
                       />
@@ -528,7 +540,11 @@ const CreateEventsScreen = ({navigation, route}) => {
           }}
           rightView={
             <Touchable
-              style={styles.addMoreView}
+              style={{
+                ...styles.addMoreView,
+                // backgroundColor: 'red',
+                width: wp('73'),
+              }}
               onPress={() => {
                 append({
                   title: '',
@@ -546,10 +562,11 @@ const CreateEventsScreen = ({navigation, route}) => {
                 text={'Add more'}
                 fade={true}
                 styles={styles.addMoreTxt}
+                size={hp('1.2')}
               />
             </Touchable>
           }
-        /> */}
+        />
         <View style={styles.viewFlex}>
           <TitleInputView
             title={'Event Type'}

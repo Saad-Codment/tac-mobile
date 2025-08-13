@@ -13,6 +13,7 @@ import {TextComponent} from './TextComponent';
 import {
   blackLock,
   calendar,
+  commentIcon,
   dollarCircle,
   dotsVertical,
   eventLogo,
@@ -73,6 +74,8 @@ const UpcomingEventsComp = ({
   refetch,
   functionToDelete,
   functionToUpdatePostOrEvent,
+  functionToUpdateComment,
+  setCommentModal,
 }) => {
   const removeCalendarEvent = async () => {
     try {
@@ -413,6 +416,36 @@ const UpcomingEventsComp = ({
           />
           <TextComponent
             text={`${item?.likes_count} Likes`}
+            styles={{
+              fontSize: hp('1.2'),
+            }}
+          />
+        </Touchable>
+        <Touchable
+          style={styles.leftRightView}
+          onPress={() => {
+            if (setCommentModal) setCommentModal(item?.id, item?.index);
+            else
+              NavigationService.navigate('CommentScreen', {
+                id: item?.id,
+                refetechKeys,
+                isPost: false,
+                refetch,
+                functionToUpdateComment,
+                index,
+              });
+          }}>
+          <Image
+            source={commentIcon}
+            resizeMode="contain"
+            style={{
+              width: wp('4'),
+              marginRight: wp('1'),
+              height: hp('3'),
+            }}
+          />
+          <TextComponent
+            text={`${item?.comments_count} Comments`}
             styles={{
               fontSize: hp('1.2'),
             }}

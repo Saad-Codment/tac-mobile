@@ -26,7 +26,7 @@ export const imageUrl = url => {
 };
 
 export const privacyUrl = 'https://theappforcowboys.com/privacy_policy';
-export const termsUrl = 'https://theappforcowboys.com/terms_and_conditions ';
+export const termsUrl = 'https://theappforcowboys.com/terms_and_conditions';
 export const aboutUrl = 'https://theappforcowboys.com/about_us';
 
 export const MapAPIKey = 'AIzaSyAu-nEBbiOahfUyeMc8Lc1gTTKfete_wnQ';
@@ -56,8 +56,16 @@ export const allUpComingEventsUrl = '/home/upcoming-events';
 export const allFriendEventsUrl = '/home/friends-events';
 export const allSuggestedEventsUrl = '/home/suggested-events';
 export const likeUnlikeUrl = '/react/like/';
-export const getEventsCommentUrl = '/events/comments/';
+
+// export const getEventsCommentUrl = '/events/comments/';
 // export const getPostCommentUrl = '/posts/comments/';
+
+export const getEventsCommentUrl = '/v1/event-comments/?event_id=';
+export const getEventsCommentRepliesUrl =
+  '/v1/event-comments/replies?comment_id=';
+
+export const postEventCommentReplyUrl = '/v1/event-comments/add-reply';
+export const postEventCommentLikeUrl = '/v1/event-comments/like?comment_id=';
 
 export const getPostCommentUrl = '/v1/post-comments/?post_id=';
 export const getPostCommentRepliesUrl = '/v1/post-comments/replies?comment_id=';
@@ -78,8 +86,12 @@ export const unFollowEventsUrl = '/events/unfollow-event';
 export const searchScreenDataUrl = '/search-screen-data';
 export const searchDataUrl = '/user/search?search=';
 export const getReasonsUrl = '/reports/fetch-reasons';
+
 export const reportEventUrl = '/reports/report-event';
 export const reportPostUrl = '/reports/report-post';
+export const reportPostCommentUrl = '/reports/report-post-comment';
+export const reportEventCommentUrl = '/reports/report-event-comment';
+
 export const SavePhoneNumberUrl = '/contacts/save-user-phone';
 export const SendVerficatioUrl = '/contacts/send-verification-code';
 export const verifyNumberUrl = '/contacts/validate-verification-code';
