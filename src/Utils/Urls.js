@@ -26,7 +26,7 @@ export const imageUrl = url => {
 };
 
 export const privacyUrl = 'https://theappforcowboys.com/privacy_policy';
-export const termsUrl = 'https://theappforcowboys.com/terms_and_conditions ';
+export const termsUrl = 'https://theappforcowboys.com/terms_and_conditions';
 export const aboutUrl = 'https://theappforcowboys.com/about_us';
 
 export const MapAPIKey = 'AIzaSyAu-nEBbiOahfUyeMc8Lc1gTTKfete_wnQ';
