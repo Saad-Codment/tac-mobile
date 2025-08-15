@@ -174,7 +174,7 @@ const useLocationScreen = ({navigate, addListener, params}) => {
       return locationName;
     } catch (error) {
       console.error('Error fetching location details:', error);
-      return null;
+      return 'unknown location';
     }
   };
 

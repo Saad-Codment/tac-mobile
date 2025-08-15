@@ -128,7 +128,7 @@ const CreateEventsScreen = ({navigation, route}) => {
             </View>
             {errorName && (
               <TextComponent
-                text={errorName.message}
+                text={errorName.message ?? errorName}
                 styles={styles.errorText}
               />
             )}

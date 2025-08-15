@@ -213,8 +213,8 @@ const eventCreateSchema = yup.object().shape({
 
   eventType: yup.array().of(
     yup.object().shape({
-      id: yup.string().required('Please select event type'),
-      name: yup.string().required('Please select event type'),
+      id: yup.string(),
+      name: yup.string(),
     }),
   ),
 

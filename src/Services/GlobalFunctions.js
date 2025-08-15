@@ -527,6 +527,9 @@ function updateArryObjById(data, id, newObject) {
 }
 
 const getIdsFromArry = (arry, key) => {
+  if (!Array.isArray(arry) || arry.length === 0) {
+    return [];
+  }
   return arry.map(res => res[key]);
 };
 
