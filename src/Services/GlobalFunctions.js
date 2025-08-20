@@ -268,7 +268,7 @@ function getDateMonthYear(dateString) {
 
     return {
       dayName, // Day of the week (e.g., "Mon")
-      day: Number(day) + 1, // Day of the month (e.g., "25")
+      day: Number(day), // Day of the month (e.g., "25")
       monthName, // Month name (e.g., "Nov")
       year, // Year (e.g., "2024")
     };

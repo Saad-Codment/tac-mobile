@@ -5,7 +5,6 @@ import {Colors} from '../../Theme/Variables';
 export const styles = StyleSheet.create({
   headerView: {
     flexDirection: 'row',
-    // marginTop: Platform.OS == 'ios' ? hp('6') : hp('3'),
     paddingHorizontal: wp('5'),
     paddingBottom: hp('3'),
     backgroundColor: Colors.darkThemeTextColor,
@@ -15,9 +14,6 @@ export const styles = StyleSheet.create({
   },
   HeaderLeft: {
     flex: 0.2,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // alignContent: 'center',
   },
   arrowback: {
     alignItems: 'center',
@@ -30,11 +26,9 @@ export const styles = StyleSheet.create({
   HeaderCenter: {
     flex: 1,
     alignItems: 'center',
-    // backgroundColor: 'blue',
     height: hp('5'),
     textAlignVertical: 'center',
     flexDirection: 'row',
-    // marginTop: hp('3'),
   },
   HeaderRight: {
     flex: 0.5,
@@ -46,8 +40,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     textAlign: 'left',
     alignItems: 'flex-end',
-
-    // backgroundColor: 'red',
   },
   senderView: isSender => ({
     width: wp('100'),
@@ -55,17 +47,8 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: hp('0.5'),
     marginLeft: isSender ? 0 : wp('2'),
-    // shadowColor: '#000000',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 12,
-    // },
-    // shadowOpacity: 0.58,
-    // shadowRadius: 5,
-    // elevation: 50,
-    // justifyContent: 'flex-end',
   }),
-  senderText: isSender => ({
+  senderText: (isSender, type) => ({
     maxWidth: wp('80'),
     borderWidth: 0.3,
     borderColor: Colors.grayFaded,
@@ -73,22 +56,25 @@ export const styles = StyleSheet.create({
     borderTopStartRadius: 15,
     borderBottomEndRadius: isSender ? 0 : 15,
     borderBottomStartRadius: isSender ? 15 : 0,
-    paddingVertical: hp('1.5'),
-    paddingHorizontal: wp('3.5'),
+    paddingVertical: type === 'text' ? hp('2') : hp('0.5'),
+    paddingHorizontal: type === 'text' ? wp('3.5') : wp('0.5'),
     marginRight: isSender ? wp('2') : 0,
     backgroundColor: isSender ? Colors.primaryColor : 'white',
-    lineHeight: 100,
+    overflow: 'hidden',
   }),
+  mediaStyle: {
+    width: wp('60'),
+    height: hp('30'),
+    borderRadius: 10,
+  },
   msgsRecieve: {
     paddingHorizontal: wp('2'),
-    // flexDirection: 'row',
     alignItems: 'center',
   },
   sendIcon: {
     width: wp('3'),
     height: hp('2'),
     resizeMode: 'contain',
-    // marginLeft: wp('1'),
   },
   searchMain: {
     flexDirection: 'row',
@@ -96,24 +82,21 @@ export const styles = StyleSheet.create({
     borderWidth: 0.2,
     minHeight: hp('5'),
     maxHeight: hp('14'),
-    // height: 'auto',
-    // borderTopEndRadius: 10,
-    // borderTopStartRadius: 10,
-    // borderTopColor: 'rgba(150, 150, 150, 1)',
     paddingHorizontal: wp('1.8'),
-    // marginHorizontal: wp('4'),
-    // marginVertical: hp('2'),
     overflow: 'hidden',
     borderRadius: 10,
-    marginBottom: Platform.OS == 'ios' ? hp('2') : hp('0'), // justifyContent: 'center',
+    marginBottom: Platform.OS == 'ios' ? hp('2') : hp('0'),
     backgroundColor: Colors.themeBlack,
-    // borderBottomWidth: 0,
     alignSelf: 'center',
-    width: wp('85'),
+    width: wp('95'),
+  },
+  attachmentBtn: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: wp('8'),
+    marginRight: wp('2'),
   },
   searchinput: {
-    // paddingHorizontal: wp(''),
-    // width: wp('65'),
     paddingRight: wp('3'),
     fontSize: hp('1.5'),
     flex: 1,
@@ -128,21 +111,5 @@ export const styles = StyleSheet.create({
     width: wp('10'),
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  sendTextStyle: {
-    color: 'white',
-    marginLeft: wp('1.5'),
-    paddingVertical: hp('0.8'),
-    fontSize: hp('1.5'),
-    // paddingHorizontal: wp('3'),
-  },
-  upperButton: {
-    width: wp('100'),
-    alignItems: 'center',
-    paddingHorizontal: wp('5'),
-    flexDirection: 'row',
-    borderBottomWidth: 1.5,
-    borderBottomColor: Colors.lightBlack,
-    justifyContent: 'space-between',
   },
 });

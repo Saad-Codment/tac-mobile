@@ -11,81 +11,97 @@ import React, {memo} from 'react';
 import {Colors} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
 import {Touchable} from '../../Components/Touchable';
-import {
-  arrowBack,
-  arrowrightblack,
-  backIcon,
-  rightArrowFill,
-  send,
-} from '../../Assets';
+import {backIcon, send} from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
 import {styles} from './styles';
-import {Chat, msgs} from '../../Utils/localDB';
 import {keyExtractor} from '../../Utils';
 import useChatScreen from './useChatScreen';
-import ThemeButton from '../../Components/ThemeButton';
 import {imageUrl} from '../../Utils/Urls';
-import {removeSeconds} from '../../Utils/globalFunctions';
 import Overlay from '../../Components/Overlay';
+import Video from 'react-native-video';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const ChatScreen = ({navigation, route}) => {
   const {
     sendMessage,
     setMessage,
     handleAutoScroll,
-    app_id,
     isLoading,
     scrollViewRef,
     message,
     allMessages,
     userData,
     receiverData,
-    regexp,
+    pickAndSendMedia,
+    otherUserOnline,
+    lastSeen,
   } = useChatScreen(navigation, route);
 
   const renderItem = ({item, index}) => {
-    // Convert Firebase timestamp into a JS Date object
-    const timestamp = item?.createdAt?.seconds
-      ? new Date(item?.createdAt?.seconds * 1000)
-      : '';
+    const timestamp = item.timestamp ? new Date(item.timestamp) : new Date();
+    const formattedTime = timestamp.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    const isSender = item.sender === userData?.id;
 
-    // Format the date into a readable time (e.g., '4:32 PM')
-    const formattedTime = !timestamp
-      ? ''
-      : timestamp.toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-    const isSender = Boolean(item.sender == userData?.id);
-    return !isSender ? (
-      <View style={styles.senderView(isSender)}>
-        <View style={styles.senderText(isSender)}>
-          <TextComponent
-            text={item?.text}
-            styles={{fontWeight: '300', fontSize: hp('1.5')}}
-          />
-        </View>
-        <TextComponent
-          text={formattedTime}
-          fade={true}
-          styles={{fontSize: hp('1.2'), marginLeft: wp('2')}}
-        />
-      </View>
-    ) : (
+    return (
       <View
-        style={{...styles.senderView(isSender), justifyContent: 'flex-end'}}>
-        <TextComponent
-          text={formattedTime}
-          fade={true}
-          styles={{fontSize: hp('1.2'), marginRight: wp('2')}}
-        />
-        <View style={styles.senderText(isSender)}>
+        style={{
+          ...styles.senderView(isSender),
+          justifyContent: isSender ? 'flex-end' : 'flex-start',
+        }}>
+        {!isSender && (
           <TextComponent
-            text={item?.text}
-            styles={{fontWeight: '300', color: 'white', fontSize: hp('1.5')}}
+            text={formattedTime}
+            fade={true}
+            styles={{fontSize: hp('1.2'), marginLeft: wp('2')}}
           />
+        )}
+        <View style={styles.senderText(isSender, item.type)}>
+          {item.type === 'text' ? (
+            <TextComponent
+              text={item.content}
+              styles={{
+                fontWeight: '300',
+                fontSize: hp('1.5'),
+                color: isSender ? 'white' : 'black',
+              }}
+            />
+          ) : item.type === 'image' ? (
+            <Image
+              source={{uri: `data:${item.mime};base64,${item.content}`}}
+              style={styles.mediaStyle}
+              resizeMode="contain"
+            />
+          ) : item.type === 'video' ? (
+            <Video
+              source={{uri: `data:${item.mime};base64,${item.content}`}}
+              style={styles.mediaStyle}
+              controls={true}
+              resizeMode="contain"
+            />
+          ) : null}
+          {isSender && (
+            <TextComponent
+              text={item.seen ? '✓✓' : '✓'}
+              styles={{
+                fontSize: hp('1.2'),
+                color: item.seen ? Colors.blue : Colors.grayFaded,
+                marginTop: hp('0.5'),
+                alignSelf: 'flex-end',
+              }}
+            />
+          )}
         </View>
+        {isSender && (
+          <TextComponent
+            text={formattedTime}
+            fade={true}
+            styles={{fontSize: hp('1.2'), marginRight: wp('2')}}
+          />
+        )}
       </View>
     );
   };
@@ -119,53 +135,51 @@ const ChatScreen = ({navigation, route}) => {
             image={imageUrl(receiverData?.profile_image)}
             uri={true}
           />
-          <TextComponent
-            text={
-              receiverData?.first_name +
-              ' ' +
-              (receiverData?.last_name ? receiverData?.last_name : '')
-            }
-            styles={{marginLeft: wp('2'), color: 'white', fontWeight: 'bold'}}
-          />
+          <View style={{marginLeft: wp('2')}}>
+            <TextComponent
+              text={
+                receiverData?.first_name +
+                ' ' +
+                (receiverData?.last_name ? receiverData?.last_name : '')
+              }
+              styles={{color: 'white', fontWeight: 'bold'}}
+            />
+            <TextComponent
+              text={otherUserOnline ? 'Online' : `Last seen: ${lastSeen}`}
+              styles={{
+                color: otherUserOnline ? 'green' : 'gray',
+                fontSize: hp('1.4'),
+              }}
+            />
+          </View>
         </Touchable>
         <View style={styles.HeaderRight} />
       </View>
-      {/* <Touchable
-        style={styles.upperButton}
-        onPress={() =>
-          navigation.navigate('AppointmentDetailScreen', {id: app_id})
-        }>
-        <TextComponent text={'View Appointment'} />
-        <Image
-          source={rightArrowFill}
-          resizeMode="contain"
-          style={{width: wp('5'), height: hp('5')}}
-        />
-      </Touchable> */}
       <FlatList
         data={allMessages}
         renderItem={renderItem}
-        keyExtractor={keyExtractor}
+        keyExtractor={item => item.id}
         onLayout={handleAutoScroll}
         ref={scrollViewRef}
         onContentSizeChange={handleAutoScroll}
         showsVerticalScrollIndicator={false}
       />
       <View style={styles.searchMain}>
+        <Touchable onPress={pickAndSendMedia} style={styles.attachmentBtn}>
+          <Ionicons name="attach" size={24} color={Colors.grayFaded} />
+        </Touchable>
         <TextInput
           enablesReturnKeyAutomatically
           style={styles.searchinput}
-          onChangeText={e => setMessage(e)}
+          onChangeText={setMessage}
           value={message}
           placeholder={'Type a message'}
           placeholderTextColor={Colors.grayFaded}
           multiline
         />
-
-        {message != null && message != '' && regexp.test(message) && (
+        {message?.trim() && (
           <Touchable onPress={sendMessage} style={styles.sendBtnStyle}>
             <View style={styles.msgsRecieve}>
-              {/* <TextComponent text={'Send'} styles={styles.sendTextStyle} /> */}
               <Image source={send} style={styles.sendIcon} />
             </View>
           </Touchable>
