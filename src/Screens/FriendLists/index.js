@@ -14,6 +14,7 @@ import {DataNotFound} from '../../Components/DataNotFound';
 import MyFriendComp from '../../Components/MyFriendComp';
 import Overlay from '../../Components/Overlay';
 import {getMyFriendsUrl} from '../../Utils/Urls';
+import ThemeButton from '../../Components/ThemeButton';
 
 const FriendLists = ({navigation, route}) => {
   const {
@@ -56,28 +57,33 @@ const FriendLists = ({navigation, route}) => {
           flatListProps={{
             extraData: friendListData,
             numColumns: 1,
-            ListEmptyComponent: (
-              <DataNotFound
-                onpress={refetch}
-                btnStyles={{width: wp('80')}}
-                // title={
-                //   url == getMyFriendsUrl
-                //     ? 'No Rodeo Crew Yet'
-                //     : 'Data not found'
-                // }
-                // subTitle={
-                //   url == getMyFriendsUrl
-                //     ? 'Search for friends or sync your contacts to see which rodeo enthusiasts are already on TAC.'
-                //     : 'No data, please try again later'
-                // }
-              />
-            ),
-            onEndReachedThreshold: 0.5, // Trigger fetch when 50% of the list is scrolled
-            ListFooterComponent: () =>
-              isFetchingNextPage ? <ActivityIndicator /> : null,
-            onEndReached: () => {
-              if (hasNextPage) fetchNextPage();
-            },
+            // Show loading spinner at the bottom
+            ListFooterComponent:
+              friendListData.length >= 9 &&
+              (isFetchingNextPage ? (
+                <ActivityIndicator size="small" color="gray" />
+              ) : (
+                <ThemeButton
+                  title={'Load More'}
+                  style={{
+                    marginTop: hp('2'),
+                    width: wp('30'),
+                    height: hp('4'),
+                    alignSelf: 'center',
+                    marginBottom: hp('5'),
+                  }}
+                  textStyle={{fontSize: hp('1.5')}}
+                  onPress={async () => {
+                    await fetchNextPage();
+                    // afterFetchNextPage();
+                  }}
+                />
+              )),
+            // onEndReachedThreshold: 0.5, // Trigger fetch when 50% of the list is scrolled
+
+            // onEndReached: () => {
+            //   if (hasNextPage) fetchNextPage();
+            // },
           }}
           InnerCompnonet={(item, index) => {
             return renderData(item, index);

@@ -1,7 +1,7 @@
 import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query';
 import {getMyFriendsUrl} from '../../Utils/Urls';
 import API from '../../Utils/helperFunc';
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import useReduxStore from '../../Hooks/UseReduxStore';
 
@@ -21,8 +21,9 @@ const useFriendLists = ({navigation, route}, {params}) => {
     refetch,
   } = useInfiniteQuery({
     queryKey: [params?.key],
-    queryFn: async ({pageParam = 1}) =>
-      API.get(`${params?.url}page=${pageParam}`),
+    queryFn: async ({pageParam = 1}) => {
+      return API.get(`${params?.url}page=${pageParam}`);
+    },
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
       // Implement proper pagination logic here
@@ -51,7 +52,10 @@ const useFriendLists = ({navigation, route}, {params}) => {
     'datadatadatadatadatadatadatadata',
     data?.pages?.flatMap(page => page.data?.data),
   );
-  const list = data?.pages?.flatMap(page => page.data?.data) || [];
+  const list =
+    data?.pages?.flatMap(page => {
+      return page.data?.data;
+    }) || [];
 
   return {
     friendListData: list.filter(res => res != undefined),

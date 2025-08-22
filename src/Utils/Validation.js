@@ -166,18 +166,16 @@ const eventCreateSchema = yup.object().shape({
     .date()
     .required('Event start time is required')
     .default(currentDate),
-  eventEndDate: yup
-    .date()
-    .required('Event end date is required')
-    .test(
-      'is-after-start',
-      'End date must be after start date',
-      function (value) {
-        const {eventStartDate} = this.parent;
-        return !eventStartDate || !value || value >= eventStartDate;
-      },
-    )
-    .default(nextDay),
+  eventEndDate: yup.date().required('Event end date is required'),
+  // .test(
+  //   'is-after-start',
+  //   'End date must be after start date',
+  //   function (value) {
+  //     const {eventStartDate} = this.parent;
+  //     return !eventStartDate || !value || value >= eventStartDate;
+  //   },
+  // )
+  // .default(nextDay),
   eventEndTime: yup
     .date()
     .required('Event end time is required')

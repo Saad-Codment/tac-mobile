@@ -46,7 +46,7 @@ const App = () => {
     if (Platform.OS === 'ios') {
       Purchases.configure({apiKey: 'appl_FlnMxEBtfVpRzXrWhCyKvhcVQYs'});
     } else if (Platform.OS === 'android') {
-      // Purchases.configure({apiKey: ''});
+      Purchases.configure({apiKey: 'goog_GGhwNAKnmUWMKwuIFJJghrHhAZG'});
       // OR: if building for Amazon, be sure to follow the installation instructions then:
     }
   }, []);

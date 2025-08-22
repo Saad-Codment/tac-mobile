@@ -345,7 +345,8 @@ const SettingScreen = ({navigation}) => {
           <View style={styles.upperProfileView}>
             <Pressable onPress={onImagePress}>
               <CircleImage
-                size={Platform.OS == 'ios' ? 0.12 : 0.35}
+                size={0.12}
+                // size={Platform.OS == 'ios' ? 0.12 : 0.35}
                 image={imageUrl(userData?.profile_image)}
                 uri={true}
               />
