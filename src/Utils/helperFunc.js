@@ -338,7 +338,7 @@ const formDataFunc = async (url, body, imageKey, isArray) => {
       }
     }
   });
-
+  console.log('lksdnvklsdnklvndsklvskdlvnkldvs', JSON.stringify(formData));
   const requestOptions = {
     method: 'POST',
     headers: myHeaders,

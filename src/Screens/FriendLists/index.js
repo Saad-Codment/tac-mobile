@@ -57,6 +57,13 @@ const FriendLists = ({navigation, route}) => {
           flatListProps={{
             extraData: friendListData,
             numColumns: 1,
+            ListEmptyComponent: (
+              <DataNotFound
+                btnStyles={{width: wp('80')}}
+                title={'No user found!'}
+                subTitle={''}
+              />
+            ),
             // Show loading spinner at the bottom
             ListFooterComponent:
               friendListData.length >= 9 &&

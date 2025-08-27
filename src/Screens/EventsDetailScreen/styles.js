@@ -5,13 +5,53 @@ import {Colors} from '../../Theme/Variables';
 export const styles = StyleSheet.create({
   mainView: {flexGrow: 1, backgroundColor: 'white'},
   scrollView: {flexGrow: 1, paddingBottom: hp('20')},
+
+  container: {
+    marginTop: hp('1'),
+    // backgroundColor: 'red',
+    // alignSelf: 'center',
+    // height: hp('16'),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imgScrollView: {
+    width: wp('95'),
+  },
+  slide: {
+    width: wp('95'),
+    height: hp('20'),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   imgStyle: {
     width: wp('95'),
     height: hp('15'),
     alignSelf: 'center',
-    marginTop: hp('1'),
     borderRadius: 15,
-    // overflow: 'hidden',
+  },
+  pagination: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: hp('1'),
+  },
+  dot: {
+    width: wp('2'),
+    height: wp('2'),
+    borderRadius: wp('1'),
+    backgroundColor: '#ccc',
+    marginHorizontal: wp('0.5'),
+  },
+  activeDot: {
+    backgroundColor: '#000',
+  },
+
+  imgStyle: {
+    width: wp('95'),
+    height: hp('20'),
+    alignSelf: 'center',
+    // marginTop: hp('1'),
+    borderRadius: 20,
+    overflow: 'hidden',
   },
   systemView: {
     width: wp('95'),

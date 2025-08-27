@@ -18,6 +18,7 @@ import {store} from '../Redux/Reducer';
 import {femaleImg, maleImg} from '../Assets';
 // import Intl from 'intl';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
+import RNFS from 'react-native-fs';
 
 const getSingleCharacter = text => {
   let letter = text?.charAt(0).toUpperCase();
@@ -661,11 +662,12 @@ const uploadFromGalary = async (isMulti, isCircle) => {
 };
 
 //GET IMAGE From Mobile
-const uploadFromCamera = async (isMulti, isCircle) => {
+const uploadFromCamera = async (isMulti, isCircle, maxFiles) => {
   const imageData = await ImageCropPicker.openCamera({
     cropping: true,
     multiple: isMulti ?? false,
     cropperCircleOverlay: isCircle, // 👈 Enables circular cropping
+    maxFiles,
   });
 
   const checkOrientation = img => {

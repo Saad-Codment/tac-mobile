@@ -84,7 +84,10 @@ const ProfileScreen = ({navigation}) => {
 
   const centerView = [
     {
-      title: userData?.first_name + ' ' + userData?.last_name,
+      title:
+        userData?.first_name +
+        ' ' +
+        (userData?.last_name ? userData?.last_name : ''),
       leftIcon: profileCircle,
       rightText: 'Edit',
       onPress: () => onOpenModal('edit_profile'),
@@ -186,7 +189,11 @@ const ProfileScreen = ({navigation}) => {
               </Touchable>
             </Pressable>
             <TextComponent
-              text={userData?.first_name + ' ' + userData?.last_name}
+              text={
+                userData?.first_name +
+                ' ' +
+                (userData?.last_name ? userData?.last_name : '')
+              }
               styles={{fontSize: hp('2'), fontWeight: 'bold'}}
             />
             <TextComponent

@@ -58,7 +58,7 @@ const useFriendLists = ({navigation, route}, {params}) => {
     }) || [];
 
   return {
-    friendListData: list.filter(res => res != undefined),
+    friendListData: list.filter(res => res != undefined) ?? [],
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,

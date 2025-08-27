@@ -36,24 +36,42 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
   const currentDate = new Date();
   const nextDay = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // Adds 1 day in milliseconds
 
+  const parseTimeString = timeStr => {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    return hours * 60 + minutes; // Convert to minutes since midnight for comparison
+  };
+
+  // Set default end time to 11:59 PM next day
+  const nextDayTime = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // August 26, 2025
+  nextDayTime.setHours(23, 59, 0, 0); // Set to 11:59 PM
+  const defaultEndTime = new Date(nextDayTime); // Full Date object for August 26, 2025, 11:59 PM
+
   const {data} = useQuery({
     queryKey: ['eventDetailForEdit'],
     queryFn: async () => {
       const allProps = await API.get(getEventDetailsUrl + event?.id);
       if (allProps?.ok) {
         const res = allProps.data;
-
+        console.log(
+          'jsdbvklsdbvksdbvkjsdbkjvbsdlkvblsdkbvsdbkvklsdbvlksd',
+          JSON.parse(res.images).map(img => ({
+            uri: img,
+            type: 'image/jpeg',
+            name: img.split('/').pop(),
+            isEdit: true,
+          })),
+        );
         setValue('eventTitle', res?.title || '');
         setValue(
           'eventImg',
           res?.images
-            ? {
-                uri: JSON.parse(res.images)[0],
+            ? JSON.parse(res.images).map(img => ({
+                uri: img,
                 type: 'image/jpeg',
-                name: JSON.parse(res.images)[0].split('/').pop(),
+                name: img.split('/').pop(),
                 isEdit: true,
-              }
-            : {},
+              }))
+            : [],
         );
         setValue('eventPrice', res?.added_money || '');
         setValue('perfEventList', []); // set if you have event list data
@@ -85,14 +103,16 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
         );
         setValue(
           'eventEndTime',
-          isFutureOrNow(res?.end_time) ? new Date(res.end_time) : nextDay,
+          isFutureOrNow(res?.end_time)
+            ? new Date(res.end_time)
+            : defaultEndTime,
         );
       }
       return allProps;
     },
   });
 
-  console.log('jkdbflksfblksblksblkdfklbnlkdfnbkldfnklbndfb', data?.data);
+  console.log('jkdbflksfblksblksblkdfklbnlkdfnbkldfnklbndfb', defaultEndTime);
 
   const {
     control,
@@ -121,7 +141,7 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
     eventEndDate: data?.data?.to_date ? new Date(data?.data?.to_date) : nextDay,
     eventEndTime: data?.data?.end_time
       ? new Date(data?.data?.end_time)
-      : nextDay,
+      : defaultEndTime,
     evnetTour: 1,
     privateEvent: 0,
   });
@@ -210,14 +230,19 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
         tour_id: evnetTour,
         private: privateEvent ? 1 : 0,
         is_confirmed: eventConfirm ? 1 : 0,
-        'images[]': isEditEvnet
-          ? !eventImg.isEdit
-            ? eventImg
+        // performances: perfEventList,
+        images: isEditEvnet
+          ? eventImg?.find(res => !res?.isEdit)
+            ? eventImg?.filter(res => !res?.isEdit)
             : null
           : eventImg,
         timezone: timeZone,
         added_money: eventPrice,
-        images_array: eventImg?.isEdit ? JSON.stringify([eventImg?.uri]) : null,
+        images_array: eventImg?.find(res => res?.isEdit)
+          ? JSON.stringify(
+              eventImg?.filter(res => res?.isEdit)?.map(img => img?.uri),
+            )
+          : null,
       };
 
       console.log('Request Body:', JSON.stringify(body));
@@ -225,7 +250,8 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
       const {ok, data} = await formDataFunc(
         isEditEvnet ? updateEventUrl + event?.id : createEventUrl,
         body,
-        'images[]',
+        'images',
+        true,
       );
 
       console.log('API Response:', data);

@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
   },
   perInnerView: {flexDirection: 'row', justifyContent: 'space-between'},
   perInnerText: {
-    fontSize: hp('1.5'),
+    fontSize: hp('1.2'),
     width: wp('40'),
     borderRadius: Platform.OS == 'ios' ? 10 : 4,
     borderWidth: 0.2,
@@ -47,11 +47,12 @@ export const styles = StyleSheet.create({
   addMoreView: {
     width: wp('40'),
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    // justifyContent: 'space-evenly',
     alignItems: 'center',
+    marginLeft: wp('40'),
   },
-  addMoreImg: {width: wp('5'), height: hp('3')},
-  addMoreTxt: {fontSize: hp('1.5'), marginLeft: wp('2')},
+  addMoreImg: {width: wp('5'), height: hp('3'), marginLeft: wp('14')},
+  addMoreTxt: {marginLeft: wp('2')},
   createBtnStyle: {
     width: wp('85'),
     alignSelf: 'center',

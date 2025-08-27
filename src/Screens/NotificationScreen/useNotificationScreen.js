@@ -13,6 +13,7 @@ const useNotificationScreen = () => {
   const {data, error, refetch} = useQuery({
     queryKey: ['allNotifications'],
     queryFn: () => API.get(getAllNotificationsUrl),
+    cacheTime: 0,
   });
 
   const onRefresh = useCallback(() => {
@@ -32,6 +33,7 @@ const useNotificationScreen = () => {
     notificationsList: data?.data?.data,
     onRefresh,
     acceptReq: async id => {
+      console.log('jkdsvbklsdbvklsdbklvbsdklvsd', id);
       await acceptFriendReq.mutateAsync(id);
       refetch();
       // queryClient.invalidateQueries({queryKey: ['allNotifications']});

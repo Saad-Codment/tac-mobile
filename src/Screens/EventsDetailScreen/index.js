@@ -1,4 +1,11 @@
-import {Image, Linking, Pressable, ScrollView, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  Linking,
+  Pressable,
+  ScrollView,
+  View,
+} from 'react-native';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import BlurImage from '../../Components/BlurImage';
 import {hp, wp} from '../../Config/responsive';
@@ -8,12 +15,8 @@ import {
   filledLocation,
   locationGray,
   tacLogo,
-  tickCircle,
-  tickSquare,
-  unCheck,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
-import CheckBox, {CheckBoxComponent} from '@react-native-community/checkbox';
 import MutualFriends from '../../Components/MutualFriendsComponent';
 import {styles} from './styles';
 import {Colors} from '../../Theme/Variables';
@@ -21,7 +24,6 @@ import {MultiView} from '../SettingScreen/MultiView';
 import ThemeButton from '../../Components/ThemeButton';
 import useEventDetailScreen from './useEventsDetailScreen';
 import {
-  checkParagraphForUndefined,
   convertToLocalTime,
   formatDateToLong,
   formatPrice,
@@ -29,13 +31,12 @@ import {
 } from '../../Services/GlobalFunctions';
 import {imageUrl} from '../../Utils/Urls';
 import {CircleImage} from '../../Components/CircleImage';
-import {Touchable} from '../../Components/Touchable';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {types} from '../../Redux/types';
-import {Text} from 'react-native';
 import {MultiSelectButton} from '../../Components/MultiSelectButton';
 import DividerLine from '../../Components/DividerLine';
 import CustomModalComp from '../../Components/CustomModalComp';
+import {useRef, useState} from 'react';
 
 const EventsDetailScreen = ({navigation, route}) => {
   const {
@@ -56,7 +57,7 @@ const EventsDetailScreen = ({navigation, route}) => {
     dispatch({
       payload: isEvent
         ? eventData?.images
-          ? JSON.parse(eventData?.images)[0]
+          ? JSON.parse(eventData?.images)
           : ''
         : eventData?.user?.profile_image,
       type: types.openModal,
@@ -143,6 +144,27 @@ const EventsDetailScreen = ({navigation, route}) => {
 
   console.log('eventDataeventDataeventDataeventData', eventData);
 
+  const scrollViewRef = useRef(null);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const windowWidth = Dimensions.get('window').width;
+
+  const images = eventData?.images ? JSON.parse(eventData?.images) : [];
+
+  const handleScroll = event => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const currentIndex = Math.round(contentOffsetX / windowWidth);
+    if (currentIndex !== activeSlide) {
+      setActiveSlide(currentIndex);
+    }
+  };
+
+  const scrollToIndex = index => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({x: index * windowWidth, animated: true});
+      setActiveSlide(index);
+    }
+  };
+
   return (
     <View style={styles.mainView}>
       <HeaderComponent
@@ -153,7 +175,47 @@ const EventsDetailScreen = ({navigation, route}) => {
       <ScrollView
         contentContainerStyle={styles.scrollView}
         showsVerticalScrollIndicator={false}>
-        <Pressable onPress={() => onImagePress(true)}>
+        {images.length > 0 && (
+          <View style={styles.container}>
+            <ScrollView
+              ref={scrollViewRef}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={handleScroll}
+              scrollEventThrottle={16} // Matches 60fps
+              style={styles.imgScrollView}>
+              {images.map((item, index) => (
+                <Pressable
+                  key={index}
+                  onPress={() => onImagePress(true)}
+                  style={styles.slide}>
+                  <BlurImage
+                    isURI
+                    uri={imageUrl(item)}
+                    styles={styles.imgStyle}
+                    radius={15}
+                  />
+                </Pressable>
+              ))}
+            </ScrollView>
+            {images.length > 1 && (
+              <View style={styles.pagination}>
+                {images.map((_, index) => (
+                  <Pressable
+                    key={index}
+                    onPress={() => scrollToIndex(index)}
+                    style={[
+                      styles.dot,
+                      activeSlide === index && styles.activeDot,
+                    ]}
+                  />
+                ))}
+              </View>
+            )}
+          </View>
+        )}
+        {/* <Pressable onPress={() => onImagePress(true)}>
           <BlurImage
             isURI
             uri={
@@ -164,7 +226,7 @@ const EventsDetailScreen = ({navigation, route}) => {
             styles={styles.imgStyle}
             radius={15}
           />
-        </Pressable>
+        </Pressable> */}
         <View style={styles.systemView}>
           <Pressable
             onPress={() => onImagePress(false)}

@@ -13,7 +13,7 @@ import {Colors} from '../../Theme/Variables';
 const NotificationScreen = ({navigation}) => {
   const {notificationsList, onRefresh, acceptReq, declineReq} =
     useNotificationScreen(navigation);
-
+  console.log('notificationsListnotificationsList', notificationsList[0]);
   return (
     <>
       <HeaderComponent
