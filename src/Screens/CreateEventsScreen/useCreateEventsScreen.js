@@ -230,7 +230,15 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
         tour_id: evnetTour,
         private: privateEvent ? 1 : 0,
         is_confirmed: eventConfirm ? 1 : 0,
-        // performances: perfEventList,
+        // performances:
+        //   perfEventList.length > 0
+        //     ? perfEventList.map(res => ({
+        //         title: res?.title,
+        //         date: formatDateToYMD(res?.date),
+        //         startTime: getFormattedTime(res?.startTime),
+        //         endTime: getFormattedTime(res?.endTime),
+        //       }))
+        //     : [],
         images: isEditEvnet
           ? eventImg?.find(res => !res?.isEdit)
             ? eventImg?.filter(res => !res?.isEdit)
