@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
     borderTopStartRadius: 15,
     borderBottomEndRadius: isSender ? 0 : 15,
     borderBottomStartRadius: isSender ? 15 : 0,
-    paddingVertical: type === 'text' ? hp('2') : hp('0.5'),
+    paddingVertical: type === 'text' ? hp('1.5') : hp('0.5'),
     paddingHorizontal: type === 'text' ? wp('3.5') : wp('0.5'),
     marginRight: isSender ? wp('2') : 0,
     backgroundColor: isSender ? Colors.primaryColor : 'white',

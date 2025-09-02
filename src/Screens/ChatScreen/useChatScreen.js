@@ -9,50 +9,80 @@ import {
 } from '../../Utils/Urls';
 import {mergeIds} from '../../Services/GlobalFunctions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import io from 'socket.io-client';
 import RNFetchBlob from 'rn-fetch-blob';
 import ImageCropPicker from 'react-native-image-crop-picker';
 
-// Helper function to format timestamp for last seen
+// Replace with your actual Socket.io backend URL
+const SOCKET_URL = 'YOUR_BACKEND_URL_HERE'; // e.g., 'https://your-chat-server.com'
+
 const formatLastSeen = timestamp => {
   if (!timestamp) return '';
   const date = new Date(timestamp);
   return date.toLocaleString(); // e.g., "8/15/2025, 10:10 PM"
 };
 
-// Simulate receiving a message from the other user
-const simulateReceivedMessage = (receiverId, onMessageReceived) => {
-  const simulatedMessage = {
-    id: `${receiverId}_${Date.now()}_${Math.random()}`,
-    type: 'text',
-    content: 'Hello! This is a simulated reply.',
-    sender: receiverId,
-    timestamp: Date.now(),
-    seen: false,
-  };
-  onMessageReceived(simulatedMessage);
+// Socket.io Functions
+const initSocket = () => {
+  const socket = io(SOCKET_URL, {
+    transports: ['websocket'],
+    reconnection: true,
+    reconnectionAttempts: 5,
+  });
+  socket.on('connect', () => console.log('Socket connected'));
+  socket.on('disconnect', () => console.log('Socket disconnected'));
+  socket.on('error', err => console.error('Socket error:', err));
+  return socket;
 };
 
-// Simulate marking messages as seen after a delay
-const simulateMessageSeen = (messages, userId, onMessageSeen) => {
-  messages.forEach(msg => {
-    if (msg.sender === userId && !msg.seen) {
-      setTimeout(() => {
-        onMessageSeen(msg.id);
-      }, 2000); // Simulate 2-second delay for seen status
+const joinRoom = (
+  socket,
+  room,
+  userId,
+  onNewMessage,
+  onUserOnline,
+  onUserOffline,
+  onMessageSeen,
+) => {
+  socket.emit('join_room', {room, userId});
+
+  socket.on('new_message', msg => {
+    if (msg.sender !== userId) {
+      onNewMessage(msg);
+      socket.emit('message_seen', {room, messageId: msg.id, userId});
     }
+  });
+
+  socket.on('user_online', data => {
+    if (data.userId !== userId) {
+      onUserOnline(data);
+    }
+  });
+
+  socket.on('user_offline', data => {
+    if (data.userId !== userId) {
+      onUserOffline(data);
+    }
+  });
+
+  socket.on('message_seen', ({messageId}) => {
+    onMessageSeen(messageId);
   });
 };
 
-// Simulate other user's online/offline status
-const simulateUserStatus = (onUserOnline, onUserOffline) => {
-  onUserOnline();
-  setTimeout(() => {
-    onUserOffline({timestamp: Date.now()});
-  }, 10000); // Simulate offline after 10 seconds
+const leaveRoom = (socket, room, userId) => {
+  socket.emit('leave_room', {room, userId});
+  socket.off('new_message');
+  socket.off('user_online');
+  socket.off('user_offline');
+  socket.off('message_seen');
 };
 
-// Pick and send multiple images/videos as separate messages
-const pickAndSendMedia = (sender, onMessageSent) => {
+const sendChatMessage = (socket, room, message) => {
+  socket.emit('chat_message', {room, message});
+};
+
+const pickAndSendMedia = (socket, room, sender, onMessageSent) => {
   ImageCropPicker.openPicker({
     multiple: true,
     mediaType: 'any',
@@ -73,6 +103,7 @@ const pickAndSendMedia = (sender, onMessageSent) => {
               timestamp: Date.now(),
               seen: false,
             };
+            sendChatMessage(socket, room, msg);
             onMessageSent(msg);
           })
           .catch(err => console.error('Error reading file:', err));
@@ -83,6 +114,7 @@ const pickAndSendMedia = (sender, onMessageSent) => {
 
 const useChatScreen = ({navigate}, {params}) => {
   const [asynUserData, setAsynUserData] = useState(null);
+  const socketRef = useRef(null);
 
   const getUserData = async () => {
     const UserData = await AsyncStorage.getItem('userData');
@@ -111,36 +143,40 @@ const useChatScreen = ({navigate}, {params}) => {
 
   const myId = userData?.userData?.id ?? paramUserId ?? asynUserData?.id;
 
-  // Set chatroomId and simulate other user's behavior
+  useEffect(() => {
+    socketRef.current = initSocket();
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+      updateState({messages: []}); // Clear messages on unmount
+    };
+  }, []);
+
   useEffect(() => {
     if (id && myId) {
       const roomId = mergeIds(id, myId);
       updateState({chatroomId: roomId});
 
-      // Simulate other user's online status
-      simulateUserStatus(
+      joinRoom(
+        socketRef.current,
+        roomId,
+        myId,
+        msg => updateState({messages: [...messages, {...msg, seen: false}]}),
         () => updateState({otherUserOnline: true}),
-        data => updateState({otherUserOnline: false, lastSeen: data.timestamp}),
+        ({timestamp}) =>
+          updateState({otherUserOnline: false, lastSeen: timestamp}),
+        messageId => {
+          updateState({
+            messages: messages.map(msg =>
+              msg.id === messageId ? {...msg, seen: true} : msg,
+            ),
+          });
+        },
       );
 
-      // Simulate receiving a message after 3 seconds
-      const receiveTimer = setTimeout(() => {
-        simulateReceivedMessage(id, msg => {
-          updateState({messages: [...messages, msg]});
-        });
-      }, 3000);
-
-      // Simulate marking sender's messages as seen
-      simulateMessageSeen(messages, myId, messageId => {
-        updateState({
-          messages: messages.map(msg =>
-            msg.id === messageId ? {...msg, seen: true} : msg,
-          ),
-        });
-      });
-
       return () => {
-        clearTimeout(receiveTimer);
+        leaveRoom(socketRef.current, roomId, myId);
       };
     }
   }, [id, myId, messages]);
@@ -184,33 +220,17 @@ const useChatScreen = ({navigate}, {params}) => {
         timestamp: Date.now(),
         seen: false,
       };
+      sendChatMessage(socketRef.current, chatroomId, msg);
       updateState({messages: [...messages, msg], message: ''});
       mutate({msg: message});
-
-      // Simulate marking this message as seen after a delay
-      setTimeout(() => {
-        updateState({
-          messages: messages.map(m =>
-            m.id === msg.id ? {...m, seen: true} : m,
-          ),
-        });
-      }, 2000);
     }
   };
 
   const handlePickAndSendMedia = () => {
     if (chatroomId && myId) {
-      pickAndSendMedia(myId, msg => {
-        updateState({messages: [...messages, msg]});
-        // Simulate marking media message as seen after a delay
-        setTimeout(() => {
-          updateState({
-            messages: messages.map(m =>
-              m.id === msg.id ? {...m, seen: true} : m,
-            ),
-          });
-        }, 2000);
-      });
+      pickAndSendMedia(socketRef.current, chatroomId, myId, msg =>
+        updateState({messages: [...messages, msg]}),
+      );
     }
   };
 
@@ -229,7 +249,6 @@ const useChatScreen = ({navigate}, {params}) => {
     mutateAsync();
     return () => {
       mutateAsync();
-      updateState({messages: []}); // Clear messages on unmount
     };
   }, []);
 
