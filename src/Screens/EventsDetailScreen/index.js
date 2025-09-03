@@ -341,10 +341,11 @@ const EventsDetailScreen = ({navigation, route}) => {
                 }}
               />
               <TextComponent
-                // text={`${getDateMonthYear(eventData?.from_date)?.monthName} ${
-                //   getDateMonthYear(eventData?.from_date)?.day
-                // }, ${getDateMonthYear(eventData?.from_date)?.year}`}
-                text={`${formatDateToLong(eventData?.from_date)}`}
+                text={`${getDateMonthYear(eventData?.from_date)?.monthName} ${
+                  getDateMonthYear(eventData?.from_date)?.day
+                }, ${getDateMonthYear(eventData?.from_date)?.year}`}
+                // text={`${formatDateToLong(eventData?.from_date)}`}
+                // sep 4, 2025
                 styles={{fontSize: hp('1.2')}}
               />
               <Image
@@ -356,7 +357,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                 text={
                   eventData?.start_time
                     ? `${convertToLocalTime(eventData?.start_time)?.time} ${
-                        convertToLocalTime(eventData?.start_time)?.period
+                        convertToLocalTime(eventData?.start_time)?.period ?? ''
                       }`
                     : 'Not Confirmed'
                 }
@@ -387,10 +388,10 @@ const EventsDetailScreen = ({navigation, route}) => {
                 }}
               />
               <TextComponent
-                // text={`${getDateMonthYear(eventData?.to_date)?.monthName} ${
-                //   getDateMonthYear(eventData?.to_date)?.day
-                // }, ${getDateMonthYear(eventData?.to_date)?.year}`}
-                text={formatDateToLong(eventData?.to_date)}
+                text={`${getDateMonthYear(eventData?.to_date)?.monthName} ${
+                  getDateMonthYear(eventData?.to_date)?.day
+                }, ${getDateMonthYear(eventData?.to_date)?.year}`}
+                // text={formatDateToLong(eventData?.to_date)}
                 styles={{fontSize: hp('1.2')}}
               />
               <Image
@@ -402,7 +403,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                 text={
                   eventData?.end_time
                     ? `${convertToLocalTime(eventData?.end_time)?.time} ${
-                        convertToLocalTime(eventData?.end_time)?.period
+                        convertToLocalTime(eventData?.end_time)?.period ?? ''
                       }`
                     : 'Not Confirmed'
                 }

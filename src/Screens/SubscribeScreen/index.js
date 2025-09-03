@@ -61,7 +61,9 @@ const SubscribeScreen = ({navigation, route}) => {
             <View style={{marginLeft: wp('1.5')}}>
               <Text style={styles.monthlyText} numberOfLines={2}>
                 {plan?.title} /
-                <Text style={styles.monthlyTextBold}>{plan?.priceString}</Text>
+                <Text style={styles.monthlyTextBold} numberOfLines={2}>
+                  {plan?.priceString}
+                </Text>
               </Text>
               {/* <TextComponent
                 styles={styles.textDes}

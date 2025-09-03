@@ -306,12 +306,12 @@ const formDataFunc = async (url, body, imageKey, isArray) => {
   const formData = new FormData();
 
   // Handle image conversion and form data preparation
-  if (isArray) {
+  if (isArray && body[imageKey]?.length > 0) {
     for (const [index, value] of body[imageKey].entries()) {
       if (value?.uri) {
         const pngUri = await convertToPNG(value.uri);
         formData.append(`${imageKey}[${index}]`, {
-          uri: pngUri,
+          uri: Platform.OS == 'ios' ? pngUri : value.uri,
           type: 'image/png', // Force PNG type
           name: value.name || `image_${index}.png`,
         });
@@ -320,7 +320,7 @@ const formDataFunc = async (url, body, imageKey, isArray) => {
   } else if (body[imageKey]?.uri) {
     const pngUri = await convertToPNG(body[imageKey].uri);
     formData.append(imageKey, {
-      uri: pngUri,
+      uri: Platform.OS == 'ios' ? pngUri : body[imageKey].uri,
       type: 'image/png', // Force PNG type
       name: body[imageKey].name || 'image.png',
     });

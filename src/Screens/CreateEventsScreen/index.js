@@ -253,57 +253,70 @@ const CreateEventsScreen = ({navigation, route}) => {
                     }}
                     showsHorizontalScrollIndicator={false}
                     ListFooterComponent={
-                      <Touchable
-                        onPress={async () => {
-                          Alert.alert(
-                            'Pick to choose image',
-                            '',
-                            [
-                              {
-                                text: 'Camera',
-                                onPress: async () => {
-                                  const imgData = await uploadFromCamera(
-                                    true,
-                                    false,
-                                    5,
-                                  );
-                                  onChange([...(value ?? []), ...imgData]);
+                      (value?.length ?? []) <= 4 && (
+                        <Touchable
+                          onPress={async () => {
+                            Alert.alert(
+                              'Pick to choose image',
+                              '',
+                              [
+                                {
+                                  text: 'Camera',
+                                  onPress: async () => {
+                                    const imgData = await uploadFromCamera(
+                                      true,
+                                      false,
+                                      5,
+                                    );
+                                    console.log(
+                                      'sjkbdvklsdbvklsdbkvbsdlvbksdvb',
+                                      imgData,
+                                    );
+                                    onChange([...(value ?? []), imgData]);
+                                  },
                                 },
-                              },
-                              {
-                                text: 'Gallery', // Just a dismissal button
-                                onPress: async () => {
-                                  const imgData = await uploadFromGalary(
-                                    true,
-                                    false,
-                                    5,
-                                  );
-                                  onChange([...(value ?? []), ...imgData]);
+                                {
+                                  text: 'Gallery', // Just a dismissal button
+                                  onPress: async () => {
+                                    console.log(
+                                      'slkdbvklsdbvklsdbklvbskdlv',
+                                      value?.length,
+                                    );
+                                    const imgData = await uploadFromGalary(
+                                      true,
+                                      false,
+                                      Math.max(0, 5 - (value?.length ?? 0)),
+                                    );
+                                    onChange([...(value ?? []), ...imgData]);
+                                  },
                                 },
-                              },
-                            ],
-                            {cancelable: true, onDismiss: () => {}},
-                          );
-                        }}
-                        style={{
-                          width: wp('44'),
-                          height: hp('12'),
-                          borderRadius: 10,
-                          marginVertical: hp('0.5'),
-                          borderWidth: 0.5,
-                          borderColor: Colors.grayBorder,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          backgroundColor: Colors.lightInnerColor,
-                        }}>
-                        <Image
-                          source={editProfileBlack}
-                          resizeMode="contain"
-                          style={{width: wp('6'), height: hp('4')}}
-                          // tintColor={'gray'}
-                        />
-                        <TextComponent text={'Upload Image'} size={hp('1.5')} />
-                      </Touchable>
+                              ],
+                              {cancelable: true, onDismiss: () => {}},
+                            );
+                          }}
+                          style={{
+                            width: wp('44'),
+                            height: hp('12'),
+                            borderRadius: 10,
+                            marginVertical: hp('0.5'),
+                            borderWidth: 0.5,
+                            borderColor: Colors.grayBorder,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: Colors.lightInnerColor,
+                          }}>
+                          <Image
+                            source={editProfileBlack}
+                            resizeMode="contain"
+                            style={{width: wp('6'), height: hp('4')}}
+                            // tintColor={'gray'}
+                          />
+                          <TextComponent
+                            text={'Upload Image'}
+                            size={hp('1.5')}
+                          />
+                        </Touchable>
+                      )
                     }
                   />
                   {errors['eventImg'] && (
@@ -448,7 +461,7 @@ const CreateEventsScreen = ({navigation, route}) => {
             />
           }
         />
-        {/* <TitleInputView
+        <TitleInputView
           title={'Performances'}
           centerInnerView={
             <View
@@ -606,7 +619,7 @@ const CreateEventsScreen = ({navigation, route}) => {
               />
             </Touchable>
           }
-        /> */}
+        />
         <View style={styles.viewFlex}>
           <TitleInputView
             title={'Event Type'}

@@ -140,7 +140,10 @@ const ProfileScreen = ({navigation}) => {
     <View showsVerticalScrollIndicator={false} style={{flexGrow: 1}}>
       <HeaderComponent headerTitle={'Profile'} isBack />
 
-      <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        contentContainerStyle={{flexGrow: 1}}>
         <View style={styles.mainBtn}>
           <View style={styles.upperWhiteView}>
             <Pressable style={styles.imgView} onPress={onImagePress}>

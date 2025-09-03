@@ -27,10 +27,14 @@ const useNotificationScreen = () => {
     dispatch({type: types.isNotifyFalse});
   };
 
-  useEffect(clearNotification, []);
+  useEffect(() => {
+    setTimeout(() => {
+      clearNotification();
+    }, 1000);
+  }, []);
 
   return {
-    notificationsList: data?.data?.data,
+    notificationsList: data?.data?.data ?? [],
     onRefresh,
     acceptReq: async id => {
       console.log('jkdsvbklsdbvklsdbklvbsdklvsd', id);

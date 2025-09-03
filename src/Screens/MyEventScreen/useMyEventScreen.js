@@ -39,16 +39,16 @@ const useMyEventScreen = ({navigate, addListener}, {params}) => {
       return allProps;
     },
   });
-  console.log('datadatadatadatadatadata', data?.data);
   const {mutate} = useMutation({
     mutationFn: body => {
-      console.log(
-        'datadatadatadatadatadsdvsdvsatadatadatjhvdhjdshjvsdjhka',
-        body,
-      );
-      return API.post(getEventByDatesUrl, {
+      console.log('datadatadatadatadatadsdvsdvsatadatadatjhvdhjdshjvsdjhka', {
         ...body,
         timeZone,
+        user_id: params || userData?.id,
+      });
+      return API.post(getEventByDatesUrl, {
+        ...body,
+        timezone: timeZone,
         user_id: params || userData?.id,
       });
     },

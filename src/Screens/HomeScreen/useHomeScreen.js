@@ -153,11 +153,6 @@ const HomeScreen = ({navigate}) => {
     };
   }, [loadMoreDebounced]);
 
-  console.log(
-    'ksdhvklsdbvlksbdkvlbskldvbklsdbvlsbdvlksdbvlksd',
-    upComingEvents?.data?.data?.suggested_events,
-  );
-
   return {
     search,
     setSearch,

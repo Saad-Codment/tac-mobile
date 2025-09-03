@@ -35,10 +35,7 @@ const BlurImage = ({
   };
 
   const imageSource = getImageSource();
-  console.log(
-    'sjdkbfklsdbfkbsdjkfbdsjkfbjksdbfjsdfbsjdfbsdjfbsdkfbsdkfsd',
-    imageSource,
-  );
+
   return (
     <View
       style={{

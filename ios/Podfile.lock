@@ -1131,7 +1131,7 @@ PODS:
     - React-Core
   - react-native-date-picker (5.0.7):
     - React-Core
-  - react-native-geolocation (3.3.0):
+  - react-native-geolocation (3.4.0):
     - DoubleConversion
     - glog
     - RCT-Folly (= 2024.01.01.00)
@@ -1919,7 +1919,7 @@ SPEC CHECKSUMS:
   react-native-blurhash: 1b0ee9dda3eb486246af6db654e519a78b4255fc
   react-native-contacts: f551920b74ebfc5f7f6df307495f085e504a4369
   react-native-date-picker: 585252087d4820b4cd8f2cf80068f6e8f5b72413
-  react-native-geolocation: 349b784043c1cf3db83b21a202c51d6f18b6b66c
+  react-native-geolocation: f29ff578389a3386ce14453c17279be72533161d
   react-native-geolocation-service: 32b2c2a3b91e70ce2a8d0c684801aaeb0a07e0ec
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-google-maps: 98754480fbb4fd5ccd016d0f75a2168a6c84ebc5

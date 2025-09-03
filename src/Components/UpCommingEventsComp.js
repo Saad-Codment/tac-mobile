@@ -308,9 +308,9 @@ const UpcomingEventsComp = ({
               style={styles.calenderIcon}
             />
             <TextComponent
-              text={`${getDateMonthYear(item?.from_date)?.monthName} ${
-                getDateMonthYear(item?.from_date)?.day
-              }, ${getDateMonthYear(item?.from_date)?.year}`}
+              text={`${getDateMonthYear(item?.to_date)?.monthName} ${
+                getDateMonthYear(item?.to_date)?.day
+              }, ${getDateMonthYear(item?.to_date)?.year}`}
               styles={{fontSize: hp('1.2')}}
             />
           </View>

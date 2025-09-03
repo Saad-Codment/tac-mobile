@@ -55,41 +55,42 @@ const FriendProfileScreen = ({navigation, route}) => {
     (item, index) => {
       return (
         <View style={{marginVertical: hp('0.5')}}>
-          {item?.type == 2 ||
+          {(item?.type == 2 ||
             item?.type == 4 ||
             item?.type == 5 ||
-            (item?.type == 6 && (
-              <UpcomingEventsComp
-                item={item}
-                index={index}
-                mainViewStyle={{width: wp('95')}}
-                upperImgStyle={{width: wp('95')}}
-                functionToUpdateLike={functionToUpdateLike}
-                openBottomSheet={id => setModal({id, type: 'event'})}
-                refetch={refetch}
-                functionToDelete={functionToDelete}
-                // likePost={likePost}
-              />
-            ))}
+            item?.type == 6) && (
+            <UpcomingEventsComp
+              item={item}
+              index={index}
+              mainViewStyle={{width: wp('95')}}
+              upperImgStyle={{width: wp('95')}}
+              functionToUpdateLike={functionToUpdateLike}
+              openBottomSheet={id => setModal({id, type: 'event'})}
+              refetch={refetch}
+              functionToDelete={functionToDelete}
+              // likePost={likePost}
+            />
+          )}
 
-          {item?.type == 3 ||
-            (item?.type == 1 && (
-              <PostViewComp
-                item={item}
-                index={index}
-                functionToUpdateLike={functionToUpdateLike}
-                openBottomSheet={id => setModal({id, type: 'post'})}
-                functionToUpdateComment={(i, isComment) =>
-                  functionToUpdateComment(index, isComment)
-                }
-                functionToDelete={functionToDelete}
-              />
-            ))}
+          {(item?.type == 3 || item?.type == 1) && (
+            <PostViewComp
+              item={item}
+              index={index}
+              functionToUpdateLike={functionToUpdateLike}
+              openBottomSheet={id => setModal({id, type: 'post'})}
+              functionToUpdateComment={(i, isComment) =>
+                functionToUpdateComment(index, isComment)
+              }
+              functionToDelete={functionToDelete}
+            />
+          )}
         </View>
       );
     },
     [refetch, isRefetching, functionToUpdateComment, eventsList],
   );
+
+  console.log('skldvbklsdbvklsdbvklsdbklvklsdvksdlvs', eventsList);
 
   return (
     <View style={{flex: 1}}>

@@ -3058,13 +3058,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/geolocation@npm:^3.0.4, @react-native-community/geolocation@npm:^3.2.1":
+"@react-native-community/geolocation@npm:^3.0.4":
   version: 3.3.0
   resolution: "@react-native-community/geolocation@npm:3.3.0"
   peerDependencies:
     react: "*"
     react-native: "*"
   checksum: a0920ff7ff2f9f24300a8eabd641fd5bd9124a8a5274f0077d64bc143111c925986eaf7c29fa25b6b0daaebb780ebf1aeee12e908584fe200fc619e30de330c6
+  languageName: node
+  linkType: hard
+
+"@react-native-community/geolocation@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "@react-native-community/geolocation@npm:3.4.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 4a1a334de5b8345ee5ca9af987718a4cdd0b401b6d024268330c98736eccd0bebf45fd1d4cb396558f429a4670e5b29da0b5b7ebd4e51ca12972d4b08b55d4bc
   languageName: node
   linkType: hard
 
@@ -11520,7 +11530,7 @@ __metadata:
     "@notifee/react-native": ^7.8.2
     "@react-native-async-storage/async-storage": ^1.23.1
     "@react-native-community/checkbox": ^0.5.17
-    "@react-native-community/geolocation": ^3.2.1
+    "@react-native-community/geolocation": ^3.4.0
     "@react-native-community/push-notification-ios": ^1.11.0
     "@react-native-firebase/app": ^18.7.3
     "@react-native-firebase/auth": ^18.7.3

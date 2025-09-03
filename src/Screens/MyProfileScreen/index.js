@@ -51,7 +51,7 @@ const MyProfileScreen = ({navigation, route}) => {
     setStateForModalData,
   } = useMyProfileScreen(navigation, route);
 
-  console.log('lkdbkldbfklbdfklbkldfbl;kdbsf;b;ldflnb;df', eventsList);
+  console.log('lkdbkldbfklbdfklbkldfbl;kdbsf;b;ldflnb;df', eventsList[0]);
 
   const renderItem = useCallback(
     (item, index) => {

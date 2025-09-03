@@ -237,6 +237,49 @@ function removeTimeFromDate(datetimeStr) {
 }
 
 function getDateMonthYear(dateString) {
+  if (!dateString) return null;
+
+  // Normalize to ISO format by adding "T" and "Z"
+  // "2025-09-04 21:08:52" -> "2025-09-04T21:08:52Z"
+  const isoDateString = dateString.replace(' ', 'T') + 'Z';
+
+  const utcDate = new Date(isoDateString);
+
+  if (isNaN(utcDate)) {
+    throw new Error(
+      'Invalid date format. Please provide a valid UTC date string.',
+    );
+  }
+
+  const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const options = {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: currentTimeZone,
+    hour12: false,
+  };
+
+  const formatter = new Intl.DateTimeFormat(undefined, options);
+  const parts = formatter.formatToParts(utcDate);
+
+  return {
+    dayName: parts.find(p => p.type === 'weekday')?.value,
+    day: Number(parts.find(p => p.type === 'day')?.value),
+    monthName: parts.find(p => p.type === 'month')?.value,
+    year: parts.find(p => p.type === 'year')?.value,
+    time: `${parts.find(p => p.type === 'hour')?.value}:${
+      parts.find(p => p.type === 'minute')?.value
+    }`,
+    timeZone: currentTimeZone,
+  };
+}
+
+function getDateMonthYearWithOutUTC(dateString) {
   if (dateString) {
     // Create a Date object from the provided global date string
     const globalDate = new Date(dateString);
@@ -603,7 +646,7 @@ const resizeImage = async (image, targetWidth = 800, targetHeight = 800) => {
   }
 };
 //GET IMAGE From Mobile
-const uploadFromGalary = async (isMulti, isCircle) => {
+const uploadFromGalary = async (isMulti, isCircle, maxFiles) => {
   const imageData = await ImageCropPicker.openPicker({
     cropping: true,
     width: 300, // set desired resolution
@@ -611,6 +654,7 @@ const uploadFromGalary = async (isMulti, isCircle) => {
     // compressImageQuality: 0.8,
     multiple: isMulti ?? false,
     cropperCircleOverlay: isCircle, // 👈 Enables circular cropping
+    maxFiles: maxFiles ?? 200,
   });
 
   const getOrientation = (width, height) => {
@@ -623,7 +667,7 @@ const uploadFromGalary = async (isMulti, isCircle) => {
     const processedImages = await Promise.all(
       imageData.map(async res => {
         const baseImage = {
-          uri: Platform.OS === 'ios' ? res?.sourceURL : res?.path,
+          uri: Platform.OS === 'ios' ? res?.sourceURL : `file://${res?.path}`,
           name: res?.filename || 'photo.jpg',
           type: res?.mime,
           orientation: getOrientation(res?.width, res?.height),
@@ -646,7 +690,7 @@ const uploadFromGalary = async (isMulti, isCircle) => {
     const uri = Platform.OS === 'ios' ? sourceURL : path;
     const fileName = filename || 'photo.png';
     const baseImage = {
-      uri: Platform.OS === 'ios' ? sourceURL : path,
+      uri: Platform.OS === 'ios' ? sourceURL : `file://${path}`,
       name: filename || 'photo.jpg',
       type: mime,
       orientation: getOrientation(width, height),
@@ -676,7 +720,7 @@ const uploadFromCamera = async (isMulti, isCircle, maxFiles) => {
 
   if (Array.isArray(imageData)) {
     return imageData.map(res => ({
-      uri: Platform.OS === 'ios' ? res?.path : res?.sourceURL,
+      uri: Platform.OS === 'ios' ? res?.path : `file://${res?.path}`,
       name: res?.filename || 'photo.jpg',
       type: res?.mime,
       orientation: checkOrientation(res),
@@ -693,12 +737,12 @@ const uploadFromCamera = async (isMulti, isCircle, maxFiles) => {
       mime,
     } = imageData;
 
-    const uri = Platform.OS === 'ios' ? path : sourceURL;
+    const uri = Platform.OS === 'ios' ? path : `file://${sourceURL}`;
     const fileName = filename || 'photo.jpg';
     const orientation = checkOrientation(imageData);
 
     return {
-      uri,
+      uri: Platform.OS === 'ios' ? path : `file://${path}`,
       name: fileName,
       type: mime,
       orientation,
@@ -1210,4 +1254,5 @@ export {
   formatDateToLong,
   getFormattedTime,
   getCustom12HourTime,
+  getDateMonthYearWithOutUTC,
 };

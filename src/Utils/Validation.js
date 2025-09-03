@@ -161,21 +161,8 @@ const eventCreateSchema = yup.object().shape({
   eventImg: yup.mixed().required('Event image is required'),
   eventPrice: yup.mixed().required('Event price is required'),
   eventStartDate: yup.date().required('Event start date is required'),
-  // .default(currentDate)
-  eventStartTime: yup
-    .date()
-    .required('Event start time is required')
-    .default(currentDate),
+  eventStartTime: yup.date().required('Event start time is required'),
   eventEndDate: yup.date().required('Event end date is required'),
-  // .test(
-  //   'is-after-start',
-  //   'End date must be after start date',
-  //   function (value) {
-  //     const {eventStartDate} = this.parent;
-  //     return !eventStartDate || !value || value >= eventStartDate;
-  //   },
-  // )
-  // .default(nextDay),
   eventEndTime: yup
     .date()
     .required('Event end time is required')
@@ -183,39 +170,36 @@ const eventCreateSchema = yup.object().shape({
       'is-after-start-time',
       'End time must be after start time',
       function (value) {
-        const {eventStartTime, eventStartDate, eventEndDate} = this.parent;
+        const {eventStartTime} = this.parent;
+        if (eventStartTime && value) {
+          // Extract hours and minutes for comparison
+          const startHours = eventStartTime.getHours();
+          const startMinutes = eventStartTime.getMinutes();
+          const endHours = value.getHours();
+          const endMinutes = value.getMinutes();
 
-        if (
-          eventStartDate &&
-          eventEndDate &&
-          eventStartDate.getTime() === eventEndDate.getTime()
-        ) {
-          if (eventStartTime && value) {
-            const startTime = parseTimeString(eventStartTime);
-            const endTime = parseTimeString(value);
-            return endTime > startTime;
-          }
-          return true;
+          // Compare times
+          return (
+            endHours > startHours ||
+            (endHours === startHours && endMinutes > startMinutes)
+          );
         }
-        return true; // No need to validate if dates are different
+        return true;
       },
     ),
-  // .default(currentDate),
   eventLocation: yup.object().shape({
     locationName: yup.string().required('Event location Name is required'),
     coords: yup.object().shape({
-      latitude: yup.string().required('Please select locaiton'),
-      longitude: yup.string().required('Please select locaiton'),
+      latitude: yup.string().required('Please select location'),
+      longitude: yup.string().required('Please select location'),
     }),
   }),
-
   eventType: yup.array().of(
     yup.object().shape({
       id: yup.string(),
       name: yup.string(),
     }),
   ),
-
   privateEvent: yup.mixed().required('Specify the event type').default(0),
   eventAssociation: yup.array().of(
     yup.object().shape({

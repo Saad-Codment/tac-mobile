@@ -29,7 +29,7 @@ export const privacyUrl = 'https://theappforcowboys.com/privacy_policy';
 export const termsUrl = 'https://theappforcowboys.com/terms_and_conditions';
 export const aboutUrl = 'https://theappforcowboys.com/about_us';
 
-export const MapAPIKey = 'AIzaSyAu-nEBbiOahfUyeMc8Lc1gTTKfete_wnQ';
+export const MapAPIKey = 'AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY';
 
 export const registerUrl = '/signup';
 export const loginUrl = '/login';

@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     marginLeft: wp('1.5'),
     color: Colors.gray,
     fontSize: hp('2'),
-    top: hp('3'),
+    top: Platform.OS == 'ios' ? hp('3') : 0,
   },
   HeaderTitle: {
     fontSize: hp('1.8'),

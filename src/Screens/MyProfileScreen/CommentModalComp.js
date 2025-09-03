@@ -148,7 +148,7 @@ const CommentModalComp = ({
                 />
               </Touchable>
             </View>
-            <KeyboardAvoidingView
+            <View
               style={{flex: 1}}
               behavior={Platform.OS === 'ios' ? 'padding' : null}>
               <FlatList
@@ -174,7 +174,7 @@ const CommentModalComp = ({
                   style={styles.searchinput}
                   onChangeText={e => setMessage(e)}
                   value={message}
-                  placeholder={'Type a message'}
+                  placeholder={'Type a message...'}
                   placeholderTextColor={Colors.grayFaded}
                   multiline
                 />
@@ -188,7 +188,7 @@ const CommentModalComp = ({
                   </Touchable>
                 )}
               </View>
-            </KeyboardAvoidingView>
+            </View>
           </View>
         </View>
       </Modal>

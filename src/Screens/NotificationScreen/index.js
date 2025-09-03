@@ -22,10 +22,12 @@ const NotificationScreen = ({navigation}) => {
       />
       {notificationsList != null && (
         <AniFlatOneByOne
-          data={notificationsList}
+          data={notificationsList ?? []}
           flatViewStyle={styles.upComingFlatlistView}
           onRefresh={onRefresh}
           flatListProps={{
+            keyExtractor: (item, index) =>
+              item?.id?.toString() || index.toString(), // ✅ FIX
             ListEmptyComponent: (
               <DataNotFound onpress={onRefresh} btnStyles={{width: wp('80')}} />
             ),

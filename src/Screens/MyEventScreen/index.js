@@ -36,8 +36,6 @@ function MyEventScreen({navigation, route}) {
     [eventDate, eventsByDate],
   );
 
-  console.log('datadatadatadatadatadsdvdsdvsvsvsdsdvsatadatadata', eventDate);
-
   return (
     <View style={{flex: 1}}>
       <HeaderComponent
@@ -65,7 +63,7 @@ function MyEventScreen({navigation, route}) {
             alignItems: 'center',
             paddingBottom: hp('10'),
           }}
-          onRefresh={() => onSelectVal(eventDate[0])}
+          onRefresh={refetch}
           refreshing={false}
           ListEmptyComponent={
             eventsByDate != null && (

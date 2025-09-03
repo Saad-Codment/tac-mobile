@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
     flex: 0.3,
   },
   inputMain: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
     borderWidth: 0.5,
     paddingHorizontal: wp('4'),
     // paddingVertical: hp('1'),
