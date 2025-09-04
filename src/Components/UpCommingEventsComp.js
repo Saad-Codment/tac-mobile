@@ -226,8 +226,18 @@ const UpcomingEventsComp = ({
               />
             </MenuTrigger>
             <MenuOptions>
-              <MenuOption onSelect={() => onEditPost(item)} text="Edit" />
-              <MenuOption onSelect={() => onDeletePost(item)} text="Delete" />
+              <MenuOption
+                onSelect={() => onEditPost(item)}
+                text="Edit"
+                style={{color: 'black'}}
+                customStyles={{color: 'black'}}
+              />
+              <MenuOption
+                onSelect={() => onDeletePost(item)}
+                text="Delete"
+                style={{color: 'black'}}
+                customStyles={{color: 'black'}}
+              />
             </MenuOptions>
           </Menu>
         )}

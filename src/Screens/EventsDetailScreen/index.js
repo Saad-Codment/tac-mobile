@@ -10,6 +10,8 @@ import {HeaderComponent} from '../../Components/HeaderComponent';
 import BlurImage from '../../Components/BlurImage';
 import {hp, wp} from '../../Config/responsive';
 import {
+  arrRight,
+  arrRightPurple,
   filledCalender,
   filledClock,
   filledLocation,
@@ -120,6 +122,14 @@ const EventsDetailScreen = ({navigation, route}) => {
       rightText: eventData?.tour?.name ?? 'Not Available',
       onPress: () => {},
       rightTextStyles: {color: Colors.primaryColor},
+    },
+    {
+      title: 'Performances',
+      onPress: () =>
+        navigation.navigate('PerformancesScreen', eventData?.performances),
+      rightIcon: arrRightPurple,
+      rightIconColor: Colors.primaryColor,
+      rightStyle: {width: wp('3')},
     },
     {
       title: 'Event Confirmation',
@@ -485,6 +495,7 @@ const EventsDetailScreen = ({navigation, route}) => {
           dividerStyles={styles.dividerStyle}
           titleStyles={{fontSize: hp('1.2')}}
           rightTextStyles={{fontSize: hp('1.2')}}
+          rightStyles={{marginRight: wp('3')}}
         />
         {eventData?.performances && performanceArry.length > 0 && (
           <>

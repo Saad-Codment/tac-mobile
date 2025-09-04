@@ -33,5 +33,6 @@ export {default as ChatScreen} from './ChatScreen';
 export {default as ChatUsersScreen} from './ChatUsersScreen';
 export {default as ContactUsScreen} from './ContactUsScreen';
 export {default as BlockedUserScreen} from './BlockedUserScreen';
+export {default as PerformancesScreen} from './PerformancesScreen';
 
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

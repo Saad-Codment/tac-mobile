@@ -270,7 +270,7 @@ const fetchGetWithToken = async (url, isUpdate) => {
 //   }
 // };
 
-const formDataFunc = async (url, body, imageKey, isArray) => {
+const formDataFunc = async (url, body, imageKey, isArray, inewArryKey) => {
   const {Auth} = store.getState();
   store.dispatch(loadingTrue());
 

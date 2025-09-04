@@ -61,6 +61,7 @@ const HomeScreen = ({navigate}) => {
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => (pages?.length ?? 0) + 1,
+    cacheTime: 0, // 👈 Don't cache the data
   });
 
   // useEffect(() => {

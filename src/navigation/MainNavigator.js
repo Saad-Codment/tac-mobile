@@ -94,6 +94,10 @@ function MainNavigator() {
               component={Screens.BlockedUserScreen}
             />
             <Stack.Screen
+              name="PerformancesScreen"
+              component={Screens.PerformancesScreen}
+            />
+            <Stack.Screen
               name="ContactUsScreen"
               component={Screens.ContactUsScreen}
             />

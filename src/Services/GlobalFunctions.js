@@ -319,37 +319,90 @@ function getDateMonthYearWithOutUTC(dateString) {
   }
 }
 
-function convertToLocalTime(globalTimeString) {
-  if (globalTimeString) {
-    // Parse the input global time string into a Date object
-    const globalDate = new Date(globalTimeString);
+function getFullLocalDate(dateString) {
+  if (!dateString) return null;
 
-    // Check if the date is valid
-    if (isNaN(globalDate)) {
-      throw new Error(
-        'Invalid date format. Please provide a valid date string.',
-      );
-    }
+  // Add Z (UTC) to the backend string
+  const utcDate = new Date(dateString.replace(' ', 'T') + 'Z');
 
-    // Format the date to local time with hours and minutes
-    const options = {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true, // Use 12-hour format
-    };
-
-    // Use Intl.DateTimeFormat to format the time
-    const localTimeFormatter = new Intl.DateTimeFormat(undefined, options);
-    const formattedTime = localTimeFormatter.format(globalDate);
-
-    // Split the formatted time into time and period (e.g., "12:53 PM")
-    const [time, period] = formattedTime.split(' ');
-
-    return {
-      time, // Time without period (e.g., "12:53")
-      period, // Period (e.g., "AM" or "PM")
-    };
+  if (isNaN(utcDate)) {
+    throw new Error('Invalid date format. Please provide a valid date string.');
   }
+
+  const options = {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  };
+
+  return new Intl.DateTimeFormat(undefined, options).format(utcDate);
+}
+
+function convertToLocalTime(globalTimeString) {
+  if (!globalTimeString) return null;
+
+  // Ensure the input string is treated as UTC
+  const utcDate = new Date(globalTimeString.replace(' ', 'T') + 'Z');
+
+  if (isNaN(utcDate)) {
+    throw new Error(
+      'Invalid date format. Please provide a valid UTC date string.',
+    );
+  }
+
+  // Format the date to local time
+  const options = {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true, // 12-hour format
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // local TZ
+  };
+
+  const localTimeFormatter = new Intl.DateTimeFormat(undefined, options);
+  const formattedTime = localTimeFormatter.format(utcDate);
+
+  // "hh:mm AM/PM"
+  const [time, period] = formattedTime.split(' ');
+
+  return {
+    time, // "09:08"
+    period, // "PM"
+  };
+}
+
+function convertToLocalFullTime(globalTimeString) {
+  if (!globalTimeString) return null;
+
+  // Ensure the input string is treated as UTC
+  const utcDate = new Date(globalTimeString.replace(' ', 'T') + 'Z');
+
+  if (isNaN(utcDate)) {
+    throw new Error(
+      'Invalid date format. Please provide a valid UTC date string.',
+    );
+  }
+
+  // Format with full date + time in local timezone
+  const options = {
+    weekday: 'short', // e.g. "Fri"
+    year: 'numeric', // e.g. "2025"
+    month: 'short', // e.g. "Sep"
+    day: '2-digit', // e.g. "05"
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  };
+
+  const formatter = new Intl.DateTimeFormat(undefined, options);
+  const formattedDateTime = formatter.format(utcDate);
+
+  return formattedDateTime;
 }
 
 const openGoogleMaps = (latitude, longitude) => {
@@ -1255,4 +1308,6 @@ export {
   getFormattedTime,
   getCustom12HourTime,
   getDateMonthYearWithOutUTC,
+  convertToLocalFullTime,
+  getFullLocalDate,
 };
