@@ -72,7 +72,7 @@ const HomeScreen = ({navigate}) => {
   // });
 
   const list = data?.pages?.flatMap(page => page.data?.data) || [];
-  console.log('ljskdvhjklsdbvjkbsdkvbsdkjvbksdbvsdbjk', list);
+  console.log('ljskdvhjklsdbvjkbsdkvbsdkjvbksdbvsdbjk', list[2]);
 
   const onRefresh = useCallback(() => {
     setRefresh(true);

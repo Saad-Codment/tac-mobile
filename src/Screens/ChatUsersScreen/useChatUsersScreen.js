@@ -149,7 +149,12 @@ const useChatUserScreen = ({navigate, addListener}) => {
     store.dispatch({type: types.isChatNotifyFalse});
   };
 
-  useEffect(clearNotification, []);
+  useEffect(() => {
+    const event = addListener('focus', () => {
+      clearNotification();
+    });
+    return event;
+  }, []);
 
   useEffect(() => {
     // Update unread count in Redux whenever unreadCount changes

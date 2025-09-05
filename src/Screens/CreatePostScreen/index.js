@@ -103,6 +103,7 @@ const CreatePostScreen = ({navigation, route}) => {
               },
               {
                 text: 'Cancel', // Just a dismissal button
+                style: 'destructive',
                 onPress: async () => {
                   // console.log(
                   //   'slkdbvklsdbvklsdbklvbskdlv',

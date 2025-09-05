@@ -10,7 +10,7 @@ const useNotificationScreen = () => {
   const {queryClient, dispatch} = useReduxStore();
   const {sendFriendReq, acceptFriendReq, rejectFriendReq} = useFriendServices();
 
-  const {data, error, refetch} = useQuery({
+  const {data, error, refetch, isLoading} = useQuery({
     queryKey: ['allNotifications'],
     queryFn: () => API.get(getAllNotificationsUrl),
     cacheTime: 0,
@@ -36,6 +36,7 @@ const useNotificationScreen = () => {
   return {
     notificationsList: data?.data?.data ?? [],
     onRefresh,
+    isLoading,
     acceptReq: async id => {
       console.log('jkdsvbklsdbvklsdbklvbsdklvsd', id);
       await acceptFriendReq.mutateAsync(id);

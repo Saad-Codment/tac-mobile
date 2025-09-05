@@ -205,7 +205,7 @@ const PostViewComp = ({
           style: 'destructive',
           onPress: async () => {
             await deletePost.mutateAsync(item?.id);
-            refetch();
+            // refetch();
             functionToDelete(index);
             // Call your delete mutation here
             // deletePost.mutateAsync(item?.id);

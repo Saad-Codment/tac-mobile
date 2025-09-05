@@ -184,9 +184,10 @@ const App = () => {
       {modalType && <ImagePreviewComp visible={modalType} images={image} />}
       {isloading &&
         Boolean(getNameFunc?.getCurrentRoute()?.name != 'AllEventsScreen') &&
-        Boolean(getNameFunc?.getCurrentRoute()?.name != 'HomeScreen') && (
-          <Overlay />
-        )}
+        Boolean(getNameFunc?.getCurrentRoute()?.name != 'HomeScreen') &&
+        Boolean(
+          getNameFunc?.getCurrentRoute()?.name != 'FriendProfileScreen',
+        ) && <Overlay />}
       {/* <StackNavigatior />; */}
     </>
   );

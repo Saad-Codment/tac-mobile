@@ -29,6 +29,8 @@ import PostViewComp from '../../Components/PostViewComp';
 import {BottomSheet} from 'react-native-elements';
 import BottomModalComponent from '../../Components/BottomModalComponent';
 import {Touchable} from '../../Components/Touchable';
+import SharePostComp from '../../Components/SharePostComp';
+import ShareEventComp from '../../Components/ShareEventComp';
 
 const FriendProfileScreen = ({navigation, route}) => {
   const {
@@ -55,11 +57,22 @@ const FriendProfileScreen = ({navigation, route}) => {
     (item, index) => {
       return (
         <View style={{marginVertical: hp('0.5')}}>
-          {(item?.type == 2 ||
-            item?.type == 4 ||
-            item?.type == 5 ||
-            item?.type == 6) && (
+          {(item?.type == 2 || item?.type == 5 || item?.type == 6) && (
             <UpcomingEventsComp
+              item={item}
+              index={index}
+              mainViewStyle={{width: wp('95'), alignSelf: 'center'}}
+              upperImgStyle={{width: wp('95')}}
+              functionToUpdateLike={functionToUpdateLike}
+              openBottomSheet={id => setModal({id, type: 'event'})}
+              refetch={refetch}
+              functionToDelete={functionToDelete}
+
+              // likePost={likePost}
+            />
+          )}
+          {item?.type == 5 && (
+            <ShareEventComp
               item={item}
               index={index}
               mainViewStyle={{width: wp('95')}}
@@ -68,11 +81,14 @@ const FriendProfileScreen = ({navigation, route}) => {
               openBottomSheet={id => setModal({id, type: 'event'})}
               refetch={refetch}
               functionToDelete={functionToDelete}
-              // likePost={likePost}
+              upperMainView={{
+                width: wp('100'),
+                marginBottom: hp('1'),
+                marginTop: hp('1'),
+              }}
             />
           )}
-
-          {(item?.type == 3 || item?.type == 1) && (
+          {item?.type == 1 && (
             <PostViewComp
               item={item}
               index={index}
@@ -82,6 +98,21 @@ const FriendProfileScreen = ({navigation, route}) => {
                 functionToUpdateComment(index, isComment)
               }
               functionToDelete={functionToDelete}
+            />
+          )}
+          {item?.type == 3 && (
+            <SharePostComp
+              item={item}
+              index={index}
+              functionToUpdateLike={functionToUpdateLike}
+              openBottomSheet={id => setModal({id, type: 'post'})}
+              functionToUpdateComment={(i, isComment) =>
+                functionToUpdateComment(index, isComment)
+              }
+              functionToDelete={functionToDelete}
+              upperMainView={{
+                width: wp('100'),
+              }}
             />
           )}
         </View>

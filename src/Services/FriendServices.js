@@ -213,7 +213,7 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
         successMessage(data?.message);
       } else {
         console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
-        errorMessage(data?.message);
+        errorMessage('An error occurred while deleting the event!');
       }
     },
     onError: () => {
@@ -229,7 +229,7 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
         successMessage(data?.message);
       } else {
         console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
-        errorMessage(data?.message);
+        errorMessage('An error occurred while deleting the post!');
       }
     },
     onError: () => {

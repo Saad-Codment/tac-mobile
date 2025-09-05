@@ -123,14 +123,14 @@ const EventsDetailScreen = ({navigation, route}) => {
       onPress: () => {},
       rightTextStyles: {color: Colors.primaryColor},
     },
-    {
-      title: 'Performances',
-      onPress: () =>
-        navigation.navigate('PerformancesScreen', eventData?.performances),
-      rightIcon: arrRightPurple,
-      rightIconColor: Colors.primaryColor,
-      rightStyle: {width: wp('3')},
-    },
+    // {
+    //   title: 'Performances',
+    //   onPress: () =>
+    //     navigation.navigate('PerformancesScreen', eventData?.performances),
+    //   rightIcon: arrRightPurple,
+    //   rightIconColor: Colors.primaryColor,
+    //   rightStyle: {width: wp('3')},
+    // },
     {
       title: 'Event Confirmation',
       rightText: eventData?.is_confirmed == 0 ? 'Planning' : 'Confirmed',

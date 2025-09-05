@@ -292,6 +292,7 @@ const CreateEventsScreen = ({navigation, route}) => {
                                 },
                                 {
                                   text: 'Cancel', // Just a dismissal button
+                                  style: 'destructive',
                                   onPress: async () => {
                                     // console.log(
                                     //   'slkdbvklsdbvklsdbklvbskdlv',
@@ -476,7 +477,7 @@ const CreateEventsScreen = ({navigation, route}) => {
             />
           }
         />
-        <TitleInputView
+        {/* <TitleInputView
           title={'Performances'}
           centerInnerView={
             <View
@@ -634,7 +635,7 @@ const CreateEventsScreen = ({navigation, route}) => {
               />
             </Touchable>
           }
-        />
+        /> */}
         <View style={styles.viewFlex}>
           <TitleInputView
             title={'Event Type'}

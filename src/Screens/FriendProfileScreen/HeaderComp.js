@@ -184,6 +184,7 @@ const HeaderComp = ({userData, myUserData}) => {
                           style: 'destructive',
                           onPress: async () => {
                             await removeFriend.mutateAsync(userData?.friends);
+                            queryClient.invalidateQueries(['getProfileData']);
                           },
                         },
                       ],

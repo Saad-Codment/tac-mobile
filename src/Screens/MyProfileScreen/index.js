@@ -17,6 +17,8 @@ import {Touchable} from '../../Components/Touchable';
 import {getEventsUrl, getMyFriendsUrl} from '../../Utils/Urls';
 import SettingModal from '../SettingScreen/SettingModal';
 import CommentModalComp from './CommentModalComp';
+import SharePostComp from '../../Components/SharePostComp';
+import ShareEventComp from '../../Components/ShareEventComp';
 
 const MyProfileScreen = ({navigation, route}) => {
   const {
@@ -57,7 +59,7 @@ const MyProfileScreen = ({navigation, route}) => {
     (item, index) => {
       return (
         <View style={{marginVertical: hp('1')}}>
-          {item?.type == 3 || item?.type == 1 ? (
+          {item?.type == 1 ? (
             <PostViewComp
               item={item}
               index={index}
@@ -75,6 +77,45 @@ const MyProfileScreen = ({navigation, route}) => {
               functionToUpdatePostOrEvent={newItem =>
                 functionToUpdatePostOrEvent(index, newItem)
               }
+            />
+          ) : item?.type == 3 ? (
+            <SharePostComp
+              item={item}
+              index={index}
+              functionToUpdateLike={functionToUpdateLike}
+              openBottomSheet={id => setModal(id)}
+              functionToDelete={functionToDelete}
+              functionToUpdateComment={(i, isComment) =>
+                functionToUpdateComment(index, isComment)
+              }
+              refetch={refetch}
+              setCommentModal={id => {
+                setStateForModalData({id, index});
+                setCommentModal(true);
+              }}
+              functionToUpdatePostOrEvent={newItem =>
+                functionToUpdatePostOrEvent(index, newItem)
+              }
+              upperMainView={{
+                width: wp('100'),
+              }}
+            />
+          ) : item?.type == 5 ? (
+            <ShareEventComp
+              item={item}
+              index={index}
+              mainViewStyle={{width: wp('95')}}
+              upperImgStyle={{width: wp('95')}}
+              functionToUpdateLike={functionToUpdateLike}
+              openBottomSheet={id => setModal(id)}
+              functionToDelete={functionToDelete}
+              refetch={refetch}
+              functionToUpdatePostOrEvent={newItem =>
+                functionToUpdatePostOrEvent(index, newItem)
+              }
+              upperMainView={{
+                width: wp('100'),
+              }}
             />
           ) : (
             <UpcomingEventsComp

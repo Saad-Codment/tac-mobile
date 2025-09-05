@@ -110,7 +110,7 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
         );
         setValue(
           'eventEndDate',
-          res?.to_date ? new Date(getFullLocalDate(res.to_date)) : nextNextDay,
+          res?.to_date ? new Date(getFullLocalDate(res.to_date)) : nextDay,
         );
         setValue(
           'eventEndTime',
@@ -149,9 +149,7 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
     eventStartTime: data?.data?.start_time
       ? new Date(data?.data?.start_time)
       : defaultMorningTime,
-    eventEndDate: data?.data?.to_date
-      ? new Date(data?.data?.to_date)
-      : nextNextDay,
+    eventEndDate: data?.data?.to_date ? new Date(data?.data?.to_date) : nextDay,
     eventEndTime: data?.data?.end_time
       ? new Date(data?.data?.end_time)
       : defaultEndTime,
@@ -243,15 +241,15 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
         tour_id: evnetTour,
         private: privateEvent ? 1 : 0,
         is_confirmed: eventConfirm ? 1 : 0,
-        '[performances]':
-          perfEventList.length > 0
-            ? perfEventList.map(res => ({
-                title: res?.title,
-                date: formatDateToYMD(res?.date),
-                start_time: getFormattedTime(res?.startTime),
-                end_time: getFormattedTime(res?.endTime),
-              }))
-            : [],
+        // '[performances]':
+        //   perfEventList.length > 0
+        //     ? perfEventList.map(res => ({
+        //         title: res?.title,
+        //         date: formatDateToYMD(res?.date),
+        //         start_time: getFormattedTime(res?.startTime),
+        //         end_time: getFormattedTime(res?.endTime),
+        //       }))
+        //     : [],
         images: isEditEvnet
           ? eventImg?.find(res => !res?.isEdit)
             ? eventImg?.filter(res => !res?.isEdit)

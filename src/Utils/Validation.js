@@ -160,9 +160,21 @@ const eventCreateSchema = yup.object().shape({
     .max(50, 'Name must be less than 50 characters.'),
   eventImg: yup.mixed().required('Event image is required'),
   eventPrice: yup.mixed().required('Event price is required'),
-  eventStartDate: yup.date().required('Event start date is required'),
+  eventStartDate: yup
+    .date()
+    .required('Event start date is required')
+    .min(
+      new Date(new Date().setHours(0, 0, 0, 0)), // today's date at 00:00
+      'Event start date cannot be in the past',
+    ),
   eventStartTime: yup.date().required('Event start time is required'),
-  eventEndDate: yup.date().required('Event end date is required'),
+  eventEndDate: yup
+    .date()
+    .required('Event end date is required')
+    .min(
+      new Date(new Date().setHours(0, 0, 0, 0)), // today's date at 00:00
+      'Event end date cannot be in the past',
+    ),
   eventEndTime: yup
     .date()
     .required('Event end time is required')

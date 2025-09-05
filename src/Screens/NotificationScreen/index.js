@@ -11,7 +11,7 @@ import {boldDivider, divider} from '../../Assets';
 import {Colors} from '../../Theme/Variables';
 
 const NotificationScreen = ({navigation}) => {
-  const {notificationsList, onRefresh, acceptReq, declineReq} =
+  const {notificationsList, onRefresh, acceptReq, declineReq, isLoading} =
     useNotificationScreen(navigation);
   return (
     <>
@@ -20,7 +20,7 @@ const NotificationScreen = ({navigation}) => {
         goBack={() => navigation.goBack()}
         isBack
       />
-      {notificationsList != null && (
+      {!isLoading && (
         <AniFlatOneByOne
           data={notificationsList ?? []}
           flatViewStyle={styles.upComingFlatlistView}

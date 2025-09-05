@@ -30,6 +30,7 @@ const CommentScreen = ({navigation, route}) => {
     message,
     setMessage,
     sendMessage,
+    isLoading,
   } = useCommentScreen(navigation, route);
 
   const renderItem = useCallback(
@@ -38,6 +39,8 @@ const CommentScreen = ({navigation, route}) => {
     },
     [commentsList],
   );
+
+  console.log('commentsListcommentsListcommentsListcommentsList', commentsList);
 
   return (
     <KeyboardAvoidingView
@@ -49,23 +52,25 @@ const CommentScreen = ({navigation, route}) => {
         goBack={() => navigation.goBack()}
         isBack
       />
-      <FlatList
-        data={commentsList}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        onLayout={handleAutoScroll}
-        ref={scrollViewRef}
-        onContentSizeChange={handleAutoScroll}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <DataNotFound
-            btnStyles={{width: wp('80')}}
-            mainViewStyles={{marginTop: hp('25')}}
-            title={'No Comments yet!'}
-            subTitle={''}
-          />
-        }
-      />
+      {!isLoading && (
+        <FlatList
+          data={commentsList}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          onLayout={handleAutoScroll}
+          ref={scrollViewRef}
+          onContentSizeChange={handleAutoScroll}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <DataNotFound
+              btnStyles={{width: wp('80')}}
+              mainViewStyles={{marginTop: hp('25')}}
+              title={'No Comments yet!'}
+              subTitle={''}
+            />
+          }
+        />
+      )}
       <View style={styles.searchMain}>
         <TextInput
           enablesReturnKeyAutomatically
