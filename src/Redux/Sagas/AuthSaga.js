@@ -22,6 +22,7 @@ import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import NavigationService from '../../Services/NavigationService';
 import {statusCodes} from '@react-native-google-signin/google-signin';
 import appleAuth from '@invertase/react-native-apple-authentication';
+import Purchases from 'react-native-purchases';
 
 const loginObject = {
   Google: () => googleLogin(),
@@ -65,6 +66,7 @@ const loginSaga = function* ({payload: {datas, type}}) {
         if (ok) {
           yield put(loadingTrue());
           yield put(updateAuth(data));
+          // yield call(Purchases.logIn, data?.user?.id);
         } else errorMessage(data?.message);
       }
     }
@@ -146,6 +148,7 @@ function* registerSaga({payload: {datas}}) {
         if (ok) {
           yield put(loadingTrue());
           yield put(updateAuth(data));
+          // yield call(Purchases.logIn, data?.user?.id);
         } else errorMessage(data?.message);
       }
     }

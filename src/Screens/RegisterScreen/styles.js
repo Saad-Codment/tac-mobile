@@ -187,6 +187,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: 'black',
   },
   modalContent: {
     maxHeight: 300,

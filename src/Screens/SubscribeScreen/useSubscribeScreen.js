@@ -94,7 +94,7 @@ const useSubscribeScreen = () => {
 
       if (customerInfo?.originalAppUserId != null) {
         mutate({
-          customer_id: customerInfo.originalAppUserId,
+          original_customer_id: customerInfo.originalAppUserId,
           identifier:
             customerInfo.entitlements.active['Tac subscription group']
               .productIdentifier,

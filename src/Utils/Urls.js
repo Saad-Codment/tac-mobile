@@ -1,8 +1,8 @@
 const getCredentials = () => {
   if (__DEV__)
     return {
-      baseURL: 'https://theappforcowboys.com/tac-backend/api',
-      imageURL: 'https://tac-app-bucket.s3.us-east-2.amazonaws.com/',
+      baseURL: 'https://theappforcowboys.com/backend-staging/api',
+      imageURL: 'https://tac-staging.s3.us-east-2.amazonaws.com/',
     };
   else {
     console.log = () => {};

@@ -35,21 +35,29 @@ const App = () => {
 
   const appState = useRef(AppState.currentState);
   const {isloading} = getState('isloading');
-  const {isLogin} = getState('Auth');
+  const {isLogin, userData} = getState('Auth');
   const {image, modalType} = getState('modalState');
   const isFetching = useIsFetching();
 
   console.log('load', isloading);
 
   useEffect(() => {
-    Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
-    if (Platform.OS === 'ios') {
-      Purchases.configure({apiKey: 'appl_FlnMxEBtfVpRzXrWhCyKvhcVQYs'});
-    } else if (Platform.OS === 'android') {
-      Purchases.configure({apiKey: 'goog_GGhwNAKnmUWMKwuIFJJghrHhAZG'});
-      // OR: if building for Amazon, be sure to follow the installation instructions then:
+    if (isLogin) {
+      Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+      if (Platform.OS === 'ios') {
+        Purchases.configure({
+          apiKey: 'appl_FlnMxEBtfVpRzXrWhCyKvhcVQYs',
+          appUserID: userData?.id?.toString(),
+        });
+      } else if (Platform.OS === 'android') {
+        Purchases.configure({
+          apiKey: 'goog_GGhwNAKnmUWMKwuIFJJghrHhAZG',
+          appUserID: userData?.id?.toString(),
+        });
+        // OR: if building for Amazon, be sure to follow the installation instructions then:
+      }
     }
-  }, []);
+  }, [isLogin]);
 
   const time = () => {
     return 3000;
