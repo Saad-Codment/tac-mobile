@@ -2,7 +2,10 @@ import {Pressable, StyleSheet, View} from 'react-native';
 import {CircleImage} from './CircleImage';
 import {TextComponent} from './TextComponent';
 import {hp, wp} from '../Config/responsive';
-import {convertToCustomTimeFormat} from '../Services/GlobalFunctions';
+import {
+  convertToCustomTimeFormat,
+  convertUTCToLocalTimeForComment,
+} from '../Services/GlobalFunctions';
 import {types} from '../Redux/types';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {imageUrl} from '../Utils/Urls';
@@ -17,7 +20,11 @@ const CommentComp = ({item, index}) => {
     });
   };
 
-  console.log('itemitemitemitemitemitemitemitem', item?.last_name);
+  console.log(
+    'itemitemitemitemitemitemitemsadsitem',
+    item?.created_at,
+    convertUTCToLocalTimeForComment(item?.created_at),
+  );
   return (
     <View style={styles.mainView}>
       <View style={styles.upperView}>
@@ -31,7 +38,7 @@ const CommentComp = ({item, index}) => {
           styles={styles.nameText}
         />
         <TextComponent
-          text={convertToCustomTimeFormat(item?.created_at)}
+          text={convertUTCToLocalTimeForComment(item?.created_at)}
           styles={{fontSize: hp('1.2')}}
         />
       </View>
@@ -52,7 +59,7 @@ const styles = StyleSheet.create({
   nameText: {
     fontWeight: 'bold',
     fontSize: hp('1.5'),
-    width: wp('67'),
+    width: wp('64'),
     marginLeft: wp('2'),
   },
   descText: {marginTop: hp('1'), marginLeft: wp('2'), fontSize: hp('1.5')},

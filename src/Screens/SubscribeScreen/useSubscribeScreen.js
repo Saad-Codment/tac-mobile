@@ -99,6 +99,7 @@ const useSubscribeScreen = () => {
             customerInfo.entitlements.active['Tac subscription group']
               .productIdentifier,
           trial_start_at: formattedDate,
+          customer_id: userData?.customer_id?.toString(),
         });
       }
     } catch (error) {

@@ -47,12 +47,12 @@ const App = () => {
       if (Platform.OS === 'ios') {
         Purchases.configure({
           apiKey: 'appl_FlnMxEBtfVpRzXrWhCyKvhcVQYs',
-          appUserID: userData?.id?.toString(),
+          appUserID: userData?.customer_id?.toString(),
         });
       } else if (Platform.OS === 'android') {
         Purchases.configure({
           apiKey: 'goog_GGhwNAKnmUWMKwuIFJJghrHhAZG',
-          appUserID: userData?.id?.toString(),
+          appUserID: userData?.customer_id?.toString(),
         });
         // OR: if building for Amazon, be sure to follow the installation instructions then:
       }

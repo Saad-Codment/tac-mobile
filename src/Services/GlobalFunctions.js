@@ -858,6 +858,29 @@ function convertToCustomTimeFormat(isoDate) {
   return formattedTime;
 }
 
+function convertUTCToLocalTimeForComment(utcString) {
+  // Parse the UTC time string as a Date object
+  const utcDate = new Date(utcString + 'Z'); // 'Z' ensures it's treated as UTC
+
+  // Convert to local time (automatically uses the device’s local timezone)
+  const localHours = utcDate.getHours();
+  const localMinutes = utcDate.getMinutes();
+
+  // Determine A.M. or P.M.
+  const amOrPm = localHours >= 12 ? 'P.M.' : 'A.M.';
+
+  // Convert hours to 12-hour format
+  const formattedHours = localHours % 12 || 12;
+
+  // Format the final time
+  const formattedTime = `${formattedHours}:${String(localMinutes).padStart(
+    2,
+    '0',
+  )} ${amOrPm}`;
+
+  return formattedTime;
+}
+
 function getOrdinal(num) {
   const lastDigit = num % 10;
   const lastTwoDigits = num % 100;
@@ -1310,4 +1333,5 @@ export {
   getDateMonthYearWithOutUTC,
   convertToLocalFullTime,
   getFullLocalDate,
+  convertUTCToLocalTimeForComment,
 };

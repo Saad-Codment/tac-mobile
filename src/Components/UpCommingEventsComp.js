@@ -163,7 +163,11 @@ const UpcomingEventsComp = ({
       onPress={() => {
         NavigationService.navigate('EventsDetailScreen', {id: item?.id});
       }}>
-      <View style={styles.upperImage}>
+      <Pressable
+        style={styles.upperImage}
+        onPress={() =>
+          NavigationService.navigate('FriendProfileScreen', {id: item?.user_id})
+        }>
         <Pressable onPress={onImagePress}>
           <CircleImage
             size={0.12}
@@ -242,7 +246,7 @@ const UpcomingEventsComp = ({
           </Menu>
         )}
         {/* } */}
-      </View>
+      </Pressable>
       <View style={styles.priceMainView}>
         <TextComponent
           text={item?.title}
