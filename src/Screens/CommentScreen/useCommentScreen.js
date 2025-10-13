@@ -25,18 +25,19 @@ const useCommentScreen = ({navigate}, {params}) => {
     addReplyOnCommentOnEvent,
   } = useFriendServices();
 
-  const {data, error, refetch} = useQuery({
+  const {data, error, refetch, isLoading} = useQuery({
     queryKey: [params?.isPost ? 'postComments' : 'eventComment'],
     queryFn: () =>
       API.get(
         (params?.isPost ? getPostCommentUrl : getEventsCommentUrl) + params?.id,
       ),
+    staleTime: 0, // 👈 Treat data as stale immediately
+    cacheTime: 0, // 👈 Don't cache the data
   });
 
   const onRefresh = useCallback(() => {
     queryClient.fetchQuery({
       queryKey: [params?.isPost ? 'postComments' : 'eventComment'],
-      staleTime: 1000,
     });
   }, []);
 
@@ -213,6 +214,7 @@ const useCommentScreen = ({navigate}, {params}) => {
     addLikeOnCommentEvent,
     refetch,
     getEventCommentReplies,
+    isLoading,
   };
 };
 

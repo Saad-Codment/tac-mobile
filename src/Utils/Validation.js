@@ -160,24 +160,21 @@ const eventCreateSchema = yup.object().shape({
     .max(50, 'Name must be less than 50 characters.'),
   eventImg: yup.mixed().required('Event image is required'),
   eventPrice: yup.mixed().required('Event price is required'),
-  eventStartDate: yup.date().required('Event start date is required'),
-  // .default(currentDate)
-  eventStartTime: yup
+  eventStartDate: yup
     .date()
-    .required('Event start time is required')
-    .default(currentDate),
+    .required('Event start date is required')
+    .min(
+      new Date(new Date().setHours(0, 0, 0, 0)), // today's date at 00:00
+      'Event start date cannot be in the past',
+    ),
+  eventStartTime: yup.date().required('Event start time is required'),
   eventEndDate: yup
     .date()
     .required('Event end date is required')
-    .test(
-      'is-after-start',
-      'End date must be after start date',
-      function (value) {
-        const {eventStartDate} = this.parent;
-        return !eventStartDate || !value || value >= eventStartDate;
-      },
-    )
-    .default(nextDay),
+    .min(
+      new Date(new Date().setHours(0, 0, 0, 0)), // today's date at 00:00
+      'Event end date cannot be in the past',
+    ),
   eventEndTime: yup
     .date()
     .required('Event end time is required')
@@ -185,42 +182,36 @@ const eventCreateSchema = yup.object().shape({
       'is-after-start-time',
       'End time must be after start time',
       function (value) {
-        const {eventStartTime, eventStartDate, eventEndDate} = this.parent;
+        const {eventStartTime} = this.parent;
+        if (eventStartTime && value) {
+          // Extract hours and minutes for comparison
+          const startHours = eventStartTime.getHours();
+          const startMinutes = eventStartTime.getMinutes();
+          const endHours = value.getHours();
+          const endMinutes = value.getMinutes();
 
-        if (
-          eventStartDate &&
-          eventEndDate &&
-          eventStartDate.getTime() === eventEndDate.getTime()
-        ) {
-          if (eventStartTime && value) {
-            const startTime = parseTimeString(eventStartTime);
-            const endTime = parseTimeString(value);
-            return endTime > startTime;
-          }
-          return true;
+          // Compare times
+          return (
+            endHours > startHours ||
+            (endHours === startHours && endMinutes > startMinutes)
+          );
         }
-        return true; // No need to validate if dates are different
+        return true;
       },
     ),
-  // .default(currentDate),
   eventLocation: yup.object().shape({
     locationName: yup.string().required('Event location Name is required'),
     coords: yup.object().shape({
-      latitude: yup.string().required('Please select locaiton'),
-      longitude: yup.string().required('Please select locaiton'),
+      latitude: yup.string().required('Please select location'),
+      longitude: yup.string().required('Please select location'),
     }),
   }),
-
-  eventType: yup
-    .array()
-    .of(
-      yup.object().shape({
-        id: yup.string().required('Please select event type'),
-        name: yup.string().required('Please select event type'),
-      }),
-    )
-    .min(1, 'At least one event type is required'),
-
+  eventType: yup.array().of(
+    yup.object().shape({
+      id: yup.string(),
+      name: yup.string(),
+    }),
+  ),
   privateEvent: yup.mixed().required('Specify the event type').default(0),
   eventAssociation: yup.array().of(
     yup.object().shape({
@@ -228,15 +219,12 @@ const eventCreateSchema = yup.object().shape({
       name: yup.string(),
     }),
   ),
-  eventCircuit: yup
-    .array()
-    .of(
-      yup.object().shape({
-        id: yup.string(),
-        name: yup.string(),
-      }),
-    )
-    .min(1, 'At least one event circuit is required'),
+  eventCircuit: yup.array().of(
+    yup.object().shape({
+      id: yup.string(),
+      name: yup.string(),
+    }),
+  ),
   evnetTour: yup.mixed().required('Specify the event tour').default(1),
   eventConfirm: yup.boolean().required('Event confirmation is required'),
   eventSync: yup.boolean(),

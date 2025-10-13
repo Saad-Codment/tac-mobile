@@ -11,7 +11,7 @@ import {allSubID} from '../../Utils/localDB';
 import {types} from '../../Redux/types';
 
 const SKU = Platform.select({
-  android: ['monthly_18012024', 'yearly_18012024'],
+  android: ['21082025_yearly', 'tac_subscription'],
   ios: ['monthly_12062025', 'yearly_12062025'],
 });
 
@@ -94,11 +94,12 @@ const useSubscribeScreen = () => {
 
       if (customerInfo?.originalAppUserId != null) {
         mutate({
-          customer_id: customerInfo.originalAppUserId,
+          original_customer_id: customerInfo.originalAppUserId,
           identifier:
             customerInfo.entitlements.active['Tac subscription group']
               .productIdentifier,
           trial_start_at: formattedDate,
+          customer_id: userData?.customer_id?.toString(),
         });
       }
     } catch (error) {
@@ -115,6 +116,7 @@ const useSubscribeScreen = () => {
     dispatch(loadingTrue());
     try {
       const offerings = await Purchases.getProducts(SKU);
+      console.log('offeringsofferingsofferingsofferings', offerings);
       const allProducts = offerings ?? [];
       const yearlyPackages = allProducts.filter(
         res => res.subscriptionPeriod == 'P1Y',

@@ -84,7 +84,10 @@ const ProfileScreen = ({navigation}) => {
 
   const centerView = [
     {
-      title: userData?.first_name + ' ' + userData?.last_name,
+      title:
+        userData?.first_name +
+        ' ' +
+        (userData?.last_name ? userData?.last_name : ''),
       leftIcon: profileCircle,
       rightText: 'Edit',
       onPress: () => onOpenModal('edit_profile'),
@@ -137,7 +140,10 @@ const ProfileScreen = ({navigation}) => {
     <View showsVerticalScrollIndicator={false} style={{flexGrow: 1}}>
       <HeaderComponent headerTitle={'Profile'} isBack />
 
-      <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        contentContainerStyle={{flexGrow: 1}}>
         <View style={styles.mainBtn}>
           <View style={styles.upperWhiteView}>
             <Pressable style={styles.imgView} onPress={onImagePress}>
@@ -172,6 +178,22 @@ const ProfileScreen = ({navigation}) => {
                           justUploadImg(img);
                         },
                       },
+                      {
+                        text: 'Cancel', // Just a dismissal button
+                        style: 'destructive',
+                        onPress: async () => {
+                          // console.log(
+                          //   'slkdbvklsdbvklsdbklvbskdlv',
+                          //   value?.length,
+                          // );
+                          // const imgData = await uploadFromGalary(
+                          //   true,
+                          //   false,
+                          //   Math.max(0, 5 - (value?.length ?? 0)),
+                          // );
+                          // onChange([...(value ?? []), ...imgData]);
+                        },
+                      },
                     ],
                     {cancelable: true},
                   );
@@ -186,7 +208,11 @@ const ProfileScreen = ({navigation}) => {
               </Touchable>
             </Pressable>
             <TextComponent
-              text={userData?.first_name + ' ' + userData?.last_name}
+              text={
+                userData?.first_name +
+                ' ' +
+                (userData?.last_name ? userData?.last_name : '')
+              }
               styles={{fontSize: hp('2'), fontWeight: 'bold'}}
             />
             <TextComponent

@@ -8,6 +8,7 @@ import {
   convertToLocalTime,
   formatPrice,
   getDateMonthYear,
+  getDateMonthYearWithOutUTC,
   showFirstThreeAndCountRest,
 } from '../Services/GlobalFunctions';
 import {Touchable} from './Touchable';
@@ -15,6 +16,33 @@ import {MultiSelectButton} from './MultiSelectButton';
 
 const SmallEventCardsComp = ({item, onPress}) => {
   console.log('lkjsdbvklsbdlkvbklsdbvlsbdkvbksldvksd', item);
+
+  function parseUTC(dateStr) {
+    // Replace space with T and add Z to force UTC interpretation
+    return new Date(dateStr.replace(' ', 'T') + 'Z');
+  }
+
+  function convertUTCToLocal(dateStr) {
+    const utcDate = parseUTC(dateStr);
+
+    const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    return dateStr.toLocaleString('en-US', {
+      timeZone: currentTimeZone,
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+  }
+
+  console.log(
+    'liasbklasbklvbsdklvblksdblkvbklsdbvlksdklvbsdvkdsv',
+    getDateMonthYear(item?.from_date),
+  );
+
   return (
     <Touchable onPress={onPress} style={styles.mainView}>
       <View style={styles.dateView}>
@@ -24,7 +52,7 @@ const SmallEventCardsComp = ({item, onPress}) => {
           styles={styles.monthText}
         />
         <TextComponent
-          text={getDateMonthYear(item?.from_date)?.day}
+          text={getDateMonthYearWithOutUTC(item?.from_date)?.day}
           isThemeColor
           styles={styles.dateText}
         />

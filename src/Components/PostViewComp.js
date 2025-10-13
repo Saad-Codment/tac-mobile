@@ -205,7 +205,7 @@ const PostViewComp = ({
           style: 'destructive',
           onPress: async () => {
             await deletePost.mutateAsync(item?.id);
-            refetch();
+            // refetch();
             functionToDelete(index);
             // Call your delete mutation here
             // deletePost.mutateAsync(item?.id);
@@ -270,8 +270,18 @@ const PostViewComp = ({
               />
             </MenuTrigger>
             <MenuOptions>
-              <MenuOption onSelect={() => onEditPost(item)} text="Edit" />
-              <MenuOption onSelect={() => onDeletePost(item)} text="Delete" />
+              <MenuOption
+                onSelect={() => onEditPost(item)}
+                text="Edit"
+                style={{color: 'black'}}
+                customStyles={{color: 'black'}}
+              />
+              <MenuOption
+                onSelect={() => onDeletePost(item)}
+                text="Delete"
+                style={{color: 'black'}}
+                customStyles={{color: 'black'}}
+              />
             </MenuOptions>
           </Menu>
         )}

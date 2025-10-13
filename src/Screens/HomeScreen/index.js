@@ -40,6 +40,8 @@ import {DataNotFound} from '../../Components/DataNotFound';
 import PostViewComp from '../../Components/PostViewComp';
 import BottomModalComponent from '../../Components/BottomModalComponent';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
+import SharePostComp from '../../Components/SharePostComp';
+import ShareEventComp from '../../Components/ShareEventComp';
 
 const HomeScreen = ({navigation}) => {
   const {
@@ -218,7 +220,10 @@ const HomeScreen = ({navigation}) => {
         <FlatList
           data={homeTimeLine ?? []}
           extraData={homeTimeLine}
-          contentContainerStylee={styles.upComingFlatlistView}
+          contentContainerStylee={{
+            ...styles.upComingFlatlistView,
+            // marginTop: hp('5'),
+          }}
           keyExtractor={keyExtractor}
           refreshing={false}
           ListFooterComponent={
@@ -255,7 +260,16 @@ const HomeScreen = ({navigation}) => {
             //             }
             return (
               <>
-                {item?.type == 3 || item?.type == 1 ? (
+                {item?.type == 3 ? (
+                  <SharePostComp
+                    item={item}
+                    index={index}
+                    refetechKeys={refetchKey}
+                    mainViewStyle={styles.cardStyles}
+                    functionToUpdateLike={() => {}}
+                    openBottomSheet={id => setModal({id, type: 'post'})}
+                  />
+                ) : item?.type == 1 ? (
                   <PostViewComp
                     item={item}
                     index={index}
@@ -263,6 +277,16 @@ const HomeScreen = ({navigation}) => {
                     mainViewStyle={styles.cardStyles}
                     functionToUpdateLike={() => {}}
                     openBottomSheet={id => setModal({id, type: 'post'})}
+                  />
+                ) : item?.type == 5 ? (
+                  <ShareEventComp
+                    item={item}
+                    index={index}
+                    refetechKeys={refetchKey}
+                    mainViewStyle={styles.cardStyles}
+                    functionToUpdateLike={() => {}}
+                    openBottomSheet={id => setModal({id, type: 'event'})}
+                    upperMainView={{marginBottom: hp('1')}}
                   />
                 ) : (
                   <UpcomingEventsComp

@@ -17,6 +17,9 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:allowBackup="false"
     android:theme="@style/AppTheme">
+    <!-- <activity
+      android:name="com.your.Activity"
+      android:launchMode="standard" /> -->
     <meta-data
       android:name="com.google.android.geo.API_KEY"
       android:value="AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY" />
@@ -24,12 +27,9 @@
       android:name=".MainActivity"
       android:label="@string/app_name"
       android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
-      android:launchMode="singleTask"
+      android:launchMode="standard"
       android:windowSoftInputMode="adjustResize"
       android:exported="true">
-      <!-- <activity
-        android:name="com.your.Activity"
-        android:launchMode="standard" />  or singleTop -->
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

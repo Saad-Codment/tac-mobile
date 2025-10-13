@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation from '@react-native-community/geolocation';
 import Geolocationios from '@react-native-community/geolocation';
 import {updateCoordinatesUrl} from '../../Utils/Urls';
 import {fetchPostWithToken} from '../../Services/AuthServices';

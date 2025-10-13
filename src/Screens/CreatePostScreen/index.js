@@ -101,6 +101,22 @@ const CreatePostScreen = ({navigation, route}) => {
                   );
                 },
               },
+              {
+                text: 'Cancel', // Just a dismissal button
+                style: 'destructive',
+                onPress: async () => {
+                  // console.log(
+                  //   'slkdbvklsdbvklsdbklvbskdlv',
+                  //   value?.length,
+                  // );
+                  // const imgData = await uploadFromGalary(
+                  //   true,
+                  //   false,
+                  //   Math.max(0, 5 - (value?.length ?? 0)),
+                  // );
+                  // onChange([...(value ?? []), ...imgData]);
+                },
+              },
             ],
             {cancelable: true},
           );

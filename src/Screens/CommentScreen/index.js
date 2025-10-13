@@ -39,6 +39,7 @@ const CommentScreen = ({navigation, route}) => {
     refetch,
     addLikeOnCommentEvent,
     getEventCommentReplies,
+    isLoading,
   } = useCommentScreen(navigation, route);
 
   console.log(
@@ -105,6 +106,8 @@ const CommentScreen = ({navigation, route}) => {
       getEventCommentReplies.data?.data?.data,
     ],
   );
+
+  console.log('commentsListcommentsListcommentsListcommentsList', commentsList);
 
   return (
     <KeyboardAvoidingView

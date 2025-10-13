@@ -11,9 +11,8 @@ import {boldDivider, divider} from '../../Assets';
 import {Colors} from '../../Theme/Variables';
 
 const NotificationScreen = ({navigation}) => {
-  const {notificationsList, onRefresh, acceptReq, declineReq} =
+  const {notificationsList, onRefresh, acceptReq, declineReq, isLoading} =
     useNotificationScreen(navigation);
-
   return (
     <>
       <HeaderComponent
@@ -21,12 +20,14 @@ const NotificationScreen = ({navigation}) => {
         goBack={() => navigation.goBack()}
         isBack
       />
-      {notificationsList != null && (
+      {!isLoading && (
         <AniFlatOneByOne
-          data={notificationsList}
+          data={notificationsList ?? []}
           flatViewStyle={styles.upComingFlatlistView}
           onRefresh={onRefresh}
           flatListProps={{
+            keyExtractor: (item, index) =>
+              item?.id?.toString() || index.toString(), // ✅ FIX
             ListEmptyComponent: (
               <DataNotFound onpress={onRefresh} btnStyles={{width: wp('80')}} />
             ),

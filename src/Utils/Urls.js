@@ -1,8 +1,8 @@
 const getCredentials = () => {
   if (__DEV__)
     return {
-      baseURL: 'https://theappforcowboys.com/tac-backend/api',
-      imageURL: 'https://tac-app-bucket.s3.us-east-2.amazonaws.com/',
+      baseURL: 'https://theappforcowboys.com/backend-staging/api',
+      imageURL: 'https://tac-staging.s3.us-east-2.amazonaws.com/',
     };
   else {
     console.log = () => {};
@@ -29,7 +29,7 @@ export const privacyUrl = 'https://theappforcowboys.com/privacy_policy';
 export const termsUrl = 'https://theappforcowboys.com/terms_and_conditions';
 export const aboutUrl = 'https://theappforcowboys.com/about_us';
 
-export const MapAPIKey = 'AIzaSyAu-nEBbiOahfUyeMc8Lc1gTTKfete_wnQ';
+export const MapAPIKey = 'AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY';
 
 export const registerUrl = '/signup';
 export const loginUrl = '/login';
@@ -74,6 +74,8 @@ export const postCommentUrl = '/react/comment';
 export const postCommentReplyUrl = '/v1/post-comments/add-reply';
 
 export const postCommentLikeUrl = '/v1/post-comments/like?comment_id=';
+
+export const sendMsgUrl = 'v1/chat/send';
 
 export const getUserProfileUrl = '/user/get/';
 export const getUserPostsUrl = '/user/posts-and-events/';

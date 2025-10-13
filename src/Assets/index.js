@@ -130,6 +130,7 @@ export {default as arrowLeft} from './Icons/arrow-left.png';
 export {default as apple} from './Icons/appleImage.png';
 export {default as google} from './Icons/googleImage.png';
 export {default as facebook} from './Icons/facebookImage.png';
+export {default as uploadPhoto} from './Icons/uploadPhoto.png';
 
 export {default as male} from './Icons/male.png';
 export {default as female} from './Icons/female.png';

@@ -35,21 +35,29 @@ const App = () => {
 
   const appState = useRef(AppState.currentState);
   const {isloading} = getState('isloading');
-  const {isLogin} = getState('Auth');
+  const {isLogin, userData} = getState('Auth');
   const {image, modalType} = getState('modalState');
   const isFetching = useIsFetching();
 
   console.log('load', isloading);
 
   useEffect(() => {
-    Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
-    if (Platform.OS === 'ios') {
-      Purchases.configure({apiKey: 'appl_FlnMxEBtfVpRzXrWhCyKvhcVQYs'});
-    } else if (Platform.OS === 'android') {
-      // Purchases.configure({apiKey: ''});
-      // OR: if building for Amazon, be sure to follow the installation instructions then:
+    if (isLogin) {
+      Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+      if (Platform.OS === 'ios') {
+        Purchases.configure({
+          apiKey: 'appl_FlnMxEBtfVpRzXrWhCyKvhcVQYs',
+          appUserID: userData?.customer_id?.toString(),
+        });
+      } else if (Platform.OS === 'android') {
+        Purchases.configure({
+          apiKey: 'goog_GGhwNAKnmUWMKwuIFJJghrHhAZG',
+          appUserID: userData?.customer_id?.toString(),
+        });
+        // OR: if building for Amazon, be sure to follow the installation instructions then:
+      }
     }
-  }, []);
+  }, [isLogin]);
 
   const time = () => {
     return 3000;
@@ -184,9 +192,10 @@ const App = () => {
       {modalType && <ImagePreviewComp visible={modalType} images={image} />}
       {isloading &&
         Boolean(getNameFunc?.getCurrentRoute()?.name != 'AllEventsScreen') &&
-        Boolean(getNameFunc?.getCurrentRoute()?.name != 'HomeScreen') && (
-          <Overlay />
-        )}
+        Boolean(getNameFunc?.getCurrentRoute()?.name != 'HomeScreen') &&
+        Boolean(
+          getNameFunc?.getCurrentRoute()?.name != 'FriendProfileScreen',
+        ) && <Overlay />}
       {/* <StackNavigatior />; */}
     </>
   );

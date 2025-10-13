@@ -53,7 +53,7 @@ a POST request to the `acceptFriendReqUrl` endpoint with the provided data. */
       if (ok) {
         successMessage(data?.message);
       } else {
-        errorMessage(data?.message);
+        errorMessage('Oops! Something went wrong. Please try again later.');
       }
     },
     onError: () => {
@@ -71,7 +71,7 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
       if (ok) {
         successMessage(data?.message);
       } else {
-        errorMessage(data?.message);
+        errorMessage('Oops! Something went wrong. Please try again later.');
       }
     },
     onError: () => {
@@ -290,7 +290,7 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
         successMessage(data?.message);
       } else {
         console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
-        errorMessage(data?.message);
+        errorMessage('An error occurred while deleting the event!');
       }
     },
     onError: () => {
@@ -306,7 +306,7 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
         successMessage(data?.message);
       } else {
         console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
-        errorMessage(data?.message);
+        errorMessage('An error occurred while deleting the post!');
       }
     },
     onError: () => {

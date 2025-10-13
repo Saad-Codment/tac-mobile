@@ -18,6 +18,7 @@ import {store} from '../Redux/Reducer';
 import {femaleImg, maleImg} from '../Assets';
 // import Intl from 'intl';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
+import RNFS from 'react-native-fs';
 
 const getSingleCharacter = text => {
   let letter = text?.charAt(0).toUpperCase();
@@ -236,6 +237,49 @@ function removeTimeFromDate(datetimeStr) {
 }
 
 function getDateMonthYear(dateString) {
+  if (!dateString) return null;
+
+  // Normalize to ISO format by adding "T" and "Z"
+  // "2025-09-04 21:08:52" -> "2025-09-04T21:08:52Z"
+  const isoDateString = dateString.replace(' ', 'T') + 'Z';
+
+  const utcDate = new Date(isoDateString);
+
+  if (isNaN(utcDate)) {
+    throw new Error(
+      'Invalid date format. Please provide a valid UTC date string.',
+    );
+  }
+
+  const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const options = {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: currentTimeZone,
+    hour12: false,
+  };
+
+  const formatter = new Intl.DateTimeFormat(undefined, options);
+  const parts = formatter.formatToParts(utcDate);
+
+  return {
+    dayName: parts.find(p => p.type === 'weekday')?.value,
+    day: Number(parts.find(p => p.type === 'day')?.value),
+    monthName: parts.find(p => p.type === 'month')?.value,
+    year: parts.find(p => p.type === 'year')?.value,
+    time: `${parts.find(p => p.type === 'hour')?.value}:${
+      parts.find(p => p.type === 'minute')?.value
+    }`,
+    timeZone: currentTimeZone,
+  };
+}
+
+function getDateMonthYearWithOutUTC(dateString) {
   if (dateString) {
     // Create a Date object from the provided global date string
     const globalDate = new Date(dateString);
@@ -275,37 +319,90 @@ function getDateMonthYear(dateString) {
   }
 }
 
-function convertToLocalTime(globalTimeString) {
-  if (globalTimeString) {
-    // Parse the input global time string into a Date object
-    const globalDate = new Date(globalTimeString);
+function getFullLocalDate(dateString) {
+  if (!dateString) return null;
 
-    // Check if the date is valid
-    if (isNaN(globalDate)) {
-      throw new Error(
-        'Invalid date format. Please provide a valid date string.',
-      );
-    }
+  // Add Z (UTC) to the backend string
+  const utcDate = new Date(dateString.replace(' ', 'T') + 'Z');
 
-    // Format the date to local time with hours and minutes
-    const options = {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true, // Use 12-hour format
-    };
-
-    // Use Intl.DateTimeFormat to format the time
-    const localTimeFormatter = new Intl.DateTimeFormat(undefined, options);
-    const formattedTime = localTimeFormatter.format(globalDate);
-
-    // Split the formatted time into time and period (e.g., "12:53 PM")
-    const [time, period] = formattedTime.split(' ');
-
-    return {
-      time, // Time without period (e.g., "12:53")
-      period, // Period (e.g., "AM" or "PM")
-    };
+  if (isNaN(utcDate)) {
+    throw new Error('Invalid date format. Please provide a valid date string.');
   }
+
+  const options = {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  };
+
+  return new Intl.DateTimeFormat(undefined, options).format(utcDate);
+}
+
+function convertToLocalTime(globalTimeString) {
+  if (!globalTimeString) return null;
+
+  // Ensure the input string is treated as UTC
+  const utcDate = new Date(globalTimeString.replace(' ', 'T') + 'Z');
+
+  if (isNaN(utcDate)) {
+    throw new Error(
+      'Invalid date format. Please provide a valid UTC date string.',
+    );
+  }
+
+  // Format the date to local time
+  const options = {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true, // 12-hour format
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // local TZ
+  };
+
+  const localTimeFormatter = new Intl.DateTimeFormat(undefined, options);
+  const formattedTime = localTimeFormatter.format(utcDate);
+
+  // "hh:mm AM/PM"
+  const [time, period] = formattedTime.split(' ');
+
+  return {
+    time, // "09:08"
+    period, // "PM"
+  };
+}
+
+function convertToLocalFullTime(globalTimeString) {
+  if (!globalTimeString) return null;
+
+  // Ensure the input string is treated as UTC
+  const utcDate = new Date(globalTimeString.replace(' ', 'T') + 'Z');
+
+  if (isNaN(utcDate)) {
+    throw new Error(
+      'Invalid date format. Please provide a valid UTC date string.',
+    );
+  }
+
+  // Format with full date + time in local timezone
+  const options = {
+    weekday: 'short', // e.g. "Fri"
+    year: 'numeric', // e.g. "2025"
+    month: 'short', // e.g. "Sep"
+    day: '2-digit', // e.g. "05"
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  };
+
+  const formatter = new Intl.DateTimeFormat(undefined, options);
+  const formattedDateTime = formatter.format(utcDate);
+
+  return formattedDateTime;
 }
 
 const openGoogleMaps = (latitude, longitude) => {
@@ -527,6 +624,9 @@ function updateArryObjById(data, id, newObject) {
 }
 
 const getIdsFromArry = (arry, key) => {
+  if (!Array.isArray(arry) || arry.length === 0) {
+    return [];
+  }
   return arry.map(res => res[key]);
 };
 
@@ -599,7 +699,7 @@ const resizeImage = async (image, targetWidth = 800, targetHeight = 800) => {
   }
 };
 //GET IMAGE From Mobile
-const uploadFromGalary = async (isMulti, isCircle) => {
+const uploadFromGalary = async (isMulti, isCircle, maxFiles) => {
   const imageData = await ImageCropPicker.openPicker({
     cropping: true,
     width: 300, // set desired resolution
@@ -607,6 +707,7 @@ const uploadFromGalary = async (isMulti, isCircle) => {
     // compressImageQuality: 0.8,
     multiple: isMulti ?? false,
     cropperCircleOverlay: isCircle, // 👈 Enables circular cropping
+    maxFiles: maxFiles ?? 200,
   });
 
   const getOrientation = (width, height) => {
@@ -619,7 +720,7 @@ const uploadFromGalary = async (isMulti, isCircle) => {
     const processedImages = await Promise.all(
       imageData.map(async res => {
         const baseImage = {
-          uri: Platform.OS === 'ios' ? res?.sourceURL : res?.path,
+          uri: Platform.OS === 'ios' ? res?.sourceURL : `file://${res?.path}`,
           name: res?.filename || 'photo.jpg',
           type: res?.mime,
           orientation: getOrientation(res?.width, res?.height),
@@ -642,7 +743,7 @@ const uploadFromGalary = async (isMulti, isCircle) => {
     const uri = Platform.OS === 'ios' ? sourceURL : path;
     const fileName = filename || 'photo.png';
     const baseImage = {
-      uri: Platform.OS === 'ios' ? sourceURL : path,
+      uri: Platform.OS === 'ios' ? sourceURL : `file://${path}`,
       name: filename || 'photo.jpg',
       type: mime,
       orientation: getOrientation(width, height),
@@ -658,11 +759,12 @@ const uploadFromGalary = async (isMulti, isCircle) => {
 };
 
 //GET IMAGE From Mobile
-const uploadFromCamera = async (isMulti, isCircle) => {
+const uploadFromCamera = async (isMulti, isCircle, maxFiles) => {
   const imageData = await ImageCropPicker.openCamera({
     cropping: true,
     multiple: isMulti ?? false,
     cropperCircleOverlay: isCircle, // 👈 Enables circular cropping
+    maxFiles,
   });
 
   const checkOrientation = img => {
@@ -671,7 +773,7 @@ const uploadFromCamera = async (isMulti, isCircle) => {
 
   if (Array.isArray(imageData)) {
     return imageData.map(res => ({
-      uri: Platform.OS === 'ios' ? res?.path : res?.sourceURL,
+      uri: Platform.OS === 'ios' ? res?.path : `file://${res?.path}`,
       name: res?.filename || 'photo.jpg',
       type: res?.mime,
       orientation: checkOrientation(res),
@@ -688,12 +790,12 @@ const uploadFromCamera = async (isMulti, isCircle) => {
       mime,
     } = imageData;
 
-    const uri = Platform.OS === 'ios' ? path : sourceURL;
+    const uri = Platform.OS === 'ios' ? path : `file://${sourceURL}`;
     const fileName = filename || 'photo.jpg';
     const orientation = checkOrientation(imageData);
 
     return {
-      uri,
+      uri: Platform.OS === 'ios' ? path : `file://${path}`,
       name: fileName,
       type: mime,
       orientation,
@@ -749,6 +851,29 @@ function convertToCustomTimeFormat(isoDate) {
 
   // Ensure that both hours and minutes have two digits
   const formattedTime = `${formattedHours}:${String(minutes).padStart(
+    2,
+    '0',
+  )} ${amOrPm}`;
+
+  return formattedTime;
+}
+
+function convertUTCToLocalTimeForComment(utcString) {
+  // Parse the UTC time string as a Date object
+  const utcDate = new Date(utcString + 'Z'); // 'Z' ensures it's treated as UTC
+
+  // Convert to local time (automatically uses the device’s local timezone)
+  const localHours = utcDate.getHours();
+  const localMinutes = utcDate.getMinutes();
+
+  // Determine A.M. or P.M.
+  const amOrPm = localHours >= 12 ? 'P.M.' : 'A.M.';
+
+  // Convert hours to 12-hour format
+  const formattedHours = localHours % 12 || 12;
+
+  // Format the final time
+  const formattedTime = `${formattedHours}:${String(localMinutes).padStart(
     2,
     '0',
   )} ${amOrPm}`;
@@ -1205,4 +1330,8 @@ export {
   formatDateToLong,
   getFormattedTime,
   getCustom12HourTime,
+  getDateMonthYearWithOutUTC,
+  convertToLocalFullTime,
+  getFullLocalDate,
+  convertUTCToLocalTimeForComment,
 };

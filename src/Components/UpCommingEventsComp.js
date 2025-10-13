@@ -166,7 +166,11 @@ const UpcomingEventsComp = ({
       onPress={() => {
         NavigationService.navigate('EventsDetailScreen', {id: item?.id});
       }}>
-      <View style={styles.upperImage}>
+      <Pressable
+        style={styles.upperImage}
+        onPress={() =>
+          NavigationService.navigate('FriendProfileScreen', {id: item?.user_id})
+        }>
         <Pressable onPress={onImagePress}>
           <CircleImage
             size={0.12}
@@ -229,13 +233,23 @@ const UpcomingEventsComp = ({
               />
             </MenuTrigger>
             <MenuOptions>
-              <MenuOption onSelect={() => onEditPost(item)} text="Edit" />
-              <MenuOption onSelect={() => onDeletePost(item)} text="Delete" />
+              <MenuOption
+                onSelect={() => onEditPost(item)}
+                text="Edit"
+                style={{color: 'black'}}
+                customStyles={{color: 'black'}}
+              />
+              <MenuOption
+                onSelect={() => onDeletePost(item)}
+                text="Delete"
+                style={{color: 'black'}}
+                customStyles={{color: 'black'}}
+              />
             </MenuOptions>
           </Menu>
         )}
         {/* } */}
-      </View>
+      </Pressable>
       <View style={styles.priceMainView}>
         <TextComponent
           text={item?.title}
@@ -311,9 +325,9 @@ const UpcomingEventsComp = ({
               style={styles.calenderIcon}
             />
             <TextComponent
-              text={`${getDateMonthYear(item?.from_date)?.monthName} ${
-                getDateMonthYear(item?.from_date)?.day
-              }, ${getDateMonthYear(item?.from_date)?.year}`}
+              text={`${getDateMonthYear(item?.to_date)?.monthName} ${
+                getDateMonthYear(item?.to_date)?.day
+              }, ${getDateMonthYear(item?.to_date)?.year}`}
               styles={{fontSize: hp('1.2')}}
             />
           </View>

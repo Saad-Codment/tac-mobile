@@ -61,6 +61,7 @@ const HomeScreen = ({navigate}) => {
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => (pages?.length ?? 0) + 1,
+    cacheTime: 0, // 👈 Don't cache the data
   });
 
   // useEffect(() => {
@@ -71,7 +72,7 @@ const HomeScreen = ({navigate}) => {
   // });
 
   const list = data?.pages?.flatMap(page => page.data?.data) || [];
-  console.log('ljskdvhjklsdbvjkbsdkvbsdkjvbksdbvsdbjk', list);
+  console.log('ljskdvhjklsdbvjkbsdkvbsdkjvbksdbvsdbjk', list[2]);
 
   const onRefresh = useCallback(() => {
     setRefresh(true);
@@ -152,11 +153,6 @@ const HomeScreen = ({navigate}) => {
       loadMoreDebounced.cancel(); // Important!
     };
   }, [loadMoreDebounced]);
-
-  console.log(
-    'ksdhvklsdbvlksbdkvlbskldvbklsdbvlsbdvlksdbvlksd',
-    upComingEvents?.data?.data?.suggested_events,
-  );
 
   return {
     search,

@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React, {memo} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import {searchIcon, trashWhite} from '../../Assets';
@@ -6,40 +6,85 @@ import {hp, wp} from '../../Config/responsive';
 import {CircleImage} from '../../Components/CircleImage';
 import {TextComponent} from '../../Components/TextComponent';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {Image} from 'react-native';
 import {styles} from './styles';
-import ChatUserComp from '../../Components/ChatUserComp';
-import useChatUserScreen from './useChatUsersScreen';
 import {mergeIds} from '../../Services/GlobalFunctions';
+import {Colors} from '../../Theme/Variables';
+import useChatUserScreen from './useChatUsersScreen';
 
 const ChatUsersScreen = ({navigation}) => {
   const {
     messageList,
+    dynamicNav,
     users,
     userData,
-    dynamicNav,
     onRefresh,
     deleteEntireChat,
-    initializeChat,
   } = useChatUserScreen(navigation);
 
   const renderItem = ({item, index}) => {
-    return <ChatUserComp item={item} index={index} userDataProp={userData} />;
+    const avatarLetter =
+      item?.other_user?.first_name?.charAt(0)?.toUpperCase() || '?';
+    const lastMessage = item?.last_message?.text || 'No messages yet';
+    const isTyping = item?.isTyping || false;
+    const unreadCount = item?.unread_count || 0;
+
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          dynamicNav('ChatScreen', {
+            id: item?.other_user?.id || item?.id, // Fallback to item.id if other_user.id is missing
+            userId: userData?.id,
+            conversationId: item?.conversation_id,
+          })
+        }
+        style={styles.chatItem}>
+        <CircleImage
+          image={
+            item?.other_user?.profile_image
+              ? {uri: item.other_user.profile_image}
+              : null
+          }
+          text={avatarLetter}
+          size={0.12}
+          backgroundColor={Colors.grayFaded || '#B0BEC5'}
+          textStyle={{color: Colors.white || '#FFFFFF', fontSize: hp('2.5')}}
+        />
+        <View style={styles.chatInfo}>
+          <TextComponent
+            text={`${item?.other_user?.first_name || 'Unknown'} ${
+              item?.other_user?.last_name || ''
+            }`}
+            styles={styles.userName}
+          />
+          <TextComponent
+            text={isTyping ? 'typing...' : lastMessage}
+            styles={isTyping ? styles.typingText : styles.lastMessage}
+          />
+        </View>
+        {unreadCount > 0 && (
+          <View style={styles.unreadBadge}>
+            <TextComponent text={unreadCount} styles={styles.unreadText} />
+          </View>
+        )}
+      </TouchableOpacity>
+    );
   };
+
   const renderHiddenItem = ({item}) => (
     <View
       style={{
         width: '98%',
         alignSelf: 'center',
-        justifyContent: 'center', // Center the trash icon vertically
+        justifyContent: 'flex-end',
+        height: hp('7'),
       }}>
       <TouchableOpacity
-        style={[
-          styles.backRightBtn,
-          styles.backRightBtnRight,
-          {height: hp('6')},
-        ]} // Match height here
-        onPress={() => deleteEntireChat(mergeIds(item.id, item?.user_id))}>
+        style={styles.backRightBtnRight}
+        onPress={() =>
+          deleteEntireChat(
+            mergeIds(item?.other_user?.id || item?.id, userData?.id),
+          )
+        }>
         <Image
           source={trashWhite}
           style={styles.trashIcon}
@@ -48,38 +93,24 @@ const ChatUsersScreen = ({navigation}) => {
       </TouchableOpacity>
     </View>
   );
-  console.log('sdjkvbklsbdvlbsdlkbvsd', users);
-
-  const onRowDidOpen = rowKey => {
-    console.log('This row opened', rowKey);
-  };
 
   return (
-    <View style={{flexGrow: 1}}>
-      <HeaderComponent
-        headerTitle={'Chat Box'}
-        // rightIconImg={searchIcon}
-        // isSearch
-      />
-
+    <View style={styles.container}>
+      <HeaderComponent headerTitle={'Chat Box'} />
       <SwipeListView
         showsVerticalScrollIndicator={false}
         style={styles.listMain}
         useFlatList
-        // data={[1, 23, 4]}
         data={users}
-        // sections={bottomData}
         renderItem={renderItem}
         renderHiddenItem={renderHiddenItem}
-        rightOpenValue={-55}
+        rightOpenValue={-75}
         leftOpenValue={0}
         previewRowKey={'0'}
         stopLeftSwipe
-        // previewOpenValue={-40}
         previewOpenDelay={3000}
-        onRowDidOpen={onRowDidOpen}
         closeOnRowPress
-        onRefresh={initializeChat}
+        onRefresh={onRefresh}
         refreshing={false}
       />
     </View>

@@ -9,8 +9,9 @@ import {
   Switch,
   Alert,
   ImageBackground,
+  FlatList,
 } from 'react-native';
-import React, {memo, useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import {TextComponent} from '../../Components/TextComponent';
 import {hp, wp} from '../../Config/responsive';
@@ -20,6 +21,7 @@ import {
   addcircle,
   arrRight,
   crossWhite,
+  editProfileBlack,
   gpsImg,
   infoCircle,
   questionMark,
@@ -27,7 +29,9 @@ import {
   radioCircleOn,
   squareGray,
   tickSquare,
+  upload,
   uploadImgView,
+  uploadPhoto,
 } from '../../Assets';
 import DatePicker from 'react-native-date-picker';
 import DividerLine from '../../Components/DividerLine';
@@ -58,6 +62,7 @@ import {
   imageUrl,
 } from '../../Utils/Urls';
 import {InfoModal} from '../../Components/InfoModalComp';
+import {keyExtractor} from '../../Utils';
 
 const CreateEventsScreen = ({navigation, route}) => {
   const {
@@ -128,7 +133,7 @@ const CreateEventsScreen = ({navigation, route}) => {
             </View>
             {errorName && (
               <TextComponent
-                text={errorName.message}
+                text={errorName.message ?? errorName}
                 styles={styles.errorText}
               />
             )}
@@ -138,6 +143,43 @@ const CreateEventsScreen = ({navigation, route}) => {
     );
   };
 
+  const renderImageView = useCallback(({item, index, onChange, value}) => {
+    return (
+      <>
+        <Touchable
+          style={{
+            position: 'absolute',
+            zIndex: 1,
+            right: wp('2'),
+            top: hp('1'),
+            // backgroundColor: 'black',
+            // paddingVertical: hp('1'),
+            // paddingHorizontal: wp('1'),
+          }}
+          onPress={() => {
+            const imgArry = [...value];
+            onChange(imgArry.filter(res => res?.uri != item?.uri));
+          }}>
+          <Image
+            source={crossWhite}
+            resizeMode="contain"
+            style={{width: wp('4'), height: hp('3')}}
+          />
+        </Touchable>
+        <Image
+          source={{uri: item?.isEdit ? imageUrl(item?.uri) : item?.uri}}
+          resizeMode="cover"
+          style={{
+            width: wp('44'),
+            height: hp('12'),
+            borderRadius: 10,
+            marginVertical: hp('0.5'),
+            // marginHorizontal: wp('1'),
+          }}
+        />
+      </>
+    );
+  }, []);
   return (
     <View style={{flexGrow: 1}}>
       <HeaderComponent
@@ -186,7 +228,7 @@ const CreateEventsScreen = ({navigation, route}) => {
         />
 
         <TitleInputView
-          title={'Event Image *'}
+          title={'Event Image'}
           errorName={errors['eventImg']}
           centerInnerView={
             <Controller
@@ -194,80 +236,117 @@ const CreateEventsScreen = ({navigation, route}) => {
               name="eventImg"
               render={({field: {onChange, value}}) => (
                 <>
-                  <Touchable
-                    // onPress={async () => {
-                    //   const imgData = await uploadFromGalary();
-                    //   onChange(imgData);
-                    // }}
-                    onPress={async () => {
-                      Alert.alert(
-                        'Pick to choose image',
-                        '',
-                        [
-                          {
-                            text: 'Camera',
-                            onPress: async () => {
-                              const imgData = await uploadFromCamera();
-                              onChange(imgData);
-                            },
-                          },
-                          {
-                            text: 'Gallery', // Just a dismissal button
-                            onPress: async () => {
-                              const imgData = await uploadFromGalary();
-                              onChange(imgData);
-                            },
-                          },
-                        ],
-                        {cancelable: true, onDismiss: () => {}},
-                      );
-                    }}>
-                    <ImageBackground
-                      source={
-                        value?.uri
-                          ? {
-                              uri: value?.isEdit
-                                ? imageUrl(value?.uri)
-                                : value?.uri,
-                            }
-                          : uploadImgView
-                      }
-                      style={styles.uploadImg}>
-                      {value?.uri && (
+                  <FlatList
+                    data={value}
+                    renderItem={({item, index}) =>
+                      renderImageView({item, index, onChange, value})
+                    }
+                    keyExtractor={keyExtractor}
+                    contentContainerStyle={{
+                      flexDirection: 'row',
+                      width: wp('90'),
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      // padding: 5,
+                    }}
+                    showsHorizontalScrollIndicator={false}
+                    ListFooterComponent={
+                      (value?.length ?? []) <= 4 && (
                         <Touchable
-                          onPress={() => onChange(null)}
+                          onPress={async () => {
+                            Alert.alert(
+                              'Pick to choose image',
+                              '',
+                              [
+                                {
+                                  text: 'Camera',
+                                  onPress: async () => {
+                                    const imgData = await uploadFromCamera(
+                                      true,
+                                      false,
+                                      5,
+                                    );
+                                    console.log(
+                                      'sjkbdvklsdbvklsdbkvbsdlvbksdvb',
+                                      imgData,
+                                    );
+                                    onChange([...(value ?? []), imgData]);
+                                  },
+                                },
+                                {
+                                  text: 'Gallery', // Just a dismissal button
+                                  onPress: async () => {
+                                    console.log(
+                                      'slkdbvklsdbvklsdbklvbskdlv',
+                                      value?.length,
+                                    );
+                                    const imgData = await uploadFromGalary(
+                                      true,
+                                      false,
+                                      Math.max(0, 5 - (value?.length ?? 0)),
+                                    );
+                                    onChange([...(value ?? []), ...imgData]);
+                                  },
+                                },
+                                {
+                                  text: 'Cancel', // Just a dismissal button
+                                  style: 'destructive',
+                                  onPress: async () => {
+                                    // console.log(
+                                    //   'slkdbvklsdbvklsdbklvbskdlv',
+                                    //   value?.length,
+                                    // );
+                                    // const imgData = await uploadFromGalary(
+                                    //   true,
+                                    //   false,
+                                    //   Math.max(0, 5 - (value?.length ?? 0)),
+                                    // );
+                                    // onChange([...(value ?? []), ...imgData]);
+                                  },
+                                },
+                              ],
+                              {cancelable: true, onDismiss: () => {}},
+                            );
+                          }}
                           style={{
-                            with: wp('4'),
-                            height: hp('4'),
-                            paddingHorizontal: wp('2'),
-                            paddingVertical: hp('2'),
+                            width: wp('44'),
+                            height: hp('12'),
+                            borderRadius: 10,
+                            marginVertical: hp('0.5'),
+                            borderWidth: 0.5,
+                            borderColor: Colors.grayBorder,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: Colors.lightInnerColor,
                           }}>
                           <Image
-                            source={crossWhite}
+                            source={editProfileBlack}
                             resizeMode="contain"
-                            style={{
-                              width: wp('3'),
-                              height: hp('3'),
-                              right: wp('2'),
-                              position: 'absolute',
-                            }}
+                            style={{width: wp('6'), height: hp('4')}}
+                            // tintColor={'gray'}
+                          />
+                          <TextComponent
+                            text={'Upload Image'}
+                            size={hp('1.5')}
                           />
                         </Touchable>
-                      )}
-                    </ImageBackground>
-                  </Touchable>
+                      )
+                    }
+                  />
                   {errors['eventImg'] && (
                     <TextComponent
                       text={errors['eventImg'].message}
                       styles={styles.errorText}
                     />
                   )}
+                  <TextComponent />
                 </>
               )}
             />
           }
         />
-
         <View style={styles.viewFlex}>
           <TitleInputView
             title={'Start Date *'}
@@ -465,6 +544,7 @@ const CreateEventsScreen = ({navigation, route}) => {
                               onChange,
                             )
                           }
+                          size={hp(1.2)}
                           text={formatDateToCustomFormat(value ?? currentDate)}
                           styles={{
                             ...styles.perInnerText,

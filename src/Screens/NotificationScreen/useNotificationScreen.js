@@ -10,9 +10,10 @@ const useNotificationScreen = () => {
   const {queryClient, dispatch} = useReduxStore();
   const {sendFriendReq, acceptFriendReq, rejectFriendReq} = useFriendServices();
 
-  const {data, error, refetch} = useQuery({
+  const {data, error, refetch, isLoading} = useQuery({
     queryKey: ['allNotifications'],
     queryFn: () => API.get(getAllNotificationsUrl),
+    cacheTime: 0,
   });
 
   const onRefresh = useCallback(() => {
@@ -26,12 +27,18 @@ const useNotificationScreen = () => {
     dispatch({type: types.isNotifyFalse});
   };
 
-  useEffect(clearNotification, []);
+  useEffect(() => {
+    setTimeout(() => {
+      clearNotification();
+    }, 1000);
+  }, []);
 
   return {
-    notificationsList: data?.data?.data,
+    notificationsList: data?.data?.data ?? [],
     onRefresh,
+    isLoading,
     acceptReq: async id => {
+      console.log('jkdsvbklsdbvklsdbklvbsdklvsd', id);
       await acceptFriendReq.mutateAsync(id);
       refetch();
       // queryClient.invalidateQueries({queryKey: ['allNotifications']});

@@ -213,19 +213,29 @@ const RegisterScreen = ({navigation}) => {
             <View style={styles.modalContainer}>
               <Text style={styles.modalTitle}>Terms of Use (EULA)</Text>
               <ScrollView style={styles.modalContent}>
-                <Text style={{fontSize: FontSize.scale16, fontWeight: '700'}}>
+                <Text
+                  style={{
+                    fontSize: FontSize.scale16,
+                    fontWeight: '700',
+                    color: 'black',
+                  }}>
                   Effective Date: February 19, 2025{'\n'}
                 </Text>
-                <Text>
+                <Text style={{color: 'black'}}>
                   Welcome to TAC! By accessing or using our platform, you agree
                   to comply with these Terms of Use, our Privacy Policy, and
                   Community Guidelines. Please read them carefully.{'\n\n'}
                 </Text>
 
-                <Text style={{fontSize: FontSize.scale18, fontWeight: '700'}}>
+                <Text
+                  style={{
+                    fontSize: FontSize.scale18,
+                    fontWeight: '700',
+                    color: 'black',
+                  }}>
                   TABLE OF CONTENTS{'\n'}
                 </Text>
-                <Text>
+                <Text style={{color: 'black'}}>
                   - Acceptance of Terms{'\n'}- User Responsibilities{'\n'}-
                   Community Guidelines{'\n'}- Job Posting & Reporting System
                   {'\n'}- Content Moderation & Enforcement{'\n'}- Compliance
@@ -234,19 +244,29 @@ const RegisterScreen = ({navigation}) => {
                   Contact Us{'\n\n'}
                 </Text>
 
-                <Text style={{fontSize: FontSize.scale18, fontWeight: '700'}}>
+                <Text
+                  style={{
+                    fontSize: FontSize.scale18,
+                    fontWeight: '700',
+                    color: 'black',
+                  }}>
                   1. Acceptance of Terms{'\n'}
                 </Text>
-                <Text>
+                <Text style={{color: 'black'}}>
                   By accessing or using TAC ("Platform"), you agree to abide by
                   these Terms of Use. If you do not agree, please refrain from
                   using our services.{'\n\n'}
                 </Text>
 
-                <Text style={{fontSize: FontSize.scale18, fontWeight: '700'}}>
+                <Text
+                  style={{
+                    fontSize: FontSize.scale18,
+                    fontWeight: '700',
+                    color: 'black',
+                  }}>
                   2. User Responsibilities{'\n'}
                 </Text>
-                <Text>
+                <Text style={{color: 'black'}}>
                   As a user of TAC, you are expected to:{'\n'}- Provide Accurate
                   Information: Ensure all information you provide is truthful
                   and current.{'\n'}- Comply with Laws: Adhere to all applicable
@@ -256,10 +276,15 @@ const RegisterScreen = ({navigation}) => {
                   actions.{'\n\n'}
                 </Text>
 
-                <Text style={{fontSize: FontSize.scale18, fontWeight: '700'}}>
+                <Text
+                  style={{
+                    fontSize: FontSize.scale18,
+                    fontWeight: '700',
+                    color: 'black',
+                  }}>
                   3. Community Guidelines{'\n'}
                 </Text>
-                <Text>
+                <Text style={{color: 'black'}}>
                   To maintain a safe and respectful environment, users must not:
                   {'\n'}- Post Spam or Scams: Avoid sharing deceptive or
                   irrelevant content.{'\n'}- Share Inappropriate Content: Do not
@@ -272,10 +297,15 @@ const RegisterScreen = ({navigation}) => {
                   account suspension.{'\n\n'}
                 </Text>
 
-                <Text style={{fontSize: FontSize.scale18, fontWeight: '700'}}>
+                <Text
+                  style={{
+                    fontSize: FontSize.scale18,
+                    fontWeight: '700',
+                    color: 'black',
+                  }}>
                   4. Job Posting & Reporting System{'\n'}
                 </Text>
-                <Text>
+                <Text style={{color: 'black'}}>
                   TAC enables users to post and accept jobs. To uphold quality
                   and safety, we have implemented a reporting system for
                   user-generated content.{'\n\n'}
@@ -290,10 +320,15 @@ const RegisterScreen = ({navigation}) => {
                   suspension.{'\n\n'}
                 </Text>
 
-                <Text style={{fontSize: FontSize.scale18, fontWeight: '700'}}>
+                <Text
+                  style={{
+                    fontSize: FontSize.scale18,
+                    fontWeight: '700',
+                    color: 'black',
+                  }}>
                   5. Content Moderation & Enforcement{'\n'}
                 </Text>
-                <Text>
+                <Text style={{color: 'black'}}>
                   Our moderation team actively reviews reported content and
                   takes necessary actions:{'\n'}- Content Removal: Content that
                   breaches our guidelines will be taken down.{'\n'}- Account
@@ -302,10 +337,15 @@ const RegisterScreen = ({navigation}) => {
                   believe a report was made in error.{'\n\n'}
                 </Text>
 
-                <Text style={{fontSize: FontSize.scale18, fontWeight: '700'}}>
+                <Text
+                  style={{
+                    fontSize: FontSize.scale18,
+                    fontWeight: '700',
+                    color: 'black',
+                  }}>
                   6. Compliance with Apple’s Policies{'\n'}
                 </Text>
-                <Text>
+                <Text style={{color: 'black'}}>
                   In line with Apple's App Store Review Guidelines, TAC has
                   implemented:{'\n'}- User Reporting Mechanism: Users can flag
                   objectionable content directly within the app.{'\n'}- Content
@@ -316,11 +356,16 @@ const RegisterScreen = ({navigation}) => {
                   taken within 24 hours when necessary.{'\n\n'}
                 </Text>
 
-                <Text style={{fontSize: FontSize.scale18, fontWeight: '700'}}>
+                <Text
+                  style={{
+                    fontSize: FontSize.scale18,
+                    fontWeight: '700',
+                    color: 'black',
+                  }}>
                   7. No Tolerance for Objectionable Content or Abusive Users
                   {'\n'}
                 </Text>
-                <Text>
+                <Text style={{color: 'black'}}>
                   At TAC, we are committed to maintaining a safe, respectful,
                   and professional environment for all users. We have a
                   zero-tolerance policy for objectionable content and abusive
@@ -346,21 +391,31 @@ const RegisterScreen = ({navigation}) => {
                   {'\n\n'}
                 </Text>
 
-                <Text style={{fontSize: FontSize.scale18, fontWeight: '700'}}>
+                <Text
+                  style={{
+                    fontSize: FontSize.scale18,
+                    fontWeight: '700',
+                    color: 'black',
+                  }}>
                   8. Changes to These Terms{'\n'}
                 </Text>
-                <Text>
+                <Text style={{color: 'black'}}>
                   We may update these Terms periodically. Continued use of the
                   platform signifies acceptance of any changes.{'\n\n'}
                 </Text>
 
-                <Text style={{fontSize: FontSize.scale18, fontWeight: '700'}}>
+                <Text
+                  style={{
+                    fontSize: FontSize.scale18,
+                    fontWeight: '700',
+                    color: 'black',
+                  }}>
                   9. Contact Us{'\n'}
                 </Text>
-                <Text>
+                <Text style={{color: 'black'}}>
                   For questions or concerns about these Terms, please reach out
                   to us at{' '}
-                  <Text style={{fontWeight: '700'}}>
+                  <Text style={{fontWeight: '700', color: 'black'}}>
                     theappforcowboys@gmail.com
                   </Text>
                   .{'\n\n'}

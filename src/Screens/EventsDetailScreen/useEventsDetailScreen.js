@@ -9,7 +9,6 @@ import {useCallback, useRef, useState} from 'react';
 import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import ReactNativeCalendarEvents from 'react-native-calendar-events';
-import {Alert} from 'react-native';
 import {getCalenderPerComfirm} from '../../Services/GlobalFunctions';
 
 const useEventDetailScreen = ({navigate}, {params}) => {

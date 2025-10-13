@@ -1,77 +1,136 @@
+import {useEffect, useRef, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
-import API, {fetchGetWithToken} from '../../Utils/helperFunc';
+import API from '../../Utils/helperFunc';
 import {GetChatListUrl} from '../../Utils/Urls';
-import {useCallback, useEffect, useRef, useState} from 'react';
 import useReduxStore from '../../Hooks/UseReduxStore';
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  limit,
-  onSnapshot,
-  orderBy,
-  query,
-  startAfter,
-  writeBatch,
-} from 'firebase/firestore';
-import {db} from '../../Services/FirebaseServicsConfig';
+import io from 'socket.io-client';
 import {mergeIds} from '../../Services/GlobalFunctions';
-import {store} from '../../Redux/Reducer';
-import {types} from '../../Redux/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Replace with your actual Socket.io backend URL
+const SOCKET_URL = 'https://messaging.theappforcowboys.com/'; // e.g., 'https://your-chat-server.com'
 
 const useChatUserScreen = ({navigate, addListener}) => {
-  const {data} = useQuery({
-    queryKey: ['chatList'],
-    queryFn: () => API.get(GetChatListUrl),
-  });
-
-  const [users, setUsers] = useState([]);
-
-  const {getState, dispatch, queryClient} = useReduxStore();
-  const {userData} = getState('Auth');
+  const [asynUserData, setAsynUserData] = useState(null);
+  const socketRef = useRef(null);
+  const [chats, setChats] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
+  const {getState} = useReduxStore();
+  const {userData} = getState('Auth');
+
+  // Fetch user data from AsyncStorage
+  const getUserData = async () => {
+    const UserData = await AsyncStorage.getItem('userData');
+    setAsynUserData(JSON.parse(UserData));
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const myId = userData?.id ?? asynUserData?.id;
+
+  // Fetch chat list from Laravel API
+  const {data, refetch} = useQuery({
+    queryKey: ['chatList'],
+    queryFn: () => API.get('v1/chat/list'),
+  });
+
+  // Initialize Socket.io
+  useEffect(() => {
+    socketRef.current = io(SOCKET_URL, {
+      transports: ['websocket'],
+      reconnection: true,
+      reconnectionAttempts: 5,
+    });
+    socketRef.current.on('connect', () => console.log('Socket connected'));
+    socketRef.current.on('disconnect', () =>
+      console.log('Socket disconnected'),
+    );
+    socketRef.current.on('error', err => console.error('Socket error:', err));
+
+    return () => {
+      socketRef.current.disconnect();
+      setChats([]); // Clear chats on unmount
+    };
+  }, []);
+
+  // Setup socket listeners and fetch chats
+  useEffect(() => {
+    if (myId && data?.data && data?.data.length > 0) {
+      setChats(data.data.map(chat => ({...chat, isTyping: false})));
+
+      console.log('Chat List Data:', data.data);
+      // Join all chat rooms
+      data.data.forEach(chat => {
+        const roomId = mergeIds(chat.other_user.id, myId);
+        socketRef.current.emit('join_room', {room: roomId, userId: myId});
+      });
+
+      // Socket listeners
+      socketRef.current.on('newMessage', msg => {
+        setChats(prevChats =>
+          prevChats.map(chat => {
+            const roomId = mergeIds(chat.other_user.id, myId);
+            if (msg.room === roomId) {
+              const isUnread = msg.sender !== myId && !msg.seen;
+              return {
+                ...chat,
+                last_message: msg,
+                unread_count: isUnread
+                  ? (chat.unread_count || 0) + 1
+                  : chat.unread_count,
+              };
+            }
+            return chat;
+          }),
+        );
+        if (msg.sender !== myId) {
+          setUnreadCount(prev => prev + 1);
+        }
+      });
+
+      socketRef.current.on('userTyping', ({room, userId, typing}) => {
+        if (userId !== myId) {
+          setChats(prevChats =>
+            prevChats.map(chat => {
+              const roomId = mergeIds(chat.other_user.id, myId);
+              if (room === roomId) {
+                return {...chat, isTyping: typing};
+              }
+              return {...chat, isTyping: false};
+            }),
+          );
+        }
+      });
+
+      return () => {
+        data?.data?.forEach(chat => {
+          const roomId = mergeIds(chat?.other_user?.id, myId);
+          socketRef.current.emit('leave_room', {room: roomId, userId: myId});
+        });
+        socketRef.current.off('newMessage');
+        socketRef.current.off('userTyping');
+      };
+    }
+  }, [data, myId]);
+
+  // Delete entire chat
   const deleteEntireChat = async chatroomId => {
     try {
-      if (!chatroomId) return false;
-
-      // Recursive function to delete all messages in batches
-      const deleteMessages = async nextQuery => {
-        const snapshot = await getDocs(nextQuery);
-
-        if (snapshot.empty) return;
-
-        const batch = writeBatch(db);
-        snapshot.docs.forEach(doc => batch.delete(doc.ref));
-        await batch.commit();
-
-        // Recurse if there are more messages
-        if (snapshot.docs.length === 300) {
-          // Firebase limit per batch
-          const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-          const newQuery = query(
-            collection(db, 'messages', chatroomId, 'messages'),
-            orderBy('__name__'),
-            startAfter(lastDoc.id),
-            limit(300),
-          );
-          await deleteMessages(newQuery);
-        }
-      };
-
-      // Start with initial query
-      const messagesQuery = query(
-        collection(db, 'messages', chatroomId, 'messages'),
-        limit(300),
+      await API.delete(`${API_BASE_URL}/chat/${chatroomId}`);
+      setChats(prevChats =>
+        prevChats.filter(
+          chat => mergeIds(chat.other_user.id, myId) !== chatroomId,
+        ),
       );
-      await deleteMessages(messagesQuery);
-
-      // Delete the main document
-      await deleteDoc(doc(db, 'messages', chatroomId));
-      await initializeChat();
-      // updateState({ messages: [] });
+      setUnreadCount(
+        prev =>
+          prev -
+          (chats.find(chat => mergeIds(chat.other_user.id, myId) === chatroomId)
+            ?.unread_count || 0),
+      );
       return true;
     } catch (error) {
       console.error('Error deleting chat:', error);
@@ -79,118 +138,30 @@ const useChatUserScreen = ({navigate, addListener}) => {
     }
   };
 
-  const fetchUsersAndMessages = async () => {
-    try {
-      const fetchedUsers = await fetchGetWithToken(GetChatListUrl);
-
-      const unsubscribeFunctions = fetchedUsers.map(
-        async (appointments, index) => {
-          const chatroomDocRef = doc(
-            db,
-            'messages',
-            mergeIds(appointments?.id?.toString(), userData?.id?.toString()),
-          );
-          const chatroomDocSnap = await getDoc(chatroomDocRef);
-
-          if (chatroomDocSnap.exists()) {
-            return listenForLastMessage(appointments, index);
-          }
-        },
-      );
-      setUsers(fetchedUsers);
-      return () => {
-        unsubscribeFunctions.forEach(unsub => unsub());
-      };
-    } catch (error) {
-      console.error('Error fetching users or messages:', error);
-    }
-  };
-
-  const listenForLastMessage = (appointment, index) => {
-    const appId = appointment.id;
-    const channelId = mergeIds(appId.toString(), userData?.id.toString());
-
-    const messageRef = query(
-      collection(db, 'messages', channelId, 'messages'),
-      orderBy('createdAt', 'desc'),
-      limit(1),
-    );
-
-    const unsubscribe = onSnapshot(messageRef, querySnapshot => {
-      if (querySnapshot.empty) return;
-
-      const lastMessage = querySnapshot.docs[0]?.data();
-      if (!lastMessage) return;
-
-      // Update ONLY the user at the given index
-      setUsers(prevUsers => {
-        const updatedUsers = [...prevUsers];
-        if (lastMessage.msgChannelId === channelId) {
-          updatedUsers[index] = {
-            ...updatedUsers[index],
-            lastMessage,
-          };
-        }
-        return updatedUsers;
-      });
-
-      // Unread logic (if needed)
-      const isUnread =
-        userData?.id === lastMessage?.receiver && lastMessage?.seen === 0;
-      if (isUnread) {
-        setUnreadCount(prev => prev + 1);
-      }
-    });
-
-    return unsubscribe;
-  };
-
-  const clearNotification = () => {
-    store.dispatch({type: types.isChatNotifyFalse});
-  };
-
-  useEffect(clearNotification, []);
-
-  useEffect(() => {
-    // Update unread count in Redux whenever unreadCount changes
-    // dispatch(updateUnreadCount(unreadCount));
-  }, [unreadCount]);
-
-  const initializeChat = async () => {
-    try {
-      // Reset the unread count  when the Chat screen is focused
-      //   dispatch(resetUnreadCount());
-      queryClient.fetchQuery({
-        queryKey: ['chatList'],
-        staleTime: 1000,
-      });
-      await fetchUsersAndMessages();
-    } catch (error) {
-      console.error('Error initializing chat:', error);
-    }
-  };
-  useEffect(() => {
-    const unsubscribe = addListener('focus', () => {
-      initializeChat();
-    });
-    return unsubscribe;
-  }, []);
-
-  const onRefresh = useCallback(() => {
-    initializeChat();
-  }, []);
-
+  // Navigation to ChatScreen
   const dynamicNav = (screenName, screenData) =>
     navigate(screenName, screenData);
 
+  // Refresh chat list
+  const onRefresh = () => {
+    refetch();
+  };
+
+  // Clear notifications on focus
+  useEffect(() => {
+    const unsubscribe = addListener('focus', () => {
+      setUnreadCount(0); // Reset unread count
+    });
+    return unsubscribe;
+  }, []);
+
   return {
-    messageList: data?.data ?? [],
+    messageList: chats,
     dynamicNav,
-    users,
+    users: chats,
     userData,
     onRefresh,
     deleteEntireChat,
-    initializeChat,
   };
 };
 

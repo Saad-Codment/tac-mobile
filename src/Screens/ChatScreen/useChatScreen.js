@@ -3,8 +3,10 @@ import useReduxStore from '../../Hooks/UseReduxStore';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import API from '../../Utils/helperFunc';
 import {
+  baseURL,
   getUserProfileUrl,
   SendChatNotificationUrl,
+  sendMsgUrl,
   WhenUserInAndOutChatUrl,
 } from '../../Utils/Urls';
 import {mergeIds} from '../../Services/GlobalFunctions';
@@ -14,12 +16,16 @@ import RNFetchBlob from 'rn-fetch-blob';
 import ImageCropPicker from 'react-native-image-crop-picker';
 
 // Replace with your actual Socket.io backend URL
-const SOCKET_URL = 'YOUR_BACKEND_URL_HERE'; // e.g., 'https://your-chat-server.com'
+const SOCKET_URL = 'https://messaging.theappforcowboys.com/'; // e.g., 'https://your-chat-server.com'
 
+// Laravel API base URL (replace with your actual URL)
+const API_BASE_URL = baseURL; // e.g., 'https://your-laravel-api.com'
+
+// Helper function to format timestamp for last seen
 const formatLastSeen = timestamp => {
   if (!timestamp) return '';
   const date = new Date(timestamp);
-  return date.toLocaleString(); // e.g., "8/15/2025, 10:10 PM"
+  return date.toLocaleString(); // e.g., "10/14/2025, 2:14 AM"
 };
 
 // Socket.io Functions
@@ -40,46 +46,42 @@ const joinRoom = (
   room,
   userId,
   onNewMessage,
-  onUserOnline,
-  onUserOffline,
+  onUserTyping,
   onMessageSeen,
 ) => {
   socket.emit('join_room', {room, userId});
 
-  socket.on('new_message', msg => {
+  socket.on('newMessage', msg => {
     if (msg.sender !== userId) {
       onNewMessage(msg);
-      socket.emit('message_seen', {room, messageId: msg.id, userId});
+      socket.emit('messageSeen', {room, messageId: msg.id, userId});
     }
   });
 
-  socket.on('user_online', data => {
-    if (data.userId !== userId) {
-      onUserOnline(data);
+  socket.on('userTyping', ({userId: senderId, typing}) => {
+    if (senderId !== userId) {
+      onUserTyping(typing);
     }
   });
 
-  socket.on('user_offline', data => {
-    if (data.userId !== userId) {
-      onUserOffline(data);
-    }
-  });
-
-  socket.on('message_seen', ({messageId}) => {
+  socket.on('messageSeen', ({messageId}) => {
     onMessageSeen(messageId);
   });
 };
 
 const leaveRoom = (socket, room, userId) => {
   socket.emit('leave_room', {room, userId});
-  socket.off('new_message');
-  socket.off('user_online');
-  socket.off('user_offline');
-  socket.off('message_seen');
+  socket.off('newMessage');
+  socket.off('userTyping');
+  socket.off('messageSeen');
 };
 
-const sendChatMessage = (socket, room, message) => {
-  socket.emit('chat_message', {room, message});
+const publishTyping = (socket, room, userId, typing) => {
+  socket.emit('publish', {
+    event: `typing.${typing ? 'start' : 'stop'}`,
+    userId,
+    room,
+  });
 };
 
 const pickAndSendMedia = (socket, room, sender, onMessageSent) => {
@@ -103,7 +105,7 @@ const pickAndSendMedia = (socket, room, sender, onMessageSent) => {
               timestamp: Date.now(),
               seen: false,
             };
-            sendChatMessage(socket, room, msg);
+            socket.emit('chat_message', {room, message: msg});
             onMessageSent(msg);
           })
           .catch(err => console.error('Error reading file:', err));
@@ -115,7 +117,37 @@ const pickAndSendMedia = (socket, room, sender, onMessageSent) => {
 const useChatScreen = ({navigate}, {params}) => {
   const [asynUserData, setAsynUserData] = useState(null);
   const socketRef = useRef(null);
+  const [chatState, setChatState] = useState({
+    messages: [],
+    message: '',
+    chatroomId: params?.conversationId,
+    isTyping: false,
+    lastSeenMessageId: null,
+    page: 1,
+    hasMore: true,
+    isLoadingMessages: false,
+  });
 
+  const {
+    messages,
+    message,
+    chatroomId,
+    isTyping,
+    lastSeenMessageId,
+    page,
+    hasMore,
+    isLoadingMessages,
+  } = chatState;
+
+  const updateState = data => setChatState(prev => ({...prev, ...data}));
+
+  const {getState} = useReduxStore();
+  const userData = getState('Auth');
+  const {id, userId: paramUserId} = params; // id: other user's ID, paramUserId: optional user ID
+
+  const myId = userData?.userData?.id ?? paramUserId ?? asynUserData?.id;
+
+  // Fetch user data from AsyncStorage
   const getUserData = async () => {
     const UserData = await AsyncStorage.getItem('userData');
     setAsynUserData(JSON.parse(UserData));
@@ -125,24 +157,7 @@ const useChatScreen = ({navigate}, {params}) => {
     getUserData();
   }, []);
 
-  const [chatState, setChatState] = useState({
-    messages: [],
-    message: '',
-    chatroomId: '',
-    otherUserOnline: false,
-    lastSeen: null,
-  });
-
-  const {message, messages, chatroomId, otherUserOnline, lastSeen} = chatState;
-
-  const updateState = data => setChatState(prev => ({...prev, ...data}));
-
-  const {getState} = useReduxStore();
-  const userData = getState('Auth');
-  const {id, userId: paramUserId} = params;
-
-  const myId = userData?.userData?.id ?? paramUserId ?? asynUserData?.id;
-
+  // Initialize Socket.io
   useEffect(() => {
     socketRef.current = initSocket();
     return () => {
@@ -153,21 +168,85 @@ const useChatScreen = ({navigate}, {params}) => {
     };
   }, []);
 
+  // Fetch other user and last seen message ID
+  const {data: otherUserData} = useQuery({
+    queryKey: ['otherUser', chatroomId],
+    queryFn: () => API.get(`v1/chat/${chatroomId}/participants`),
+    enabled: !!chatroomId,
+  });
+
+  console.log('Other User Data:', otherUserData?.data);
+
+  // Fetch messages (paginated)
+  const fetchMessages = async pageNum => {
+    try {
+      updateState({isLoadingMessages: true});
+      const response = await API.get(
+        `v1/chat/${chatroomId}/messages?page=${pageNum}`,
+      );
+      const newMessages = response.data.data;
+      console.log('API Response for Messages:', response?.data);
+      const hasMoreMessages = response.data.has_more;
+      console.log('Fetched Messages:', response?.data);
+      updateState({
+        messages: pageNum === 1 ? newMessages : [...newMessages, ...messages],
+        hasMore: false,
+        page: pageNum,
+      });
+
+      if (pageNum === 1) {
+        handleAutoScroll();
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    } finally {
+      updateState({isLoadingMessages: false});
+    }
+  };
+
+  // Mark messages as seen
+  const {mutate: markMessagesAsSeen} = useMutation({
+    mutationFn: () => API.post(`v1/chat/${chatroomId}/seen`),
+    onSuccess: () => {
+      console.log('Messages marked as seen');
+    },
+  });
+
+  // Send message
+  const {mutate: sendMessageMutation} = useMutation({
+    mutationFn: body => API.post(sendMsgUrl, body),
+    onSuccess: response => {
+      const msg = response.data;
+      console.log('Message sent:', response?.data);
+      socketRef.current.emit('chat_message', {room: chatroomId, message: msg});
+      updateState({messages: [...messages, msg], message: ''});
+      publishTyping(socketRef.current, chatroomId, myId, false);
+    },
+  });
+
+  // Notify user in/out
+  const {mutateAsync} = useMutation({
+    mutationFn: () => API.post(WhenUserInAndOutChatUrl, {user_id: id}),
+    onSuccess: ({ok, data}) => {
+      console.log('User in/out updated:', data);
+    },
+  });
+
+  // Join room and set up socket listeners
   useEffect(() => {
     if (id && myId) {
       const roomId = mergeIds(id, myId);
-      updateState({chatroomId: roomId});
+      // updateState({chatroomId: roomId});
 
       joinRoom(
         socketRef.current,
         roomId,
         myId,
         msg => updateState({messages: [...messages, {...msg, seen: false}]}),
-        () => updateState({otherUserOnline: true}),
-        ({timestamp}) =>
-          updateState({otherUserOnline: false, lastSeen: timestamp}),
+        typing => updateState({isTyping: typing}),
         messageId => {
           updateState({
+            lastSeenMessageId: messageId,
             messages: messages.map(msg =>
               msg.id === messageId ? {...msg, seen: true} : msg,
             ),
@@ -175,57 +254,41 @@ const useChatScreen = ({navigate}, {params}) => {
         },
       );
 
+      fetchMessages(1); // Load initial messages
+      markMessagesAsSeen(); // Mark messages as seen on entry
+
       return () => {
         leaveRoom(socketRef.current, roomId, myId);
       };
     }
-  }, [id, myId, messages]);
+  }, [id, myId]);
 
-  const {data} = useQuery({
-    queryKey: ['userData'],
-    queryFn: () => API.get(getUserProfileUrl + id),
-  });
-
-  const {mutate} = useMutation({
-    mutationFn: body => {
-      return API.post(SendChatNotificationUrl, {
-        id,
-        message: body?.msg,
-        user_id: id,
-      });
-    },
-    onSuccess: ({ok, data}) => {
-      console.log('Notification sent:', data);
-    },
-  });
-
-  const {mutateAsync} = useMutation({
-    mutationFn: () => {
-      return API.post(WhenUserInAndOutChatUrl, {
-        user_id: id,
-      });
-    },
-    onSuccess: ({ok, data}) => {
-      console.log('User in/out updated:', data);
-    },
-  });
-
-  const sendMessage = () => {
-    if (message.trim() && chatroomId && myId) {
-      const msg = {
-        id: `${myId}_${Date.now()}_${Math.random()}`,
-        type: 'text',
-        content: message,
-        sender: myId,
-        timestamp: Date.now(),
-        seen: false,
-      };
-      sendChatMessage(socketRef.current, chatroomId, msg);
-      updateState({messages: [...messages, msg], message: ''});
-      mutate({msg: message});
+  // Handle typing
+  const typingTimeoutRef = useRef(null);
+  const handleTyping = text => {
+    updateState({message: text});
+    if (text.trim()) {
+      publishTyping(socketRef.current, chatroomId, myId, true);
+      clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = setTimeout(() => {
+        publishTyping(socketRef.current, chatroomId, myId, false);
+      }, 2000);
+    } else {
+      publishTyping(socketRef.current, chatroomId, myId, false);
     }
   };
 
+  // Send text message
+  const sendMessage = () => {
+    if (message.trim() && chatroomId && myId) {
+      sendMessageMutation({
+        receiver_id: id,
+        text: message,
+      });
+    }
+  };
+
+  // Send media messages
   const handlePickAndSendMedia = () => {
     if (chatroomId && myId) {
       pickAndSendMedia(socketRef.current, chatroomId, myId, msg =>
@@ -234,7 +297,15 @@ const useChatScreen = ({navigate}, {params}) => {
     }
   };
 
+  // Handle scroll for pagination
   const scrollViewRef = useRef();
+  const handleScroll = e => {
+    const {contentOffset} = e.nativeEvent;
+    if (contentOffset.y <= 0 && hasMore && !isLoadingMessages) {
+      fetchMessages(page + 1);
+    }
+  };
+
   const handleAutoScroll = () => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToEnd({animated: false});
@@ -242,7 +313,9 @@ const useChatScreen = ({navigate}, {params}) => {
   };
 
   useLayoutEffect(() => {
-    handleAutoScroll();
+    if (page === 1) {
+      handleAutoScroll();
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -257,15 +330,17 @@ const useChatScreen = ({navigate}, {params}) => {
     message,
     allMessages: messages,
     userData: userData?.userData,
-    receiverData: data?.data,
+    receiverData: otherUserData?.data?.other_user,
     handleAutoScroll,
-    isLoading: false,
+    handleScroll,
+    isLoading: isLoadingMessages,
     id,
     scrollViewRef,
-    setMessage: e => updateState({message: e}),
+    setMessage: handleTyping,
     pickAndSendMedia: handlePickAndSendMedia,
-    otherUserOnline,
-    lastSeen: formatLastSeen(lastSeen),
+    isTyping,
+    lastSeenMessageId: otherUserData?.data?.last_read_message_id,
+    lastSeen: formatLastSeen(otherUserData?.data?.last_seen_timestamp),
   };
 };
 

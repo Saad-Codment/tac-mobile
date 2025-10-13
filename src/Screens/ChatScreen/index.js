@@ -7,7 +7,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
 } from 'react-native';
-import React, {memo} from 'react';
+import React, {memo, useRef} from 'react';
 import {Colors} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
 import {Touchable} from '../../Components/Touchable';
@@ -27,6 +27,7 @@ const ChatScreen = ({navigation, route}) => {
     sendMessage,
     setMessage,
     handleAutoScroll,
+    handleScroll,
     isLoading,
     scrollViewRef,
     message,
@@ -34,17 +35,20 @@ const ChatScreen = ({navigation, route}) => {
     userData,
     receiverData,
     pickAndSendMedia,
-    otherUserOnline,
+    isTyping,
+    lastSeenMessageId,
     lastSeen,
   } = useChatScreen(navigation, route);
 
   const renderItem = ({item, index}) => {
-    const timestamp = item.timestamp ? new Date(item.timestamp) : new Date();
+    const timestamp = item.created_at ? new Date(item.created_at) : new Date();
     const formattedTime = timestamp.toLocaleTimeString([], {
       hour: '2-digit',
       minute: '2-digit',
     });
-    const isSender = item.sender === userData?.id;
+    const isSender = item.sender_id === userData?.id;
+
+    console.log('itemmsssgggg', item?.id, lastSeenMessageId);
 
     return (
       <View
@@ -62,7 +66,7 @@ const ChatScreen = ({navigation, route}) => {
         <View style={styles.senderText(isSender, item.type)}>
           {item.type === 'text' ? (
             <TextComponent
-              text={item.content}
+              text={item.text}
               styles={{
                 fontWeight: '300',
                 fontSize: hp('1.5'),
@@ -85,10 +89,13 @@ const ChatScreen = ({navigation, route}) => {
           ) : null}
           {isSender && (
             <TextComponent
-              text={item.seen ? '✓✓' : '✓'}
+              text={item?.id == lastSeenMessageId ? '✓✓' : '✓'}
               styles={{
                 fontSize: hp('1.2'),
-                color: item.seen ? Colors.blue : Colors.grayFaded,
+                color:
+                  item?.id == lastSeenMessageId
+                    ? Colors.blue
+                    : Colors.grayFaded,
                 marginTop: hp('0.5'),
                 alignSelf: 'flex-end',
               }}
@@ -145,9 +152,13 @@ const ChatScreen = ({navigation, route}) => {
               styles={{color: 'white', fontWeight: 'bold'}}
             />
             <TextComponent
-              text={otherUserOnline ? 'Online' : `Last seen: ${lastSeen}`}
+              text={
+                isTyping
+                  ? `${receiverData?.first_name} is typing...`
+                  : `Last seen: ${lastSeen}`
+              }
               styles={{
-                color: otherUserOnline ? 'green' : 'gray',
+                color: isTyping ? 'green' : 'gray',
                 fontSize: hp('1.4'),
               }}
             />
@@ -158,8 +169,9 @@ const ChatScreen = ({navigation, route}) => {
       <FlatList
         data={allMessages}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={keyExtractor}
         onLayout={handleAutoScroll}
+        onScroll={handleScroll}
         ref={scrollViewRef}
         onContentSizeChange={handleAutoScroll}
         showsVerticalScrollIndicator={false}

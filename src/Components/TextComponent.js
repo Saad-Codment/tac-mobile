@@ -37,7 +37,7 @@ export const TextComponent = ({
           ? Colors.backgroundTheme
           : Colors.black,
         fontSize: size ?? hp('2'),
-        fontWeight: fontFamily ?? '200',
+        fontWeight: fontFamily ?? '400',
         ...styles,
       }}>
       {text}

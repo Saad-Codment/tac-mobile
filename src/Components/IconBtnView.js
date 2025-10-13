@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
     // backgroundColor: 'yellow',
   },
   arrowStyle: {
-    flex: 0.06,
     width: wp('2'),
     height: hp('2'),
     resizeMode: 'contain',

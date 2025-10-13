@@ -9,7 +9,10 @@ import {
 import {CircleImage} from './CircleImage';
 import {TextComponent} from './TextComponent';
 import {hp, wp} from '../Config/responsive';
-import {convertToCustomTimeFormat} from '../Services/GlobalFunctions';
+import {
+  convertToCustomTimeFormat,
+  convertUTCToLocalTimeForComment,
+} from '../Services/GlobalFunctions';
 import {types} from '../Redux/types';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {imageUrl} from '../Utils/Urls';
@@ -164,6 +167,17 @@ const CommentComp = ({
             item?.replies_count == 0 || item?.replies_count == null,
           )}
         />
+        <Image
+          source={replyIcon}
+          resizeMode="contain"
+          style={styles.replyIcon}
+        />
+        <TextComponent
+          text={`Reply to comment`}
+          fade
+          size={hp('1.5')}
+          onPress={() => onSwipeRight(item?.id)}
+        />
         <Touchable
           onPress={() => onCommentLikePress()}
           style={{
@@ -209,7 +223,7 @@ const styles = StyleSheet.create({
   nameText: {
     fontWeight: 'bold',
     fontSize: hp('1.5'),
-    width: wp('67'),
+    width: wp('64'),
     marginLeft: wp('2'),
   },
   timeText: {
