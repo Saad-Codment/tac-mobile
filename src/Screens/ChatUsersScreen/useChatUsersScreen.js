@@ -3,12 +3,13 @@ import {useQuery} from '@tanstack/react-query';
 import API from '../../Utils/helperFunc';
 import {GetChatListUrl} from '../../Utils/Urls';
 import useReduxStore from '../../Hooks/UseReduxStore';
-import io from 'socket.io-client';
+import {io} from 'socket.io-client'; // Import io directly
 import {mergeIds} from '../../Services/GlobalFunctions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Replace with your actual Socket.io backend URL
-const SOCKET_URL = 'https://messaging.theappforcowboys.com/'; // e.g., 'https://your-chat-server.com'
+// API base URL
+const API_BASE_URL = GetChatListUrl;
+const SOCKET_URL = 'https://messaging.theappforcowboys.com/'; // Use your socket URL
 
 const useChatUserScreen = ({navigate, addListener}) => {
   const [asynUserData, setAsynUserData] = useState(null);
@@ -34,10 +35,10 @@ const useChatUserScreen = ({navigate, addListener}) => {
   // Fetch chat list from Laravel API
   const {data, refetch} = useQuery({
     queryKey: ['chatList'],
-    queryFn: () => API.get('v1/chat/list'),
+    queryFn: () => API.get('/v1/chat/list'),
   });
 
-  // Initialize Socket.io
+  // Initialize Socket.io directly in useEffect
   useEffect(() => {
     socketRef.current = io(SOCKET_URL, {
       transports: ['websocket'],
@@ -51,64 +52,81 @@ const useChatUserScreen = ({navigate, addListener}) => {
     socketRef.current.on('error', err => console.error('Socket error:', err));
 
     return () => {
-      socketRef.current.disconnect();
-      setChats([]); // Clear chats on unmount
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
     };
   }, []);
 
   // Setup socket listeners and fetch chats
   useEffect(() => {
     if (myId && data?.data && data?.data.length > 0) {
+      // Initialize chats with isTyping: false
       setChats(data.data.map(chat => ({...chat, isTyping: false})));
 
-      console.log('Chat List Data:', data.data);
       // Join all chat rooms
       data.data.forEach(chat => {
-        const roomId = mergeIds(chat.other_user.id, myId);
-        socketRef.current.emit('join_room', {room: roomId, userId: myId});
+        socketRef.current.emit('join', userData?.id);
       });
 
       // Socket listeners
-      socketRef.current.on('newMessage', msg => {
-        setChats(prevChats =>
-          prevChats.map(chat => {
-            const roomId = mergeIds(chat.other_user.id, myId);
-            if (msg.room === roomId) {
-              const isUnread = msg.sender !== myId && !msg.seen;
-              return {
-                ...chat,
-                last_message: msg,
-                unread_count: isUnread
-                  ? (chat.unread_count || 0) + 1
-                  : chat.unread_count,
-              };
-            }
-            return chat;
-          }),
+      socketRef.current.on('newMessage', payload => {
+        console.log('New message received ChatList:', payload);
+        const index = chats.findIndex(
+          c => c.conversation_id === payload.conversation_id,
         );
-        if (msg.sender !== myId) {
-          setUnreadCount(prev => prev + 1);
+        if (index !== -1) {
+          const chat = chats[index];
+          const updatedChat = {
+            ...chat,
+            last_message: payload.message,
+            unread_count:
+              payload.message.sender_id !== myId
+                ? (chat.unread_count || 0) + 1
+                : chat.unread_count,
+          };
+          // Remove from old position and insert at top
+          setChats(prevChats => {
+            const newChats = prevChats.filter(
+              c => c.conversation_id !== payload.conversation_id,
+            );
+            return [updatedChat, ...newChats];
+          });
+          if (payload.message.sender_id !== myId) {
+            setUnreadCount(prev => prev + 1);
+          }
         }
       });
 
-      socketRef.current.on('userTyping', ({room, userId, typing}) => {
-        if (userId !== myId) {
+      socketRef.current.on('userTyping', payload => {
+        console.log('Typing event received:', payload);
+        const chat = chats.find(c => c.other_user.id === payload.sender_id);
+        if (chat) {
           setChats(prevChats =>
-            prevChats.map(chat => {
-              const roomId = mergeIds(chat.other_user.id, myId);
-              if (room === roomId) {
-                return {...chat, isTyping: typing};
-              }
-              return {...chat, isTyping: false};
-            }),
+            prevChats.map(c =>
+              c.other_user.id === payload.sender_id
+                ? {...c, isTyping: payload.isTyping}
+                : c,
+            ),
           );
+          if (payload.isTyping) {
+            setTimeout(() => {
+              setChats(prevChats =>
+                prevChats.map(c =>
+                  c.other_user.id === payload.sender_id
+                    ? {...c, isTyping: false}
+                    : c,
+                ),
+              );
+            }, 3000);
+          }
         }
       });
 
       return () => {
-        data?.data?.forEach(chat => {
-          const roomId = mergeIds(chat?.other_user?.id, myId);
-          socketRef.current.emit('leave_room', {room: roomId, userId: myId});
+        data.data.forEach(chat => {
+          const roomId = mergeIds(myId, chat.other_user.id);
+          socketRef.current.emit('leave', roomId);
         });
         socketRef.current.off('newMessage');
         socketRef.current.off('userTyping');

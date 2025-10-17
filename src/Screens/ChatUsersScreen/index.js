@@ -10,6 +10,8 @@ import {styles} from './styles';
 import {mergeIds} from '../../Services/GlobalFunctions';
 import {Colors} from '../../Theme/Variables';
 import useChatUserScreen from './useChatUsersScreen';
+import {imageUrl} from '../../Utils/Urls';
+import ChatUserComp from '../../Components/ChatUserComp';
 
 const ChatUsersScreen = ({navigation}) => {
   const {
@@ -29,44 +31,41 @@ const ChatUsersScreen = ({navigation}) => {
     const unreadCount = item?.unread_count || 0;
 
     return (
-      <TouchableOpacity
-        onPress={() =>
-          dynamicNav('ChatScreen', {
-            id: item?.other_user?.id || item?.id, // Fallback to item.id if other_user.id is missing
-            userId: userData?.id,
-            conversationId: item?.conversation_id,
-          })
-        }
-        style={styles.chatItem}>
-        <CircleImage
-          image={
-            item?.other_user?.profile_image
-              ? {uri: item.other_user.profile_image}
-              : null
-          }
-          text={avatarLetter}
-          size={0.12}
-          backgroundColor={Colors.grayFaded || '#B0BEC5'}
-          textStyle={{color: Colors.white || '#FFFFFF', fontSize: hp('2.5')}}
-        />
-        <View style={styles.chatInfo}>
-          <TextComponent
-            text={`${item?.other_user?.first_name || 'Unknown'} ${
-              item?.other_user?.last_name || ''
-            }`}
-            styles={styles.userName}
-          />
-          <TextComponent
-            text={isTyping ? 'typing...' : lastMessage}
-            styles={isTyping ? styles.typingText : styles.lastMessage}
-          />
-        </View>
-        {unreadCount > 0 && (
-          <View style={styles.unreadBadge}>
-            <TextComponent text={unreadCount} styles={styles.unreadText} />
-          </View>
-        )}
-      </TouchableOpacity>
+      <ChatUserComp item={item} index={index} userDataProp={userData} />
+      // <TouchableOpacity
+      //   onPress={() =>
+      //     dynamicNav('ChatScreen', {
+      //       id: item?.other_user?.id || item?.id, // Fallback to item.id if other_user.id is missing
+      //       userId: userData?.id,
+      //       conversationId: item?.conversation_id,
+      //     })
+      //   }
+      //   style={styles.chatItem}>
+      //   <CircleImage
+      //     image={imageUrl(item?.other_user?.profile_image)}
+      //     size={0.12}
+      //     uri={true}
+      //     backgroundColor={Colors.grayFaded || '#B0BEC5'}
+      //     textStyle={{color: Colors.white || '#FFFFFF', fontSize: hp('2.5')}}
+      //   />
+      //   <View style={styles.chatInfo}>
+      //     <TextComponent
+      //       text={`${item?.other_user?.first_name || 'Unknown'} ${
+      //         item?.other_user?.last_name || ''
+      //       }`}
+      //       styles={styles.userName}
+      //     />
+      //     <TextComponent
+      //       text={isTyping ? 'typing...' : lastMessage}
+      //       styles={isTyping ? styles.typingText : styles.lastMessage}
+      //     />
+      //   </View>
+      //   {unreadCount > 0 && (
+      //     <View style={styles.unreadBadge}>
+      //       <TextComponent text={unreadCount} styles={styles.unreadText} />
+      //     </View>
+      //   )}
+      // </TouchableOpacity>
     );
   };
 
@@ -76,7 +75,7 @@ const ChatUsersScreen = ({navigation}) => {
         width: '98%',
         alignSelf: 'center',
         justifyContent: 'flex-end',
-        height: hp('7'),
+        // height: hp('7'),
       }}>
       <TouchableOpacity
         style={styles.backRightBtnRight}

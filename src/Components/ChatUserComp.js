@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {View, Text, StyleSheet, Pressable, Platform} from 'react-native';
 import React from 'react';
 import {hp, wp} from '../Config/responsive';
 import {CircleImage} from './CircleImage';
@@ -6,6 +6,7 @@ import {TextComponent} from './TextComponent';
 import NavigationService from '../Services/NavigationService';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {imageUrl} from '../Utils/Urls';
+import {Colors} from '../Theme/Variables';
 
 const ChatUserComp = ({mainViewStyles, item, index, userDataProp}) => {
   const {getState} = useReduxStore();
@@ -31,34 +32,51 @@ const ChatUserComp = ({mainViewStyles, item, index, userDataProp}) => {
   console.log(
     'timestamptimestamptimestamptimestamptimestamptimestamp',
     userData,
-    userDataProp,
   );
+
+  const avatarLetter =
+    item?.other_user?.first_name?.charAt(0)?.toUpperCase() || '?';
+  const lastMessage = item?.last_message?.text || 'No messages yet';
+  const isTyping = item?.isTyping || false;
+  const unreadCount = item?.unread_count || 0;
 
   return (
     <Pressable
       style={styles.container}
       onPress={() => {
         NavigationService.navigate('ChatScreen', {
-          ...item,
-          userId: userDataProp?.id ?? userData?.id ?? item?.user_id,
+          id: item?.other_user?.id || item?.id, // Fallback to item.id if other_user.id is missing
+          userId: userData?.id,
+          conversationId: item?.conversation_id,
         });
       }}>
-      <CircleImage size={0.1} uri image={imageUrl(item?.profile_image)} />
+      <CircleImage
+        size={0.1}
+        uri
+        image={imageUrl(item?.other_user?.profile_image)}
+      />
       <View style={styles.textWrapper}>
         <TextComponent
           text={
-            item?.first_name + ' ' + (item?.last_name ? item?.last_name : '')
+            item?.other_user?.first_name +
+            ' ' +
+            (item?.other_user?.last_name ? item?.other_user?.last_name : '')
           }
           styles={styles.nameText}
         />
         <TextComponent
-          text={item?.lastMessage?.text || 'Start Conversation...'}
+          text={isTyping ? 'typing...' : lastMessage}
           numberOfLines={1}
           fade
-          styles={styles.messageText}
+          styles={isTyping ? styles.typingText : styles.lastMessage}
         />
       </View>
       <TextComponent text={formattedTime} styles={styles.timeText} />
+      {unreadCount > 0 && (
+        <View style={styles.unreadBadge}>
+          <TextComponent text={unreadCount} styles={styles.unreadText} />
+        </View>
+      )}
     </Pressable>
   );
 };
@@ -88,6 +106,43 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontSize: hp('1.2'),
+  },
+  lastMessage: {
+    fontSize: hp('1.6'),
+    color: Colors.gray || '#757575',
+    maxWidth: wp('60'), // Prevent overflow
+    flexWrap: 'wrap',
+  },
+  typingText: {
+    fontSize: hp('1.6'),
+    color: Colors.green || '#4CAF50',
+    fontStyle: 'italic',
+  },
+  unreadBadge: {
+    backgroundColor: Colors.primaryColor || '#6200EE', // Fallback purple
+    borderRadius: 20,
+    minWidth: wp('6'),
+    height: hp('3'),
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: wp('1.5'),
+    marginLeft: wp('2'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  unreadText: {
+    color: Colors.white || '#FFFFFF',
+    fontSize: hp('1.6'),
+    fontWeight: 'bold',
   },
   timeText: {
     fontSize: hp('1.2'),

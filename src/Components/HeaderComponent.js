@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     marginLeft: wp('2'),
   },
   inputView: {
-    width: wp('82'),
+    width: wp('75'),
     height: hp('5'),
     borderRadius: 30,
     borderWidth: 0.5,

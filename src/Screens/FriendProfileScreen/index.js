@@ -121,7 +121,7 @@ const FriendProfileScreen = ({navigation, route}) => {
     [refetch, isRefetching, functionToUpdateComment, eventsList],
   );
 
-  console.log('skldvbklsdbvklsdbvklsdbklvklsdvksdlvs', eventsList);
+  console.log('skldvbklsdbvklsdbvklsdbklvklsdvksdlvs', userData);
 
   return (
     <View style={{flex: 1}}>

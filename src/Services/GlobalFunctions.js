@@ -1276,6 +1276,21 @@ function getCustom12HourTime(dateStr) {
   // output: "12.21 .AM"
 }
 
+function sortChatsByCreatedAt(chats, order) {
+  if (!Array.isArray(chats)) return [];
+
+  return [...chats].sort((a, b) => {
+    const dateA = new Date(a.created_at);
+    const dateB = new Date(b.created_at);
+
+    // Ascending (oldest → newest)
+    if (order === 'asc') return dateA - dateB;
+
+    // Descending (newest → oldest)
+    return dateB - dateA;
+  });
+}
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -1334,4 +1349,5 @@ export {
   convertToLocalFullTime,
   getFullLocalDate,
   convertUTCToLocalTimeForComment,
+  sortChatsByCreatedAt,
 };

@@ -1,151 +1,53 @@
-import {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {useMutation, useQuery} from '@tanstack/react-query';
-import API from '../../Utils/helperFunc';
+import API, {formDataFunc} from '../../Utils/helperFunc';
 import {
   baseURL,
   getUserProfileUrl,
   SendChatNotificationUrl,
   sendMsgUrl,
+  socketURL,
   WhenUserInAndOutChatUrl,
 } from '../../Utils/Urls';
-import {mergeIds} from '../../Services/GlobalFunctions';
+import {
+  mergeIds,
+  sortChatsByCreatedAt,
+  uploadFromCamera,
+  uploadFromGalary,
+} from '../../Services/GlobalFunctions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import io from 'socket.io-client';
 import RNFetchBlob from 'rn-fetch-blob';
 import ImageCropPicker from 'react-native-image-crop-picker';
+import {loadingFalse} from '../../Redux/Action/isloadingAction';
+import initSocket from '../../Services/SocketServices'; // Use only initSocket
+import {io} from 'socket.io-client';
+import axios from 'axios';
+import {set} from 'react-hook-form';
+import {Alert} from 'react-native';
 
-// Replace with your actual Socket.io backend URL
-const SOCKET_URL = 'https://messaging.theappforcowboys.com/'; // e.g., 'https://your-chat-server.com'
+// API base URL
+const API_BASE_URL = baseURL;
 
-// Laravel API base URL (replace with your actual URL)
-const API_BASE_URL = baseURL; // e.g., 'https://your-laravel-api.com'
-
-// Helper function to format timestamp for last seen
 const formatLastSeen = timestamp => {
   if (!timestamp) return '';
   const date = new Date(timestamp);
-  return date.toLocaleString(); // e.g., "10/14/2025, 2:14 AM"
-};
-
-// Socket.io Functions
-const initSocket = () => {
-  const socket = io(SOCKET_URL, {
-    transports: ['websocket'],
-    reconnection: true,
-    reconnectionAttempts: 5,
-  });
-  socket.on('connect', () => console.log('Socket connected'));
-  socket.on('disconnect', () => console.log('Socket disconnected'));
-  socket.on('error', err => console.error('Socket error:', err));
-  return socket;
-};
-
-const joinRoom = (
-  socket,
-  room,
-  userId,
-  onNewMessage,
-  onUserTyping,
-  onMessageSeen,
-) => {
-  socket.emit('join_room', {room, userId});
-
-  socket.on('newMessage', msg => {
-    if (msg.sender !== userId) {
-      onNewMessage(msg);
-      socket.emit('messageSeen', {room, messageId: msg.id, userId});
-    }
-  });
-
-  socket.on('userTyping', ({userId: senderId, typing}) => {
-    if (senderId !== userId) {
-      onUserTyping(typing);
-    }
-  });
-
-  socket.on('messageSeen', ({messageId}) => {
-    onMessageSeen(messageId);
-  });
-};
-
-const leaveRoom = (socket, room, userId) => {
-  socket.emit('leave_room', {room, userId});
-  socket.off('newMessage');
-  socket.off('userTyping');
-  socket.off('messageSeen');
-};
-
-const publishTyping = (socket, room, userId, typing) => {
-  socket.emit('publish', {
-    event: `typing.${typing ? 'start' : 'stop'}`,
-    userId,
-    room,
-  });
-};
-
-const pickAndSendMedia = (socket, room, sender, onMessageSent) => {
-  ImageCropPicker.openPicker({
-    multiple: true,
-    mediaType: 'any',
-    cropping: false,
-  })
-    .then(files => {
-      files.forEach(file => {
-        RNFetchBlob.fs
-          .readFile(file.path, 'base64')
-          .then(base64 => {
-            const type = file.mime.startsWith('image/') ? 'image' : 'video';
-            const msg = {
-              id: `${sender}_${Date.now()}_${Math.random()}`,
-              type,
-              content: base64,
-              mime: file.mime,
-              sender,
-              timestamp: Date.now(),
-              seen: false,
-            };
-            socket.emit('chat_message', {room, message: msg});
-            onMessageSent(msg);
-          })
-          .catch(err => console.error('Error reading file:', err));
-      });
-    })
-    .catch(err => console.error('Error picking media:', err));
+  return date.toLocaleString(); // e.g., "10/15/2025, 10:07 PM"
 };
 
 const useChatScreen = ({navigate}, {params}) => {
-  const [asynUserData, setAsynUserData] = useState(null);
   const socketRef = useRef(null);
-  const [chatState, setChatState] = useState({
-    messages: [],
-    message: '',
-    chatroomId: params?.conversationId,
-    isTyping: false,
-    lastSeenMessageId: null,
-    page: 1,
-    hasMore: true,
-    isLoadingMessages: false,
-  });
+  const [asynUserData, setAsynUserData] = useState(null);
+  const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [images, setImages] = useState([]);
+  const typingTimeoutRef = useRef(null);
 
-  const {
-    messages,
-    message,
-    chatroomId,
-    isTyping,
-    lastSeenMessageId,
-    page,
-    hasMore,
-    isLoadingMessages,
-  } = chatState;
-
-  const updateState = data => setChatState(prev => ({...prev, ...data}));
-
-  const {getState} = useReduxStore();
-  const userData = getState('Auth');
-  const {id, userId: paramUserId} = params; // id: other user's ID, paramUserId: optional user ID
-
-  const myId = userData?.userData?.id ?? paramUserId ?? asynUserData?.id;
+  const {getState, dispatch} = useReduxStore();
+  const {userData, token} = getState('Auth');
+  const {id, userId: paramUserId} = params; // id: other user's ID, paramUserId: optional
+  const myId = userData?.id ?? paramUserId ?? asynUserData?.id;
 
   // Fetch user data from AsyncStorage
   const getUserData = async () => {
@@ -157,142 +59,239 @@ const useChatScreen = ({navigate}, {params}) => {
     getUserData();
   }, []);
 
-  // Initialize Socket.io
+  // Initialize Socket.io using initSocket from separate file
   useEffect(() => {
-    socketRef.current = initSocket();
+    if (myId) {
+      socketRef.current = io(socketURL, {
+        transports: ['websocket'],
+        reconnection: true,
+        reconnectionAttempts: 5,
+      });
+      socketRef.current.on('connect', () => {
+        console.log('Socket connected:', socketRef.current.id);
+        // Re-join room on reconnect if conversationId exists
+        if (params?.conversationId) {
+          socketRef.current.emit('join', mergeIds(myId, id));
+        }
+      });
+      socketRef.current.on('disconnect', () =>
+        console.log('Socket disconnected'),
+      );
+      socketRef.current.on('error', err => console.error('Socket error:', err));
+    }
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect();
       }
-      updateState({messages: []}); // Clear messages on unmount
     };
-  }, []);
+  }, [myId, id, params?.conversationId]);
 
-  // Fetch other user and last seen message ID
+  // Fetch other participant
   const {data: otherUserData} = useQuery({
-    queryKey: ['otherUser', chatroomId],
-    queryFn: () => API.get(`v1/chat/${chatroomId}/participants`),
-    enabled: !!chatroomId,
+    queryKey: ['otherUser', params?.conversationId],
+    queryFn: () => API.get(`/v1/chat/${params?.conversationId}/participants`),
+    enabled: !!params?.conversationId,
   });
 
-  console.log('Other User Data:', otherUserData?.data);
+  const receiverData = otherUserData?.data?.other_user;
 
   // Fetch messages (paginated)
-  const fetchMessages = async pageNum => {
+  const fetchMessages = async (pageNum = 1) => {
     try {
-      updateState({isLoadingMessages: true});
+      setIsLoading(true);
+      dispatch(loadingFalse());
       const response = await API.get(
-        `v1/chat/${chatroomId}/messages?page=${pageNum}`,
+        `/v1/chat/${params?.conversationId}/messages?page=${pageNum}`,
       );
       const newMessages = response.data.data;
-      console.log('API Response for Messages:', response?.data);
-      const hasMoreMessages = response.data.has_more;
-      console.log('Fetched Messages:', response?.data);
-      updateState({
-        messages: pageNum === 1 ? newMessages : [...newMessages, ...messages],
-        hasMore: false,
-        page: pageNum,
-      });
-
-      if (pageNum === 1) {
-        handleAutoScroll();
-      }
+      const hasMore = !!response.data.next_page_url;
+      return {
+        messages: pageNum === 1 ? newMessages : [...messages, ...newMessages],
+        hasMore,
+      };
     } catch (error) {
       console.error('Error fetching messages:', error);
+      return {messages: [], hasMore: false};
     } finally {
-      updateState({isLoadingMessages: false});
+      setIsLoading(false);
     }
   };
 
+  // Initial message fetch
+  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    if (params?.conversationId) {
+      fetchMessages(1).then(({messages: newMessages}) =>
+        setMessages(sortChatsByCreatedAt(newMessages, 'asc')),
+      );
+    }
+  }, [params?.conversationId]);
+
   // Mark messages as seen
   const {mutate: markMessagesAsSeen} = useMutation({
-    mutationFn: () => API.post(`v1/chat/${chatroomId}/seen`),
-    onSuccess: () => {
-      console.log('Messages marked as seen');
+    mutationFn: () => {
+      dispatch(loadingFalse());
+      return API.post(`/v1/chat/${params?.conversationId}/seen`);
     },
+    onSuccess: () => console.log('Messages marked as seen'),
   });
 
   // Send message
   const {mutate: sendMessageMutation} = useMutation({
-    mutationFn: body => API.post(sendMsgUrl, body),
+    mutationFn: body => {
+      // const formData = new FormData();
+      // formData.append('receiver_id', id);
+      const bodyData = {
+        receiver_id: id,
+        text: body.text || '',
+        images: body?.images || [],
+      };
+      // if (body.text) formData.append('text', body.text);
+      return formDataFunc(sendMsgUrl, bodyData, 'images', true);
+    },
     onSuccess: response => {
-      const msg = response.data;
-      console.log('Message sent:', response?.data);
-      socketRef.current.emit('chat_message', {room: chatroomId, message: msg});
-      updateState({messages: [...messages, msg], message: ''});
-      publishTyping(socketRef.current, chatroomId, myId, false);
+      console.log('Message sent:', response.data);
+      if (response?.ok && response.data) {
+        const msg = response.data;
+        setMessages(prev => [...prev, msg]);
+        socketRef.current.emit('chat_message', {
+          conversation_id: params?.conversationId,
+          message: msg,
+        });
+        setMessage('');
+      }
     },
   });
 
   // Notify user in/out
   const {mutateAsync} = useMutation({
     mutationFn: () => API.post(WhenUserInAndOutChatUrl, {user_id: id}),
-    onSuccess: ({ok, data}) => {
-      console.log('User in/out updated:', data);
-    },
+    onSuccess: ({ok, data}) => console.log('User in/out updated:', data),
   });
 
-  // Join room and set up socket listeners
+  // Socket listeners
   useEffect(() => {
-    if (id && myId) {
-      const roomId = mergeIds(id, myId);
-      // updateState({chatroomId: roomId});
-
-      joinRoom(
-        socketRef.current,
-        roomId,
-        myId,
-        msg => updateState({messages: [...messages, {...msg, seen: false}]}),
-        typing => updateState({isTyping: typing}),
-        messageId => {
-          updateState({
-            lastSeenMessageId: messageId,
-            messages: messages.map(msg =>
-              msg.id === messageId ? {...msg, seen: true} : msg,
-            ),
-          });
-        },
+    if (params?.conversationId && socketRef.current) {
+      console.log(
+        'Setting up socket listeners for conversation:',
+        params?.conversationId,
       );
+      socketRef.current.emit('join', userData?.id); // Join the room based on conversation
+      console.log('Socket is connected, setting up event listeners');
+      socketRef.current.on('newMessage', data => {
+        console.log('New message received:', data);
+        if (
+          data.conversation_id === params?.conversationId &&
+          data.message.sender !== myId
+        ) {
+          setMessages(prev =>
+            sortChatsByCreatedAt([...prev, data.message], 'asc'),
+          );
+          dispatch(loadingFalse());
+          markMessagesAsSeen();
+          dispatch(loadingFalse());
+        }
+      });
 
-      fetchMessages(1); // Load initial messages
-      markMessagesAsSeen(); // Mark messages as seen on entry
+      socketRef.current.on('userTyping', data => {
+        console.log('Typing event received:', data);
+        if (data.sender_id === id) {
+          setIsTyping(data.isTyping); // Update based on backend payload
+        }
+      });
 
+      socketRef.current.on('messageSeen', data => {
+        console.log('Message seen event:', data);
+        if (data.conversation_id === params?.conversationId) {
+          // Seen state can be updated if backend provides last_read_message_id
+        }
+      });
       return () => {
-        leaveRoom(socketRef.current, roomId, myId);
+        socketRef.current.off('newMessage');
+        socketRef.current.off('userTyping');
+        socketRef.current.off('messageSeen');
+        socketRef.current.emit('leave', userData?.id); // Leave the room on cleanup
       };
     }
-  }, [id, myId]);
+  }, [params?.conversationId, myId, id]);
+
+  if (socketRef.current) {
+  }
 
   // Handle typing
-  const typingTimeoutRef = useRef(null);
-  const handleTyping = text => {
-    updateState({message: text});
+  const handleTyping = async text => {
+    setMessage(text);
     if (text.trim()) {
-      publishTyping(socketRef.current, chatroomId, myId, true);
+      await axios
+        .post(`${socketURL}publish`, {
+          type: 'typing.start',
+          payload: {
+            sender_id: parseInt(myId, 10),
+            receiver_id: parseInt(id, 10),
+          },
+          headers: {
+            Authorization: `Bearer ${token}`, // your token here
+            'Content-Type': 'application/json', // optional but good practice
+          },
+        })
+        .catch(err => console.error('Publish error:', err));
       clearTimeout(typingTimeoutRef.current);
-      typingTimeoutRef.current = setTimeout(() => {
-        publishTyping(socketRef.current, chatroomId, myId, false);
+      typingTimeoutRef.current = setTimeout(async () => {
+        await axios
+          .post(`${socketURL}publish`, {
+            type: 'typing.stop',
+            payload: {
+              sender_id: parseInt(myId, 10),
+              receiver_id: parseInt(id, 10),
+            },
+            headers: {
+              Authorization: `Bearer ${token}`, // your token here
+              'Content-Type': 'application/json', // optional but good practice
+            },
+          })
+          .catch(err => console.error('Publish error:', err));
       }, 2000);
-    } else {
-      publishTyping(socketRef.current, chatroomId, myId, false);
+    } else if (!text) {
+      await axios
+        .post(`${socketURL}publish`, {
+          type: 'typing.stop',
+          payload: {
+            sender_id: parseInt(myId, 10),
+            receiver_id: parseInt(id, 10),
+          },
+          headers: {
+            Authorization: `Bearer ${token}`, // your token here
+            'Content-Type': 'application/json', // optional but good practice
+          },
+        })
+        .catch(err => console.error('Publish error:', err));
     }
   };
 
-  // Send text message
+  // Send message
   const sendMessage = () => {
-    if (message.trim() && chatroomId && myId) {
-      sendMessageMutation({
-        receiver_id: id,
-        text: message,
-      });
+    if (message.trim() && params?.conversationId) {
+      sendMessageMutation({text: message, images});
     }
   };
 
-  // Send media messages
-  const handlePickAndSendMedia = () => {
-    if (chatroomId && myId) {
-      pickAndSendMedia(socketRef.current, chatroomId, myId, msg =>
-        updateState({messages: [...messages, msg]}),
+  const pickAndSendMediaSocket = async isCamera => {
+    const imgData = isCamera
+      ? await uploadFromCamera(true)
+      : await uploadFromGalary(true, false);
+    sendMessageMutation({text: '', images: imgData});
+  };
+
+  // Pick and send media
+  const pickAndSendMedia = () => {
+    if (params?.conversationId && myId) {
+      pickAndSendMediaSocket(
+        socketRef.current,
+        params?.conversationId,
+        myId,
+        msg => {
+          setMessages(prev => [...prev, msg]);
+        },
       );
     }
   };
@@ -301,8 +300,10 @@ const useChatScreen = ({navigate}, {params}) => {
   const scrollViewRef = useRef();
   const handleScroll = e => {
     const {contentOffset} = e.nativeEvent;
-    if (contentOffset.y <= 0 && hasMore && !isLoadingMessages) {
-      fetchMessages(page + 1);
+    if (contentOffset.y <= 0 && !isLoading) {
+      fetchMessages(2).then(({messages: newMessages, hasMore}) => {
+        if (hasMore) setMessages(prev => [...newMessages, ...prev]);
+      });
     }
   };
 
@@ -312,34 +313,66 @@ const useChatScreen = ({navigate}, {params}) => {
     }
   };
 
-  useLayoutEffect(() => {
-    if (page === 1) {
-      handleAutoScroll();
-    }
-  }, [messages]);
-
   useEffect(() => {
+    if (params?.conversationId) {
+      markMessagesAsSeen();
+    }
     mutateAsync();
-    return () => {
-      mutateAsync();
-    };
-  }, []);
+    return () => mutateAsync();
+  }, [params?.conversationId]);
+
+  console.log('lkdjbvlksbdvklbsdklvbsdklvbksdlbvlksdbvskdbvslkd', messages);
 
   return {
     sendMessage,
-    message,
-    allMessages: messages,
-    userData: userData?.userData,
-    receiverData: otherUserData?.data?.other_user,
+    setMessage: handleTyping,
     handleAutoScroll,
     handleScroll,
-    isLoading: isLoadingMessages,
-    id,
+    isLoading,
     scrollViewRef,
-    setMessage: handleTyping,
-    pickAndSendMedia: handlePickAndSendMedia,
-    isTyping,
-    lastSeenMessageId: otherUserData?.data?.last_read_message_id,
+    message,
+    allMessages: messages, // Return current messages state for FlatList
+    userData,
+    receiverData,
+    pickAndSendMedia: () => {
+      Alert.alert(
+        'Pick to choose image',
+        '',
+        [
+          {
+            text: 'Camera',
+            onPress: () => {
+              pickAndSendMediaSocket(true);
+            },
+          },
+          {
+            text: 'Gallery', // Just a dismissal button
+            onPress: async () => {
+              pickAndSendMediaSocket();
+            },
+          },
+          {
+            text: 'Cancel', // Just a dismissal button
+            style: 'destructive',
+            onPress: async () => {
+              // console.log(
+              //   'slkdbvklsdbvklsdbklvbskdlv',
+              //   value?.length,
+              // );
+              // const imgData = await uploadFromGalary(
+              //   true,
+              //   false,
+              //   Math.max(0, 5 - (value?.length ?? 0)),
+              // );
+              // onChange([...(value ?? []), ...imgData]);
+            },
+          },
+        ],
+        {cancelable: true},
+      );
+    },
+    isTyping, // Use local isTyping state updated by socket
+    lastSeenMessageId: otherUserData?.data?.last_read_message_id || null,
     lastSeen: formatLastSeen(otherUserData?.data?.last_seen_timestamp),
   };
 };

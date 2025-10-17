@@ -36,6 +36,7 @@ const SearchScreen = ({navigation}) => {
         rightIconImg={searchIcon}
         isSearch
         searchVal
+        isBack
         setSearchVal={setSearchVal}
         onRightPress={() => {
           if (!isSearch) afterSearch();

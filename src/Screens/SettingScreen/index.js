@@ -182,7 +182,7 @@ const SettingScreen = ({navigation}) => {
         leftIcon: friendList,
         rightIcon: arrRight,
         onPress: () =>
-          NavigationService.navigate('FriendLists', {
+          NavigationService.navigate('SearchScreen', {
             url: getMyFriendsUrl,
             key: 'myFriends',
           }),

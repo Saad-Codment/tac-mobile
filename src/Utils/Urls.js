@@ -1,19 +1,23 @@
+import socket from '../Services/SocketServices';
+
 const getCredentials = () => {
   if (__DEV__)
     return {
       baseURL: 'https://theappforcowboys.com/backend-staging/api',
       imageURL: 'https://tac-staging.s3.us-east-2.amazonaws.com/',
+      socketURL: 'https://messaging.theappforcowboys.com/',
     };
   else {
     console.log = () => {};
     return {
       baseURL: 'https://theappforcowboys.com/tac-backend/api',
       imageURL: 'https://tac-app-bucket.s3.us-east-2.amazonaws.com/',
+      socketURL: 'https://messaging.theappforcowboys.com/',
     };
   }
 };
 
-export const {baseURL, imageURL} = getCredentials();
+export const {baseURL, imageURL, socketURL} = getCredentials();
 
 export const apendUrl = url => {
   return baseURL + url;
@@ -75,7 +79,13 @@ export const postCommentReplyUrl = '/v1/post-comments/add-reply';
 
 export const postCommentLikeUrl = '/v1/post-comments/like?comment_id=';
 
-export const sendMsgUrl = 'v1/chat/send';
+export const sendMsgUrl = '/v1/chat/send';
+
+export const globalSearchUrl = '/v1/global-search/all?keyword=';
+
+export const globalSearchUsersUrl = '/v1/global-search/users?keyword=';
+export const globalSearchPostsUrl = '/v1/global-search/posts?keyword=';
+export const globalSearchEventsUrl = '/v1/global-search/events?keyword=';
 
 export const getUserProfileUrl = '/user/get/';
 export const getUserPostsUrl = '/user/posts-and-events/';

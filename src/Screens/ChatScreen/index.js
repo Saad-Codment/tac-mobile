@@ -7,7 +7,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
 } from 'react-native';
-import React, {memo, useRef} from 'react';
+import React, {memo, useCallback, useRef} from 'react';
 import {Colors} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
 import {Touchable} from '../../Components/Touchable';
@@ -40,85 +40,98 @@ const ChatScreen = ({navigation, route}) => {
     lastSeen,
   } = useChatScreen(navigation, route);
 
-  const renderItem = ({item, index}) => {
-    const timestamp = item.created_at ? new Date(item.created_at) : new Date();
-    const formattedTime = timestamp.toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-    const isSender = item.sender_id === userData?.id;
+  console.log(
+    'lskvklsbdvblksdbvkjsdbkjvbsdkjvbkjsdbvbsdjbvkjsbdjkbvkjjsbd',
+    allMessages[9],
+  );
 
-    console.log('itemmsssgggg', item?.id, lastSeenMessageId);
+  const renderItem = useCallback(
+    ({item, index}) => {
+      const timestamp = item.created_at
+        ? new Date(item.created_at)
+        : new Date();
+      const formattedTime = timestamp.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      const isSender = item.sender_id === userData?.id;
 
-    return (
-      <View
-        style={{
-          ...styles.senderView(isSender),
-          justifyContent: isSender ? 'flex-end' : 'flex-start',
-        }}>
-        {!isSender && (
-          <TextComponent
-            text={formattedTime}
-            fade={true}
-            styles={{fontSize: hp('1.2'), marginLeft: wp('2')}}
-          />
-        )}
-        <View style={styles.senderText(isSender, item.type)}>
-          {item.type === 'text' ? (
+      console.log('itemmsssgggg', item?.sender?.id, lastSeenMessageId);
+
+      return (
+        <View
+          style={{
+            ...styles.senderView(isSender),
+            justifyContent: isSender ? 'flex-end' : 'flex-start',
+          }}>
+          {!isSender && (
             <TextComponent
-              text={item.text}
-              styles={{
-                fontWeight: '300',
-                fontSize: hp('1.5'),
-                color: isSender ? 'white' : 'black',
-              }}
+              text={formattedTime}
+              fade={true}
+              styles={{fontSize: hp('1.2'), marginLeft: wp('2')}}
             />
-          ) : item.type === 'image' ? (
-            <Image
-              source={{uri: `data:${item.mime};base64,${item.content}`}}
-              style={styles.mediaStyle}
-              resizeMode="contain"
-            />
-          ) : item.type === 'video' ? (
-            <Video
-              source={{uri: `data:${item.mime};base64,${item.content}`}}
-              style={styles.mediaStyle}
-              controls={true}
-              resizeMode="contain"
-            />
-          ) : null}
+          )}
+          <View style={styles.senderText(isSender, item.type)}>
+            {item.type === 'text' ? (
+              <TextComponent
+                text={item.text}
+                styles={{
+                  fontWeight: '300',
+                  fontSize: hp('1.5'),
+                  color: isSender ? 'white' : 'black',
+                }}
+              />
+            ) : item.type == 'image' ? (
+              item?.metadata?.files.map(res => {
+                return (
+                  <Image
+                    source={{uri: imageUrl(res)}}
+                    style={styles.mediaStyle}
+                    resizeMode="contain"
+                  />
+                );
+              })
+            ) : item.type === 'video' ? (
+              <Video
+                source={{uri: `data:${item.mime};base64,${item.content}`}}
+                style={styles.mediaStyle}
+                controls={true}
+                resizeMode="contain"
+              />
+            ) : null}
+            {isSender && index === allMessages.length - 1 && (
+              <TextComponent
+                text={item?.id == lastSeenMessageId ? '✓✓' : '✓'}
+                styles={{
+                  fontSize: hp('1.2'),
+                  color:
+                    item?.id == lastSeenMessageId
+                      ? Colors.blue
+                      : Colors.grayFaded,
+                  marginTop: hp('0.5'),
+                  alignSelf: 'flex-end',
+                }}
+              />
+            )}
+          </View>
           {isSender && (
             <TextComponent
-              text={item?.id == lastSeenMessageId ? '✓✓' : '✓'}
-              styles={{
-                fontSize: hp('1.2'),
-                color:
-                  item?.id == lastSeenMessageId
-                    ? Colors.blue
-                    : Colors.grayFaded,
-                marginTop: hp('0.5'),
-                alignSelf: 'flex-end',
-              }}
+              text={formattedTime}
+              fade={true}
+              styles={{fontSize: hp('1.2'), marginRight: wp('2')}}
             />
           )}
         </View>
-        {isSender && (
-          <TextComponent
-            text={formattedTime}
-            fade={true}
-            styles={{fontSize: hp('1.2'), marginRight: wp('2')}}
-          />
-        )}
-      </View>
-    );
-  };
+      );
+    },
+    [allMessages, lastSeenMessageId, userData],
+  );
 
   return (
     <KeyboardAvoidingView
       style={{flex: 1, backgroundColor: Colors.themeBlack}}
       behavior={Platform.OS === 'ios' ? 'padding' : null}
       keyboardVerticalOffset={Platform.OS === 'ios' ? hp('0') : 0}>
-      {isLoading && <Overlay />}
       <View style={styles.headerView}>
         <View style={styles.HeaderLeft}>
           <Touchable
@@ -151,17 +164,16 @@ const ChatScreen = ({navigation, route}) => {
               }
               styles={{color: 'white', fontWeight: 'bold'}}
             />
-            <TextComponent
-              text={
-                isTyping
-                  ? `${receiverData?.first_name} is typing...`
-                  : `Last seen: ${lastSeen}`
-              }
-              styles={{
-                color: isTyping ? 'green' : 'gray',
-                fontSize: hp('1.4'),
-              }}
-            />
+            {isTyping && (
+              <TextComponent
+                text={`${receiverData?.first_name} is typing...`}
+                styles={{
+                  color: isTyping ? 'green' : 'gray',
+                  fontSize: hp('1.4'),
+                }}
+                fontFamily={'500'}
+              />
+            )}
           </View>
         </Touchable>
         <View style={styles.HeaderRight} />

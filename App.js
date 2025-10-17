@@ -39,8 +39,6 @@ const App = () => {
   const {image, modalType} = getState('modalState');
   const isFetching = useIsFetching();
 
-  console.log('load', isloading);
-
   useEffect(() => {
     if (isLogin) {
       Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
@@ -193,6 +191,8 @@ const App = () => {
       {isloading &&
         Boolean(getNameFunc?.getCurrentRoute()?.name != 'AllEventsScreen') &&
         Boolean(getNameFunc?.getCurrentRoute()?.name != 'HomeScreen') &&
+        Boolean(getNameFunc?.getCurrentRoute()?.name != 'ChatScreen') &&
+        Boolean(getNameFunc?.getCurrentRoute()?.name != 'GlobalSearchScreen') &&
         Boolean(
           getNameFunc?.getCurrentRoute()?.name != 'FriendProfileScreen',
         ) && <Overlay />}

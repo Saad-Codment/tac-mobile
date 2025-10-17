@@ -30,6 +30,7 @@ import {
   circleCalFilled,
   chatDotFill,
   chatDotTransparent,
+  searchIcon,
 } from '../Assets';
 import {types} from '../Redux/types';
 import useReduxStore from '../Hooks/UseReduxStore';
@@ -114,9 +115,9 @@ function MybottomTabs() {
         component={Screens.HomeScreen}
       />
       <Tab.Screen
-        name="HomeScreen1"
-        options={tabarComponent(groupBlack, groupBlack)}
-        component={Screens.SearchScreen}
+        name="GlobalSearchScreen"
+        options={tabarComponent(searchIcon, searchIcon)}
+        component={Screens.GlobalSearchScreen}
       />
       <Tab.Screen
         name="MyEventScreen"

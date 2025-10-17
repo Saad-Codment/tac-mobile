@@ -206,7 +206,11 @@ const HeaderComp = ({userData, myUserData}) => {
                   isYellowTheme={Boolean(userData?.friends == 1)}
                   isDisable={Boolean(userData?.friends == 0)}
                   onPress={() =>
-                    NavigationService.navigate('ChatScreen', userData)
+                    NavigationService.navigate('ChatScreen', {
+                      // id: item?.other_user?.id || item?.id, // Fallback to item.id if other_user.id is missing
+                      userId: userData?.id,
+                      // conversationId: item?.conversation_id,
+                    })
                   }
                 />
               )}
