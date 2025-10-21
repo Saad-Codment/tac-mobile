@@ -126,21 +126,21 @@ const MyProfileScreen = ({navigation, route}) => {
               index={index}
               mainViewStyle={{width: wp('95')}}
               upperImgStyle={{width: wp('95')}}
-              functionToUpdateLike={functionToUpdateLike}
               openBottomSheet={id => setModal(id)}
-              functionToDelete={functionToDelete}
               refetch={refetch}
+              functionToDelete={functionToDelete}
+              functionToUpdateLike={functionToUpdateLike}
               functionToUpdatePostOrEvent={newItem =>
                 functionToUpdatePostOrEvent(index, newItem)
+              }
+              functionToUpdateComment={(i, isComment) =>
+                functionToUpdateComment(index, isComment)
               }
               setCommentModal={id => {
                 setModalType(false);
                 setStateForModalData({id, index});
                 setCommentModal(true);
               }}
-              functionToUpdateComment={(i, isComment) =>
-                functionToUpdateComment(index, isComment)
-              }
               // likePost={likePost}
             />
           )}

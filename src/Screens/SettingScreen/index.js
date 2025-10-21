@@ -52,6 +52,10 @@ import {
   privacyWithOutBg,
   termNoBg,
   blockUser,
+  phone,
+  horseShoe,
+  callEmpty,
+  manageSub,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
@@ -87,6 +91,7 @@ import {
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {types} from '../../Redux/types';
 import {Touchable} from '../../Components/Touchable';
+import Purchases from 'react-native-purchases';
 
 const SettingScreen = ({navigation}) => {
   const {
@@ -147,6 +152,30 @@ const SettingScreen = ({navigation}) => {
         onPress: () => NavigationService.navigate('ChangePasswordScreen'),
       },
       {
+        title: 'Change Number',
+        leftIcon: callEmpty,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('NumberEditScreen'),
+      },
+      {
+        title: 'Are you willing to have horses for others?',
+        leftIcon: horseShoe,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('UpdateHorseScreen'),
+        rightChilderView: (
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TextComponent text={'Edit'} styles={styles.statusText} fade />
+            <Image
+              source={arrRight}
+              resizeMode="contain"
+              style={styles.rightImgStyle}
+            />
+          </View>
+        ),
+      },
+      {
         title: 'Blocked User',
         leftIcon: blockUser,
         rightIcon: arrRight,
@@ -164,6 +193,14 @@ const SettingScreen = ({navigation}) => {
         rightIcon: arrRight,
         rightIconColor: Colors.black,
         onPress: () => NavigationService.navigate('SubscriptionScreen', true),
+      },
+      {
+        title: `Manage Subscriptions`,
+        leftIcon: manageSub,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () =>
+          NavigationService.navigate('SubscriptionInfoScreen', true),
       },
       {
         title: 'Notifications',

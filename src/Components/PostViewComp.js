@@ -321,6 +321,7 @@ const PostViewComp = ({
           onPress={async () => {
             functionToUpdateLike(index);
             await addLikeOnPost.mutateAsync(item?.id);
+            if (refetch) refetch();
             if (refetechKeys)
               refetechKeys.map(res => queryClient.invalidateQueries([res]));
           }}>

@@ -99,6 +99,9 @@ export const searchScreenDataUrl = '/search-screen-data';
 export const searchDataUrl = '/user/search?search=';
 export const getReasonsUrl = '/reports/fetch-reasons';
 
+export const getTransportUrl = '/setup/transports';
+export const updateTransportUrl = '/transport-update';
+
 export const reportEventUrl = '/reports/report-event';
 export const reportPostUrl = '/reports/report-post';
 export const reportPostCommentUrl = '/reports/report-post-comment';

@@ -15,6 +15,7 @@ export const MultiSelectButton = ({
   textStyle,
   mainViewStyle,
   selectedBgColor,
+  isBlack,
 }) => {
   const [dummy, setDummy] = useState(0);
 

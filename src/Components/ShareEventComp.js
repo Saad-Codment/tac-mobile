@@ -158,6 +158,10 @@ const ShareEventComp = ({
       ],
     );
   };
+  console.log(
+    'sdvjksdbjkvbsdkjbvjsdbvbsdjkvbjksdbvjkdsbjvdbsjkvbkdsbvjkbdsk',
+    item,
+  );
 
   return (
     <View
@@ -250,7 +254,7 @@ const ShareEventComp = ({
           }>
           <Pressable onPress={onImagePress}>
             <CircleImage
-              size={0.12}
+              size={0.07}
               image={
                 Boolean(item?.user_image ?? item?.profile_image)
                   ? imageUrl(item?.user_image ?? item?.profile_image)
@@ -492,6 +496,7 @@ const ShareEventComp = ({
             onPress={async () => {
               functionToUpdateLike(index);
               await likeAndDisLikeEvent.mutateAsync(item?.id);
+              if (refetch) refetch();
               if (refetechKeys)
                 refetechKeys.map(res => queryClient.invalidateQueries([res]));
             }}>

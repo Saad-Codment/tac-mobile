@@ -80,7 +80,7 @@ const CommentComp = ({
             <Pressable onPress={onImagePress}>
               <CircleImage
                 image={imageUrl(res?.user?.profile_image)}
-                size={0.11}
+                size={0.07}
                 uri
               />
             </Pressable>

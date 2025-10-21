@@ -25,7 +25,7 @@ const useGloabalSearchScreen = () => {
   };
 
   const {data, refetch} = useQuery({
-    queryKey: ['globalSearchUrl'],
+    queryKey: ['globalSearchUrlForAllData'],
     queryFn: async () => API.get(globalSearchUrl + searchVal),
     enabled: false,
     cacheTime: 0, // 👈 Don't cache the data
@@ -43,9 +43,6 @@ const useGloabalSearchScreen = () => {
   } = useInfiniteQuery({
     queryKey: [selectUrl[selectedVal?.id]],
     queryFn: async ({pageParam = 1}) => {
-      setTimeout(() => {
-        dispatch(loadingFalse());
-      }, 100);
       return API.get(
         `${
           selectUrl[selectedVal?.id]

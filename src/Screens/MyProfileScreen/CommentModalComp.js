@@ -386,7 +386,7 @@ styles = StyleSheet.create({
     elevation: 20,
     width: wp('100'),
     // paddingHorizontal: wp('5'),
-    height: hp('90'),
+    height: hp('70'),
     alignSelf: 'center',
     marginBottom: hp('-2.5'),
 
@@ -601,7 +601,7 @@ styles = StyleSheet.create({
     // marginVertical: hp('2'),
     overflow: 'hidden',
     borderRadius: 10,
-    marginBottom: Platform.OS == 'ios' ? hp('2') : hp('0'), // justifyContent: 'center',
+    marginBottom: Platform.OS == 'ios' ? hp('-3') : hp('0'), // justifyContent: 'center',
     backgroundColor: Colors.themeBlack,
     // borderBottomWidth: 0,
     alignSelf: 'center',

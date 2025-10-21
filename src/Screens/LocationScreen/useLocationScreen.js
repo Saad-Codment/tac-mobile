@@ -11,6 +11,7 @@ import Geolocationios from '@react-native-community/geolocation';
 import {updateCoordinatesUrl} from '../../Utils/Urls';
 import {fetchPostWithToken} from '../../Services/AuthServices';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {formatAddress} from '../../Services/GlobalFunctions';
 
 const useLocationScreen = ({navigate, addListener, params}) => {
   // GET LOCATION DATA  IN PARAM this function  getLocationFunction
@@ -199,9 +200,12 @@ const useLocationScreen = ({navigate, addListener, params}) => {
         return 'Unknown Location';
       }
 
-      const locationName =
-        data.results[0]?.formatted_address || 'Unknown Location';
-      console.log('Location Name:', locationName);
+      const locationName = formatAddress(data.results[0]) || 'Unknown Location';
+      console.log(
+        'Location Namesdfsdfd:',
+        formatAddress(data.results[0]),
+        data.results[0],
+      );
       return locationName;
     } catch (error) {
       console.error('Error fetching location details:', error);

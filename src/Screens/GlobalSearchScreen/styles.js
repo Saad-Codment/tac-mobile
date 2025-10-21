@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   searchInputWrapper: {
     width: wp('95'),
     alignSelf: 'center',
-    height: hp('5'),
+    height: hp('4'),
     borderRadius: 10,
     marginVertical: hp('1'),
     flexDirection: 'row',
@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
     backgroundColor: Colors.bgGray,
   },
   searchIcon: {
-    width: wp('5'),
+    width: wp('3'),
     height: hp('2'),
     tintColor: Colors.textGray,
   },
@@ -32,6 +32,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     marginLeft: wp('2'),
     color: 'black',
+    fontSize: hp('1.3'),
   },
   mainView: {
     flexDirection: 'row',
@@ -53,7 +54,7 @@ export const styles = StyleSheet.create({
   },
   titleText: {
     fontWeight: '600',
-    fontSize: hp('1.3'),
+    fontSize: hp('1.5'),
   },
   seeAllText: {
     marginRight: wp('2'),
@@ -63,7 +64,7 @@ export const styles = StyleSheet.create({
     // paddingBottom: hp('15'),
     flexGrow: 1,
     alignSelf: 'center',
-    paddingTop: hp('1'),
+    // paddingTop: hp('1'),
     backgroundColor: 'transparent',
   },
   dataNotFoundContainer: {

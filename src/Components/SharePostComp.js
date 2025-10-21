@@ -307,6 +307,7 @@ const SharePostComp = ({
           <CircleImage
             image={imageUrl(item?.profile_image ?? item?.user_image)}
             uri
+            size={0.07}
           />
           <View style={styles.userDetails}>
             <TextComponent
@@ -358,6 +359,7 @@ const SharePostComp = ({
             onPress={async () => {
               functionToUpdateLike(index);
               await addLikeOnPost.mutateAsync(item?.id);
+              if (refetch) refetch();
               if (refetechKeys)
                 refetechKeys.map(res => queryClient.invalidateQueries([res]));
             }}>

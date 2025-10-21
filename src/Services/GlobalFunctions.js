@@ -1291,6 +1291,63 @@ function sortChatsByCreatedAt(chats, order) {
   });
 }
 
+function formatAddress(addressData) {
+  // Extract address components
+  const components = addressData.address_components;
+
+  // Initialize variables for different address parts
+  let state = '';
+  let city = '';
+  let streetNumber = '';
+  let streetName = '';
+  let neighborhood = '';
+  let county = '';
+  let postalCode = '';
+
+  // Categorize components based on their types
+  components.forEach(component => {
+    if (component.types.includes('administrative_area_level_1')) {
+      state = component.long_name;
+    } else if (component.types.includes('locality')) {
+      city = component.long_name;
+    } else if (component.types.includes('street_number')) {
+      streetNumber = component.long_name;
+    } else if (component.types.includes('route')) {
+      streetName = component.long_name;
+    } else if (
+      component.types.includes('neighborhood') ||
+      component.types.includes('sublocality')
+    ) {
+      neighborhood = component.long_name;
+    } else if (component.types.includes('administrative_area_level_2')) {
+      county = component.long_name;
+    } else if (component.types.includes('postal_code')) {
+      postalCode = component.long_name;
+    }
+  });
+
+  // Combine street address (number + name)
+  const streetAddress = [streetNumber, streetName]
+    .filter(part => part !== '')
+    .join(' ');
+
+  // Collect other address components (excluding state, city, and country)
+  const otherComponents = [
+    streetAddress,
+    neighborhood,
+    county,
+    postalCode,
+  ].filter(part => part !== '');
+
+  // Start with state and city, then append other components
+  const addressParts = [state, city, ...otherComponents].filter(
+    part => part !== '',
+  );
+
+  // Join parts with a comma and space for readability
+  return addressParts.join(', ');
+}
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -1350,4 +1407,5 @@ export {
   getFullLocalDate,
   convertUTCToLocalTimeForComment,
   sortChatsByCreatedAt,
+  formatAddress,
 };

@@ -5,7 +5,7 @@ import {Colors} from '../../Theme/Variables';
 export const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: Colors.white || '#1C2526', // Fallback dark gray
+    // backgroundColor: Colors.white || '#1C2526', // Fallback dark gray
   },
   listMain: {
     flex: 1,
@@ -85,28 +85,20 @@ export const styles = StyleSheet.create({
   },
   backRightBtnRight: {
     backgroundColor: '#EA4335',
-    height: hp('7'),
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 12,
+    // flexGrow: 1,
+    height: Platform.OS == 'ios' ? hp('8.9') : hp('9.9'),
+    // borderTopRightRadius: 15,
+    // borderBottomRightRadius: 15,
+    alignItems: 'flex-end',
+    // paddingTop: hp('2'),
+    paddingRight: wp('3'),
+    borderRadius: 15,
     marginVertical: hp('0.5'),
-    marginHorizontal: wp('2'),
-    paddingHorizontal: wp('4'),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
+    // marginHorizontal: wp('3.5'),
+    justifyContent: 'center',
   },
   trashIcon: {
-    width: wp('6'),
-    height: hp('3'),
-    tintColor: Colors.white || '#FFFFFF',
+    width: wp('4'),
+    height: hp('4'),
   },
 });

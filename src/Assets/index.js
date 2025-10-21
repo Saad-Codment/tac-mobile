@@ -78,6 +78,10 @@ export {default as unfilledCalender} from './Icons/unfilledCalender.png';
 export {default as groupBlack} from './Icons/groupBlack.png';
 export {default as circleCalFilled} from './Icons/circleCalFilled.png';
 export {default as userEditWhite} from './Icons/user-edit.png';
+export {default as horseShoe} from './Icons/horseShoe.png';
+export {default as callEmpty} from './Icons/callEmpty.png';
+export {default as bigHorseNail} from './Icons/bigHorseNail.png';
+export {default as manageSub} from './Icons/manageSub.png';
 
 export {default as blockUser} from './Icons/blockUser.png';
 export {default as replyIcon} from './Icons/replyIcon.png';

@@ -489,3 +489,103 @@ export const allSubID = {
   monthly_12062025: 'Monthly',
   yearly_12062025: 'Yearly',
 };
+
+export const subscriptionMessages = {
+  app_store: {
+    ios: `
+Your subscription is managed through the Apple App Store.
+
+To update, change, or cancel your TAC subscription:
+1. Open the **Settings** app on your iPhone or iPad.
+2. Tap your **Apple ID name** at the top.
+3. Select **Subscriptions**.
+4. Find **TAC – The App for Cowboys** in the list.
+5. Choose **Cancel Subscription** or select another plan.
+
+Apple processes all payments and cancellations securely. TAC cannot modify or cancel App Store subscriptions directly.
+    `,
+    android: `
+This subscription was purchased on the App Store.
+
+To manage it:
+1. Open the **Settings** app on your iPhone or iPad.
+2. Tap your **Apple ID name** at the top.
+3. Select **Subscriptions**.
+4. Find **TAC – The App for Cowboys**.
+5. Choose **Cancel Subscription** or select another plan.
+
+Apple securely handles all billing. TAC cannot modify or cancel App Store subscriptions directly.
+    `,
+    web: `
+This subscription was purchased on the App Store.
+
+To manage your TAC subscription:
+1. Open the **Settings** app on your iPhone or iPad.
+2. Tap your **Apple ID name**.
+3. Select **Subscriptions**.
+4. Locate **TAC – The App for Cowboys**.
+5. Tap **Cancel Subscription** or choose another plan.
+
+Apple manages all payments and renewals securely.
+    `,
+  },
+
+  play_store: {
+    android: `
+Your subscription is managed through Google Play.
+
+To manage, update, or cancel your TAC subscription:
+1. Open the **Google Play Store** app on your Android device.
+2. Tap your **profile picture** in the top right corner.
+3. Select **Payments and subscriptions → Subscriptions**.
+4. Find **TAC – The App for Cowboys**.
+5. Tap **Cancel subscription** or change your plan.
+
+Google Play handles all billing and renewals. TAC cannot modify or cancel subscriptions directly.
+    `,
+    ios: `
+This subscription was purchased on Google Play.
+
+To manage or cancel it:
+1. Open the **Google Play Store** app on your Android device.
+2. Tap your **profile picture** in the top right corner.
+3. Select **Payments and subscriptions → Subscriptions**.
+4. Find **TAC – The App for Cowboys**.
+5. Tap **Cancel subscription** or update your plan.
+
+Google Play handles all payments and renewals. TAC cannot modify or cancel Google Play subscriptions directly.
+    `,
+    web: `
+This subscription was purchased through Google Play.
+
+To manage your TAC subscription:
+1. Open the **Google Play Store** app on your Android device.
+2. Tap your **profile picture** in the top right corner.
+3. Select **Payments and subscriptions → Subscriptions**.
+4. Find **TAC – The App for Cowboys**.
+5. Tap **Cancel subscription** or modify your plan.
+
+Google Play manages all billing and renewals securely.
+    `,
+  },
+
+  stripe: {
+    any: `
+Your subscription is managed through the TAC website.
+
+To manage or cancel your plan:
+1. Visit **theappforcowboys.com**.
+2. Log in with the same account used in the app.
+3. Navigate to **Settings → Billing**.
+4. Click **Manage Subscription** to view, upgrade, or cancel your plan.
+
+Website subscriptions are handled securely through TAC’s billing partner (Stripe). Your access remains active until the plan expires.
+    `,
+  },
+
+  none: `
+You don’t currently have an active TAC subscription.
+
+To unlock all premium features — including event creation, posting, and connecting with friends — please subscribe to TAC Premium from your app store or the TAC website.
+  `,
+};

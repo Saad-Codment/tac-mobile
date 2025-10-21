@@ -1,4 +1,11 @@
-import {View, Text, StyleSheet, Pressable, Platform} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Platform,
+  Dimensions,
+} from 'react-native';
 import React from 'react';
 import {hp, wp} from '../Config/responsive';
 import {CircleImage} from './CircleImage';
@@ -120,13 +127,15 @@ const styles = StyleSheet.create({
   },
   unreadBadge: {
     backgroundColor: Colors.primaryColor || '#6200EE', // Fallback purple
-    borderRadius: 20,
-    minWidth: wp('6'),
-    height: hp('3'),
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: wp('1.5'),
-    marginLeft: wp('2'),
+    marginLeft: wp('8'),
+    borderRadius: Math.round(
+      Dimensions.get('window').width + Dimensions.get('window').height,
+    ),
+    width: Dimensions.get('window').width * 0.05,
+    height: Dimensions.get('window').width * 0.05,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -141,7 +150,7 @@ const styles = StyleSheet.create({
   },
   unreadText: {
     color: Colors.white || '#FFFFFF',
-    fontSize: hp('1.6'),
+    fontSize: hp('1.2'),
     fontWeight: 'bold',
   },
   timeText: {

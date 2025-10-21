@@ -86,6 +86,27 @@ function MainNavigator() {
               component={Screens.SubscribeScreen}
             />
             <Stack.Screen
+              name="NumberEditScreen"
+              component={Screens.NumberEditScreen}
+            />
+            <Stack.Screen
+              name="SubscriptionInfoScreen"
+              component={Screens.SubscriptionInfoScreen}
+              options={{
+                presentation: 'modal', // 👈 Makes it open as a modal
+                animation: 'slide_from_bottom', // Optional animation style
+                headerShown: false, // Optional, hides the header
+              }}
+            />
+            <Stack.Screen
+              name="UpdateHorseScreen"
+              component={Screens.UpdateHorseScreen}
+            />
+            <Stack.Screen
+              name="VerficationScreen"
+              component={Screens.VerficationScreen}
+            />
+            <Stack.Screen
               name="ListViewScreen"
               component={Screens.ListViewScreen}
             />

@@ -35,5 +35,7 @@ export {default as ContactUsScreen} from './ContactUsScreen';
 export {default as BlockedUserScreen} from './BlockedUserScreen';
 export {default as PerformancesScreen} from './PerformancesScreen';
 export {default as GlobalSearchScreen} from './GlobalSearchScreen';
+export {default as UpdateHorseScreen} from './UpdateHorseScreen';
+export {default as SubscriptionInfoScreen} from './SubscriptionInfoScreen';
 
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

@@ -22,7 +22,7 @@ import RNFS from 'react-native-fs';
 
 const API = create({
   baseURL,
-  timeout: 15000,
+  // timeout: 15000,
   //   timeoutErrorMessage: 'Please try Again...',
 });
 

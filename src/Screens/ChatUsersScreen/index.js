@@ -74,16 +74,15 @@ const ChatUsersScreen = ({navigation}) => {
       style={{
         width: '98%',
         alignSelf: 'center',
-        justifyContent: 'flex-end',
-        // height: hp('7'),
+        justifyContent: 'center', // Center the trash icon vertically
       }}>
       <TouchableOpacity
-        style={styles.backRightBtnRight}
-        onPress={() =>
-          deleteEntireChat(
-            mergeIds(item?.other_user?.id || item?.id, userData?.id),
-          )
-        }>
+        style={[
+          styles.backRightBtn,
+          styles.backRightBtnRight,
+          {height: hp('6')},
+        ]} // Match height here
+        onPress={() => deleteEntireChat(mergeIds(item.id, item?.user_id))}>
         <Image
           source={trashWhite}
           style={styles.trashIcon}

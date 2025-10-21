@@ -445,6 +445,11 @@ const CreateEventsScreen = ({navigation, route}) => {
         </View>
         <TitleInputView
           title={'Event Location *'}
+          // innerViewOuterStyle={{
+          //   height: 'auto',
+          //   paddingVertical: hp('1'),
+          //   backgroundColor: 'red',
+          // }}
           errorName={errors['eventLocation']?.locationName}
           innerLeftView={
             <Controller

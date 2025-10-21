@@ -56,7 +56,7 @@ const GlobalSearchScreen = ({navigation}) => {
   );
 
   const DynamicViewForSearch = useCallback(
-    ({array, title, isSeeAll, flatViewStyle}) => {
+    ({array, title, isSeeAll, flatViewStyle, isNotRefreshing}) => {
       return (
         <View style={styles.sectionContainer}>
           {isSeeAll && (
@@ -88,7 +88,7 @@ const GlobalSearchScreen = ({navigation}) => {
                   <MyFriendComp
                     item={item}
                     index={index}
-                    refetch={refetch}
+                    refetch={isNotRefreshing ? undefined : refetch}
                     mainViewStyles={styles.friendCompContainer}
                   />
                 )}
@@ -100,6 +100,7 @@ const GlobalSearchScreen = ({navigation}) => {
                         index={index}
                         refetechKeys={refetchKeys}
                         functionToUpdateLike={() => {}}
+                        refetch={isNotRefreshing ? undefined : refetch}
                         openBottomSheet={id => setModal({id, type: 'post'})}
                       />
                     ) : item?.type == 1 ? (
@@ -108,7 +109,9 @@ const GlobalSearchScreen = ({navigation}) => {
                         index={index}
                         refetechKeys={refetchKeys}
                         functionToUpdateLike={() => {}}
+                        mainViewStyle={{marginTop: hp('1')}}
                         openBottomSheet={id => setModal({id, type: 'post'})}
+                        refetch={isNotRefreshing ? undefined : refetch}
                       />
                     ) : null}
                   </>
@@ -140,6 +143,7 @@ const GlobalSearchScreen = ({navigation}) => {
                         refetechKeys={refetchKeys}
                         functionToUpdateLike={() => {}}
                         openBottomSheet={id => setModal({id, type: 'event'})}
+                        refetch={isNotRefreshing ? undefined : refetch}
                       />
                     ) : item?.type == 2 ? (
                       <UpcomingEventsComp
@@ -154,6 +158,7 @@ const GlobalSearchScreen = ({navigation}) => {
                         refetechKeys={refetchKeys}
                         functionToUpdateLike={() => {}}
                         openBottomSheet={id => setModal({id, type: 'event'})}
+                        refetch={isNotRefreshing ? undefined : refetch}
                       />
                     ) : null}
                   </>
@@ -205,11 +210,13 @@ const GlobalSearchScreen = ({navigation}) => {
             placeholderTextColor={Colors.textGray}
             value={searchVal}
             onChangeText={e => setSearchVal(e)}
+            returnKeyType="search"
             onSubmitEditing={() => {
               const isSearch = Boolean(
                 searchVal == null || searchVal == '' || searchVal == undefined,
               );
               if (!isSearch) {
+                setSelectedVal({name: 'All', id: 'all'});
                 onSearch();
               }
             }}
@@ -227,17 +234,20 @@ const GlobalSearchScreen = ({navigation}) => {
           selectedBgColor={Colors.headerBg}
           selectedAlter={selectedVal}
           onSelectVal={(id, item) => {
-            if (
-              item?.id != 'all' &&
-              searchVal != null &&
-              searchVal != '' &&
-              searchVal != undefined
-            ) {
+            if (item?.id != 'all') {
               setSelectedVal(item);
               allDataRefetch();
-            } else setSelectedVal(item);
+            } else if (item?.id == 'all') {
+              setSelectedVal(item);
+              refetch();
+            }
           }}
-          btnStyle={{marginBottom: 0}}
+          btnStyle={{
+            marginBottom: 0,
+            height: hp('3'),
+            paddingHorizontal: wp('4'),
+          }}
+          textStyle={{fontSize: hp('1.2'), fontWeight: 'bold'}}
         />
       </View>
       {allSearchData != null && selectedVal?.id == 'all' && (
@@ -249,6 +259,7 @@ const GlobalSearchScreen = ({navigation}) => {
               title={'Users'}
               array={allSearchData?.users}
               isSeeAll={true}
+              flatViewStyle={{marginTop: hp('1')}}
             />
           )}
           {allSearchData?.posts?.length > 0 && (
@@ -275,6 +286,7 @@ const GlobalSearchScreen = ({navigation}) => {
             title={selectedVal?.name}
             array={selectTabAllData}
             flatViewStyle={{alignItem: 'center'}}
+            isNotRefreshing={true}
           />
         </ScrollView>
       )}

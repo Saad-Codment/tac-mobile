@@ -415,6 +415,7 @@ const UpcomingEventsComp = ({
           onPress={async () => {
             functionToUpdateLike(index);
             await likeAndDisLikeEvent.mutateAsync(item?.id);
+            if (refetch) refetch();
             if (refetechKeys)
               refetechKeys.map(res => queryClient.invalidateQueries([res]));
           }}>
