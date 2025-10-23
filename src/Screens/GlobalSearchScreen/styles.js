@@ -37,9 +37,11 @@ export const styles = StyleSheet.create({
   mainView: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: wp('3'),
+    paddingLeft: wp('4'),
     paddingVertical: hp('1.5'),
     backgroundColor: 'white',
+    width: wp('100'),
+    justifyContent: 'space-between',
   },
   sectionContainer: {
     marginTop: hp('1'),

@@ -48,9 +48,9 @@ export const styles = StyleSheet.create({
     marginVertical: hp('0.5'),
     marginLeft: isSender ? 0 : wp('2'),
   }),
-  senderText: (isSender, type) => ({
+  senderText: (isSender, type, isEmoji) => ({
     maxWidth: wp('80'),
-    borderWidth: 0.3,
+    // borderWidth: isEmoji ? 0 : 0.3,
     borderColor: Colors.grayFaded,
     borderTopEndRadius: 15,
     borderTopStartRadius: 15,
@@ -58,9 +58,16 @@ export const styles = StyleSheet.create({
     borderBottomStartRadius: isSender ? 15 : 0,
     paddingVertical: type === 'text' ? hp('1.5') : hp('0.5'),
     paddingHorizontal: type === 'text' ? wp('3.5') : wp('0.5'),
-    marginRight: isSender ? wp('2') : 0,
-    backgroundColor: isSender ? Colors.primaryColor : 'white',
+    marginRight: isSender ? (isEmoji ? wp('-3') : wp('2')) : 0,
+    backgroundColor: isSender
+      ? isEmoji
+        ? 'transparent'
+        : Colors.primaryColor
+      : isEmoji
+      ? 'transparent'
+      : 'white',
     overflow: 'hidden',
+    marginLeft: !isSender ? (isEmoji ? wp('-3') : wp('2')) : 0,
   }),
   mediaStyle: {
     width: wp('60'),
@@ -84,7 +91,7 @@ export const styles = StyleSheet.create({
     maxHeight: hp('14'),
     paddingHorizontal: wp('1.8'),
     overflow: 'hidden',
-    borderRadius: 10,
+    borderRadius: 30,
     marginBottom: Platform.OS == 'ios' ? hp('2') : hp('0'),
     backgroundColor: Colors.themeBlack,
     alignSelf: 'center',
@@ -104,12 +111,102 @@ export const styles = StyleSheet.create({
     marginBottom: hp('1'),
   },
   sendBtnStyle: {
-    borderRadius: 8,
+    borderRadius: 15,
     overflow: 'hidden',
     backgroundColor: Colors.primaryColor,
     height: hp('3.5'),
     width: wp('10'),
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  // image View
+
+  singleImage: {
+    width: wp('90'),
+    height: hp('30'),
+    borderRadius: wp('2'),
+    // marginHorizontal: wp('1'),
+    // aspectRatio: 1,
+  },
+  twoImagesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    // backgroundColor: 'red',
+    width: wp('72'),
+    justifyContent: 'space-between',
+    paddingHorizontal: wp('0.5'),
+  },
+  twoImage: {
+    width: wp('35'),
+    height: hp('20'),
+    // aspectRatio: 1,
+    borderRadius: wp('2'),
+    backgroundColor: 'yellow',
+  },
+  threeImagesContainer: {
+    flexDirection: 'column',
+  },
+  threeImage: {
+    // width: '100%',
+    // height: hp('20'),
+    // aspectRatio: 1,
+    borderRadius: wp('2'),
+    marginBottom: hp('1'),
+    // resizeMode: 'contain',
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    // backgroundColor: 'red',
+    width: wp('72'),
+    justifyContent: 'space-between',
+    paddingHorizontal: wp('0.5'),
+  },
+  gridItem: {
+    width: wp('35'),
+    height: hp('20'),
+    borderRadius: wp('2'),
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  gridImage: {
+    // width: '100%',
+    // height: '100%',
+    width: wp('35'),
+    height: hp('20'),
+    // aspectRatio: 1,
+    borderRadius: wp('2'),
+    overflow: 'hidden',
+    // resizeMode: 'contain',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: hp('0.5'),
+    overflow: 'hidden',
+    borderRadius: wp('2'),
+  },
+  overlayText: {
+    color: '#fff',
+    fontSize: wp(6),
+    fontWeight: 'bold',
+  },
+
+  dateHeader: {
+    alignSelf: 'center',
+    // backgroundColor: 'black',
+    backgroundColor: Colors.grayFaded,
+    paddingVertical: hp('0.5'),
+    paddingHorizontal: wp('3'),
+    borderRadius: 10,
+    marginVertical: hp('1'),
+  },
+  dateHeaderText: {
+    color: Colors.white,
+    fontSize: hp('1.5'),
+    fontWeight: '500',
   },
 });

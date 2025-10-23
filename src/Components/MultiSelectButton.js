@@ -16,6 +16,7 @@ export const MultiSelectButton = ({
   mainViewStyle,
   selectedBgColor,
   isBlack,
+  isTabBarStyle,
 }) => {
   const [dummy, setDummy] = useState(0);
 
@@ -30,26 +31,45 @@ export const MultiSelectButton = ({
       }}
       title={item?.name ?? item?.title ?? item}
       style={{
-        ...styles.btnMain(
-          isMultipule
-            ? Boolean(selectedAlter?.find(res => res?.id == item.id))
-            : Boolean(
-                (selectedAlter?.alternates?.id ?? selectedAlter?.id) ==
-                  item?.id,
-              ),
-          selectedBgColor,
-        ),
+        ...(isTabBarStyle
+          ? styles.tbBarBtnMain(
+              isMultipule
+                ? Boolean(selectedAlter?.find(res => res?.id === item?.id))
+                : Boolean(
+                    (selectedAlter?.alternates?.id ?? selectedAlter?.id) ===
+                      item?.id,
+                  ),
+              selectedBgColor,
+            )
+          : styles.btnMain(
+              isMultipule
+                ? Boolean(selectedAlter?.find(res => res?.id === item?.id))
+                : Boolean(
+                    (selectedAlter?.alternates?.id ?? selectedAlter?.id) ===
+                      item?.id,
+                  ),
+              selectedBgColor,
+            )),
         ...btnStyle,
       }}
       textStyle={{
-        ...styles.btnText(
-          isMultipule
-            ? Boolean(selectedAlter?.find(res => res?.id == item.id))
-            : Boolean(
-                (selectedAlter?.alternates?.id ?? selectedAlter?.id) ==
-                  item?.id,
-              ),
-        ),
+        ...(isTabBarStyle
+          ? styles.tbBarBtnText(
+              isMultipule
+                ? Boolean(selectedAlter?.find(res => res?.id == item.id))
+                : Boolean(
+                    (selectedAlter?.alternates?.id ?? selectedAlter?.id) ==
+                      item?.id,
+                  ),
+            )
+          : styles.btnText(
+              isMultipule
+                ? Boolean(selectedAlter?.find(res => res?.id == item.id))
+                : Boolean(
+                    (selectedAlter?.alternates?.id ?? selectedAlter?.id) ==
+                      item?.id,
+                  ),
+            )),
         ...textStyle,
       }}
       isDisable={isDisable}
@@ -72,6 +92,21 @@ export const styles = StyleSheet.create({
   }),
   btnText: isSelected => ({
     color: isSelected ? 'white' : '#525252',
+    fontSize: hp('1.5'),
+  }),
+  tbBarBtnMain: (isSelected, selectedBgColor) => ({
+    height: hp('4.5'),
+    width: 'auto',
+    paddingHorizontal: wp('2'),
+    marginRight: wp('2'),
+    marginBottom: hp('1'),
+    backgroundColor: 'transparent',
+    borderBottomColor: Colors.primaryColor,
+    borderBottomWidth: isSelected ? 2 : 0,
+    borderRadius: 0,
+  }),
+  tbBarBtnText: isSelected => ({
+    color: '#525252',
     fontSize: hp('1.5'),
   }),
 });

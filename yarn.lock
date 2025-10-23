@@ -10340,13 +10340,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-image-crop-picker@npm:^0.50.1":
-  version: 0.50.1
-  resolution: "react-native-image-crop-picker@npm:0.50.1"
+"react-native-image-crop-picker@npm:^0.51.1":
+  version: 0.51.1
+  resolution: "react-native-image-crop-picker@npm:0.51.1"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 35d4fae23e7da88da388fea740b39aeb2d5f9adecfd971a1efb04c8331e636dff777baedb4c94755a2ae18d9d43bacb68a25d39343e63c7dd14562c5d6934816
+  checksum: 56acf486af8861e2128cf2f23adbafd02c329281a73edf1543d1fc12dd177a9639258dc9d2b4c55e661ff3ffb0a184fafc2649a4ccf1d204b3e1368651ee1d05
   languageName: node
   linkType: hard
 
@@ -11955,7 +11955,7 @@ __metadata:
     react-native-geolocation-service: ^5.3.1
     react-native-get-random-values: ^1.11.0
     react-native-google-places-autocomplete: ^2.5.1
-    react-native-image-crop-picker: ^0.50.1
+    react-native-image-crop-picker: ^0.51.1
     react-native-image-pan-zoom: ^2.1.12
     react-native-infinite-scroll-view: ^0.4.5
     react-native-keyboard-aware-scroll-view: ^0.9.5

@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import API from '../../Utils/helperFunc';
-import {GetChatListUrl} from '../../Utils/Urls';
+import {deleteEntireChatUrl, GetChatListUrl} from '../../Utils/Urls';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {io} from 'socket.io-client'; // Import io directly
 import {mergeIds} from '../../Services/GlobalFunctions';
@@ -12,31 +12,43 @@ const API_BASE_URL = GetChatListUrl;
 const SOCKET_URL = 'https://messaging.theappforcowboys.com/'; // Use your socket URL
 
 const useChatUserScreen = ({navigate, addListener}) => {
-  const [asynUserData, setAsynUserData] = useState(null);
   const socketRef = useRef(null);
   const [chats, setChats] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [searchVal, setSearchVal] = useState('');
 
   const {getState} = useReduxStore();
   const {userData} = getState('Auth');
 
-  // Fetch user data from AsyncStorage
-  const getUserData = async () => {
-    const UserData = await AsyncStorage.getItem('userData');
-    setAsynUserData(JSON.parse(UserData));
-  };
-
-  useEffect(() => {
-    getUserData();
-  }, []);
-
-  const myId = userData?.id ?? asynUserData?.id;
+  const myId = userData?.id;
 
   // Fetch chat list from Laravel API
   const {data, refetch} = useQuery({
     queryKey: ['chatList'],
     queryFn: () => API.get('/v1/chat/list'),
   });
+  const [filterData, setFilterData] = useState([]);
+
+  function searchFun(e) {
+    var text = e;
+    if (text) {
+      // Inserted text is not blank
+      // Filter the masterDataSource and update FilteredDataSource
+      const newData = chats.filter(function (item) {
+        // Applying filter for the inserted text in search bar
+        const itemData = (
+          item?.other_user?.first_name + ' ' + item?.other_user?.last_name || ''
+        ).toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      console.log('newDatanewDatanewDatanewData', newData);
+      setFilterData(newData);
+      setSearchVal(text);
+    } else {
+      setFilterData(chats);
+      setSearchVal(text);
+    }
+  }
 
   // Initialize Socket.io directly in useEffect
   useEffect(() => {
@@ -80,10 +92,7 @@ const useChatUserScreen = ({navigate, addListener}) => {
           const updatedChat = {
             ...chat,
             last_message: payload.message,
-            unread_count:
-              payload.message.sender_id !== myId
-                ? (chat.unread_count || 0) + 1
-                : chat.unread_count,
+            unread_count: chat.unread_count,
           };
           // Remove from old position and insert at top
           setChats(prevChats => {
@@ -92,9 +101,6 @@ const useChatUserScreen = ({navigate, addListener}) => {
             );
             return [updatedChat, ...newChats];
           });
-          if (payload.message.sender_id !== myId) {
-            setUnreadCount(prev => prev + 1);
-          }
         }
       });
 
@@ -137,18 +143,9 @@ const useChatUserScreen = ({navigate, addListener}) => {
   // Delete entire chat
   const deleteEntireChat = async chatroomId => {
     try {
-      await API.delete(`${API_BASE_URL}/chat/${chatroomId}`);
-      setChats(prevChats =>
-        prevChats.filter(
-          chat => mergeIds(chat.other_user.id, myId) !== chatroomId,
-        ),
-      );
-      setUnreadCount(
-        prev =>
-          prev -
-          (chats.find(chat => mergeIds(chat.other_user.id, myId) === chatroomId)
-            ?.unread_count || 0),
-      );
+      await API.delete(`${deleteEntireChatUrl}${chatroomId}`);
+      onRefresh();
+      onRefresh();
       return true;
     } catch (error) {
       console.error('Error deleting chat:', error);
@@ -168,7 +165,7 @@ const useChatUserScreen = ({navigate, addListener}) => {
   // Clear notifications on focus
   useEffect(() => {
     const unsubscribe = addListener('focus', () => {
-      setUnreadCount(0); // Reset unread count
+      onRefresh();
     });
     return unsubscribe;
   }, []);
@@ -180,6 +177,10 @@ const useChatUserScreen = ({navigate, addListener}) => {
     userData,
     onRefresh,
     deleteEntireChat,
+    searchVal,
+    setSearchVal,
+    searchFun,
+    filterData,
   };
 };
 

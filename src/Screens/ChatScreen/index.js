@@ -6,6 +6,7 @@ import {
   FlatList,
   TextInput,
   KeyboardAvoidingView,
+  Pressable,
 } from 'react-native';
 import React, {memo, useCallback, useRef} from 'react';
 import {Colors} from '../../Theme/Variables';
@@ -21,6 +22,61 @@ import {imageUrl} from '../../Utils/Urls';
 import Overlay from '../../Components/Overlay';
 import Video from 'react-native-video';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import BlurImage from '../../Components/BlurImage';
+import useReduxStore from '../../Hooks/UseReduxStore';
+import {types} from '../../Redux/types';
+import {
+  convertToCustomDateTimeFormat,
+  convertToCustomTimeFormat,
+  isOnlyEmoji,
+} from '../../Services/GlobalFunctions';
+
+const formatMessageDate = utcTimestamp => {
+  const date = new Date(utcTimestamp);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  const isToday = date.toDateString() === today.toDateString();
+  const isYesterday = date.toDateString() === yesterday.toDateString();
+
+  if (isToday) {
+    return 'Today';
+  } else if (isYesterday) {
+    return 'Yesterday';
+  } else {
+    // Format as DD/MM/YYYY
+    return `${date.getDate().toString().padStart(2, '0')}/${(
+      date.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, '0')}/${date.getFullYear()}`;
+  }
+};
+
+const groupMessagesByDate = messages => {
+  if (!messages || messages.length === 0) return [];
+
+  const groupedMessages = [];
+  let currentDate = null;
+
+  messages.forEach((message, index) => {
+    const messageDate = formatMessageDate(message.created_at).split(' ')[0]; // Get date part (e.g., "Today" or "DD/MM/YYYY")
+
+    if (messageDate !== currentDate) {
+      groupedMessages.push({
+        type: 'date_header',
+        date: messageDate,
+        id: `date_${index}_${messageDate}`, // Unique ID for date header
+      });
+      currentDate = messageDate;
+    }
+
+    groupedMessages.push(message);
+  });
+
+  return groupedMessages;
+};
 
 const ChatScreen = ({navigation, route}) => {
   const {
@@ -38,6 +94,8 @@ const ChatScreen = ({navigation, route}) => {
     isTyping,
     lastSeenMessageId,
     lastSeen,
+    onImagePress,
+    isSeenTrue,
   } = useChatScreen(navigation, route);
 
   console.log(
@@ -45,86 +103,183 @@ const ChatScreen = ({navigation, route}) => {
     allMessages[9],
   );
 
+  const images = [
+    'profile_image/1754511428_d7da06fc-c638-4c22-881c-90b0764b7f3b.png',
+    // 'profile_image/1754511428_d7da06fc-c638-4c22-881c-90b0764b7f3b.png',
+    // 'profile_image/1754511428_d7da06fc-c638-4c22-881c-90b0764b7f3b.png',
+    // 'profile_image/1754511428_d7da06fc-c638-4c22-881c-90b0764b7f3b.png',
+    // 'profile_image/1754511428_d7da06fc-c638-4c22-881c-90b0764b7f3b.png',
+  ];
+
+  const RenderImages = ({images, onImagePress}) => {
+    if (images.length == 1) {
+      return (
+        <Pressable onPress={onImagePress}>
+          <BlurImage
+            uri={imageUrl(images[0])}
+            isURI
+            styles={styles.singleImage}
+            // resizeMode={'contain'}
+          />
+        </Pressable>
+      );
+    } else if (images.length == 2) {
+      return (
+        <Touchable style={styles.twoImagesContainer} onPress={onImagePress}>
+          {images.map((img, index) => (
+            <BlurImage uri={imageUrl(img)} isURI styles={styles.twoImage} />
+          ))}
+        </Touchable>
+      );
+    } else if (images.length == 3) {
+      return (
+        <Touchable style={styles.twoImagesContainer} onPress={onImagePress}>
+          {images.slice(0, 1).map((img, index) => (
+            <BlurImage
+              uri={imageUrl(img)}
+              isURI
+              styles={{
+                width: wp('35'),
+                height: hp('40.5'),
+              }}
+            />
+          ))}
+          <View style={{justifyContent: 'space-between'}}>
+            {images.slice(1, 3).map((img, index) => (
+              <BlurImage
+                uri={imageUrl(img)}
+                isURI
+                styles={{
+                  width: wp('35'),
+                  height: hp('20'),
+                }}
+              />
+            ))}
+          </View>
+        </Touchable>
+      );
+    } else {
+      return (
+        <Touchable style={styles.gridContainer} onPress={onImagePress}>
+          {images.slice(0, 4).map((img, index) => (
+            <View key={index} style={styles.gridItem}>
+              <BlurImage
+                uri={imageUrl(img)}
+                isURI
+                styles={{
+                  ...styles.gridImage,
+                  marginTop: index > 1 ? hp('0.5') : 0,
+                }}
+                // resizeMode={'contain'}
+              />
+              {index === 3 && images.length > 4 && (
+                <View style={styles.overlay}>
+                  <Text style={styles.overlayText}>+{images.length - 4}</Text>
+                </View>
+              )}
+            </View>
+          ))}
+        </Touchable>
+      );
+    }
+  };
+
   const renderItem = useCallback(
     ({item, index}) => {
-      const timestamp = item.created_at
-        ? new Date(item.created_at)
-        : new Date();
-      const formattedTime = timestamp.toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-      const isSender = item.sender_id === userData?.id;
-
-      console.log('itemmsssgggg', item?.sender?.id, lastSeenMessageId);
+      if (item.type === 'date_header') {
+        return (
+          <View style={styles.dateHeader}>
+            <TextComponent text={item.date} styles={styles.dateHeaderText} />
+          </View>
+        );
+      }
+      const isSender = item.sender_id == userData?.id;
+      // Find the last sender's message in allMessages
+      const lastSenderMessage = allMessages
+        .filter(msg => msg.sender_id == userData?.id)
+        .slice(-1)[0];
 
       return (
-        <View
-          style={{
-            ...styles.senderView(isSender),
-            justifyContent: isSender ? 'flex-end' : 'flex-start',
-          }}>
-          {!isSender && (
-            <TextComponent
-              text={formattedTime}
-              fade={true}
-              styles={{fontSize: hp('1.2'), marginLeft: wp('2')}}
-            />
-          )}
-          <View style={styles.senderText(isSender, item.type)}>
-            {item.type === 'text' ? (
+        <View>
+          <View
+            style={{
+              ...styles.senderView(isSender),
+              justifyContent: isSender ? 'flex-end' : 'flex-start',
+            }}>
+            {isSender && (
               <TextComponent
-                text={item.text}
-                styles={{
-                  fontWeight: '300',
-                  fontSize: hp('1.5'),
-                  color: isSender ? 'white' : 'black',
-                }}
+                text={convertToCustomTimeFormat(item?.created_at)}
+                fade={true}
+                styles={{fontSize: hp('1.1'), marginRight: wp('2')}}
               />
-            ) : item.type == 'image' ? (
-              item?.metadata?.files.map(res => {
-                return (
-                  <Image
-                    source={{uri: imageUrl(res)}}
-                    style={styles.mediaStyle}
-                    resizeMode="contain"
-                  />
-                );
-              })
-            ) : item.type === 'video' ? (
-              <Video
-                source={{uri: `data:${item.mime};base64,${item.content}`}}
-                style={styles.mediaStyle}
-                controls={true}
-                resizeMode="contain"
-              />
-            ) : null}
-            {isSender && index === allMessages.length - 1 && (
+            )}
+            <View
+              style={styles.senderText(
+                isSender,
+                item.type,
+                Boolean(isOnlyEmoji(item?.text) && item?.text?.length == 2),
+              )}>
+              {item.type === 'text' &&
+              isOnlyEmoji(item.text) &&
+              item.text.length == 2 ? (
+                <TextComponent
+                  text={item.text}
+                  styles={{
+                    fontWeight: '300',
+                    fontSize: isOnlyEmoji(item?.text) ? hp('10') : hp('1.5'),
+                    color: isSender ? 'white' : 'black',
+                  }}
+                />
+              ) : item.type === 'text' ? (
+                <TextComponent
+                  text={item.text}
+                  styles={{
+                    fontWeight: '500',
+                    fontSize: hp('1.5'),
+                    color: isSender ? 'white' : 'black',
+                  }}
+                />
+              ) : item.type == 'image' ? (
+                <RenderImages
+                  images={item?.metadata?.files}
+                  onImagePress={() => onImagePress(item)}
+                />
+              ) : item.type === 'video' ? (
+                <Video
+                  source={{uri: `data:${item.mime};base64,${item.content}`}}
+                  style={styles.mediaStyle}
+                  controls={true}
+                  resizeMode="contain"
+                />
+              ) : null}
+            </View>
+            {!isSender && (
               <TextComponent
-                text={item?.id == lastSeenMessageId ? '✓✓' : '✓'}
-                styles={{
-                  fontSize: hp('1.2'),
-                  color:
-                    item?.id == lastSeenMessageId
-                      ? Colors.blue
-                      : Colors.grayFaded,
-                  marginTop: hp('0.5'),
-                  alignSelf: 'flex-end',
-                }}
+                text={convertToCustomTimeFormat(item?.created_at)}
+                fade={true}
+                styles={{fontSize: hp('1.1'), marginLeft: wp('2')}}
               />
             )}
           </View>
-          {isSender && (
+          {isSender && item.id === lastSenderMessage?.id && (
             <TextComponent
-              text={formattedTime}
-              fade={true}
-              styles={{fontSize: hp('1.2'), marginRight: wp('2')}}
+              text={
+                item.id === lastSeenMessageId || isSeenTrue
+                  ? 'Seen'
+                  : 'Delivered'
+              }
+              styles={{
+                fontSize: hp('1.2'),
+                color: Colors.grayFaded,
+                textAlign: 'right',
+                marginRight: wp('2'),
+              }}
             />
           )}
         </View>
       );
     },
-    [allMessages, lastSeenMessageId, userData],
+    [allMessages, lastSeenMessageId, userData, isSeenTrue],
   );
 
   return (
@@ -179,7 +334,7 @@ const ChatScreen = ({navigation, route}) => {
         <View style={styles.HeaderRight} />
       </View>
       <FlatList
-        data={allMessages}
+        data={groupMessagesByDate(allMessages)}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onLayout={handleAutoScroll}
@@ -187,6 +342,7 @@ const ChatScreen = ({navigation, route}) => {
         ref={scrollViewRef}
         onContentSizeChange={handleAutoScroll}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: hp('2')}}
       />
       <View style={styles.searchMain}>
         <Touchable onPress={pickAndSendMedia} style={styles.attachmentBtn}>
@@ -202,7 +358,12 @@ const ChatScreen = ({navigation, route}) => {
           multiline
         />
         {message?.trim() && (
-          <Touchable onPress={sendMessage} style={styles.sendBtnStyle}>
+          <Touchable
+            onPress={() => {
+              setMessage('');
+              sendMessage(message);
+            }}
+            style={styles.sendBtnStyle}>
             <View style={styles.msgsRecieve}>
               <Image source={send} style={styles.sendIcon} />
             </View>

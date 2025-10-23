@@ -16,7 +16,13 @@ import {
 import {types} from '../Redux/types';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {imageUrl} from '../Utils/Urls';
-import {heart, heartFilledLike, replyIcon} from '../Assets';
+import {
+  arrDown,
+  heart,
+  heartFilledLike,
+  heartTheme,
+  replyIcon,
+} from '../Assets';
 import {useCallback, useRef, useState} from 'react';
 import {Touchable} from './Touchable';
 import BottomModalComponent from './BottomModalComponent';
@@ -148,36 +154,26 @@ const CommentComp = ({
       </Animated.View>
 
       <View style={styles.replyContainer}>
-        <TextComponent
-          text={`${item?.likes_count} Likes`}
-          fade
-          size={hp('1.5')}
-        />
         <Image
           source={replyIcon}
           resizeMode="contain"
-          style={styles.replyIcon}
+          style={{...styles.replyIcon, marginLeft: wp('0')}}
+          tintColor={'white'}
         />
         <TextComponent
-          text={`${item?.replies_count} replies`}
-          fade
-          size={hp('1.5')}
-          onPress={() => onReplyPress()}
-          disable={Boolean(
-            item?.replies_count == 0 || item?.replies_count == null,
-          )}
-        />
-        <Image
-          source={replyIcon}
-          resizeMode="contain"
-          style={styles.replyIcon}
-        />
-        <TextComponent
-          text={`Reply to comment`}
+          text={`Reply`}
           fade
           size={hp('1.5')}
           onPress={() => onSwipeRight(item?.id)}
         />
+        {Boolean(item?.likes_count && item?.likes_count > 0) && (
+          <TextComponent
+            text={`              ❤️ ${item?.likes_count}`}
+            fade
+            size={hp('1.5')}
+          />
+        )}
+
         <Touchable
           onPress={() => onCommentLikePress()}
           style={{
@@ -185,12 +181,40 @@ const CommentComp = ({
             right: wp('4'),
           }}>
           <Image
-            source={item?.is_liked ? heartFilledLike : heart}
+            source={item?.is_liked ? heartTheme : heart}
             resizeMode="contain"
             style={styles.absoluteHeartIcon}
           />
         </Touchable>
       </View>
+      {Boolean(item?.replies_count && item?.replies_count > 0) && (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginLeft: wp('4'),
+            marginVertical: hp('1'),
+            marginBottom: hp('1.5'),
+          }}>
+          {/* <Image
+            source={arrDown}
+            resizeMode="contain"
+            style={styles.replyIcon}
+            tintColor={'white'}
+          /> */}
+          <TextComponent
+            text={` View ${item?.replies_count} ${
+              item?.replies_count == 1 ? 'Reply' : 'replies'
+            }`}
+            fade
+            size={hp('1.5')}
+            onPress={() => onReplyPress()}
+            disable={Boolean(
+              item?.replies_count == 0 || item?.replies_count == null,
+            )}
+          />
+        </View>
+      )}
       {replyArry?.map(
         res => renderReply(res), // Render each reply using the renderReply function
       )}

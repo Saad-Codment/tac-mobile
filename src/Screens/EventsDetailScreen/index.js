@@ -124,12 +124,19 @@ const EventsDetailScreen = ({navigation, route}) => {
       rightTextStyles: {color: Colors.primaryColor},
     },
     // {
-    //   title: 'Performances',
-    //   onPress: () =>
-    //     navigation.navigate('PerformancesScreen', eventData?.performances),
-    //   rightIcon: arrRightPurple,
-    //   rightIconColor: Colors.primaryColor,
-    //   rightStyle: {width: wp('3')},
+    //   ...(eventData?.performances.length > 0
+    //     ? {
+    //         title: 'Performances',
+    //         onPress: () =>
+    //           navigation.navigate(
+    //             'PerformancesScreen',
+    //             eventData?.performances,
+    //           ),
+    //         rightIcon: arrRightPurple,
+    //         rightIconColor: Colors.primaryColor,
+    //         rightStyle: {width: wp('3')},
+    //       }
+    //     : null),
     // },
     {
       title: 'Event Confirmation',
@@ -497,7 +504,7 @@ const EventsDetailScreen = ({navigation, route}) => {
           rightTextStyles={{fontSize: hp('1.2')}}
           rightStyles={{marginRight: wp('3')}}
         />
-        {eventData?.performances && performanceArry.length > 0 && (
+        {/* {eventData?.performances && performanceArry.length > 0 && (
           <>
             <TextComponent
               text={'Previous Performances'}
@@ -515,7 +522,7 @@ const EventsDetailScreen = ({navigation, route}) => {
               rightTextStyles={{fontSize: hp('1.2')}}
             />
           </>
-        )}
+        )} */}
         <CustomModalComp
           visible={modalVisible}
           onCancel={() => setModalVisible(false)}

@@ -14,38 +14,21 @@ import NavigationService from '../Services/NavigationService';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {imageUrl} from '../Utils/Urls';
 import {Colors} from '../Theme/Variables';
+import {convertToCustomDateTimeFormat} from '../Services/GlobalFunctions';
 
 const ChatUserComp = ({mainViewStyles, item, index, userDataProp}) => {
   const {getState} = useReduxStore();
 
-  const userData = getState('Auth');
+  const {userData} = getState('Auth');
 
-  const timestamp = item?.lastMessage?.createdAt?.seconds
-    ? new Date(item?.lastMessage?.createdAt?.seconds * 1000)
-    : '';
-
-  // Format the date into a readable time (e.g., '4:32 PM')
-  const formattedTime = !timestamp
-    ? ''
-    : timestamp.toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-      });
-  const isUnread =
-    userData?.id === item?.lastMessage?.receiver &&
-    item?.lastMessage?.seen == 0;
-
-  console.log(
-    'timestamptimestamptimestamptimestamptimestamptimestamp',
-    userData,
-  );
-
-  const avatarLetter =
-    item?.other_user?.first_name?.charAt(0)?.toUpperCase() || '?';
-  const lastMessage = item?.last_message?.text || 'No messages yet';
+  const lastMessage =
+    item?.last_message?.text ||
+    (item?.last_message?.type == 'image' && 'Photos shared') ||
+    'No messages yet';
   const isTyping = item?.isTyping || false;
-  const unreadCount = item?.unread_count || 0;
+  const unreadCount = Boolean(item?.last_message?.sender_id != userData?.id)
+    ? item?.unread_count
+    : 0;
 
   return (
     <Pressable
@@ -78,11 +61,21 @@ const ChatUserComp = ({mainViewStyles, item, index, userDataProp}) => {
           styles={isTyping ? styles.typingText : styles.lastMessage}
         />
       </View>
-      <TextComponent text={formattedTime} styles={styles.timeText} />
-      {unreadCount > 0 && (
+
+      {unreadCount > 0 ? (
         <View style={styles.unreadBadge}>
           <TextComponent text={unreadCount} styles={styles.unreadText} />
         </View>
+      ) : (
+        <TextComponent
+          text={
+            item?.last_message?.created_at
+              ? convertToCustomDateTimeFormat(item?.last_message?.created_at)
+              : ''
+          }
+          fade
+          styles={styles.timeText}
+        />
       )}
     </Pressable>
   );
@@ -115,13 +108,13 @@ const styles = StyleSheet.create({
     fontSize: hp('1.2'),
   },
   lastMessage: {
-    fontSize: hp('1.6'),
+    fontSize: hp('1.3'),
     color: Colors.gray || '#757575',
     maxWidth: wp('60'), // Prevent overflow
     flexWrap: 'wrap',
   },
   typingText: {
-    fontSize: hp('1.6'),
+    fontSize: hp('1.3'),
     color: Colors.green || '#4CAF50',
     fontStyle: 'italic',
   },
@@ -155,6 +148,7 @@ const styles = StyleSheet.create({
   },
   timeText: {
     fontSize: hp('1.2'),
-    marginTop: hp('-1'),
+    // marginTop: hp('-1'),
+    right: wp('8'),
   },
 });

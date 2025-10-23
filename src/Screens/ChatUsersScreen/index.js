@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image, TextInput} from 'react-native';
 import React, {memo} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import {searchIcon, trashWhite} from '../../Assets';
@@ -21,6 +21,10 @@ const ChatUsersScreen = ({navigation}) => {
     userData,
     onRefresh,
     deleteEntireChat,
+    searchVal,
+    setSearchVal,
+    searchFun,
+    filterData,
   } = useChatUserScreen(navigation);
 
   const renderItem = ({item, index}) => {
@@ -30,43 +34,7 @@ const ChatUsersScreen = ({navigation}) => {
     const isTyping = item?.isTyping || false;
     const unreadCount = item?.unread_count || 0;
 
-    return (
-      <ChatUserComp item={item} index={index} userDataProp={userData} />
-      // <TouchableOpacity
-      //   onPress={() =>
-      //     dynamicNav('ChatScreen', {
-      //       id: item?.other_user?.id || item?.id, // Fallback to item.id if other_user.id is missing
-      //       userId: userData?.id,
-      //       conversationId: item?.conversation_id,
-      //     })
-      //   }
-      //   style={styles.chatItem}>
-      //   <CircleImage
-      //     image={imageUrl(item?.other_user?.profile_image)}
-      //     size={0.12}
-      //     uri={true}
-      //     backgroundColor={Colors.grayFaded || '#B0BEC5'}
-      //     textStyle={{color: Colors.white || '#FFFFFF', fontSize: hp('2.5')}}
-      //   />
-      //   <View style={styles.chatInfo}>
-      //     <TextComponent
-      //       text={`${item?.other_user?.first_name || 'Unknown'} ${
-      //         item?.other_user?.last_name || ''
-      //       }`}
-      //       styles={styles.userName}
-      //     />
-      //     <TextComponent
-      //       text={isTyping ? 'typing...' : lastMessage}
-      //       styles={isTyping ? styles.typingText : styles.lastMessage}
-      //     />
-      //   </View>
-      //   {unreadCount > 0 && (
-      //     <View style={styles.unreadBadge}>
-      //       <TextComponent text={unreadCount} styles={styles.unreadText} />
-      //     </View>
-      //   )}
-      // </TouchableOpacity>
-    );
+    return <ChatUserComp item={item} index={index} userDataProp={userData} />;
   };
 
   const renderHiddenItem = ({item}) => (
@@ -82,7 +50,7 @@ const ChatUsersScreen = ({navigation}) => {
           styles.backRightBtnRight,
           {height: hp('6')},
         ]} // Match height here
-        onPress={() => deleteEntireChat(mergeIds(item.id, item?.user_id))}>
+        onPress={() => deleteEntireChat(item?.conversation_id)}>
         <Image
           source={trashWhite}
           style={styles.trashIcon}
@@ -95,11 +63,33 @@ const ChatUsersScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <HeaderComponent headerTitle={'Chat Box'} />
+      <View style={styles.searchContainer}>
+        <View style={styles.searchInputWrapper}>
+          <Image
+            source={searchIcon}
+            resizeMode="contain"
+            style={styles.searchIcon}
+          />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search..."
+            placeholderTextColor={Colors.textGray}
+            value={searchVal}
+            onChangeText={e => searchFun(e)}
+            returnKeyType="search"
+          />
+        </View>
+      </View>
       <SwipeListView
         showsVerticalScrollIndicator={false}
         style={styles.listMain}
         useFlatList
-        data={users}
+        data={
+          users != null &&
+          users?.length > 0 &&
+          (filterData.length >= 0 && searchVal != '' ? filterData : users)
+        }
+        // data={users}
         renderItem={renderItem}
         renderHiddenItem={renderHiddenItem}
         rightOpenValue={-75}

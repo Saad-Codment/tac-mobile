@@ -61,6 +61,11 @@ export const allFriendEventsUrl = '/home/friends-events';
 export const allSuggestedEventsUrl = '/home/suggested-events';
 export const likeUnlikeUrl = '/react/like/';
 
+export const getConversationIdUrl = 'v1/chat/get-conversation-id?user_id=';
+
+export const deleteSingleMsgUrl = '/v1/chat/delete-message?id=';
+export const deleteEntireChatUrl = '/v1/chat/delete-conversation?id=';
+
 // export const getEventsCommentUrl = '/events/comments/';
 // export const getPostCommentUrl = '/posts/comments/';
 

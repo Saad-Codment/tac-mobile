@@ -15,13 +15,14 @@ import {Touchable} from './Touchable';
 import {Colors, FontSize} from '../Theme/Variables';
 import {chat, profileAdd} from '../Assets';
 import {CircleImage} from './CircleImage';
-import {imageUrl} from '../Utils/Urls';
+import {getConversationIdUrl, imageUrl} from '../Utils/Urls';
 import MutualFriends from './MutualFriendsComponent';
 import ThemeButton from './ThemeButton';
 import NavigationService from '../Services/NavigationService';
 import useFriendServices from '../Services/FriendServices';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {types} from '../Redux/types';
+import API from '../Utils/helperFunc';
 
 const MyFriendComp = ({
   item,
@@ -131,7 +132,15 @@ const MyFriendComp = ({
           style={{width: wp('14'), height: hp('3'), borderRadius: 8}}
           imageStyle={{width: wp('3.5')}}
           textStyle={{fontSize: hp('1.2'), marginLeft: wp('-0.5')}}
-          onPress={() => NavigationService.navigate('ChatScreen', item)}
+          onPress={async () => {
+            const {ok, data} = await API.get(getConversationIdUrl + item?.id);
+            if (ok)
+              NavigationService.navigate('ChatScreen', {
+                id: item?.other_user?.id || item?.id, // Fallback to item.id if other_user.id is missing
+                userId: item?.id,
+                conversationId: data?.conversation_id,
+              });
+          }}
         />
       )}
     </Touchable>

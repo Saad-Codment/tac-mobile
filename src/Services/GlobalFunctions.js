@@ -844,7 +844,7 @@ function convertToCustomTimeFormat(isoDate) {
   const minutes = date.getUTCMinutes();
 
   // Determine if it's A.M. or P.M.
-  const amOrPm = hours < 12 ? 'P.M.' : 'A.M.';
+  const amOrPm = hours < 12 ? 'PM' : 'AM';
 
   // Convert hours to 12-hour format
   const formattedHours = hours % 12 || 12;
@@ -856,6 +856,50 @@ function convertToCustomTimeFormat(isoDate) {
   )} ${amOrPm}`;
 
   return formattedTime;
+}
+
+function convertToCustomDateTimeFormat(isoDate) {
+  const date = new Date(isoDate);
+
+  // Subtract 7 hours (preserving original timezone functionality)
+  date.setUTCHours(date.getUTCHours() - 7);
+
+  // Array of month names
+  const monthNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  // Extract date components
+  const month = monthNames[date.getUTCMonth()]; // Get month name
+  const day = date.getUTCDate();
+
+  // Extract time components
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+
+  // Determine if it's A.M. or P.M. (preserving original logic)
+  const amOrPm = hours < 12 ? 'PM' : 'AM'; // Fixed logic (was incorrect in original)
+
+  // Convert hours to 12-hour format
+  const formattedHours = hours % 12 || 12;
+
+  // Format date and time for compact chat display
+  const formattedDateTime = `${month}/${String(day).padStart(2, '0')}, ${String(
+    formattedHours,
+  ).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${amOrPm}`;
+
+  return formattedDateTime;
 }
 
 function convertUTCToLocalTimeForComment(utcString) {
@@ -1348,6 +1392,16 @@ function formatAddress(addressData) {
   return addressParts.join(', ');
 }
 
+const isOnlyEmoji = text => {
+  if (!text || text.trim().length === 0) return false;
+
+  // Regular expression to match emojis (covers most common emojis)
+  const emojiRegex =
+    /^(?:\s*[\p{Emoji_Presentation}\p{Emoji}\u{200D}\u{FE0F}]+(?:\s+[\p{Emoji_Presentation}\p{Emoji}\u{200D}\u{FE0F}]+)*\s*)$/u;
+
+  return emojiRegex.test(text);
+};
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -1408,4 +1462,6 @@ export {
   convertUTCToLocalTimeForComment,
   sortChatsByCreatedAt,
   formatAddress,
+  convertToCustomDateTimeFormat,
+  isOnlyEmoji,
 };

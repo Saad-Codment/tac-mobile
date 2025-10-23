@@ -245,8 +245,9 @@ const GlobalSearchScreen = ({navigation}) => {
           btnStyle={{
             marginBottom: 0,
             height: hp('3'),
-            paddingHorizontal: wp('4'),
+            paddingHorizontal: wp('2'),
           }}
+          isTabBarStyle={true}
           textStyle={{fontSize: hp('1.2'), fontWeight: 'bold'}}
         />
       </View>

@@ -1,9 +1,10 @@
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import useReduxStore from '../../Hooks/UseReduxStore';
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import API, {formDataFunc} from '../../Utils/helperFunc';
 import {
   baseURL,
+  getConversationIdUrl,
   getUserProfileUrl,
   SendChatNotificationUrl,
   sendMsgUrl,
@@ -25,6 +26,7 @@ import {io} from 'socket.io-client';
 import axios from 'axios';
 import {set} from 'react-hook-form';
 import {Alert} from 'react-native';
+import {types} from '../../Redux/types';
 
 // API base URL
 const API_BASE_URL = baseURL;
@@ -43,6 +45,8 @@ const useChatScreen = ({navigate}, {params}) => {
   const [isTyping, setIsTyping] = useState(false);
   const [images, setImages] = useState([]);
   const typingTimeoutRef = useRef(null);
+  const [pagesLoaded, setPagesLoaded] = useState(1);
+  const [isSeenTrue, setIsSeenTrue] = useState(false);
 
   const {getState, dispatch} = useReduxStore();
   const {userData, token} = getState('Auth');
@@ -91,18 +95,24 @@ const useChatScreen = ({navigate}, {params}) => {
     queryKey: ['otherUser', params?.conversationId],
     queryFn: () => API.get(`/v1/chat/${params?.conversationId}/participants`),
     enabled: !!params?.conversationId,
+    retry: 5,
   });
 
   const receiverData = otherUserData?.data?.other_user;
 
   // Fetch messages (paginated)
+  // const fetchMessages = async (pageNum = 1) => {
+  //   useFetchMessages();
+  // };
+  // // Fetch messages (paginated)
   const fetchMessages = async (pageNum = 1) => {
     try {
       setIsLoading(true);
       dispatch(loadingFalse());
       const response = await API.get(
-        `/v1/chat/${params?.conversationId}/messages?page=${pageNum}`,
+        `/v1/chat/${params?.conversationId}/messages?page=${pagesLoaded}`,
       );
+      setPagesLoaded(prev => prev + 1);
       const newMessages = response.data.data;
       const hasMore = !!response.data.next_page_url;
       return {
@@ -139,13 +149,12 @@ const useChatScreen = ({navigate}, {params}) => {
   // Send message
   const {mutate: sendMessageMutation} = useMutation({
     mutationFn: body => {
-      // const formData = new FormData();
-      // formData.append('receiver_id', id);
       const bodyData = {
         receiver_id: id,
         text: body.text || '',
         images: body?.images || [],
       };
+      console.log('bodyDatabodyDatabodyData', body?.images);
       // if (body.text) formData.append('text', body.text);
       return formDataFunc(sendMsgUrl, bodyData, 'images', true);
     },
@@ -158,7 +167,8 @@ const useChatScreen = ({navigate}, {params}) => {
           conversation_id: params?.conversationId,
           message: msg,
         });
-        setMessage('');
+        setIsSeenTrue(false);
+        // setMessage('');
       }
     },
   });
@@ -181,8 +191,8 @@ const useChatScreen = ({navigate}, {params}) => {
       socketRef.current.on('newMessage', data => {
         console.log('New message received:', data);
         if (
-          data.conversation_id === params?.conversationId &&
-          data.message.sender !== myId
+          data.conversation_id == params?.conversationId &&
+          data.message.sender != myId
         ) {
           setMessages(prev =>
             sortChatsByCreatedAt([...prev, data.message], 'asc'),
@@ -202,7 +212,8 @@ const useChatScreen = ({navigate}, {params}) => {
 
       socketRef.current.on('messageSeen', data => {
         console.log('Message seen event:', data);
-        if (data.conversation_id === params?.conversationId) {
+        setIsSeenTrue(true);
+        if (data.conversation_id == params?.conversationId) {
           // Seen state can be updated if backend provides last_read_message_id
         }
       });
@@ -214,9 +225,6 @@ const useChatScreen = ({navigate}, {params}) => {
       };
     }
   }, [params?.conversationId, myId, id]);
-
-  if (socketRef.current) {
-  }
 
   // Handle typing
   const handleTyping = async text => {
@@ -269,31 +277,17 @@ const useChatScreen = ({navigate}, {params}) => {
   };
 
   // Send message
-  const sendMessage = () => {
+  const sendMessage = msg => {
     if (message.trim() && params?.conversationId) {
-      sendMessageMutation({text: message, images});
+      sendMessageMutation({text: message ?? msg, images});
     }
   };
 
   const pickAndSendMediaSocket = async isCamera => {
     const imgData = isCamera
-      ? await uploadFromCamera(true)
-      : await uploadFromGalary(true, false);
-    sendMessageMutation({text: '', images: imgData});
-  };
-
-  // Pick and send media
-  const pickAndSendMedia = () => {
-    if (params?.conversationId && myId) {
-      pickAndSendMediaSocket(
-        socketRef.current,
-        params?.conversationId,
-        myId,
-        msg => {
-          setMessages(prev => [...prev, msg]);
-        },
-      );
-    }
+      ? await uploadFromCamera(true, false, 5)
+      : await uploadFromGalary(true, false, 5);
+    sendMessageMutation({text: '', images: imgData?.uri ? [imgData] : imgData});
   };
 
   // Handle scroll for pagination
@@ -302,16 +296,16 @@ const useChatScreen = ({navigate}, {params}) => {
     const {contentOffset} = e.nativeEvent;
     if (contentOffset.y <= 0 && !isLoading) {
       fetchMessages(2).then(({messages: newMessages, hasMore}) => {
-        if (hasMore) setMessages(prev => [...newMessages, ...prev]);
+        if (hasMore) setMessages(sortChatsByCreatedAt(newMessages, 'asc'));
       });
     }
   };
 
-  const handleAutoScroll = () => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollToEnd({animated: false});
+  const handleAutoScroll = useCallback(() => {
+    if (scrollViewRef.current && messages.length > 0 && pagesLoaded == 2) {
+      scrollViewRef.current.scrollToEnd({animated: true});
     }
-  };
+  }, [messages, pagesLoaded]);
 
   useEffect(() => {
     if (params?.conversationId) {
@@ -320,8 +314,6 @@ const useChatScreen = ({navigate}, {params}) => {
     mutateAsync();
     return () => mutateAsync();
   }, [params?.conversationId]);
-
-  console.log('lkdjbvlksbdvklbsdklvbsdklvbksdlbvlksdbvskdbvslkd', messages);
 
   return {
     sendMessage,
@@ -374,6 +366,13 @@ const useChatScreen = ({navigate}, {params}) => {
     isTyping, // Use local isTyping state updated by socket
     lastSeenMessageId: otherUserData?.data?.last_read_message_id || null,
     lastSeen: formatLastSeen(otherUserData?.data?.last_seen_timestamp),
+    isSeenTrue,
+    onImagePress: item => {
+      dispatch({
+        payload: item?.metadata?.files,
+        type: types.openModal,
+      });
+    },
   };
 };
 

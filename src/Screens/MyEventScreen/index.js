@@ -1,6 +1,6 @@
 import React, {memo, useCallback} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
-import {FlatList, View} from 'react-native';
+import {FlatList, Image, Pressable, TextInput, View} from 'react-native';
 import UseCalendar from '../../Components/Calendar';
 import {hp, wp} from '../../Config/responsive';
 import useMyEventScreen from './useMyEventScreen';
@@ -10,7 +10,8 @@ import SmallEventCardsComp from '../../Components/SmallEventCardsComp';
 import {styles} from './styles';
 import {DataNotFound} from '../../Components/DataNotFound';
 import {CircleImage} from '../../Components/CircleImage';
-import {addcircle} from '../../Assets';
+import {addcircle, searchIcon} from '../../Assets';
+import {Colors} from '../../Theme/Variables';
 
 function MyEventScreen({navigation, route}) {
   const {
@@ -44,6 +45,23 @@ function MyEventScreen({navigation, route}) {
         onRightPress={() => navigation.navigate('CreateEventsScreen')}
         isBack
       />
+
+      <Pressable style={styles.searchContainer} onPress={() => {}}>
+        <View style={styles.searchInputWrapper}>
+          <Image
+            source={searchIcon}
+            resizeMode="contain"
+            style={styles.searchIcon}
+          />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search..."
+            placeholderTextColor={Colors.textGray}
+            editable={false}
+          />
+        </View>
+      </Pressable>
+
       <View style={styles.innerView}>
         <UseCalendar
           customMarkedDates={eventDate ?? []}

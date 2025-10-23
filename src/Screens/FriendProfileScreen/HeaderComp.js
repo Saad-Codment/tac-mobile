@@ -16,6 +16,7 @@ import ThemeButton from '../../Components/ThemeButton';
 import {Touchable} from '../../Components/Touchable';
 import NavigationService from '../../Services/NavigationService';
 import {
+  getConversationIdUrl,
   getMutalFriendsUrl,
   getUserFriendsUrl,
   imageUrl,
@@ -23,6 +24,7 @@ import {
 import useFriendServices from '../../Services/FriendServices';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {types} from '../../Redux/types';
+import API from '../../Utils/helperFunc';
 
 const HeaderComp = ({userData, myUserData}) => {
   const FriendCountHeaderComp = ({num, title, onPress}) => {
@@ -205,13 +207,17 @@ const HeaderComp = ({userData, myUserData}) => {
                   textStyle={{color: Colors.textGray, fontSize: hp('1.2')}}
                   isYellowTheme={Boolean(userData?.friends == 1)}
                   isDisable={Boolean(userData?.friends == 0)}
-                  onPress={() =>
-                    NavigationService.navigate('ChatScreen', {
-                      // id: item?.other_user?.id || item?.id, // Fallback to item.id if other_user.id is missing
-                      userId: userData?.id,
-                      // conversationId: item?.conversation_id,
-                    })
-                  }
+                  onPress={async () => {
+                    const {ok, data} = await API.get(
+                      getConversationIdUrl + userData?.id,
+                    );
+                    if (ok)
+                      NavigationService.navigate('ChatScreen', {
+                        id: userData?.other_user?.id || userData?.id, // Fallback to item.id if other_user.id is missing
+                        userId: userData?.id,
+                        conversationId: data?.conversation_id,
+                      });
+                  }}
                 />
               )}
             </View>
