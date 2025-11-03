@@ -156,10 +156,10 @@ const SettingScreen = ({navigation}) => {
         leftIcon: callEmpty,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
-        onPress: () => NavigationService.navigate('NumberEditScreen'),
+        onPress: () => NavigationService.navigate('AfterLoginNumberEditScreen'),
       },
       {
-        title: 'Are you willing to have horses for others?',
+        title: 'Are you willing to haul horses for others?',
         leftIcon: horseShoe,
         rightIcon: arrRight,
         rightIconColor: Colors.black,

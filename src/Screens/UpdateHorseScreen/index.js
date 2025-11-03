@@ -30,7 +30,7 @@ const UpdateHorseScreen = () => {
         }}
       />
       <TextComponent
-        text={'Are you willing to\nhave horses for others?'}
+        text={'Are you willing to\nhawl horses for others?'}
         size={hp('2.5')}
         fontFamily={'bold'}
         styles={{marginLeft: wp('5'), marginVertical: hp('3')}}

@@ -62,10 +62,10 @@ export const styles = StyleSheet.create({
     backgroundColor: isSender
       ? isEmoji
         ? 'transparent'
-        : Colors.primaryColor
+        : 'rgba(41, 45, 50, 1)'
       : isEmoji
       ? 'transparent'
-      : 'white',
+      : 'rgba(246, 246, 246, 1)',
     overflow: 'hidden',
     marginLeft: !isSender ? (isEmoji ? wp('-3') : wp('2')) : 0,
   }),
@@ -93,9 +93,10 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 30,
     marginBottom: Platform.OS == 'ios' ? hp('2') : hp('0'),
-    backgroundColor: Colors.themeBlack,
+    // backgroundColor: Colors.themeBlack,
     alignSelf: 'center',
     width: wp('95'),
+    backgroundColor: 'white',
   },
   attachmentBtn: {
     justifyContent: 'center',
@@ -109,6 +110,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     color: 'black',
     marginBottom: hp('1'),
+    backgroundColor: 'white',
   },
   sendBtnStyle: {
     borderRadius: 15,
@@ -198,14 +200,14 @@ export const styles = StyleSheet.create({
   dateHeader: {
     alignSelf: 'center',
     // backgroundColor: 'black',
-    backgroundColor: Colors.grayFaded,
+    // backgroundColor: Colors.grayFaded,
     paddingVertical: hp('0.5'),
     paddingHorizontal: wp('3'),
     borderRadius: 10,
     marginVertical: hp('1'),
   },
   dateHeaderText: {
-    color: Colors.white,
+    color: '#969696',
     fontSize: hp('1.5'),
     fontWeight: '500',
   },

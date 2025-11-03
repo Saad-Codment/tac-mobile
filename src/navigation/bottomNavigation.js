@@ -31,6 +31,7 @@ import {
   chatDotFill,
   chatDotTransparent,
   searchIcon,
+  friendReq,
 } from '../Assets';
 import {types} from '../Redux/types';
 import useReduxStore from '../Hooks/UseReduxStore';
@@ -115,9 +116,9 @@ function MybottomTabs() {
         component={Screens.HomeScreen}
       />
       <Tab.Screen
-        name="GlobalSearchScreen"
-        options={tabarComponent(searchIcon, searchIcon)}
-        component={Screens.GlobalSearchScreen}
+        name="SearchScreen"
+        options={tabarComponent(friendReq, friendReq)}
+        component={Screens.SearchScreen}
       />
       <Tab.Screen
         name="MyEventScreen"
@@ -131,12 +132,13 @@ function MybottomTabs() {
       />
       <Tab.Screen
         name="ChatUsersScreen"
-        options={tabarComponent(
-          isChatNotify ? chatDotFill : messages,
-          isChatNotify ? chatDotTransparent : messageOut,
-          !isChatNotify ? {} : {width: wp('8')},
-          true,
-        )}
+        // options={tabarComponent(
+        //   isChatNotify ? chatDotFill : messages,
+        //   isChatNotify ? chatDotTransparent : messageOut,
+        //   !isChatNotify ? {} : {width: wp('8')},
+        //   true,
+        // )}
+        options={tabarComponent(messageOut, messageOut)}
         component={Screens.ChatUsersScreen}
       />
       <Tab.Screen

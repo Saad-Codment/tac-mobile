@@ -11,20 +11,23 @@ import {PersistGate} from 'redux-persist/integration/react';
 import FlashMessage from 'react-native-flash-message';
 import {MenuProvider} from 'react-native-popup-menu';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const queryClient = new QueryClient();
 
 const Tac = () => (
-  <QueryClientProvider client={queryClient}>
-    <Provider store={store}>
-      <PersistGate persistor={persistor} loading={null}>
-        <MenuProvider>
-          <App />
-        </MenuProvider>
-        <FlashMessage position="top" />
-      </PersistGate>
-    </Provider>
-  </QueryClientProvider>
+  <GestureHandlerRootView>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <PersistGate persistor={persistor} loading={null}>
+          <MenuProvider>
+            <App />
+          </MenuProvider>
+          <FlashMessage position="top" />
+        </PersistGate>
+      </Provider>
+    </QueryClientProvider>
+  </GestureHandlerRootView>
 );
 
 //ADD this

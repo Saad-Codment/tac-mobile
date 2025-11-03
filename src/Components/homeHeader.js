@@ -18,6 +18,7 @@ import {
   handShakeLottie,
   notificationWhite,
   redDotBell,
+  searchIcon,
   settingWhite,
 } from '../Assets';
 import {Touchable} from '../Components/Touchable';
@@ -105,6 +106,16 @@ const HomeHeader = ({
             />
           </View>
         </Touchable>
+        <Touchable
+          onPress={() => NavigationService.navigate('GlobalSearchScreen')}>
+          {/* onPress={() => NavigationService.navigate('EventFilterScreen')}> */}
+          <Image
+            source={searchIcon}
+            resizeMode="contain"
+            style={styles.setIcon}
+            tintColor={'white'}
+          />
+        </Touchable>
         <Touchable onPress={onNotificarioPress}>
           <Image
             source={isNotification ? redDotBell : notificationWhite}
@@ -112,13 +123,6 @@ const HomeHeader = ({
             style={styles.notiIcon}
           />
         </Touchable>
-        {/* <Touchable>
-          <Image
-            source={settingWhite}
-            resizeMode="contain"
-            style={styles.setIcon}
-          />
-        </Touchable> */}
       </View>
       <View style={styles.searchComponent}>
         <ThemeButton
@@ -178,7 +182,7 @@ const styles = StyleSheet.create({
     // marginTop: hp('2.5'),
   },
   notiIcon: {width: wp('5'), marginTop: hp('1')},
-  setIcon: {width: wp('7')},
+  setIcon: {width: wp('5'), marginTop: hp('1')},
   headingView: {
     flexDirection: 'row',
     justifyContent: 'space-between',

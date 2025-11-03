@@ -124,11 +124,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: wp('1.5'),
     marginLeft: wp('8'),
-    borderRadius: Math.round(
-      Dimensions.get('window').width + Dimensions.get('window').height,
-    ),
-    width: Dimensions.get('window').width * 0.05,
-    height: Dimensions.get('window').width * 0.05,
+    borderRadius: 10,
+    paddingVertical: hp('0.5'),
+    // borderRadius: Math.round(
+    //   Dimensions.get('window').width + Dimensions.get('window').height,
+    // ),
+    // width: Dimensions.get('window').width * 0.05,
+    // height: Dimensions.get('window').width * 0.05,
     ...Platform.select({
       ios: {
         shadowColor: '#000',

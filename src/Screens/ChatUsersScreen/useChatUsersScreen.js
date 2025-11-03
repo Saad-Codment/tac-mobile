@@ -57,17 +57,17 @@ const useChatUserScreen = ({navigate, addListener}) => {
       reconnection: true,
       reconnectionAttempts: 5,
     });
-    socketRef.current.on('connect', () => console.log('Socket connected'));
-    socketRef.current.on('disconnect', () =>
-      console.log('Socket disconnected'),
-    );
-    socketRef.current.on('error', err => console.error('Socket error:', err));
+    // socketRef.current.on('connect', () => console.log('Socket connected'));
+    // socketRef.current.on('disconnect', () =>
+    //   console.log('Socket disconnected'),
+    // );
+    // socketRef.current.on('error', err => console.error('Socket error:', err));
 
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-      }
-    };
+    // return () => {
+    //   if (socketRef.current) {
+    //     socketRef.current.disconnect();
+    //   }
+    // };
   }, []);
 
   // Setup socket listeners and fetch chats

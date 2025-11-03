@@ -174,10 +174,10 @@ const useChatScreen = ({navigate}, {params}) => {
   });
 
   // Notify user in/out
-  const {mutateAsync} = useMutation({
-    mutationFn: () => API.post(WhenUserInAndOutChatUrl, {user_id: id}),
-    onSuccess: ({ok, data}) => console.log('User in/out updated:', data),
-  });
+  // const {mutateAsync} = useMutation({
+  //   mutationFn: () => API.post(WhenUserInAndOutChatUrl, {user_id: id}),
+  //   onSuccess: ({ok, data}) => console.log('User in/out updated:', data),
+  // });
 
   // Socket listeners
   useEffect(() => {
@@ -311,8 +311,8 @@ const useChatScreen = ({navigate}, {params}) => {
     if (params?.conversationId) {
       markMessagesAsSeen();
     }
-    mutateAsync();
-    return () => mutateAsync();
+    // mutateAsync();
+    // return () => mutateAsync();
   }, [params?.conversationId]);
 
   return {

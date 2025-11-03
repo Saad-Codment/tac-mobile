@@ -171,6 +171,7 @@ const MyProfileScreen = ({navigation, route}) => {
               url: getEventsUrl,
               key: 'myProfileEvents',
               title: 'Events',
+              isCreateEvent: true,
             });
           }}>
           <Image source={flag} resizeMode="contain" style={styles.statIcon} />
@@ -184,6 +185,7 @@ const MyProfileScreen = ({navigation, route}) => {
         </Touchable>
         <Touchable
           style={styles.statItem}
+          disabled={Boolean(myUserData?.associations?.length == 0)}
           onPress={() => onOpenModal('event_association')}>
           <Image
             source={assoicationIcon}

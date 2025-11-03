@@ -29,12 +29,16 @@ export const HeaderComponent = ({
   searchBoxPlaceholder,
   isAnotherRightChildern,
   isAllowSearch,
+  onGoBack,
 }) => {
   return (
     <View style={[styles.TopHeader, {...style}]}>
       <View style={styles.HeaderLeft}>
         <Touchable
-          onPress={() => NavigationService.goBack()}
+          onPress={() => {
+            NavigationService.goBack();
+            // if (onGoBack) onGoBack();
+          }}
           style={styles.backMain}
           disabled={!isBack}>
           {isBack && (
@@ -77,12 +81,15 @@ export const HeaderComponent = ({
       </View>
       <View style={styles.HeaderRight}>
         <Touchable style={styles.styleCheck} onPress={onRightPress}>
-          <Image source={icon} style={{...styles.filterIcon, rightIconStyle}} />
+          <Image
+            source={icon}
+            style={{...styles.filterIcon, ...rightIconStyle}}
+          />
         </Touchable>
         <Touchable style={styles.backMain} onPress={onRightPress}>
           <Image
             source={rightIconImg ?? saveReset}
-            style={{...styles.filterIcon, rightIconStyle}}
+            style={{...styles.filterIcon, ...rightIconStyle}}
           />
           {isAnotherRightChildern}
           {/* <TextComponent

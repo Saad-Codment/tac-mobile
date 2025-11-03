@@ -10,8 +10,11 @@ const getCredentials = () => {
   else {
     console.log = () => {};
     return {
-      baseURL: 'https://theappforcowboys.com/tac-backend/api',
-      imageURL: 'https://tac-app-bucket.s3.us-east-2.amazonaws.com/',
+      // baseURL: 'https://theappforcowboys.com/tac-backend/api',
+      // imageURL: 'https://tac-app-bucket.s3.us-east-2.amazonaws.com/',
+      // socketURL: 'https://messaging.theappforcowboys.com/',
+      baseURL: 'https://theappforcowboys.com/backend-staging/api',
+      imageURL: 'https://tac-staging.s3.us-east-2.amazonaws.com/',
       socketURL: 'https://messaging.theappforcowboys.com/',
     };
   }
@@ -61,6 +64,8 @@ export const allFriendEventsUrl = '/home/friends-events';
 export const allSuggestedEventsUrl = '/home/suggested-events';
 export const likeUnlikeUrl = '/react/like/';
 
+export const getFriendEventsUrl = '/user/events/?user_id=';
+
 export const getConversationIdUrl = 'v1/chat/get-conversation-id?user_id=';
 
 export const deleteSingleMsgUrl = '/v1/chat/delete-message?id=';
@@ -91,6 +96,7 @@ export const globalSearchUrl = '/v1/global-search/all?keyword=';
 export const globalSearchUsersUrl = '/v1/global-search/users?keyword=';
 export const globalSearchPostsUrl = '/v1/global-search/posts?keyword=';
 export const globalSearchEventsUrl = '/v1/global-search/events?keyword=';
+export const globalSearchEventsWithFilterUrl = '/v1/global-search/events?';
 
 export const getUserProfileUrl = '/user/get/';
 export const getUserPostsUrl = '/user/posts-and-events/';
@@ -126,7 +132,12 @@ export const updateEventUrl = '/events/update/';
 export const deleteEventUrl = '/events/delete/';
 export const updatePostUrl = '/posts/update/';
 export const deletePostUrl = '/posts/delete/';
-export const GetChatListUrl = '/chat/users';
+
+export const GetChatListUrl = '/v1/chat/list';
+export const changeUserChatStatusUrl = '/v1/chat/is-online';
+
+export const getMinMaxPriceUrl = '/setup/added-money';
+
 export const SendChatNotificationUrl = '/chat/notification';
 export const WhenUserInAndOutChatUrl = '/chat/user-in-chat';
 export const contactFormUrl = '/inquiry/store';

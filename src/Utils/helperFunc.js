@@ -1,5 +1,6 @@
 import {create} from 'apisauce';
 import {
+  GetChatListUrl,
   SendChatNotificationUrl,
   VerifyUserUrl,
   baseURL,
@@ -34,6 +35,7 @@ const hideLoaderAPIs = [
   homeSuggestedFriendsUrl,
   SendChatNotificationUrl,
   sendMsgUrl,
+  GetChatListUrl,
 ];
 // const hideLoaderAPIs = ['/playcount', '/playlist', '/home-content'];
 

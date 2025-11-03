@@ -76,6 +76,7 @@ const UpcomingEventsComp = ({
   functionToUpdatePostOrEvent,
   functionToUpdateComment,
   setCommentModal,
+  disabled,
 }) => {
   const removeCalendarEvent = async () => {
     try {
@@ -167,10 +168,15 @@ const UpcomingEventsComp = ({
         NavigationService.navigate('EventsDetailScreen', {id: item?.id});
       }}>
       <Pressable
+        disabled={disabled}
         style={styles.upperImage}
-        onPress={() =>
-          NavigationService.navigate('FriendProfileScreen', {id: item?.user_id})
-        }>
+        onPress={() => {
+          if (item?.type != 6) {
+            NavigationService.navigate('FriendProfileScreen', {
+              id: item?.user_id,
+            });
+          }
+        }}>
         <Pressable onPress={onImagePress}>
           <CircleImage
             size={0.12}

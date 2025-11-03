@@ -65,7 +65,7 @@ export const styles = StyleSheet.create({
   upComingFlatlistView: {
     // paddingBottom: hp('15'),
     flexGrow: 1,
-    alignSelf: 'center',
+    // alignSelf: 'center',
     // paddingTop: hp('1'),
     backgroundColor: 'transparent',
   },

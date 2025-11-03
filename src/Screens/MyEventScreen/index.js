@@ -46,7 +46,11 @@ function MyEventScreen({navigation, route}) {
         isBack
       />
 
-      <Pressable style={styles.searchContainer} onPress={() => {}}>
+      <Pressable
+        style={styles.searchContainer}
+        onPress={() =>
+          navigation.navigate('GlobalEventsScreen', {isParams: false})
+        }>
         <View style={styles.searchInputWrapper}>
           <Image
             source={searchIcon}

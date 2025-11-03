@@ -20,13 +20,14 @@ import {DataNotFound} from '../../Components/DataNotFound';
 import ThemeButton from '../../Components/ThemeButton';
 import MyFriendComp from '../../Components/MyFriendComp';
 import FriendReqComp from '../../Components/FriendReqComp';
-import {searchIcon} from '../../Assets';
+import {searchIcon, tacFilterIcon} from '../../Assets';
 import useGloabalSearchScreen from './useGlobalSearchScreen';
 import PostViewComp from '../../Components/PostViewComp';
 import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
 import BottomModalComponent from '../../Components/BottomModalComponent';
 import SharePostComp from '../../Components/SharePostComp';
 import ShareEventComp from '../../Components/ShareEventComp';
+import {Touchable} from '../../Components/Touchable';
 
 const GlobalSearchScreen = ({navigation}) => {
   const {
@@ -48,6 +49,21 @@ const GlobalSearchScreen = ({navigation}) => {
     isRefetching,
     selectTabAllData,
     refetchKeys,
+    filterVal,
+    setFilterVal,
+    queryClient,
+    selectUrl,
+    isParams,
+    allDataEvents,
+    isFetchingNextPageEvents,
+    fetchNextPageEvents,
+    hasNextPageEvents,
+    isPendingEvents,
+    isFetchingEvents,
+    isRefetchingEvnts,
+    allDataRefetchEvents,
+    setPages,
+    refetchWhenParams,
   } = useGloabalSearchScreen(navigation);
 
   console.log(
@@ -167,9 +183,8 @@ const GlobalSearchScreen = ({navigation}) => {
             )}
             ListFooterComponent={
               selectTabAllData.length >= 9 &&
-              (isFetchingNextPage ? (
-                <ActivityIndicator size="small" color="gray" />
-              ) : (
+              !isSeeAll &&
+              (isFetchingNextPage ? null : (
                 <ThemeButton
                   title={'Load More'}
                   style={{
@@ -181,6 +196,7 @@ const GlobalSearchScreen = ({navigation}) => {
                   }}
                   textStyle={{fontSize: hp('1.5')}}
                   onPress={async () => {
+                    setPages(prev => prev + 1);
                     await fetchNextPage();
                     // afterFetchNextPage();
                   }}
@@ -196,7 +212,17 @@ const GlobalSearchScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <HeaderComponent headerTitle={'Search'} />
+      <HeaderComponent
+        headerTitle={'Search'}
+        isBack
+        // onGoBack={() => {
+        //   queryClient.removeQueries({
+        //     queryKey: ['globalSearchUrlForAllData'],
+        //     exact: true,
+
+        //   });
+        // }}
+      />
       <View style={styles.searchContainer}>
         <View style={styles.searchInputWrapper}>
           <Image
@@ -212,6 +238,7 @@ const GlobalSearchScreen = ({navigation}) => {
             onChangeText={e => setSearchVal(e)}
             returnKeyType="search"
             onSubmitEditing={() => {
+              setFilterVal(prev => ({...prev, isParams: false}));
               const isSearch = Boolean(
                 searchVal == null || searchVal == '' || searchVal == undefined,
               );
@@ -221,6 +248,30 @@ const GlobalSearchScreen = ({navigation}) => {
               }
             }}
           />
+          {selectedVal?.id == 'Events' && (
+            <Touchable
+              onPress={() => {
+                // setFilterVal(prev => ({...prev, isParams: false}));
+                navigation.navigate('EventFilterScreen', {
+                  onFilterPress: e => {
+                    setPages(1);
+                    setTimeout(() => {
+                      setFilterVal(e);
+                    }, 1000);
+                    setTimeout(() => {
+                      refetchWhenParams();
+                    }, 1500);
+                  },
+                  selectedVal: filterVal,
+                });
+              }}>
+              <Image
+                source={tacFilterIcon}
+                resizeMode="contain"
+                style={styles.searchIcon}
+              />
+            </Touchable>
+          )}
         </View>
       </View>
       <View style={styles.mainView}>
@@ -234,6 +285,9 @@ const GlobalSearchScreen = ({navigation}) => {
           selectedBgColor={Colors.headerBg}
           selectedAlter={selectedVal}
           onSelectVal={(id, item) => {
+            setPages(1);
+            setFilterVal(prev => ({...prev, isParams: false}));
+
             if (item?.id != 'all') {
               setSelectedVal(item);
               allDataRefetch();

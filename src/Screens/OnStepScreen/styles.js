@@ -212,7 +212,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: hp('1'),
-    marginTop: Platform.OS == 'ios' ? hp('3') : 0,
+    // marginTop: Platform.OS == 'ios' ? hp('3') : 0,
   },
   arrBack: {
     resizeMode: 'contain',

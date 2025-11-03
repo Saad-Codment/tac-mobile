@@ -110,6 +110,9 @@ export default function ListViewScreen({navigation, route}) {
               tintColor={Colors.backgroundTheme}
             />
           </Touchable>
+          {route?.params?.title && (
+            <TextComponent text={route?.params?.title} />
+          )}
           <TextComponent
             text={'Save'}
             styles={styles.saveText}

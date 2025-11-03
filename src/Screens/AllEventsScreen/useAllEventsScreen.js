@@ -37,6 +37,11 @@ const useAllEventsScreen = ({navigate, addListener}, {params}) => {
     getNextPageParam: (lastPage, pages) => (pages?.length ?? 0) + 1,
   });
 
+  console.log(
+    'datadatadatadatadatadatadatadatadatadatadatadata',
+    data?.pages[0]?.data,
+  );
+
   // useEffect(() => {
   //   const event = addListener('focus', () => {
   //     refetch();

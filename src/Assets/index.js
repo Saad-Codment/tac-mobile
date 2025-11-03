@@ -82,6 +82,8 @@ export {default as horseShoe} from './Icons/horseShoe.png';
 export {default as callEmpty} from './Icons/callEmpty.png';
 export {default as bigHorseNail} from './Icons/bigHorseNail.png';
 export {default as manageSub} from './Icons/manageSub.png';
+export {default as selectedCheck} from './Icons/selectedCheck.png';
+export {default as tacFilterIcon} from './Icons/tacFilterIcon.png';
 
 export {default as blockUser} from './Icons/blockUser.png';
 export {default as replyIcon} from './Icons/replyIcon.png';

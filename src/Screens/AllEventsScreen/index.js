@@ -12,6 +12,7 @@ import {keyExtractor} from '../../Utils';
 import Overlay from '../../Components/Overlay';
 import BottomModalComponent from '../../Components/BottomModalComponent';
 import {TextComponent} from '../../Components/TextComponent';
+import {addcircle} from '../../Assets';
 
 const AllEventsScreen = ({navigation, route}) => {
   const {
@@ -62,6 +63,8 @@ const AllEventsScreen = ({navigation, route}) => {
         headerTitle={title}
         goBack={() => navigation.goBack()}
         isBack
+        rightIconImg={route?.params?.isCreateEvent ? addcircle : null}
+        onRightPress={() => navigation.navigate('CreateEventsScreen')}
       />
       {route?.params?.key == 'suggestedEvents' && (
         <TextComponent

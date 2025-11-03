@@ -37,5 +37,8 @@ export {default as PerformancesScreen} from './PerformancesScreen';
 export {default as GlobalSearchScreen} from './GlobalSearchScreen';
 export {default as UpdateHorseScreen} from './UpdateHorseScreen';
 export {default as SubscriptionInfoScreen} from './SubscriptionInfoScreen';
+export {default as EventFilterScreen} from './EventFilterScreen';
+export {default as SelectFriendListScreem} from './SelectFriendListScreem';
+export {default as GlobalEventsScreen} from './GlobalEventsScreen';
 
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

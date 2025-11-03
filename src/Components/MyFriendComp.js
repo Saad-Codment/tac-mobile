@@ -13,7 +13,7 @@ import {hp, wp} from '../Config/responsive';
 import {TextComponent} from './TextComponent';
 import {Touchable} from './Touchable';
 import {Colors, FontSize} from '../Theme/Variables';
-import {chat, profileAdd} from '../Assets';
+import {chat, profileAdd, tickSquare, unCheck} from '../Assets';
 import {CircleImage} from './CircleImage';
 import {getConversationIdUrl, imageUrl} from '../Utils/Urls';
 import MutualFriends from './MutualFriendsComponent';
@@ -31,6 +31,9 @@ const MyFriendComp = ({
   isDisable,
   notShowProfile,
   isBlocked,
+  isSelected,
+  onSelectValue,
+  isSelectedVal,
 }) => {
   const {sendFriendReq, unblockUser} = useFriendServices();
   const {dispatch} = useReduxStore();
@@ -81,6 +84,14 @@ const MyFriendComp = ({
             refetch();
           }}
         />
+      ) : isSelected ? (
+        <Touchable onPress={onSelectValue}>
+          <Image
+            source={isSelectedVal ? tickSquare : unCheck}
+            resizeMode="contain"
+            style={{width: wp('5'), height: hp('3')}}
+          />
+        </Touchable>
       ) : item?.isInvited ? (
         <ThemeButton
           title={'Invite'}

@@ -14,7 +14,7 @@ import {logoScreen, splash, splash2} from './src/Assets';
 import Overlay from './src/Components/Overlay';
 import useReduxStore from './src/Hooks/UseReduxStore';
 import {hp, wp} from './src/Config/responsive';
-import {useIsFetching} from '@tanstack/react-query';
+import {useIsFetching, useMutation, useQuery} from '@tanstack/react-query';
 import Geolocation from '@react-native-community/geolocation';
 import {fcmService} from './src/Services/Notifications';
 import {fcmRegister} from './src/Redux/Action/AuthAction';
@@ -25,6 +25,13 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import ImagePreviewComp from './src/Components/ImagePreviewComp';
 // import {Settings} from 'react-native-fbsdk-next';
 import Purchases, {LOG_LEVEL} from 'react-native-purchases';
+import {io} from 'socket.io-client';
+import MessageShowComp from './src/Components/MessageShowComp';
+import {mergeIds} from './src/Services/GlobalFunctions';
+import API from './src/Utils/helperFunc';
+import {changeUserChatStatusUrl, GetChatListUrl} from './src/Utils/Urls';
+
+const SOCKET_URL = 'https://messaging.theappforcowboys.com/'; // Use your socket URL
 
 const App = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -38,6 +45,25 @@ const App = () => {
   const {isLogin, userData} = getState('Auth');
   const {image, modalType} = getState('modalState');
   const isFetching = useIsFetching();
+
+  /* This code snippet is defining a `useMutation` hook called `sendFriendReq` that will handle making a
+POST request to the `sendFriendReqUrl` endpoint with the provided data. */
+  const {mutateAsync} = useMutation({
+    mutationFn: data => {
+      return API.post(changeUserChatStatusUrl, data);
+    },
+  });
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', state => {
+      if (state === 'active') {
+        mutateAsync({is_online: 0});
+      } else if (state === 'background') {
+        mutateAsync({is_online: 1});
+      }
+    });
+    return () => sub.remove();
+  }, []);
 
   useEffect(() => {
     if (isLogin) {
@@ -87,17 +113,19 @@ const App = () => {
   };
 
   const onOpenNotification = notify => {
-    if (notify?.data?.payload) {
-      console.log(
-        'payloadDatapayloadDatapayloadDatapayloadDatapayloadData',
-        payloadData,
-      );
-      const payloadData = JSON.parse(notify?.data?.payload);
-      if (payloadData?.isRoute) {
-        NavigationService.navigate(
-          payloadData?.screenRoute,
-          payloadData?.app_data?.id && payloadData?.app_data,
-        );
+    console.log(
+      'payloadDatapayloadDatapayloadDatapayloasdsdsdsdDatapayloadData',
+      notify,
+    );
+    if (notify?.notification?.data?.data) {
+      const payloadData = JSON.parse(notify?.notification?.data?.data);
+      if (notify?.notification?.data?.isRoute) {
+        console.log('jksdbvkjsbdkovbdklsvbsdbvsdklblskd', payloadData);
+        NavigationService.navigate('ChatScreen', {
+          id: payloadData?.other_user?.id || payloadData?.id, // Fallback to item.id if other_user.id is missing
+          userId: userData?.id,
+          conversationId: payloadData?.conversation_id,
+        });
       }
     } else {
       NavigationService.navigate('NotificationScreen');
@@ -183,16 +211,99 @@ const App = () => {
       source={splash2}
       style={styles.SplashScreen_RootView}></ImageBackground>
   );
+
+  const [chats, setChats] = useState([]);
+  const socketRef = useRef(null);
+  const [isInAppMsg, setIsInAppMsg] = useState(null);
+
+  const {data, refetch} = useQuery({
+    queryKey: ['chatList'],
+    queryFn: () => API.get(GetChatListUrl),
+    refetchOnReconnect: true,
+    retry: 5,
+  });
+  console.log(
+    'datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata',
+    data?.data,
+  );
+
+  // Initialize Socket.io directly in useEffect
+  useEffect(() => {
+    socketRef.current = io(SOCKET_URL, {
+      transports: ['websocket'],
+      reconnection: true,
+      reconnectionAttempts: 5,
+    });
+    socketRef.current.on('connect', () =>
+      console.log('Socket connectedklsdnlkbsdklvbklsdbvlkbsdlkbvklsd'),
+    );
+    socketRef.current.on('disconnect', () =>
+      console.log('Socket disconnected'),
+    );
+    socketRef.current.on('error', err => console.error('Socket error:', err));
+    // return () => {
+    //   if (socketRef.current) {
+    //     socketRef.current.disconnect();
+    //   }
+    // };
+  }, []);
+
+  // Setup socket listeners and fetch chats
+  useEffect(() => {
+    if (userData?.id && data?.data && data?.data.length > 0 && isLogin) {
+      // Initialize chats with isTyping: false
+      setChats(data.data);
+
+      // Join all chat rooms
+      data.data.forEach(chat => {
+        socketRef.current.emit('join', userData?.id);
+      });
+
+      // Socket listeners
+      socketRef.current.on('newMessage', payload => {
+        const index = chats.findIndex(
+          c => c.conversation_id === payload.conversation_id,
+        );
+        if (index !== -1) {
+          console.log(
+            'New message received ChatLjsdhbvckjsdbvjkbsdkjvbdjksbvjkdsbkjvbksdist:',
+            payload,
+          );
+          setIsInAppMsg(payload);
+          setTimeout(() => {
+            setIsInAppMsg(null);
+          }, 5000);
+        }
+      });
+    }
+  }, [data, userData?.id, isLogin]);
+
   const getNameFunc = NavigationService.getCurrentRoute();
   return (
     <>
       {isVisible === true ? Splash_Screen : <MainNavigator />}
       {modalType && <ImagePreviewComp visible={modalType} images={image} />}
+      {isInAppMsg?.conversation_id && isLogin && (
+        <MessageShowComp
+          onDismiss={() => setIsInAppMsg(null)}
+          visible={true}
+          payload={isInAppMsg}
+          onTap={() => {
+            NavigationService.navigate('ChatScreen', {
+              id: isInAppMsg?.other_user?.id || isInAppMsg?.id, // Fallback to item.id if other_user.id is missing
+              userId: userData?.id,
+              conversationId: isInAppMsg?.conversation_id,
+            });
+            setIsInAppMsg(null);
+          }}
+        />
+      )}
       {isloading &&
         Boolean(getNameFunc?.getCurrentRoute()?.name != 'AllEventsScreen') &&
         Boolean(getNameFunc?.getCurrentRoute()?.name != 'HomeScreen') &&
         Boolean(getNameFunc?.getCurrentRoute()?.name != 'ChatScreen') &&
         Boolean(getNameFunc?.getCurrentRoute()?.name != 'GlobalSearchScreen') &&
+        Boolean(getNameFunc?.getCurrentRoute()?.name != 'GlobalEventsScreen') &&
         Boolean(
           getNameFunc?.getCurrentRoute()?.name != 'FriendProfileScreen',
         ) && <Overlay />}

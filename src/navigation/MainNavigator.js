@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import useReduxStore from '../Hooks/UseReduxStore';
@@ -6,6 +6,11 @@ import NavigationService from '../Services/NavigationService';
 import * as Screens from '../Screens/index';
 import MybottomTabs from './bottomNavigation';
 import Orientation from 'react-native-orientation-locker';
+import {useQuery} from '@tanstack/react-query';
+import API from '../Utils/helperFunc';
+import {mergeIds} from '../Services/GlobalFunctions';
+import MessageShowComp from '../Components/MessageShowComp';
+import {io} from 'socket.io-client';
 
 const Stack = createNativeStackNavigator();
 
@@ -86,7 +91,7 @@ function MainNavigator() {
               component={Screens.SubscribeScreen}
             />
             <Stack.Screen
-              name="NumberEditScreen"
+              name="AfterLoginNumberEditScreen"
               component={Screens.NumberEditScreen}
             />
             <Stack.Screen
@@ -103,12 +108,25 @@ function MainNavigator() {
               component={Screens.UpdateHorseScreen}
             />
             <Stack.Screen
-              name="VerficationScreen"
+              name="GlobalSearchScreen"
+              component={Screens.GlobalSearchScreen}
+            />
+            <Stack.Screen
+              name="EventFilterScreen"
+              component={Screens.EventFilterScreen}
+            />
+            <Stack.Screen
+              name="AfterLoginVerficationScreen"
               component={Screens.VerficationScreen}
             />
             <Stack.Screen
               name="ListViewScreen"
               component={Screens.ListViewScreen}
+              options={{
+                presentation: 'formSheet', // 👈 Makes it open as a modal
+                animation: 'slide_from_bottom', // Optional animation style
+                headerShown: false, // Optional, hides the header
+              }}
             />
             <Stack.Screen
               name="BlockedUserScreen"
@@ -152,8 +170,26 @@ function MainNavigator() {
               component={Screens.EventsDetailScreen}
             />
             <Stack.Screen
+              name="GlobalEventsScreen"
+              component={Screens.GlobalEventsScreen}
+            />
+            <Stack.Screen
               name="LocationScreen"
               component={Screens.LocationScreen}
+              options={{
+                presentation: 'formSheet', // 👈 Makes it open as a modal
+                animation: 'slide_from_bottom', // Optional animation style
+                headerShown: false, // Optional, hides the header
+              }}
+            />
+            <Stack.Screen
+              name="SelectFriendListScreem"
+              component={Screens.SelectFriendListScreem}
+              options={{
+                presentation: 'formSheet', // 👈 Makes it open as a modal
+                animation: 'slide_from_bottom', // Optional animation style
+                headerShown: false, // Optional, hides the header
+              }}
             />
             <Stack.Screen
               name="CreateEventsScreen"

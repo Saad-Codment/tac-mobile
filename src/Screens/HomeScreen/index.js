@@ -84,6 +84,7 @@ const HomeScreen = ({navigation}) => {
         openBottomSheet={id => setModal({id, type: 'event'})}
         mainViewStyle={{width: wp('90'), marginLeft: wp('2')}}
         refetechKeys={['homeSuggestedFriends']}
+        disabled={true}
       />
     );
   }, []);

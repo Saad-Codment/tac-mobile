@@ -234,7 +234,7 @@ const ChatScreen = ({navigation, route}) => {
                 <TextComponent
                   text={item.text}
                   styles={{
-                    fontWeight: '500',
+                    fontWeight: '400',
                     fontSize: hp('1.5'),
                     color: isSender ? 'white' : 'black',
                   }}
@@ -284,7 +284,7 @@ const ChatScreen = ({navigation, route}) => {
 
   return (
     <KeyboardAvoidingView
-      style={{flex: 1, backgroundColor: Colors.themeBlack}}
+      style={{flex: 1, backgroundColor: 'white'}}
       behavior={Platform.OS === 'ios' ? 'padding' : null}
       keyboardVerticalOffset={Platform.OS === 'ios' ? hp('0') : 0}>
       <View style={styles.headerView}>
@@ -342,7 +342,10 @@ const ChatScreen = ({navigation, route}) => {
         ref={scrollViewRef}
         onContentSizeChange={handleAutoScroll}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: hp('2')}}
+        contentContainerStyle={{
+          paddingBottom: hp('2'),
+          backgroundColor: 'white',
+        }}
       />
       <View style={styles.searchMain}>
         <Touchable onPress={pickAndSendMedia} style={styles.attachmentBtn}>

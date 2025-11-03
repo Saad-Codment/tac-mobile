@@ -17,6 +17,8 @@ import {Touchable} from '../../Components/Touchable';
 import NavigationService from '../../Services/NavigationService';
 import {
   getConversationIdUrl,
+  getEventsUrl,
+  getFriendEventsUrl,
   getMutalFriendsUrl,
   getUserFriendsUrl,
   imageUrl,
@@ -78,7 +80,12 @@ const HeaderComp = ({userData, myUserData}) => {
           num: userData?.event_count,
           title: 'Events',
           onPress: () =>
-            NavigationService.navigate('MyEventScreen', userData?.id),
+            NavigationService.navigate('AllEventsScreen', {
+              url: getFriendEventsUrl + userData?.id,
+              key: ' getFriendEventsUrl+userData?.id',
+              title: 'Events',
+              // NavigationService.navigate('MyEventScreen', userData?.id),
+            }),
         },
         {
           num: userData?.friends_count,

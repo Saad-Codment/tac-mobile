@@ -11,6 +11,8 @@ export const MultiSelectButton = ({
   onSelectVal,
   objId,
   isMultipule,
+  btnStyles,
+  textStyles,
 }) => {
   const [dummy, setDummy] = useState(0);
 
@@ -26,22 +28,28 @@ export const MultiSelectButton = ({
             // setDummy(pre => pre + 1);
           }}
           title={item?.name ?? item?.title}
-          style={styles.btnMain(
-            isMultipule
-              ? Boolean(selectedAlter?.find(res => res?.id == item.id))
-              : Boolean(
-                  (selectedAlter?.alternates?.id ?? selectedAlter?.id) ==
-                    item.id,
-                ),
-          )}
-          textStyle={styles.btnText(
-            isMultipule
-              ? Boolean(selectedAlter?.find(res => res?.id == item.id))
-              : Boolean(
-                  (selectedAlter?.alternates?.id ?? selectedAlter?.id) ==
-                    item.id,
-                ),
-          )}
+          style={{
+            ...styles.btnMain(
+              isMultipule
+                ? Boolean(selectedAlter?.find(res => res?.id == item.id))
+                : Boolean(
+                    (selectedAlter?.alternates?.id ?? selectedAlter?.id) ==
+                      item.id,
+                  ),
+            ),
+            ...btnStyles,
+          }}
+          textStyle={{
+            ...styles.btnText(
+              isMultipule
+                ? Boolean(selectedAlter?.find(res => res?.id == item.id))
+                : Boolean(
+                    (selectedAlter?.alternates?.id ?? selectedAlter?.id) ==
+                      item.id,
+                  ),
+            ),
+            ...textStyles,
+          }}
           isDisable={isDisable}
         />
       ))}

@@ -6,6 +6,7 @@ import useReduxStore from '../../Hooks/UseReduxStore';
 import API from '../../Utils/helperFunc';
 import {SendVerficatioUrl} from '../../Utils/Urls';
 import {useMutation} from '@tanstack/react-query';
+import NavigationService from '../../Services/NavigationService';
 
 const useNumberEditScreen = ({navigate, goBack}) => {
   const {getState, dispatch} = useReduxStore();
@@ -84,13 +85,27 @@ const useNumberEditScreen = ({navigate, goBack}) => {
   };
 
   const awaitFunc = () => {
-    navigate('VerficationScreen', {
-      item: {
-        ...userData,
-        phone: number,
-        original_phone: formattedNumber,
-      },
-    });
+    const getNameFunc = NavigationService.getCurrentRoute();
+    if (
+      Boolean(
+        getNameFunc?.getCurrentRoute()?.name == 'AfterLoginNumberEditScreen',
+      )
+    ) {
+      navigate('AfterLoginVerficationScreen', {
+        item: {
+          ...userData,
+          phone: number,
+          original_phone: formattedNumber,
+        },
+      });
+    } else
+      navigate('VerficationScreen', {
+        item: {
+          ...userData,
+          phone: number,
+          original_phone: formattedNumber,
+        },
+      });
   };
 
   const {mutate} = useMutation({
