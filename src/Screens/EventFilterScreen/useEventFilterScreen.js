@@ -16,8 +16,11 @@ const useEventFilterScreen = ({params}) => {
     queryFn: () => API.get(getMinMaxPriceUrl),
   });
 
+  const currentDate = new Date();
+
   const sliderRef = useRef(null);
   const [filterVal, setFilterVal] = useState(params?.selectedVal);
+  const [modalType, setModalType] = useState(null);
   // const [filterVal, setFilterVal] = useState({
   //   location: params?.location,
   //   minPrice: params?.minPrice,
@@ -36,6 +39,8 @@ const useEventFilterScreen = ({params}) => {
     location,
     maxPrice,
     minPrice,
+    fromDate,
+    toDate,
   } = filterVal;
   const updateState = data => setFilterVal(prev => ({...prev, ...data}));
 
@@ -59,6 +64,8 @@ const useEventFilterScreen = ({params}) => {
     navigation.goBack();
   };
 
+  const toggleDate = () => setModalType(null);
+
   return {
     sliderRef,
     onChangeVal,
@@ -72,6 +79,12 @@ const useEventFilterScreen = ({params}) => {
     filterVal,
     priceLimit: data?.data?.max_price ?? 99999999,
     applyFilters,
+    fromDate,
+    toDate,
+    currentDate,
+    toggleDate,
+    modalType,
+    setModalType,
   };
 };
 export default useEventFilterScreen;

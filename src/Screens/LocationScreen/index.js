@@ -105,7 +105,6 @@ const LocationScreen = ({route, navigation}) => {
           <GooglePlacesAutocomplete
             fetchDetails={true} // you need this to fetch the details object onPress
             GooglePlacesDetailsQuery={{fields: ['place', 'geometry']}}
-            placeholder="Search"
             onPress={(data, details = null) => {
               // 'details' contains information about the selected place
               handleLocationSelect(details);
@@ -130,7 +129,7 @@ const LocationScreen = ({route, navigation}) => {
               </TouchableOpacity>
             )}
             textInputProps={{
-              placeholderTextColor: Colors.statusCompleted,
+              placeholderTextColor: Colors.gray,
               placeholder: 'Search location here...',
               // selectionColor: Colors.themeGreen,
               clearButtonMode: 'never',

@@ -9,14 +9,18 @@ import {
 import {useCallback, useEffect, useState} from 'react';
 import useFriendServices from '../../Services/FriendServices';
 import {loadingFalse} from '../../Redux/Action/isloadingAction';
-import {getIdsFromArry} from '../../Services/GlobalFunctions';
+import {formatDateToYMD, getIdsFromArry} from '../../Services/GlobalFunctions';
 
 const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
   const {queryClient, dispatch} = useReduxStore();
   const [page, setPage] = useState(1); // Current page for pagination
   const [totalPages, setTotalPages] = useState(1); // Current page for pagination
   const [eventsList, setEventsList] = useState(null); // Combined list of events
+  const [isLoading, setIsLoading] = useState(false); // Combined list of events
   const [searchVal, setSearchVal] = useState(null);
+  var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const currentDate = new Date();
 
   const {data: maxPriceVal} = useQuery({
     queryKey: ['getMinMaxPriceUrl'],
@@ -32,6 +36,8 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
     assocations: [],
     circuits: [],
     isParams: false,
+    fromDate: null,
+    toDate: null,
   });
 
   const {
@@ -43,6 +49,8 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
     maxPrice,
     minPrice,
     isParams,
+    fromDate,
+    toDate,
   } = filterVal;
 
   const [modal, setModal] = useState(null); // Flag to check if more data exists
@@ -56,6 +64,7 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
     isFetching,
     isRefetching,
     refetch,
+    isStale,
   } = useInfiniteQuery({
     queryKey: [params?.url],
     queryFn: async ({pageParam = 1}) => {
@@ -112,6 +121,11 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
       const priceParams = `min_price=${minPrice}&max_price=${maxPrice}`;
       const pageParams = `page=${pageParam}`;
       const searchKeyword = searchVal != null ? `keyword=${searchVal}` : '';
+      const fromDateParams =
+        fromDate != null ? `from_date=${formatDateToYMD(fromDate)}` : '';
+      const toDateParams =
+        toDate != null ? `to_date=${formatDateToYMD(toDate)}` : '';
+      const timeZoneParams = `timeZone=${timeZone}`;
 
       // Combine all
       const queryParams = [
@@ -122,6 +136,9 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
         priceParams,
         searchKeyword,
         locationParams,
+        fromDateParams,
+        toDateParams,
+        timeZoneParams,
         pageParams,
       ]
         .filter(Boolean)
@@ -129,6 +146,9 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
       console.log(
         'kjsdbcjksbdjkvbjksdbvjkbsjdkvbjksdbkjvbsdjkbvksdbj',
         `${globalSearchEventsWithFilterUrl}${queryParams}`,
+        fromDate != currentDate,
+        fromDate,
+        currentDate,
       );
       return API.get(`${globalSearchEventsWithFilterUrl}${queryParams}`);
     },
@@ -172,7 +192,7 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
     fetchNextPage,
     hasNextPage,
     isPending,
-    isFetching,
+    isFetching: isStale,
     refetch,
     eventsList: data?.pages ? list.filter(res => res != undefined) : null,
     onRefresh,
@@ -190,6 +210,8 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
     setSearchVal,
     filterVal,
     setFilterVal,
+    isLoading,
+    setIsLoading,
     likePost: async (i, id) => {
       // await likeAndDisLikeEvent.mutateAsync(id);
       // queryClient.invalidateQueries([params?.key]); // Refetch data

@@ -47,10 +47,11 @@ const AddFriendComp = ({item, sendReq, mainViewStyle}) => {
           }
         />
         <View style={styles.bottomView}>
-          {/* <MutualFriends
+          <MutualFriends
             uri={'https://picsum.photos/200'}
-            friends={[1, 2, 3, 4]}
-          /> */}
+            friends={Array.from({length: item?.mutual_count}, (_, i) => i + 1)}
+            textAfterCount={'mutual friends'}
+          />
           {/* <TextComponent styles={styles.mutual} text={'32 Mutual friends'} /> */}
         </View>
         {/* {item?.requested == 0 ? (

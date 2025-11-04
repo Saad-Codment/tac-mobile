@@ -75,6 +75,11 @@ const HomeScreen = ({navigation}) => {
 
   const scrollOffset = useRef(0);
 
+  console.log(
+    'suggestedFriendssuggestedFriendssuggestedFriendssuggestedFriendssuggestedFriends',
+    suggestedFriends[0],
+  );
+
   const renderItem = useCallback(({item, index}) => {
     return (
       <UpcomingEventsComp

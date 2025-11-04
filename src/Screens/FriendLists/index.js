@@ -2,18 +2,11 @@ import {View, Text, FlatList, Image, ActivityIndicator} from 'react-native';
 import React, {useCallback} from 'react';
 import useFriendLists from './useFriendLists';
 import {styles} from './styles';
-import {TextComponent} from '../../Components/TextComponent';
-import {Touchable} from '../../Components/Touchable';
 import {HeaderComponent} from '../../Components/HeaderComponent';
-import {chat, rightIos} from '../../Assets';
-import BlurImage from '../../Components/BlurImage';
 import {hp, wp} from '../../Config/responsive';
-import MutualFriends from '../../Components/MutualFriendsComponent';
 import {AniFlatOneByOne} from '../../AnimatedComp/AniFlatOneByOne';
 import {DataNotFound} from '../../Components/DataNotFound';
 import MyFriendComp from '../../Components/MyFriendComp';
-import Overlay from '../../Components/Overlay';
-import {getMyFriendsUrl} from '../../Utils/Urls';
 import ThemeButton from '../../Components/ThemeButton';
 
 const FriendLists = ({navigation, route}) => {

@@ -11,6 +11,7 @@ import {
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import API from '../../Utils/helperFunc';
 import {loadingFalse} from '../../Redux/Action/isloadingAction';
+import {formatDateToYMD} from '../../Services/GlobalFunctions';
 
 const useGloabalSearchScreen = () => {
   const {getState, dispatch, queryClient} = useReduxStore();
@@ -20,6 +21,8 @@ const useGloabalSearchScreen = () => {
   const [modal, setModal] = useState(null); // Flag to check if more data exists
   const [selectedVal, setSelectedVal] = useState({name: 'All', id: 'all'});
   const [pages, setPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false); // Combined list of events
+  var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const {data: maxPriceVal} = useQuery({
     queryKey: ['getMinMaxPriceUrl'],
@@ -35,6 +38,8 @@ const useGloabalSearchScreen = () => {
     assocations: [],
     circuits: [],
     isParams: false,
+    fromDate: null,
+    toDate: null,
   });
 
   const {
@@ -46,6 +51,8 @@ const useGloabalSearchScreen = () => {
     maxPrice,
     minPrice,
     isParams,
+    fromDate,
+    toDate,
   } = filterVal;
 
   const selectUrl = {
@@ -132,7 +139,11 @@ const useGloabalSearchScreen = () => {
       const pageParams = `page=${pages}`;
       const searchKeyword = searchVal != null ? `keyword=${searchVal}` : '';
       const locationParams = buildLocationParams(location);
-
+      const fromDateParams =
+        fromDate != null ? `from_date=${formatDateToYMD(fromDate)}` : '';
+      const toDateParams =
+        toDate != null ? `to_date=${formatDateToYMD(toDate)}` : '';
+      const timeZoneParams = `timeZone=${timeZone}`;
       // Combine all
       const queryParams = [
         associationParams,
@@ -142,6 +153,9 @@ const useGloabalSearchScreen = () => {
         priceParams,
         locationParams,
         searchKeyword,
+        fromDateParams,
+        toDateParams,
+        timeZoneParams,
         pageParams,
       ]
         .filter(Boolean)
@@ -309,6 +323,8 @@ const useGloabalSearchScreen = () => {
     allDataRefetchEvents,
     setPages,
     refetchWhenParams,
+    isLoading,
+    setIsLoading,
   };
 };
 export default useGloabalSearchScreen;

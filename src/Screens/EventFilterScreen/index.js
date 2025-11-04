@@ -2,7 +2,14 @@ import {View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
 import React, {memo} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import {Touchable} from '../../Components/Touchable';
-import {backIcon, crossWhite, radioCircle, searchIcon} from '../../Assets';
+import {
+  backIcon,
+  calendar,
+  calender,
+  crossWhite,
+  radioCircle,
+  searchIcon,
+} from '../../Assets';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
 import {Colors} from '../../Theme/Variables';
@@ -19,12 +26,15 @@ import {
   globalSearchEventsWithFilterUrl,
 } from '../../Utils/Urls';
 import {
+  formatDateToLong,
   formatPrice,
+  getDateMonthYear,
   getIdsFromArry,
   showFirstThreeAndCountRest,
 } from '../../Services/GlobalFunctions';
 import ThemeButton from '../../Components/ThemeButton';
 import DividerLine from '../../Components/DividerLine';
+import DatePicker from 'react-native-date-picker';
 
 const EventFilterScreen = ({navigation, route}) => {
   const {
@@ -38,8 +48,14 @@ const EventFilterScreen = ({navigation, route}) => {
     minPrice,
     filterVal,
     priceLimit,
+    fromDate,
+    toDate,
+    currentDate,
+    modalType,
     onChangeVal,
+    setModalType,
     applyFilters,
+    toggleDate,
   } = useEventFilterScreen(route, navigation);
 
   const SelectBtnView = ({stateName, item, index}) => {
@@ -177,6 +193,77 @@ const EventFilterScreen = ({navigation, route}) => {
               )}
             </View>
           </View>
+
+          <View
+            style={{
+              backgroundColor: 'rgba(246, 246, 246, 1);',
+              height: hp('1'),
+            }}
+          />
+          <View style={styles.priceSection}>
+            <TextComponent
+              text={'Select Dates'}
+              styles={styles.sectionTitle}
+              size={hp('1.5')}
+            />
+            <View style={styles.priceRangeContainer}>
+              <View style={styles.priceBox}>
+                <TextComponent
+                  text={'From Date'}
+                  fade
+                  size={hp('1.5')}
+                  styles={styles.priceLabel}
+                />
+                <Touchable
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => setModalType('fromDate')}>
+                  <Image
+                    source={calender}
+                    resizeMode="contain"
+                    style={{width: wp('4'), height: hp('2')}}
+                    tintColor={'black'}
+                  />
+                  <TextComponent
+                    text={` ${
+                      fromDate ? formatDateToLong(fromDate) : 'Select Date'
+                    }`}
+                    size={hp('1.5')}
+                  />
+                </Touchable>
+              </View>
+              <View style={styles.priceBox}>
+                <TextComponent
+                  text={'To Date'}
+                  fade
+                  size={hp('1.5')}
+                  styles={styles.priceLabel}
+                />
+                <Touchable
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => setModalType('toDate')}>
+                  <Image
+                    source={calender}
+                    resizeMode="contain"
+                    style={{width: wp('4'), height: hp('2')}}
+                    tintColor={'black'}
+                  />
+                  <TextComponent
+                    text={` ${
+                      toDate ? formatDateToLong(toDate) : 'Select Date'
+                    }`}
+                    size={hp('1.5')}
+                  />
+                </Touchable>
+              </View>
+            </View>
+          </View>
+
           <View
             style={{
               backgroundColor: 'rgba(246, 246, 246, 1);',
@@ -445,6 +532,25 @@ const EventFilterScreen = ({navigation, route}) => {
             />
           </View>
         </ScrollView>
+        {modalType != null && (
+          <DatePicker
+            mode={'date'}
+            open={Boolean(modalType != null)}
+            date={filterVal[modalType] ?? currentDate}
+            is24hourSource="locale"
+            locale="en"
+            onCancel={() => toggleDate(null)}
+            modal
+            onConfirm={e => {
+              console.log(
+                'modalTypemodalTypemodalTypemodalTypemodalTypemodalTypemodalTypemodalType',
+                modalType,
+              );
+              onChangeVal(modalType, e);
+              toggleDate(null);
+            }}
+          />
+        )}
       </View>
     </View>
   );

@@ -8,10 +8,14 @@ import {CircleImage} from './CircleImage';
 import {TextComponent} from './TextComponent';
 
 const MutualFriends = ({friends, size, textAfterCount}) => {
+  console.log(
+    'ksjdbvksdbvkljsdbvklsdbvkldbvklsbdvklbsdkvbksdbv',
+    friends?.length,
+  );
   return (
     <View style={styles.container}>
       <View style={styles.avatars}>
-        {friends.slice(0, 3).map(res => {
+        {/* {friends.slice(0, 3).map(res => {
           return (
             <Avatar
               rounded
@@ -26,10 +30,15 @@ const MutualFriends = ({friends, size, textAfterCount}) => {
               }}
             />
           );
-        })}
+        })} */}
       </View>
       <TextComponent
-        text={' ' + friends.length + ' ' + textAfterCount ?? 'Mutual friends'}
+        text={
+          ' ' +
+          friends?.length +
+          ' ' +
+          (textAfterCount ? textAfterCount : 'Mutual friends')
+        }
         styles={{fontSize: hp('1.2')}}
       />
     </View>

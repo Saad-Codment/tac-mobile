@@ -28,6 +28,7 @@ import BottomModalComponent from '../../Components/BottomModalComponent';
 import SharePostComp from '../../Components/SharePostComp';
 import ShareEventComp from '../../Components/ShareEventComp';
 import {Touchable} from '../../Components/Touchable';
+import Overlay from '../../Components/Overlay';
 
 const GlobalSearchScreen = ({navigation}) => {
   const {
@@ -64,6 +65,8 @@ const GlobalSearchScreen = ({navigation}) => {
     allDataRefetchEvents,
     setPages,
     refetchWhenParams,
+    isLoading,
+    setIsLoading,
   } = useGloabalSearchScreen(navigation);
 
   console.log(
@@ -81,14 +84,16 @@ const GlobalSearchScreen = ({navigation}) => {
               <TextComponent
                 text={'See all'}
                 styles={styles.seeAllText}
-                onPress={() => {
+                onPress={async () => {
                   if (
                     searchVal != null &&
                     searchVal != '' &&
                     searchVal != undefined
                   ) {
                     setSelectedVal({id: title, name: title});
-                    allDataRefetch();
+                    setIsLoading(true);
+                    await allDataRefetch();
+                    setIsLoading(false);
                   }
                 }}
               />
@@ -237,14 +242,16 @@ const GlobalSearchScreen = ({navigation}) => {
             value={searchVal}
             onChangeText={e => setSearchVal(e)}
             returnKeyType="search"
-            onSubmitEditing={() => {
+            onSubmitEditing={async () => {
               setFilterVal(prev => ({...prev, isParams: false}));
               const isSearch = Boolean(
                 searchVal == null || searchVal == '' || searchVal == undefined,
               );
               if (!isSearch) {
                 setSelectedVal({name: 'All', id: 'all'});
-                onSearch();
+                setIsLoading(true);
+                await onSearch();
+                setIsLoading(false);
               }
             }}
           />
@@ -284,16 +291,19 @@ const GlobalSearchScreen = ({navigation}) => {
           ]}
           selectedBgColor={Colors.headerBg}
           selectedAlter={selectedVal}
-          onSelectVal={(id, item) => {
+          onSelectVal={async (id, item) => {
             setPages(1);
             setFilterVal(prev => ({...prev, isParams: false}));
-
             if (item?.id != 'all') {
               setSelectedVal(item);
-              allDataRefetch();
+              setIsLoading(true);
+              await allDataRefetch();
+              setIsLoading(false);
             } else if (item?.id == 'all') {
               setSelectedVal(item);
-              refetch();
+              setIsLoading(true);
+              await refetch();
+              setIsLoading(false);
             }
           }}
           btnStyle={{
@@ -374,6 +384,7 @@ const GlobalSearchScreen = ({navigation}) => {
           )}
         />
       </View> */}
+      {isFetching || (isLoading && <Overlay />)}
       {Boolean(modal != null) && (
         <BottomModalComponent
           isVisible={Boolean(modal != null)}

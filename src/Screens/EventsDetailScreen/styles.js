@@ -81,7 +81,7 @@ export const styles = StyleSheet.create({
   bottomView: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: wp('3'),
+    // marginLeft: wp('3'),
     marginTop: hp('2'),
   },
   locationView: {

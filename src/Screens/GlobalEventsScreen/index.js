@@ -48,6 +48,8 @@ const GlobalEventsScreen = ({navigation, route}) => {
     setSearchVal,
     filterVal,
     setFilterVal,
+    isLoading,
+    setIsLoading,
   } = useGlobalEventsScreen(navigation, route);
 
   const RenderItem = useCallback(({item, index}) => {
@@ -153,7 +155,11 @@ const GlobalEventsScreen = ({navigation, route}) => {
             value={searchVal}
             onChangeText={e => setSearchVal(e)}
             returnKeyType="search"
-            onSubmitEditing={() => refetch()}
+            onSubmitEditing={async () => {
+              setIsLoading(true);
+              await refetch();
+              setIsLoading(false);
+            }}
           />
         </View>
       </Pressable>
@@ -204,7 +210,7 @@ const GlobalEventsScreen = ({navigation, route}) => {
           }
         />
       )}
-
+      {isFetchingNextPage || (isLoading && <Overlay />)}
       {/* {Boolean(modal != null) && (
         <BottomViewModal
           childrenComp={<FilterModalComp />}
