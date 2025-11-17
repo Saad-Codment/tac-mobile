@@ -47,6 +47,7 @@ const useChatScreen = ({navigate}, {params}) => {
   const typingTimeoutRef = useRef(null);
   const [pagesLoaded, setPagesLoaded] = useState(1);
   const [isSeenTrue, setIsSeenTrue] = useState(false);
+  const [isShowFlat, setIsShowFlat] = useState(false);
 
   const {getState, dispatch} = useReduxStore();
   const {userData, token} = getState('Auth');
@@ -134,6 +135,12 @@ const useChatScreen = ({navigate}, {params}) => {
       fetchMessages(1).then(({messages: newMessages}) =>
         setMessages(sortChatsByCreatedAt(newMessages, 'asc')),
       );
+      setTimeout(() => {
+        scrollViewRef?.current?.scrollToEnd({animated: true});
+        setTimeout(() => {
+          setIsShowFlat(true);
+        }, 1000);
+      }, 2000);
     }
   }, [params?.conversationId]);
 
@@ -147,12 +154,13 @@ const useChatScreen = ({navigate}, {params}) => {
   });
 
   // Send message
-  const {mutate: sendMessageMutation} = useMutation({
+  const {mutateAsync: sendMessageMutation} = useMutation({
     mutationFn: body => {
       const bodyData = {
         receiver_id: id,
         text: body.text || '',
         images: body?.images || [],
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       };
       console.log('bodyDatabodyDatabodyData', body?.images);
       // if (body.text) formData.append('text', body.text);
@@ -277,9 +285,10 @@ const useChatScreen = ({navigate}, {params}) => {
   };
 
   // Send message
-  const sendMessage = msg => {
+  const sendMessage = async msg => {
     if (message.trim() && params?.conversationId) {
-      sendMessageMutation({text: message ?? msg, images});
+      await sendMessageMutation({text: message ?? msg, images});
+      scrollViewRef.current.scrollToEnd({animated: true});
     }
   };
 
@@ -287,7 +296,11 @@ const useChatScreen = ({navigate}, {params}) => {
     const imgData = isCamera
       ? await uploadFromCamera(true, false, 5)
       : await uploadFromGalary(true, false, 5);
-    sendMessageMutation({text: '', images: imgData?.uri ? [imgData] : imgData});
+    await sendMessageMutation({
+      text: '',
+      images: imgData?.uri ? [imgData] : imgData,
+    });
+    scrollViewRef.current.scrollToEnd({animated: true});
   };
 
   // Handle scroll for pagination
@@ -301,11 +314,18 @@ const useChatScreen = ({navigate}, {params}) => {
     }
   };
 
+  const onRefresh = () => {
+    fetchMessages(2).then(({messages: newMessages, hasMore}) => {
+      if (hasMore) setMessages(sortChatsByCreatedAt(newMessages, 'asc'));
+    });
+  };
+
   const handleAutoScroll = useCallback(() => {
-    if (scrollViewRef.current && messages.length > 0 && pagesLoaded == 2) {
-      scrollViewRef.current.scrollToEnd({animated: true});
-    }
-  }, [messages, pagesLoaded]);
+    // if (scrollViewRef.current && messages.length > 0 && pagesLoaded == 2) {
+    //   scrollViewRef.current.scrollToEnd({animated: true});
+    //   // scrollViewRef.current.scrollToEnd({animated: true});
+    // }
+  }, [pagesLoaded]);
 
   useEffect(() => {
     if (params?.conversationId) {
@@ -367,6 +387,9 @@ const useChatScreen = ({navigate}, {params}) => {
     lastSeenMessageId: otherUserData?.data?.last_read_message_id || null,
     lastSeen: formatLastSeen(otherUserData?.data?.last_seen_timestamp),
     isSeenTrue,
+    onRefresh,
+    isShowFlat,
+    setIsShowFlat,
     onImagePress: item => {
       dispatch({
         payload: item?.metadata?.files,

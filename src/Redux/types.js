@@ -24,6 +24,7 @@ export const types = {
   addContacts: 'addContacts',
   ClearContacts: 'ClearContacts',
   openModal: 'openModal',
+  openModalCircle: 'openModalCircle',
   closeModal: 'closeModal',
   isNotifyFalse: 'isNotifyFalse',
   isNotifyTrue: 'isNotifyTrue',

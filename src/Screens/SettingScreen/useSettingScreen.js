@@ -152,11 +152,11 @@ const SettingScreen = ({navigate, goBack}) => {
       mutateAsync({
         first_name: modalUpdateData?.firstName ?? userData?.first_name,
         last_name: modalUpdateData?.lastName ?? userData?.last_name,
-        age: userData?.age ?? '',
-        gender: modalUpdateData?.userGender?.id ?? userData?.gender,
-        profile_image: modalUpdateData?.profileImg?.type
-          ? modalUpdateData?.profileImg
-          : null,
+        // age: userData?.age ?? '',
+        // gender: modalUpdateData?.userGender?.id ?? userData?.gender,
+        // profile_image: modalUpdateData?.profileImg?.type
+        //   ? modalUpdateData?.profileImg
+        //   : null,
         event_type_ids:
           getIdsFromArry(
             removeUndefined(modalUpdateData?.eventType ?? []) ?? [],

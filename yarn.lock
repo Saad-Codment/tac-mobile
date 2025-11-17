@@ -2781,6 +2781,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ohmi/react-native-image-crop-picker@npm:^0.40.4-rc.5":
+  version: 0.40.4-rc.5
+  resolution: "@ohmi/react-native-image-crop-picker@npm:0.40.4-rc.5"
+  dependencies:
+    react-native-image-crop-picker: ^0.40.3
+  peerDependencies:
+    react-native: ">=0.40.0"
+  checksum: d820b7e5ceaef964a2bea5ecb809aedb717de49284328667522f5cbeb7c797b405f72685054af3996d61beccf27ff9d1b44c4537269ac527654e4f209fc5854a
+  languageName: node
+  linkType: hard
+
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
@@ -3084,6 +3095,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 4a1a334de5b8345ee5ca9af987718a4cdd0b401b6d024268330c98736eccd0bebf45fd1d4cb396558f429a4670e5b29da0b5b7ebd4e51ca12972d4b08b55d4bc
+  languageName: node
+  linkType: hard
+
+"@react-native-community/image-editor@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "@react-native-community/image-editor@npm:4.3.0"
+  peerDependencies:
+    react-native: ">=0.57.0"
+  peerDependenciesMeta:
+    react-native:
+      optional: true
+  checksum: 37c12e1188748d0cf58c5bf2123b7168835bd840ec40b0d680ccc23da4e829fe74c0362ec54a6ad0dd49698283a99a8195fafa9c4aa38b955fcb5162247fe555
   languageName: node
   linkType: hard
 
@@ -4693,6 +4716,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"base64-arraybuffer@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "base64-arraybuffer@npm:1.0.2"
+  checksum: 15e6400d2d028bf18be4ed97702b11418f8f8779fb8c743251c863b726638d52f69571d4cc1843224da7838abef0949c670bde46936663c45ad078e89fee5c62
+  languageName: node
+  linkType: hard
+
 "base64-js@npm:^1.3.1, base64-js@npm:^1.5.1":
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
@@ -5278,6 +5308,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"css-line-break@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "css-line-break@npm:2.1.0"
+  dependencies:
+    utrie: ^1.0.2
+  checksum: 37b1fe632b03be7a287cd394cef8b5285666343443125c510df9cfb6a4734a2c71e154ec8f7bbff72d7c339e1e5872989b1c52d86162aed27d6cc114725bb4d0
+  languageName: node
+  linkType: hard
+
 "css-to-react-native@npm:^3.0.0":
   version: 3.2.0
   resolution: "css-to-react-native@npm:3.2.0"
@@ -5293,6 +5332,13 @@ __metadata:
   version: 3.1.3
   resolution: "csstype@npm:3.1.3"
   checksum: 8db785cc92d259102725b3c694ec0c823f5619a84741b5c7991b8ad135dfaa66093038a1cc63e03361a6cd28d122be48f2106ae72334e067dd619a51f49eddf7
+  languageName: node
+  linkType: hard
+
+"ctx-polyfill@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "ctx-polyfill@npm:1.1.4"
+  checksum: 28235272803eb70a0aa71b3c6d4c0424f21a777ccce51dc0ea4caf3ff8dbb6eb28e2de0bebc6fad070ad11389aa14ff9357a70dac04f4b4b126aab838e67c804
   languageName: node
   linkType: hard
 
@@ -6994,6 +7040,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"html2canvas@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "html2canvas@npm:1.4.1"
+  dependencies:
+    css-line-break: ^2.1.0
+    text-segmentation: ^1.0.3
+  checksum: c134324af57f3262eecf982e436a4843fded3c6cf61954440ffd682527e4dd350e0c2fafd217c0b6f9a455fe345d0c67b4505689796ab160d4ca7c91c3766739
+  languageName: node
+  linkType: hard
+
 "http-cache-semantics@npm:^4.1.1":
   version: 4.1.1
   resolution: "http-cache-semantics@npm:4.1.1"
@@ -7177,7 +7233,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"invariant@npm:^2.2.2, invariant@npm:^2.2.4":
+"invariant@npm:2.2.4, invariant@npm:^2.2.2, invariant@npm:^2.2.4":
   version: 2.2.4
   resolution: "invariant@npm:2.2.4"
   dependencies:
@@ -10093,6 +10149,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-avatar-crop@npm:^1.3.5":
+  version: 1.3.5
+  resolution: "react-native-avatar-crop@npm:1.3.5"
+  peerDependencies:
+    "@react-native-community/image-editor": "*"
+    "@react-native-masked-view/masked-view": "*"
+    react: "*"
+    react-native: "*"
+    react-native-gesture-handler: "*"
+    react-native-image-size: "*"
+  checksum: 269acec7522b64f5d15e43fce3e51a4bb0e7d41e34cb2a2da3a710cf14342999d20d58effd6e5d923e9b76c2cc57fc2268f2262b8b52c1d002c98c5ecf1e78ac
+  languageName: node
+  linkType: hard
+
 "react-native-awesome-alerts@npm:^2.0.0":
   version: 2.0.0
   resolution: "react-native-awesome-alerts@npm:2.0.0"
@@ -10154,6 +10224,17 @@ __metadata:
     moment:
       optional: true
   checksum: e598c5967c94255851dae6a1ce0ccaee3a249a1e76558fc71b5ea21402763ccc132785f9af2e52f994875acd6a6031bbf834d326dcf430e03b90ae6027ddd389
+  languageName: node
+  linkType: hard
+
+"react-native-canvas@npm:^0.1.40":
+  version: 0.1.40
+  resolution: "react-native-canvas@npm:0.1.40"
+  dependencies:
+    ctx-polyfill: ^1.1.4
+  peerDependencies:
+    react-native-webview: ">=5.10.0 || >=6.1.0"
+  checksum: c14bc9c4a5d948686018a2b7f8e74650b2f16e652c152711baa0993bacb17e8f77c616121004328a55cabf1a57e4b4916be3b156588e4b7794708c841b7348d9
   languageName: node
   linkType: hard
 
@@ -10370,6 +10451,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-image-crop-picker@npm:^0.40.3":
+  version: 0.40.3
+  resolution: "react-native-image-crop-picker@npm:0.40.3"
+  peerDependencies:
+    react-native: ">=0.40.0"
+  checksum: de7dedf32291d2608e8eebdc580f646ec07f02b05f31fd1de8c11e3225433135da0859d5d6195a5a8d4c504ef48aed684304c39f769e2a9e0600bce75d9cb0ba
+  languageName: node
+  linkType: hard
+
 "react-native-image-crop-picker@npm:^0.51.1":
   version: 0.51.1
   resolution: "react-native-image-crop-picker@npm:0.51.1"
@@ -10387,6 +10477,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 826ed254d27b079cb985b63c65d0f504f11987b68ae71bac0e1c0e99dc24d5816fc9b8d053eb04737c60c018ad520a1e9c4b99af26952646ccabe9fc2b3bd64f
+  languageName: node
+  linkType: hard
+
+"react-native-image-picker@npm:^8.2.1":
+  version: 8.2.1
+  resolution: "react-native-image-picker@npm:8.2.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: fc85bc278c0ba5ccef8cbacfce3001e994b34b0895be34e0c884021d2215802c2e553c5e97ff7f21a30e502be60000f90cf9555e9c2a19c71fdc76120d30e158
   languageName: node
   linkType: hard
 
@@ -10727,12 +10827,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-view-shot@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "react-native-view-shot@npm:4.0.3"
+  dependencies:
+    html2canvas: ^1.4.1
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: d795849b5e2d1c75f66675aea073dae7d109b2b0a266d54f8c0ac8b30d4516dd83a5a7494fd2c44adf0e6e7286d3c29e9b025dbea3536332bf7165715f8a97de
+  languageName: node
+  linkType: hard
+
 "react-native-weather-api@npm:^3.4.0":
   version: 3.4.0
   resolution: "react-native-weather-api@npm:3.4.0"
   dependencies:
     "@react-native-community/geolocation": ^3.0.4
   checksum: 6dcf3e941d906d1e78e39a60973e47f14e13b9979a13ca3136d490dac67407a049bce9d463e607ab280d761d75fc8c0cab194c3af2af104c1c6608bd09070ffc
+  languageName: node
+  linkType: hard
+
+"react-native-webview@npm:^13.16.0":
+  version: 13.16.0
+  resolution: "react-native-webview@npm:13.16.0"
+  dependencies:
+    escape-string-regexp: ^4.0.0
+    invariant: 2.2.4
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: a6fefc1bc977c1d121057c91696edb08ca170421a6d6ad5a9bcda279a20eca84aaaf553eca3a8e51b621e22fd473afa8bc994888807fb7db154eb9d7acb87928
   languageName: node
   linkType: hard
 
@@ -11926,9 +12051,11 @@ __metadata:
     "@hookform/resolvers": ^3.3.4
     "@invertase/react-native-apple-authentication": ^2.4.0
     "@notifee/react-native": ^7.8.2
+    "@ohmi/react-native-image-crop-picker": ^0.40.4-rc.5
     "@react-native-async-storage/async-storage": ^1.23.1
     "@react-native-community/checkbox": ^0.5.17
     "@react-native-community/geolocation": ^3.4.0
+    "@react-native-community/image-editor": ^4.3.0
     "@react-native-community/push-notification-ios": ^1.11.0
     "@react-native-firebase/app": ^18.7.3
     "@react-native-firebase/auth": ^18.7.3
@@ -11952,6 +12079,7 @@ __metadata:
     apisauce: ^3.0.0
     axios: ^1.12.2
     babel-jest: ^29.6.3
+    base64-arraybuffer: ^1.0.2
     date-fns: ^4.1.0
     eslint: ^8.19.0
     firebase: ^10.14.1
@@ -11971,12 +12099,14 @@ __metadata:
     react-native: 0.74.3
     react-native-aes-crypto: ^3.2.1
     react-native-animatable: ^1.4.0
+    react-native-avatar-crop: ^1.3.5
     react-native-awesome-alerts: ^2.0.0
     react-native-axios: ^0.17.1
     react-native-bcrypt: ^2.4.0
     react-native-blurhash: ^2.0.2
     react-native-calendar-events: ^2.2.0
     react-native-calendars: ^1.1313.0
+    react-native-canvas: ^0.1.40
     react-native-checkbox: ^2.0.0
     react-native-confirmation-code-field: ^7.4.0
     react-native-contacts: ^7.0.8
@@ -11995,6 +12125,7 @@ __metadata:
     react-native-google-places-autocomplete: ^2.5.1
     react-native-image-crop-picker: ^0.51.1
     react-native-image-pan-zoom: ^2.1.12
+    react-native-image-picker: ^8.2.1
     react-native-infinite-scroll-view: ^0.4.5
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-maps: 1.10.3
@@ -12017,7 +12148,9 @@ __metadata:
     react-native-tab-view: ^3.5.2
     react-native-vector-icons: ^10.2.0
     react-native-video: ^6.16.1
+    react-native-view-shot: ^4.0.3
     react-native-weather-api: ^3.4.0
+    react-native-webview: ^13.16.0
     react-redux: ^9.2.0
     react-test-renderer: 18.2.0
     redux: ^4.2.1
@@ -12084,6 +12217,15 @@ __metadata:
     glob: ^7.1.4
     minimatch: ^3.0.4
   checksum: 3b34a3d77165a2cb82b34014b3aba93b1c4637a5011807557dc2f3da826c59975a5ccad765721c4648b39817e3472789f9b0fa98fc854c5c1c7a1e632aacdc28
+  languageName: node
+  linkType: hard
+
+"text-segmentation@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "text-segmentation@npm:1.0.3"
+  dependencies:
+    utrie: ^1.0.2
+  checksum: 2e24632d59567c55ab49ac324815e2f7a8043e63e26b109636322ac3e30692cee8679a448fd5d0f0598a345f407afd0e34ba612e22524cf576d382d84058c013
   languageName: node
   linkType: hard
 
@@ -12538,6 +12680,15 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: c81095493225ecfc28add49c106ca4f09cdf56bc66731aa8dabc2edbbccb1e1bfe2de6a115e5c6a380d3ea166d1636410b62ef216bb07b3feb1cfde1d95d5080
+  languageName: node
+  linkType: hard
+
+"utrie@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "utrie@npm:1.0.2"
+  dependencies:
+    base64-arraybuffer: ^1.0.2
+  checksum: c96fbb7d4d8855a154327da0b18e39b7511cc70a7e4bcc3658e24f424bb884312d72b5ba777500b8858e34d365dc6b1a921dc5ca2f0d341182519c6b78e280a5
   languageName: node
   linkType: hard
 

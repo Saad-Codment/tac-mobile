@@ -4,7 +4,7 @@
  */
 
 import {useMutation} from '@tanstack/react-query';
-import {useState} from 'react';
+import {useRef, useState} from 'react';
 import API from '../../Utils/helperFunc';
 import {onBoardConpleteUrl} from '../../Utils/Urls';
 import {types} from '../../Redux/types';
@@ -16,7 +16,8 @@ import {
   getIdsFromArry,
 } from '../../Services/GlobalFunctions';
 import {Alert} from 'react-native';
-import {step2} from '../../Utils/localDB';
+import {states, step2} from '../../Utils/localDB';
+import {statesWithCities} from '../../Utils/statesWithCities';
 
 const useOnStepScreen = ({navigate}) => {
   const {dispatch} = useReduxStore();
@@ -47,6 +48,7 @@ const useOnStepScreen = ({navigate}) => {
   });
 
   const [modalState, setModalState] = useState(false);
+  const [modalVal, setModalVal] = useState(false);
 
   const [onBoardData, setOnboardData] = useState({
     age: null,
@@ -56,9 +58,11 @@ const useOnStepScreen = ({navigate}) => {
     transport: null,
     hearFrom: [],
     association: [],
+    city: null,
+    state: null,
   });
   const updateState = data => setOnboardData(prev => ({...prev, ...data}));
-  const {age, gender, sport, transport, association} = onBoardData;
+  const {age, gender, sport, transport, association, city, state} = onBoardData;
 
   const onSelectValue = (key, val) => {
     updateState({[key]: val});
@@ -89,12 +93,17 @@ const useOnStepScreen = ({navigate}) => {
       handleNextStep();
     },
     5: () => {
+      handleNextStep();
+    },
+    6: () => {
       mutate({
         association_ids: getIdsFromArry(association, 'id'),
         event_type_ids: getIdsFromArry(sport, 'id'),
         gender: gender && gender.toLowerCase(),
         age: age ? formatDate(age) : null,
         transport_id: 1,
+        state: state?.name,
+        city: city?.name,
       });
     },
   };
@@ -132,6 +141,22 @@ const useOnStepScreen = ({navigate}) => {
 
   const dynamicRoute = (screen, params) => navigate(screen, params);
 
+  const onPressKeyRef = useRef(null);
+
+  const onOpenModal = key => {
+    onPressKeyRef.current = key;
+    toggleModal();
+  };
+
+  const activeTags = {
+    state: {state},
+    city: {city},
+  };
+
+  const toggleModal = (modalUpdateData, isSave) => {
+    setModalVal(!modalVal);
+  };
+
   return {
     step,
     setStep,
@@ -150,6 +175,13 @@ const useOnStepScreen = ({navigate}) => {
     modalState,
     setModalState,
     dispatch,
+    modalVal,
+    setModalVal,
+    onPressKey: onPressKeyRef.current,
+    activeTags,
+    onOpenModal,
+    city,
+    state,
   };
 };
 

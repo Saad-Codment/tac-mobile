@@ -56,7 +56,7 @@ const FriendEventsComp = ({
   const onImagePress = () => {
     dispatch({
       payload: item?.user_image,
-      type: types.openModal,
+      type: types.openModalCircle,
     });
   };
   const {userData} = getState('Auth');

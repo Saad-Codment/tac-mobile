@@ -3,64 +3,65 @@ import React, {memo} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
-import {filledCalender, filledClock} from '../../Assets';
+import {
+  calendar,
+  calender,
+  filledCalender,
+  filledClock,
+  timeCircle,
+} from '../../Assets';
 import {
   convertToLocalTime,
   getDateMonthYear,
 } from '../../Services/GlobalFunctions';
 import {styles} from './styles';
+import DividerLine from '../../Components/DividerLine';
 
 const PerformancesScreen = ({navigation, route}) => {
   console.log(
     'PerformancesScreenPerformancesScreenPerformancesScreen',
     route?.params,
   );
+
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       <HeaderComponent headerTitle={'Performances'} isBack />
-      {route?.params?.map(res => {
+      {route?.params?.map((res, i) => {
         return (
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: wp('100'),
-              paddingHorizontal: wp('2'),
-              paddingVertical: hp('1'),
-            }}>
-            <TextComponent text={res?.title} />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
-              <TextComponent text={'Start At'} />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
-                }}>
+          <View key={i} style={styles.performanceCard}>
+            <TextComponent
+              text={`Performances ${i + 1}`}
+              fade
+              size={hp('1.5')}
+            />
+
+            <View style={styles.titleRow}>
+              <TextComponent text={res?.title} fontFamily={'bold'} />
+              <View style={styles.dateRow}>
                 <Image
-                  source={filledCalender}
+                  source={calender}
                   resizeMode="contain"
-                  style={{
-                    ...styles.eventCallImg,
-                    // marginLeft: wp('20'),
-                  }}
+                  style={styles.calendarIcon}
                 />
                 <TextComponent
-                  text={`${getDateMonthYear(res?.from_date)?.monthName} ${
-                    getDateMonthYear(res?.from_date)?.day
-                  }, ${getDateMonthYear(res?.from_date)?.year}`}
-                  // text={`${formatDateToLong(res?.from_date)}`}
-                  // sep 4, 2025
-                  styles={{fontSize: hp('1.2')}}
+                  text={` ${getDateMonthYear(res?.date)?.monthName} ${
+                    getDateMonthYear(res?.date)?.day
+                  }, ${getDateMonthYear(res?.date)?.year}`}
+                  fade
+                  size={hp('1.5')}
                 />
+              </View>
+            </View>
+
+            <DividerLine />
+
+            <View style={styles.timeContainer}>
+              <View style={styles.timeRow}>
+                <TextComponent text={'Start At : '} size={hp('1.3')} />
                 <Image
-                  source={filledClock}
+                  source={timeCircle}
                   resizeMode="contain"
-                  style={{...styles.eventCallImg, marginLeft: wp('4')}}
+                  style={styles.timeIcon}
                 />
                 <TextComponent
                   text={
@@ -70,7 +71,26 @@ const PerformancesScreen = ({navigation, route}) => {
                         }`
                       : 'Not Confirmed'
                   }
-                  styles={{fontSize: hp('1.2')}}
+                  styles={styles.timeText}
+                />
+              </View>
+
+              <View style={styles.timeRow}>
+                <TextComponent text={'End At : '} size={hp('1.3')} />
+                <Image
+                  source={timeCircle}
+                  resizeMode="contain"
+                  style={styles.timeIcon}
+                />
+                <TextComponent
+                  text={
+                    res?.end_time
+                      ? `${convertToLocalTime(res?.end_time)?.time} ${
+                          convertToLocalTime(res?.end_time)?.period ?? ''
+                        }`
+                      : 'Not Confirmed'
+                  }
+                  styles={styles.timeText}
                 />
               </View>
             </View>

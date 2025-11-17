@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   Modal,
   View,
@@ -8,15 +8,18 @@ import {
   Dimensions,
   FlatList,
   Text,
+  Platform,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {types} from '../Redux/types';
-import {imageUrl} from '../Utils/Urls';
+import {imageURL, imageUrl} from '../Utils/Urls';
 import {whp, p, hp, wp} from '../Config/responsive';
 import ImageZoom from 'react-native-image-pan-zoom'; // 🔼 Add this at the top
+import {CircleImage} from './CircleImage';
+import {isImageCircle} from '../Services/GlobalFunctions';
 
-const ImagePreviewComp = ({visible, onClose, images}) => {
+const ImagePreviewComp = ({visible, onClose, images, isCircle}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
   const {dispatch} = useReduxStore();
@@ -85,14 +88,23 @@ const ImagePreviewComp = ({visible, onClose, images}) => {
                   imageHeight={hp('80')}
                   enableCenterFocus
                   enableDoubleClickZoom>
-                  <Image
-                    // source={
-                    //   typeof item === 'string' ? {uri: imageUrl(item)} : item
-                    // }
-                    source={{uri: imageUrl(item)}}
-                    style={styles.image}
-                    resizeMode="contain"
-                  />
+                  {isCircle ? (
+                    <CircleImage
+                      size={Platform.OS == 'ios' ? 0.9 : 0.35}
+                      image={imageUrl(item)}
+                      uri={true}
+                      styles={{alignSelf: 'center', marginTop: hp('20')}}
+                    />
+                  ) : (
+                    <Image
+                      // source={
+                      //   typeof item === 'string' ? {uri: imageUrl(item)} : item
+                      // }
+                      source={{uri: imageUrl(item)}}
+                      style={styles.image}
+                      resizeMode="contain"
+                    />
+                  )}
                 </ImageZoom>
               </View>
             )}

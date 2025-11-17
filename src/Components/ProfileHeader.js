@@ -59,7 +59,7 @@ const ProfileHeader = ({
   const onImagePress = () => {
     dispatch({
       payload: userData?.profile_image,
-      type: types.openModal,
+      type: types.openModalCircle,
     });
   };
 
@@ -108,24 +108,33 @@ const ProfileHeader = ({
                 Alert.alert(
                   'Pick to choose image',
                   '',
+
                   [
                     {
                       text: 'Camera',
                       onPress: async () => {
-                        const images = await uploadFromCamera(false, true);
-                        mutateAsync({
-                          profile_image: images,
-                          first_name: userData?.first_name,
+                        const img = await uploadFromCamera(false, false);
+                        NavigationService.navigate('CropScreen', {
+                          image: img,
+                          afterCropImg: e =>
+                            mutateAsync({
+                              profile_image: {...img, uri: e},
+                              first_name: userData?.first_name,
+                            }),
                         });
                       },
                     },
                     {
                       text: 'Gallery', // Just a dismissal button
                       onPress: async () => {
-                        const images = await uploadFromGalary(false, true);
-                        mutateAsync({
-                          profile_image: images,
-                          first_name: userData?.first_name,
+                        const img = await uploadFromGalary(false, false);
+                        NavigationService.navigate('CropScreen', {
+                          image: img,
+                          afterCropImg: e =>
+                            mutateAsync({
+                              profile_image: {...img, uri: e},
+                              first_name: userData?.first_name,
+                            }),
                         });
                       },
                     },

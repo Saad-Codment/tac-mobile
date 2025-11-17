@@ -365,7 +365,7 @@ const SettingScreen = ({navigation}) => {
   const onImagePress = () => {
     dispatch({
       payload: userData?.profile_image,
-      type: types.openModal,
+      type: types.openModalCircle,
     });
   };
 

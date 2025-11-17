@@ -38,9 +38,7 @@ const SettingModal = ({
   isModal,
   onPress,
   heading,
-  onSelect,
   onBackPress,
-  activeTitle,
   allData,
 }) => {
   const [innerDataState, setInnerDateState] = useState({
@@ -49,6 +47,8 @@ const SettingModal = ({
     userGender: activeTags?.userGender,
     eventType: activeTags?.eventTypes,
     associations: activeTags?.eventAssociations,
+    city: activeTags?.city,
+    state: activeTags?.state,
   });
 
   // Calculate 13 years ago from today
@@ -67,8 +67,21 @@ const SettingModal = ({
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
 
-  const {associations, eventType, profileImg, userAge, userGender} =
-    innerDataState;
+  const {
+    associations,
+    eventType,
+    profileImg,
+    userAge,
+    userGender,
+    city,
+    state,
+  } = innerDataState;
+
+  console.log(
+    'allDataallDataallDataallDataallDataallDataallDataallDataallData',
+    state,
+    activeTags?.state,
+  );
 
   const updateState = data => setInnerDateState(prev => ({...prev, ...data}));
 
@@ -201,6 +214,55 @@ const SettingModal = ({
                 associations?.filter(res => res?.id != item?.id),
               );
             } else onChangeVal('associations', [...associations, , item]);
+          }}
+        />
+      ),
+    },
+    city: {
+      title: onPress ? 'Update City' : 'City',
+      renderView: (
+        <MultiSelectButton
+          items={allData.map(res => ({
+            id: res,
+            name: res,
+          }))}
+          selectedAlter={city}
+          btnStyle={{
+            height: 'auto',
+            paddingVertical: hp('0.5'),
+            paddingHorizontal: wp('2'),
+          }}
+          selectedBgColor={Colors.backgroundTheme}
+          onSelectVal={(objId, item) => {
+            onChangeVal('city', item);
+          }}
+        />
+      ),
+    },
+    state: {
+      title: onPress ? 'Update State' : 'State',
+      renderView: (
+        <MultiSelectButton
+          items={allData.map(res => ({
+            id: res,
+            name: res,
+          }))}
+          selectedAlter={state}
+          btnStyle={{
+            height: 'auto',
+            paddingVertical: hp('0.5'),
+            paddingHorizontal: wp('2'),
+          }}
+          selectedBgColor={Colors.backgroundTheme}
+          onSelectVal={(objId, item) => {
+            console.log('selected state item', item);
+            onChangeVal('state', item);
+            // if (Boolean(state?.find(res => res?.id == item?.id))) {
+            //   onChangeVal(
+            //     'state',
+            //     state?.filter(res => res?.id != item?.id),
+            //   );
+            // } else onChangeVal('state', [item]);
           }}
         />
       ),

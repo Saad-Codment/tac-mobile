@@ -155,10 +155,14 @@ const usePorfileScreen = ({navigate, goBack}) => {
       mutateAsync({
         first_name: modalUpdateData?.firstName ?? userData?.first_name,
         last_name: modalUpdateData?.lastName ?? userData?.last_name ?? '',
+        state: modalUpdateData?.state?.name ?? userData?.state ?? '',
+        city: modalUpdateData?.city?.name ?? userData?.city ?? '',
         age: modalUpdateData?.userAge
-          ? formatDate(modalUpdateData?.userAge ?? userData?.age)
-          : '',
-        gender: modalUpdateData?.userGender?.id ?? userData?.gender,
+          ? formatDate(modalUpdateData?.userAge)
+          : userData?.age
+          ? userData?.age
+          : null,
+        gender: modalUpdateData?.userGender?.id ?? userData?.gender ?? '',
         profile_image: modalUpdateData?.profileImg?.type
           ? modalUpdateData?.profileImg
           : null,
@@ -196,6 +200,8 @@ const usePorfileScreen = ({navigate, goBack}) => {
     user_gender: {userGender: userData?.gender},
     event_type: {eventTypes: userData?.event_types},
     event_association: {eventAssociations: userData?.associations},
+    city: {city: userData?.city},
+    state: {state: userData?.state},
   };
 
   return {

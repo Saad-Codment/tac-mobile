@@ -180,7 +180,10 @@ const MyProfileScreen = ({navigation, route}) => {
               text={userData?.event_count}
               styles={styles.statNumber}
             />
-            <TextComponent text={' Events'} styles={styles.statLabel} />
+            <TextComponent
+              text={userData?.event_count > 1 ? ' Events' : ' Event'}
+              styles={styles.statLabel}
+            />
           </View>
         </Touchable>
         <Touchable
@@ -197,7 +200,14 @@ const MyProfileScreen = ({navigation, route}) => {
               text={myUserData?.associations?.length}
               styles={styles.statNumber}
             />
-            <TextComponent text={' Associations'} styles={styles.statLabel} />
+            <TextComponent
+              text={
+                myUserData?.associations?.length >= 1
+                  ? ' Associations'
+                  : ' Association'
+              }
+              styles={styles.statLabel}
+            />
           </View>
         </Touchable>
         <Touchable
@@ -219,7 +229,10 @@ const MyProfileScreen = ({navigation, route}) => {
               text={userData?.friends_count}
               styles={styles.statNumber}
             />
-            <TextComponent text={' Friends'} styles={styles.statLabel} />
+            <TextComponent
+              text={userData?.friends_count > 1 ? ' Friends' : ' Friend'}
+              styles={styles.statLabel}
+            />
           </View>
         </Touchable>
       </View>

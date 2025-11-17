@@ -1,4 +1,11 @@
-import {View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import React, {memo} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import {Touchable} from '../../Components/Touchable';
@@ -35,6 +42,7 @@ import {
 import ThemeButton from '../../Components/ThemeButton';
 import DividerLine from '../../Components/DividerLine';
 import DatePicker from 'react-native-date-picker';
+import KeyBoardWrapper from '../../Components/KeyBoardWrapper';
 
 const EventFilterScreen = ({navigation, route}) => {
   const {
@@ -128,10 +136,10 @@ const EventFilterScreen = ({navigation, route}) => {
       </Touchable> */}
       <HeaderComponent isBack headerTitle={'Search Filters'} />
       <View style={styles.scrollContainer}>
-        <ScrollView
+        <KeyBoardWrapper
           showsVerticalScrollIndicator={false}
           bounces={false}
-          contentContainerStyle={styles.scrollViewContent} // without flexGrow
+          styles={styles.scrollViewContent} // without flexGrow
         >
           <View style={styles.sectionContainer}>
             <TextComponent
@@ -478,10 +486,26 @@ const EventFilterScreen = ({navigation, route}) => {
                   size={hp('1.5')}
                   styles={styles.priceLabel}
                 />
-                <TextComponent
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <TextComponent
+                    text={'$'}
+                    size={hp('1.5')}
+                    // styles={styles.priceLabel}
+                  />
+
+                  <TextInput
+                    placeholder="Min Price"
+                    placeholderTextColor={'gray'}
+                    style={{color: 'black', fontSize: hp('1.5')}}
+                    value={minPrice}
+                    onChangeText={e => onChangeVal('minPrice', e)}
+                    keyboardType="numeric"
+                  />
+                </View>
+                {/* <TextComponent
                   text={`${formatPrice(minPrice)}`}
                   size={hp('1.5')}
-                />
+                /> */}
               </View>
               <View style={styles.priceBox}>
                 <TextComponent
@@ -490,13 +514,29 @@ const EventFilterScreen = ({navigation, route}) => {
                   size={hp('1.5')}
                   styles={styles.priceLabel}
                 />
-                <TextComponent
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <TextComponent
+                    text={'$'}
+                    size={hp('1.5')}
+                    // styles={styles.priceLabel}
+                  />
+
+                  <TextInput
+                    placeholder="Max Price"
+                    placeholderTextColor={'gray'}
+                    style={{color: 'black', fontSize: hp('1.5')}}
+                    value={maxPrice}
+                    onChangeText={e => onChangeVal('maxPrice', e)}
+                    keyboardType="numeric"
+                  />
+                </View>
+                {/* <TextComponent
                   text={`${formatPrice(maxPrice)}`}
                   size={hp('1.5')}
-                />
+                /> */}
               </View>
             </View>
-            <RangeSliderComp
+            {/* <RangeSliderComp
               ref={sliderRef}
               low={minPrice}
               setLow={e => onChangeVal('minPrice', e)}
@@ -504,7 +544,7 @@ const EventFilterScreen = ({navigation, route}) => {
               setHigh={e => onChangeVal('maxPrice', e)}
               maxRange={priceLimit}
               step={1}
-            />
+            /> */}
           </View>
           <View style={styles.btnView}>
             <ThemeButton
@@ -531,7 +571,7 @@ const EventFilterScreen = ({navigation, route}) => {
               }}
             />
           </View>
-        </ScrollView>
+        </KeyBoardWrapper>
         {modalType != null && (
           <DatePicker
             mode={'date'}

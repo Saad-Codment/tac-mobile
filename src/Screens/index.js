@@ -40,5 +40,6 @@ export {default as SubscriptionInfoScreen} from './SubscriptionInfoScreen';
 export {default as EventFilterScreen} from './EventFilterScreen';
 export {default as SelectFriendListScreem} from './SelectFriendListScreem';
 export {default as GlobalEventsScreen} from './GlobalEventsScreen';
+export {default as CropScreen} from './CropScreen';
 
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

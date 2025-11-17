@@ -173,14 +173,15 @@ function MainNavigator() {
               name="GlobalEventsScreen"
               component={Screens.GlobalEventsScreen}
             />
+            <Stack.Screen name="CropScreen" component={Screens.CropScreen} />
             <Stack.Screen
               name="LocationScreen"
               component={Screens.LocationScreen}
-              options={{
-                presentation: 'formSheet', // 👈 Makes it open as a modal
-                animation: 'slide_from_bottom', // Optional animation style
-                headerShown: false, // Optional, hides the header
-              }}
+              // options={{
+              //   presentation: 'formSheet', // 👈 Makes it open as a modal
+              //   animation: 'slide_from_bottom', // Optional animation style
+              //   headerShown: false, // Optional, hides the header
+              // }}
             />
             <Stack.Screen
               name="SelectFriendListScreem"

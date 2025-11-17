@@ -11,6 +11,7 @@ import {
   allAssociatesUrl,
   allEventCircuitUrl,
   allEventTypeUrl,
+  chatUserListUrl,
   getMyFriendsUrl,
 } from '../../Utils/Urls';
 import {useQuery} from '@tanstack/react-query';
@@ -41,9 +42,20 @@ const SelectFriendListScreem = ({navigation, route}) => {
       queryName: 'allEventsCircuit',
       url: getMyFriendsUrl,
     },
+    [chatUserListUrl]: {
+      queryName: 'chatUserListUrl',
+      url: chatUserListUrl,
+    },
   };
 
-  const {onSelectValue, selectedValue, urlName, isMultiSelect} = route?.params;
+  const {
+    onSelectValue,
+    selectedValue,
+    urlName,
+    isMultiSelect,
+    btnTitle,
+    onBtnPress,
+  } = route?.params;
 
   const {data, error} = useQuery({
     queryKey: [apiDataType[urlName].queryName],
@@ -118,12 +130,15 @@ const SelectFriendListScreem = ({navigation, route}) => {
             <TextComponent text={route?.params?.title} />
           )}
           <TextComponent
-            text={'Save'}
+            text={btnTitle ?? 'Save'}
             styles={styles.saveText}
             onPress={() => {
               navigation.goBack();
-              if (isMultiSelect) onSelectValue(selectedList);
-              else onSelectValue(...selectedList);
+              if (onBtnPress) onBtnPress(selectedList);
+              else {
+                if (isMultiSelect) onSelectValue(selectedList);
+                else onSelectValue(...selectedList);
+              }
             }}
           />
         </View>
@@ -163,20 +178,39 @@ const SelectFriendListScreem = ({navigation, route}) => {
             />
           }
         /> */}
-        {data?.data?.data != null &&
-          data?.data?.data?.length > 0 &&
+        {(data?.data?.data || data?.data) != null &&
+          (data?.data?.data?.length || data?.data.length) > 0 &&
           (filterData.length >= 0 && text != ''
             ? filterData
-            : data?.data?.data
+            : data?.data?.data || data?.data
           )?.map((item, index) => (
             <MyFriendComp
-              item={item}
+              item={
+                item?.other_user
+                  ? {...item?.other_user, id: item?.other_user?.conversation_id}
+                  : item
+              }
               isSelected={true}
               mainViewStyles={{width: wp('90'), marginLeft: wp('1')}}
               isDisable={true}
-              onSelectValue={() => toggleAllergy(item)}
+              onSelectValue={() =>
+                toggleAllergy(
+                  item?.other_user
+                    ? {
+                        ...item?.other_user,
+                        id: item?.other_user?.conversation_id,
+                      }
+                    : item,
+                )
+              }
               isSelectedVal={Boolean(
-                selectedList.find(res => res?.id === item?.id),
+                selectedList.find(
+                  res =>
+                    res?.id ===
+                    (item?.other_user
+                      ? item?.other_user?.conversation_id
+                      : item?.id),
+                ),
               )}
             />
           ))}

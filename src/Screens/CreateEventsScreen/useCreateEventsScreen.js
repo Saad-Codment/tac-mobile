@@ -61,15 +61,7 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
       const allProps = await API.get(getEventDetailsUrl + event?.id);
       if (allProps?.ok) {
         const res = allProps.data;
-        console.log(
-          'jsdbvklsdbvksdbvkjsdbkjvbsdlkvblsdkbvsdbkvklsdbvlksd',
-          JSON.parse(res.images).map(img => ({
-            uri: img,
-            type: 'image/jpeg',
-            name: img.split('/').pop(),
-            isEdit: true,
-          })),
-        );
+
         setValue('eventTitle', res?.title || '');
         setValue(
           'eventImg',
@@ -83,7 +75,40 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
             : [],
         );
         setValue('eventPrice', res?.added_money || '');
-        setValue('perfEventList', []); // set if you have event list data
+
+        // inside query success
+        replace(
+          res?.performances
+            ? res?.performances?.map(p => ({
+                title: p?.title || '',
+                date: p?.date
+                  ? new Date(getFullLocalDate(p.date))
+                  : currentDate,
+                startTime: p?.start_time
+                  ? new Date(convertToLocalFullTime(p.start_time))
+                  : defaultMorningTime,
+                endTime: p?.end_time
+                  ? new Date(convertToLocalFullTime(p.end_time))
+                  : defaultEndTime,
+              }))
+            : [],
+        );
+
+        // setValue(
+        //   'perfEventList',
+        //   res?.performances?.map(res => ({
+        //     title: res?.title || '',
+        //     date: res?.date
+        //       ? new Date(getFullLocalDate(res.date))
+        //       : currentDate,
+        //     startTime: res?.start_time
+        //       ? new Date(convertToLocalFullTime(res.start_time))
+        //       : defaultMorningTime,
+        //     endTime: res?.end_time
+        //       ? new Date(convertToLocalFullTime(res.end_time))
+        //       : defaultEndTime,
+        //   })),
+        // ); // set if you have event list data
         setValue('privateEvent', res?.private || 0);
         setValue('evnetTour', res?.tour?.id || 1);
         setValue('eventType', res?.event_types ?? null);
@@ -123,7 +148,7 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
     },
   });
 
-  console.log('jkdbflksfblksblksblkdfklbnlkdfnbkldfnklbndfb', defaultEndTime);
+  console.log('jkdbflksfblksblksblkdfklbnlkdfnbkldfnklbndfb', data?.data);
 
   const {
     control,
@@ -142,7 +167,16 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
     watch,
     errors,
   } = useFormHook(Schemas.eventCreate, {
-    perfEventList: [], // Initial empty event
+    perfEventList: data?.data?.performances?.map(res => ({
+      title: res?.title || '',
+      date: res?.date ? new Date(getFullLocalDate(res.date)) : currentDate,
+      startTime: res?.start_time
+        ? new Date(convertToLocalFullTime(res.start_time))
+        : defaultMorningTime,
+      endTime: res?.end_time
+        ? new Date(convertToLocalFullTime(res.end_time))
+        : defaultEndTime,
+    })), // Initial empty event
     eventStartDate: data?.data?.from_date
       ? new Date(data?.data?.from_date)
       : nextDay,
@@ -164,7 +198,7 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
   }, []);
 
   // Initialize useFieldArray for perfEventList
-  const {fields, append, remove, update} = useFieldArray({
+  const {fields, append, remove, update, replace} = useFieldArray({
     control,
     name: 'perfEventList',
   });
@@ -241,15 +275,15 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
         tour_id: evnetTour,
         private: privateEvent ? 1 : 0,
         is_confirmed: eventConfirm ? 1 : 0,
-        // '[performances]':
-        //   perfEventList.length > 0
-        //     ? perfEventList.map(res => ({
-        //         title: res?.title,
-        //         date: formatDateToYMD(res?.date),
-        //         start_time: getFormattedTime(res?.startTime),
-        //         end_time: getFormattedTime(res?.endTime),
-        //       }))
-        //     : [],
+        '[performances]':
+          perfEventList.length > 0
+            ? perfEventList.map(res => ({
+                title: res?.title,
+                date: formatDateToYMD(res?.date),
+                start_time: getFormattedTime(res?.startTime),
+                end_time: getFormattedTime(res?.endTime),
+              }))
+            : [],
         images: isEditEvnet
           ? eventImg?.find(res => !res?.isEdit)
             ? eventImg?.filter(res => !res?.isEdit)
@@ -271,7 +305,7 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
         body,
         'images',
         true,
-        'performances',
+        '[performances]',
       );
 
       console.log('API Response:', data);
@@ -355,6 +389,8 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
     modalVisible,
     setModalVisible,
     isEditEvnet,
+    defaultMorningTime,
+    defaultEndTime,
   };
 };
 export default useCreateEventsScreen;

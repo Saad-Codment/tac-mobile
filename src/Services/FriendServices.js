@@ -16,6 +16,7 @@ import {
   rejectFriendReqUrl,
   removeFriendUrl,
   sendFriendReqUrl,
+  shareEventInChatUrl,
   shareEventUrl,
   sharePostUrl,
   unBlockUserUrl,
@@ -281,6 +282,23 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
       errorMessage('Network request failed.');
     },
   });
+  const shareEventInChat = useMutation({
+    mutationFn: data => {
+      return API.post(shareEventInChatUrl, data);
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => {
+      errorMessage('Network request failed.');
+    },
+  });
+
   const deleteEvent = useMutation({
     mutationFn: data => {
       return API.delete(deleteEventUrl + data, {});
@@ -348,6 +366,7 @@ a POST request to the `rejectFriendReqUrl` endpoint with the provided data. */
     addLikeOnCommentPost,
     addReplyOnCommentOnEvent,
     addLikeOnCommentEvent,
+    shareEventInChat,
   };
 };
 

@@ -25,6 +25,7 @@ import FilterModalComp from './FilterModalComp';
 import SharePostComp from '../../Components/SharePostComp';
 import PostViewComp from '../../Components/PostViewComp';
 import ShareEventComp from '../../Components/ShareEventComp';
+import {TextComponent} from '../../Components/TextComponent';
 
 const GlobalEventsScreen = ({navigation, route}) => {
   const {
@@ -131,8 +132,21 @@ const GlobalEventsScreen = ({navigation, route}) => {
       <HeaderComponent
         headerTitle={'Search Events'}
         isBack
-        rightIconImg={tacFilterIcon}
+        // rightIconImg={tacFilterIcon}
         rightIconStyle={{tintColor: 'white'}}
+        backText={'Back'}
+        backTextStyle={{color: Colors.textGray}}
+        isAnotherRightChildern={
+          <TextComponent
+            text={'Advanced Search'}
+            isWhite
+            styles={{
+              height: hp('2'),
+              fontSize: hp('1.5'),
+              marginTop: hp('-1.5'),
+            }}
+          />
+        }
         // onRightPress={() => setModal('EventFilterScreen')}
         onRightPress={() =>
           navigation.navigate('EventFilterScreen', {

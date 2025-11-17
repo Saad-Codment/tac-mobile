@@ -19,6 +19,9 @@ import {femaleImg, maleImg} from '../Assets';
 // import Intl from 'intl';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 import RNFS from 'react-native-fs';
+import ImagePicker from 'react-native-image-picker';
+import ImageEditor, {ImageCropData} from '@react-native-community/image-editor';
+import Canvas, {Image as CanvasImage} from 'react-native-canvas';
 
 const getSingleCharacter = text => {
   let letter = text?.charAt(0).toUpperCase();
@@ -701,13 +704,15 @@ const resizeImage = async (image, targetWidth = 800, targetHeight = 800) => {
 //GET IMAGE From Mobile
 const uploadFromGalary = async (isMulti, isCircle, maxFiles) => {
   const imageData = await ImageCropPicker.openPicker({
-    cropping: true,
-    width: 300, // set desired resolution
-    height: 300,
+    cropping: false,
     // compressImageQuality: 0.8,
     multiple: isMulti ?? false,
     cropperCircleOverlay: isCircle, // 👈 Enables circular cropping
     maxFiles: maxFiles ?? 200,
+    freeStyleCropEnabled: true,
+    avoidEmptySpaceAroundImage: true,
+    showCropFrame: true,
+    enableRotationGesture: true,
   });
 
   const getOrientation = (width, height) => {
@@ -758,10 +763,101 @@ const uploadFromGalary = async (isMulti, isCircle, maxFiles) => {
   }
 };
 
+/* ---------- 2. Ensure file:// URI (Android) ---------- */
+const ensureFileUri = async (uri, fallbackName) => {
+  if (!uri) throw new Error('Missing uri');
+  if (Platform.OS === 'ios') return uri; // iOS gives ph:// or file://
+  if (uri.startsWith('content://')) {
+    const dest = `${RNFS.CachesDirectoryPath}/${
+      fallbackName || `img_${Date.now()}.jpg`
+    }`;
+    await RNFS.copyFile(uri, dest);
+    return `file://${dest}`;
+  }
+  return uri.startsWith('file://') ? uri : `file://${uri}`;
+};
+
+const getOrientation = (width, height) => {
+  if (width > height) return 'landscape';
+  if (height > width) return 'portrait';
+  return 'square';
+};
+/* ------------------------------------------------------------------ */
+/*  4. MAIN FUNCTION – picker + crop + compress                      */
+/* ------------------------------------------------------------------ */
+const uploadFromGalleryWithEditor = async (
+  isMulti = false,
+  isCircle = false,
+  maxFiles = 200,
+) => {
+  const pickerOptions = {
+    mediaType: 'photo',
+    includeBase64: false,
+    selectionLimit: isMulti ? maxFiles : 1,
+  };
+
+  return new Promise((resolve, reject) => {
+    ImagePicker.launchImageLibrary(pickerOptions, async response => {
+      if (response.didCancel) {
+        return resolve(null);
+      }
+      if (response.errorCode) {
+        return reject(new Error(response.errorMessage));
+      }
+
+      const assets = response.assets || [];
+      const processed = [];
+
+      for (const asset of assets) {
+        const sourceUri = asset.uri;
+        const fileName = asset.fileName || 'photo.jpg';
+        const mime = asset.type || 'image/jpeg';
+
+        let croppedUri = sourceUri;
+
+        if (isCircle) {
+          const size = Math.min(asset.width || 0, asset.height || 0);
+          const cropData = {
+            offset: {
+              x: (asset.width - size) / 2,
+              y: (asset.height - size) / 2,
+            },
+            size: {width: size, height: size},
+            displaySize: {width: 500, height: 500},
+            resizeMode: 'contain',
+          };
+
+          try {
+            croppedUri = await ImageEditor.cropImage(sourceUri, cropData);
+          } catch (e) {
+            console.warn('Crop failed, using original', e);
+          }
+        }
+
+        const baseImage = {
+          uri: croppedUri,
+          name: fileName,
+          type: mime,
+          orientation:
+            asset.width > asset.height
+              ? 'landscape'
+              : asset.height > asset.width
+              ? 'portrait'
+              : 'square',
+        };
+
+        const finalImage = await resizeImage(baseImage);
+        processed.push(finalImage);
+      }
+
+      resolve(isMulti ? processed : processed[0]);
+    });
+  });
+};
 //GET IMAGE From Mobile
 const uploadFromCamera = async (isMulti, isCircle, maxFiles) => {
   const imageData = await ImageCropPicker.openCamera({
-    cropping: true,
+    cropping: false,
     multiple: isMulti ?? false,
     cropperCircleOverlay: isCircle, // 👈 Enables circular cropping
     maxFiles,
@@ -1210,7 +1306,9 @@ function convertToArray(associations) {
 }
 
 function sortByNameAlphabetically(data) {
-  return data.sort((a, b) => a.name.localeCompare(b.name));
+  return data.sort((a, b) =>
+    a?.name ? a?.name?.localeCompare(b?.name) : a?.localeCompare(b),
+  );
 }
 
 function isFutureOrNow(dateString) {
@@ -1402,6 +1500,68 @@ const isOnlyEmoji = text => {
   return emojiRegex.test(text);
 };
 
+// Helper function to convert image to PNG
+const convertToPNG = async imageUri => {
+  try {
+    // Extract file extension
+    const fileExt = imageUri.split('.').pop().toLowerCase();
+
+    // If already PNG, return original
+    if (fileExt === 'png') return imageUri;
+
+    // Generate new filename with .png extension
+    const newPath = `${RNFS.TemporaryDirectoryPath}/${Date.now()}.png`;
+
+    // Read the original file
+    const base64Data = await RNFS.readFile(imageUri, 'base64');
+
+    // Write as PNG (this is a simplified approach)
+    await RNFS.writeFile(newPath, base64Data, 'base64');
+
+    return newPath;
+  } catch (error) {
+    console.error('Image conversion error:', error);
+    return imageUri; // Fallback to original if conversion fails
+  }
+};
+
+async function isImageCircle(uri) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const canvas = new Canvas();
+      const ctx = canvas.getContext('2d');
+
+      const img = new CanvasImage(canvas);
+      img.src = uri;
+
+      img.addEventListener('load', () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        ctx.drawImage(img, 0, 0);
+
+        // Read corner pixels (alpha)
+        const alphaTL = ctx.getImageData(0, 0, 1, 1).data[3];
+        const alphaTR = ctx.getImageData(img.width - 1, 0, 1, 1).data[3];
+        const alphaBL = ctx.getImageData(0, img.height - 1, 1, 1).data[3];
+        const alphaBR = ctx.getImageData(img.width - 1, img.height - 1, 1, 1)
+          .data[3];
+
+        const corners = [alphaTL, alphaTR, alphaBL, alphaBR];
+
+        // If all corners transparent => circular PNG
+        const isCircle = corners.every(a => a === 0);
+
+        resolve(isCircle);
+      });
+
+      img.addEventListener('error', err => reject(err));
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
 export {
   getSingleCharacter,
   getProperLocation,
@@ -1464,4 +1624,7 @@ export {
   formatAddress,
   convertToCustomDateTimeFormat,
   isOnlyEmoji,
+  uploadFromGalleryWithEditor,
+  convertToPNG,
+  isImageCircle,
 };

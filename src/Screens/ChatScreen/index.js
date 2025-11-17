@@ -12,7 +12,15 @@ import React, {memo, useCallback, useRef} from 'react';
 import {Colors} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
 import {Touchable} from '../../Components/Touchable';
-import {backIcon, send} from '../../Assets';
+import {
+  backIcon,
+  calendar,
+  calender,
+  dollarCircle,
+  location,
+  send,
+  tacLogo,
+} from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
 import {styles} from './styles';
@@ -28,8 +36,13 @@ import {types} from '../../Redux/types';
 import {
   convertToCustomDateTimeFormat,
   convertToCustomTimeFormat,
+  convertToLocalTime,
+  formatPrice,
+  getDateMonthYear,
   isOnlyEmoji,
 } from '../../Services/GlobalFunctions';
+import NavigationService from '../../Services/NavigationService';
+import DividerLine from '../../Components/DividerLine';
 
 const formatMessageDate = utcTimestamp => {
   const date = new Date(utcTimestamp);
@@ -96,6 +109,9 @@ const ChatScreen = ({navigation, route}) => {
     lastSeen,
     onImagePress,
     isSeenTrue,
+    onRefresh,
+    isShowFlat,
+    setIsShowFlat,
   } = useChatScreen(navigation, route);
 
   console.log(
@@ -199,6 +215,8 @@ const ChatScreen = ({navigation, route}) => {
         .filter(msg => msg.sender_id == userData?.id)
         .slice(-1)[0];
 
+      console.log('lastSeenMessageId', item);
+
       return (
         <View>
           <View
@@ -208,7 +226,11 @@ const ChatScreen = ({navigation, route}) => {
             }}>
             {isSender && (
               <TextComponent
-                text={convertToCustomTimeFormat(item?.created_at)}
+                text={
+                  convertToLocalTime(item?.created_at)?.time +
+                  ' ' +
+                  convertToLocalTime(item?.created_at)?.period
+                }
                 fade={true}
                 styles={{fontSize: hp('1.1'), marginRight: wp('2')}}
               />
@@ -251,11 +273,187 @@ const ChatScreen = ({navigation, route}) => {
                   controls={true}
                   resizeMode="contain"
                 />
-              ) : null}
+              ) : (
+                item.type == 'event' && (
+                  <Touchable
+                    style={{width: wp('70'), borderRadius: 20}}
+                    onPress={() => {
+                      NavigationService.navigate('EventsDetailScreen', {
+                        id: item?.metadata?.data?.id,
+                      });
+                    }}>
+                    {item?.metadata?.data?.images != null &&
+                      JSON.parse(item?.metadata?.data?.images)?.length > 0 && (
+                        <BlurImage
+                          isURI
+                          uri={
+                            item?.metadata?.data?.images != null
+                              ? imageUrl(
+                                  JSON.parse(item?.metadata?.data?.images)[0],
+                                )
+                              : null
+                          }
+                          styles={{...styles.singleImage, height: hp('15')}}
+                        />
+                      )}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginVertical: hp('1'),
+                        marginHorizontal: wp('1'),
+                      }}>
+                      <CircleImage
+                        uri={Boolean(item?.metadata?.data?.user_image != null)}
+                        image={
+                          item?.metadata?.data?.user_image != null
+                            ? imageUrl(item?.metadata?.data?.user_image)
+                            : tacLogo
+                        }
+                      />
+                      <View style={{marginLeft: wp('2')}}>
+                        <TextComponent
+                          text={
+                            item?.metadata?.data?.first_name
+                              ? `${item?.metadata?.data?.first_name} ${
+                                  item?.metadata?.data?.last_name
+                                    ? item?.metadata?.data?.last_name
+                                    : ''
+                                }`
+                              : 'System suggested'
+                          }
+                          isWhite={isSender}
+                          size={hp('1.8')}
+                        />
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <Image
+                            source={location}
+                            resizeMode="contain"
+                            style={{width: wp('3'), height: hp('2')}}
+                            tintColor={isSender ? 'white' : 'black'}
+                          />
+                          <TextComponent
+                            text={item?.metadata?.data?.address}
+                            size={hp('1.2')}
+                            styles={{width: wp('30')}}
+                            numberOfLines={1}
+                            isWhite={isSender}
+                          />
+                        </View>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginHorizontal: wp('1'),
+                        marginBottom: hp('1'),
+                      }}>
+                      <TextComponent
+                        text={item?.metadata?.data?.title}
+                        size={hp('1.8')}
+                        numberOfLines={1}
+                        styles={{
+                          marginBottom: hp('0.5'),
+                          width: wp('48'),
+                        }}
+                        isWhite={isSender}
+                      />
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-around',
+                        }}>
+                        <TextComponent
+                          text={formatPrice(item?.metadata?.data?.added_money)}
+                          size={hp('1.5')}
+                          isWhite={isSender}
+                        />
+                      </View>
+                    </View>
+                    <DividerLine
+                      DividerLineStyle={{
+                        backgroundColor: isSender ? 'white' : 'black',
+                      }}
+                    />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginTop: hp('1'),
+                        marginHorizontal: wp('1'),
+                      }}>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <TextComponent
+                          text={'Start At : '}
+                          isWhite={isSender}
+                          size={hp('1.2')}
+                        />
+                        <Image
+                          source={calender}
+                          resizeMode="contain"
+                          style={{width: wp('3'), height: hp('2')}}
+                          tintColor={isSender ? 'white' : 'black'}
+                        />
+                        <TextComponent
+                          text={` ${
+                            getDateMonthYear(item?.metadata?.data?.from_date)
+                              ?.monthName
+                          } ${
+                            getDateMonthYear(item?.metadata?.data?.from_date)
+                              ?.day
+                          }, ${
+                            getDateMonthYear(item?.metadata?.data?.from_date)
+                              ?.year
+                          }`}
+                          isWhite={isSender}
+                          size={hp('1.2')}
+                        />
+                      </View>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <TextComponent
+                          text={' End At : '}
+                          isWhite={isSender}
+                          size={hp('1.2')}
+                        />
+                        <Image
+                          source={calender}
+                          resizeMode="contain"
+                          style={{width: wp('3'), height: hp('2')}}
+                          tintColor={isSender ? 'white' : 'black'}
+                        />
+                        <TextComponent
+                          text={` ${
+                            getDateMonthYear(item?.metadata?.data?.to_date)
+                              ?.monthName
+                          } ${
+                            getDateMonthYear(item?.metadata?.data?.to_date)?.day
+                          }, ${
+                            getDateMonthYear(item?.metadata?.data?.to_date)
+                              ?.year
+                          }`}
+                          isWhite={isSender}
+                          size={hp('1.2')}
+                        />
+                      </View>
+                    </View>
+                  </Touchable>
+                )
+              )}
             </View>
             {!isSender && (
               <TextComponent
-                text={convertToCustomTimeFormat(item?.created_at)}
+                text={
+                  convertToLocalTime(item?.created_at)?.time +
+                  ' ' +
+                  convertToLocalTime(item?.created_at)?.period
+                }
                 fade={true}
                 styles={{fontSize: hp('1.1'), marginLeft: wp('2')}}
               />
@@ -338,13 +536,17 @@ const ChatScreen = ({navigation, route}) => {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onLayout={handleAutoScroll}
-        onScroll={handleScroll}
+        // onScroll={handleScroll}
+        onRefresh={onRefresh}
+        refreshing={false}
         ref={scrollViewRef}
         onContentSizeChange={handleAutoScroll}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingBottom: hp('2'),
+          paddingBottom: hp('6'),
           backgroundColor: 'white',
+          opacity: isShowFlat ? 1 : 0,
+          // display: isShowFlat ? 'flex' : 'none',
         }}
       />
       <View style={styles.searchMain}>
@@ -373,6 +575,7 @@ const ChatScreen = ({navigation, route}) => {
           </Touchable>
         )}
       </View>
+      {!isShowFlat && <Overlay />}
     </KeyboardAvoidingView>
   );
 };

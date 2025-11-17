@@ -73,6 +73,8 @@ const CreateEventsScreen = ({navigation, route}) => {
     perfEventListArry,
     modalVisible,
     isEditEvnet,
+    defaultMorningTime,
+    defaultEndTime,
     setModalVisible,
     createEventFun,
     handleSubmit,
@@ -522,18 +524,16 @@ const CreateEventsScreen = ({navigation, route}) => {
                           />
                         )}
                       />
-                      {i > 0 && (
-                        <Touchable
-                          style={{marginLeft: wp('3')}}
-                          onPress={() => remove(i)}>
-                          <Image
-                            source={crossWhite}
-                            resizeMode="contain"
-                            tintColor={'black'}
-                            style={{width: wp('3'), height: hp('2')}}
-                          />
-                        </Touchable>
-                      )}
+                      <Touchable
+                        style={{marginLeft: wp('3')}}
+                        onPress={() => remove(i)}>
+                        <Image
+                          source={crossWhite}
+                          resizeMode="contain"
+                          tintColor={'black'}
+                          style={{width: wp('3'), height: hp('2')}}
+                        />
+                      </Touchable>
                     </View>
                     <DividerLine DividerLineStyle={styles.divider} />
                     <Controller
@@ -550,7 +550,7 @@ const CreateEventsScreen = ({navigation, route}) => {
                             )
                           }
                           size={hp(1.2)}
-                          text={formatDateToCustomFormat(value ?? currentDate)}
+                          text={formatDateToLong(value ?? currentDate)}
                           styles={{
                             ...styles.perInnerText,
                             width: wp('85'),
@@ -627,15 +627,15 @@ const CreateEventsScreen = ({navigation, route}) => {
             <Touchable
               style={{
                 ...styles.addMoreView,
-                // backgroundColor: 'red',
-                width: wp('73'),
+                width: wp('20'),
+                marginLeft: wp('54'),
               }}
               onPress={() => {
                 append({
                   title: '',
                   date: currentDate,
-                  startTime: currentDate,
-                  endTime: currentDate,
+                  startTime: defaultMorningTime,
+                  endTime: defaultEndTime,
                 });
               }}>
               <Image

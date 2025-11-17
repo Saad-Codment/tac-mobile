@@ -17,13 +17,11 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ThemeButton from '../../Components/ThemeButton';
 
 import {hp, isIOS, wp} from '../../Config/responsive';
-import {backIcon, crossWhite, currentLoc, gpsImg, location} from '../../Assets';
+import {crossWhite, currentLoc, gpsImg, location} from '../../Assets';
 import Geolocation from '@react-native-community/geolocation';
 import {Colors} from '../../Theme/Variables';
 import {openSettings} from 'react-native-permissions';
 import {HeaderComponent} from '../../Components/HeaderComponent';
-import {Touchable} from '../../Components/Touchable';
-import {TextComponent} from '../../Components/TextComponent';
 
 const LocationScreen = ({route, navigation}) => {
   // Then, you can use setLocationValue as needed in the 'LocationScreen'.
@@ -87,24 +85,16 @@ const LocationScreen = ({route, navigation}) => {
             top: 0,
             position: 'absolute',
           }}>
-          <Touchable
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}>
-            <Image
-              source={backIcon}
-              resizeMode="contain"
-              style={styles.backIcon}
-              // tintColor={'black'}
-            />
-            <TextComponent
-              text={'Select Location'}
-              styles={{marginLeft: wp('25')}}
-              isWhite
-            />
-          </Touchable>
+          <HeaderComponent
+            headerTitle={'Location'}
+            style={{width: wp('100')}}
+            goBack={() => navigation.goBack()}
+            isBack
+          />
           <GooglePlacesAutocomplete
             fetchDetails={true} // you need this to fetch the details object onPress
             GooglePlacesDetailsQuery={{fields: ['place', 'geometry']}}
+            // placeholder="Search"
             onPress={(data, details = null) => {
               // 'details' contains information about the selected place
               handleLocationSelect(details);

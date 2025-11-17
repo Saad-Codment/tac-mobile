@@ -33,10 +33,11 @@ import {
   formatPrice,
   getCalenderPerComfirm,
   formatDateToCustomFormat,
+  getIdsFromArry,
 } from '../Services/GlobalFunctions';
 import {Touchable} from './Touchable';
 import NavigationService from '../Services/NavigationService';
-import {imageUrl, unFollowEventsUrl} from '../Utils/Urls';
+import {chatUserListUrl, imageUrl, unFollowEventsUrl} from '../Utils/Urls';
 import useFriendServices from '../Services/FriendServices';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {types} from '../Redux/types';
@@ -50,6 +51,7 @@ import {useState} from 'react';
 import {useMutation} from '@tanstack/react-query';
 import {errorMessage, successMessage} from '../Config/NotificationMessage';
 import ReactNativeCalendarEvents from 'react-native-calendar-events';
+import BottomViewModal from './BottomViewModal';
 
 const tags = [
   {
@@ -110,7 +112,8 @@ const ShareEventComp = ({
     }
   };
 
-  const {likeAndDisLikeEvent, shareEvent, deleteEvent} = useFriendServices();
+  const {likeAndDisLikeEvent, shareEvent, deleteEvent, shareEventInChat} =
+    useFriendServices();
 
   const [dummy, setDummy] = useState(1);
 
@@ -121,7 +124,7 @@ const ShareEventComp = ({
   const onImagePress = () => {
     dispatch({
       payload: item?.user_image ?? item?.profile_image,
-      type: types.openModal,
+      type: types.openModalCircle,
     });
   };
 
@@ -163,139 +166,142 @@ const ShareEventComp = ({
     item,
   );
 
+  const [modal, setModal] = useState(false);
+
   return (
-    <View
-      style={{
-        backgroundColor: '#fff',
-        // marginVertical: hp('1'),
-        paddingVertical: hp('1'),
-        // marginBottom: hp('0.5'),
-        ...upperMainView,
-      }}>
-      <Pressable
-        style={styles.upperView}
-        onPress={() =>
-          NavigationService.navigate('FriendProfileScreen', {
-            id: item?.shared_by_user_id,
-          })
-        }>
-        <CircleImage
-          image={imageUrl(item?.sharer_image ?? item?.sharer_image)}
-          uri
-        />
-        <View style={styles.userDetails}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <TextComponent
-              text={
-                item?.sharer_first_name +
-                ' ' +
-                (item?.sharer_last_name ? item?.sharer_last_name : '')
-              }
-              styles={styles.userName}
-            />
-            <TextComponent
-              text={' Shared an event'}
-              styles={styles.userName}
-              fade
-            />
-          </View>
-          <TextComponent
-            text={formatDateToCustomFormat(item?.created_at)}
-            styles={styles.postTime}
-          />
-        </View>
-        {userData?.id != item?.shared_by_user_id ? (
-          <TextComponent
-            text={'Report'}
-            fade
-            styles={styles.reportText}
-            onPress={() => {
-              if (userData?.id != item?.shared_by_user_id)
-                openBottomSheet(item?.id);
-            }}
-          />
-        ) : (
-          <Menu>
-            <MenuTrigger>
-              <Image
-                source={dotsVertical}
-                resizeMode="contain"
-                style={{width: wp('7'), height: hp('5'), marginLeft: wp('8')}}
-              />
-            </MenuTrigger>
-            <MenuOptions>
-              <MenuOption
-                onSelect={() => onEditPost(item)}
-                text="Edit"
-                style={{color: 'black'}}
-                customStyles={{color: 'black'}}
-              />
-              <MenuOption
-                onSelect={() => onDeletePost(item)}
-                text="Delete"
-                style={{color: 'black'}}
-                customStyles={{color: 'black'}}
-              />
-            </MenuOptions>
-          </Menu>
-        )}
-      </Pressable>
-      <Pressable
-        style={{...styles.mainView, ...mainViewStyle}}
-        onPress={() => {
-          NavigationService.navigate('EventsDetailScreen', {id: item?.id});
+    <>
+      <View
+        style={{
+          backgroundColor: '#fff',
+          // marginVertical: hp('1'),
+          paddingVertical: hp('1'),
+          // marginBottom: hp('0.5'),
+          ...upperMainView,
         }}>
         <Pressable
-          style={styles.upperImage}
+          style={styles.upperView}
           onPress={() =>
             NavigationService.navigate('FriendProfileScreen', {
-              id: item?.user_id,
+              id: item?.shared_by_user_id,
             })
           }>
-          <Pressable onPress={onImagePress}>
-            <CircleImage
-              size={0.07}
-              image={
-                Boolean(item?.user_image ?? item?.profile_image)
-                  ? imageUrl(item?.user_image ?? item?.profile_image)
-                  : eventLogo
-              }
-              uri={!Boolean(!item?.user_image ?? !item?.profile_image)}
-            />
-          </Pressable>
-          <View style={styles.nameView}>
-            <TextComponent
-              text={
-                item?.first_name
-                  ? item?.first_name +
-                    ' ' +
-                    (item?.last_name ? item?.last_name : '')
-                  : item?.title
-              }
-              styles={{
-                fontWeight: 'bold',
-                fontSize: hp('1.5'),
-                width: wp('62'),
-                // backgroundColor: 'red',
-              }}
-              numberOfLines={1}
-            />
-            <View style={styles.locationView}>
-              <Image
-                source={locationGray}
-                tintColor={'black'}
-                resizeMode="contain"
-                style={styles.locationIcom}
+          <CircleImage
+            image={imageUrl(item?.sharer_image ?? item?.sharer_image)}
+            uri
+          />
+          <View style={styles.userDetails}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TextComponent
+                text={
+                  item?.sharer_first_name +
+                  ' ' +
+                  (item?.sharer_last_name ? item?.sharer_last_name : '')
+                }
+                styles={styles.userName}
               />
               <TextComponent
-                text={item?.address}
-                styles={{fontSize: hp('1.2')}}
-                numberOfLines={1}
+                text={' Shared an event'}
+                styles={styles.userName}
+                fade
               />
             </View>
+            <TextComponent
+              text={formatDateToCustomFormat(item?.created_at)}
+              styles={styles.postTime}
+            />
           </View>
-          {/* {item?.first_name && */}
-          {/* {userData?.id != item?.user_id ? (
+          {userData?.id != item?.shared_by_user_id ? (
+            <TextComponent
+              text={'Report'}
+              fade
+              styles={styles.reportText}
+              onPress={() => {
+                if (userData?.id != item?.shared_by_user_id)
+                  openBottomSheet(item?.id);
+              }}
+            />
+          ) : (
+            <Menu>
+              <MenuTrigger>
+                <Image
+                  source={dotsVertical}
+                  resizeMode="contain"
+                  style={{width: wp('7'), height: hp('5'), marginLeft: wp('8')}}
+                />
+              </MenuTrigger>
+              <MenuOptions>
+                <MenuOption
+                  onSelect={() => onEditPost(item)}
+                  text="Edit"
+                  style={{color: 'black'}}
+                  customStyles={{color: 'black'}}
+                />
+                <MenuOption
+                  onSelect={() => onDeletePost(item)}
+                  text="Delete"
+                  style={{color: 'black'}}
+                  customStyles={{color: 'black'}}
+                />
+              </MenuOptions>
+            </Menu>
+          )}
+        </Pressable>
+        <Pressable
+          style={{...styles.mainView, ...mainViewStyle}}
+          onPress={() => {
+            NavigationService.navigate('EventsDetailScreen', {id: item?.id});
+          }}>
+          <Pressable
+            style={styles.upperImage}
+            onPress={() =>
+              NavigationService.navigate('FriendProfileScreen', {
+                id: item?.user_id,
+              })
+            }>
+            <Pressable onPress={onImagePress}>
+              <CircleImage
+                size={0.07}
+                image={
+                  Boolean(item?.user_image ?? item?.profile_image)
+                    ? imageUrl(item?.user_image ?? item?.profile_image)
+                    : eventLogo
+                }
+                uri={!Boolean(!item?.user_image ?? !item?.profile_image)}
+              />
+            </Pressable>
+            <View style={styles.nameView}>
+              <TextComponent
+                text={
+                  item?.first_name
+                    ? item?.first_name +
+                      ' ' +
+                      (item?.last_name ? item?.last_name : '')
+                    : item?.title
+                }
+                styles={{
+                  fontWeight: 'bold',
+                  fontSize: hp('1.5'),
+                  width: wp('62'),
+                  // backgroundColor: 'red',
+                }}
+                numberOfLines={1}
+              />
+              <View style={styles.locationView}>
+                <Image
+                  source={locationGray}
+                  tintColor={'black'}
+                  resizeMode="contain"
+                  style={styles.locationIcom}
+                />
+                <TextComponent
+                  text={item?.address}
+                  styles={{fontSize: hp('1.2')}}
+                  numberOfLines={1}
+                />
+              </View>
+            </View>
+            {/* {item?.first_name && */}
+            {/* {userData?.id != item?.user_id ? (
             <TextComponent
               text={'Report'}
               fade
@@ -329,94 +335,98 @@ const ShareEventComp = ({
               </MenuOptions>
             </Menu>
           )} */}
-          {/* } */}
-        </Pressable>
-        <View style={styles.priceMainView}>
-          <TextComponent
-            text={item?.title}
-            styles={{fontWeight: 'bold', width: wp('70'), fontSize: hp('1.5')}}
-            numberOfLines={1}
-            isWhite={item?.first_name ? false : true}
-          />
-          <View style={styles.priceView}>
-            <Image
-              source={dollarCircle}
-              resizeMode="contain"
-              tintColor={'white'}
-              style={styles.dollarIcon}
-            />
+            {/* } */}
+          </Pressable>
+          <View style={styles.priceMainView}>
             <TextComponent
-              text={formatPrice(item?.added_money) ?? 0}
-              styles={styles.price}
-            />
-          </View>
-        </View>
-        <View style={{...styles.centerView}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <TextComponent
-              text={`Starts at:`}
+              text={item?.title}
               styles={{
-                ...styles.leftText,
-                width: wp('12'),
-                // backgroundColor: 'red',
+                fontWeight: 'bold',
+                width: wp('70'),
+                fontSize: hp('1.5'),
               }}
+              numberOfLines={1}
+              isWhite={item?.first_name ? false : true}
             />
+            <View style={styles.priceView}>
+              <Image
+                source={dollarCircle}
+                resizeMode="contain"
+                tintColor={'white'}
+                style={styles.dollarIcon}
+              />
+              <TextComponent
+                text={formatPrice(item?.added_money) ?? 0}
+                styles={styles.price}
+              />
+            </View>
+          </View>
+          <View style={{...styles.centerView}}>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                // marginLeft: wp('-3'),
               }}>
-              <Image
-                source={calendar}
-                resizeMode="contain"
-                tintColor={'black'}
-                style={styles.calenderIcon}
-              />
               <TextComponent
-                text={`${getDateMonthYear(item?.from_date)?.monthName} ${
-                  getDateMonthYear(item?.from_date)?.day
-                }, ${getDateMonthYear(item?.from_date)?.year}`}
-                styles={{fontSize: hp('1.2')}}
+                text={`Starts at:`}
+                styles={{
+                  ...styles.leftText,
+                  width: wp('12'),
+                  // backgroundColor: 'red',
+                }}
               />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  // marginLeft: wp('-3'),
+                }}>
+                <Image
+                  source={calendar}
+                  resizeMode="contain"
+                  tintColor={'black'}
+                  style={styles.calenderIcon}
+                />
+                <TextComponent
+                  text={`${getDateMonthYear(item?.from_date)?.monthName} ${
+                    getDateMonthYear(item?.from_date)?.day
+                  }, ${getDateMonthYear(item?.from_date)?.year}`}
+                  styles={{fontSize: hp('1.2')}}
+                />
+              </View>
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TextComponent
+                text={`Ends at:`}
+                styles={{
+                  ...styles.leftText,
+                  width: wp('11'),
+                }}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  // marginLeft: wp('-3'),
+                }}>
+                <Image
+                  source={calendar}
+                  resizeMode="contain"
+                  tintColor={'black'}
+                  style={styles.calenderIcon}
+                />
+                <TextComponent
+                  text={`${getDateMonthYear(item?.to_date)?.monthName} ${
+                    getDateMonthYear(item?.to_date)?.day
+                  }, ${getDateMonthYear(item?.to_date)?.year}`}
+                  styles={{fontSize: hp('1.2')}}
+                />
+              </View>
             </View>
           </View>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <TextComponent
-              text={`Ends at:`}
-              styles={{
-                ...styles.leftText,
-                width: wp('11'),
-              }}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                // marginLeft: wp('-3'),
-              }}>
-              <Image
-                source={calendar}
-                resizeMode="contain"
-                tintColor={'black'}
-                style={styles.calenderIcon}
-              />
-              <TextComponent
-                text={`${getDateMonthYear(item?.to_date)?.monthName} ${
-                  getDateMonthYear(item?.to_date)?.day
-                }, ${getDateMonthYear(item?.to_date)?.year}`}
-                styles={{fontSize: hp('1.2')}}
-              />
-            </View>
-          </View>
-        </View>
-        {/* <View style={styles.divider} /> */}
+          {/* <View style={styles.divider} /> */}
 
-        {/* <View style={styles.centerView}>
+          {/* <View style={styles.centerView}>
         <TextComponent text={'Ends at'} styles={styles.leftText} />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image
@@ -443,102 +453,152 @@ const ShareEventComp = ({
           />
         </View>
       </View> */}
-        <View style={styles.divider} />
+          <View style={styles.divider} />
 
-        {item?.event_types && (
-          <>
-            <View style={styles.centerView}>
-              <TextComponent text={'Event types:'} styles={styles.leftText} />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <MultiSelectButton
-                  items={showFirstThreeAndCountRest(
-                    convertToArray(item?.event_types),
-                  )}
-                  isDisable={true}
-                  btnStyle={styles.tagsBtn}
-                  textStyle={{fontSize: hp('1.2'), color: '#525252'}}
-                />
+          {item?.event_types && (
+            <>
+              <View style={styles.centerView}>
+                <TextComponent text={'Event types:'} styles={styles.leftText} />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <MultiSelectButton
+                    items={showFirstThreeAndCountRest(
+                      convertToArray(item?.event_types),
+                    )}
+                    isDisable={true}
+                    btnStyle={styles.tagsBtn}
+                    textStyle={{fontSize: hp('1.2'), color: '#525252'}}
+                  />
+                </View>
               </View>
-            </View>
-            <View style={styles.divider} />
-          </>
-        )}
-        {item?.associations && (
-          <>
-            <View style={styles.centerView}>
-              <TextComponent text={'assoc:'} styles={styles.leftText} />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <MultiSelectButton
-                  items={showFirstThreeAndCountRest(
-                    convertToArray(item?.associations),
-                  )}
-                  isDisable={true}
-                  btnStyle={styles.tagsBtn}
-                  textStyle={{fontSize: hp('1.2'), color: '#525252'}}
-                />
+              <View style={styles.divider} />
+            </>
+          )}
+          {item?.associations && (
+            <>
+              <View style={styles.centerView}>
+                <TextComponent text={'assoc:'} styles={styles.leftText} />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <MultiSelectButton
+                    items={showFirstThreeAndCountRest(
+                      convertToArray(item?.associations),
+                    )}
+                    isDisable={true}
+                    btnStyle={styles.tagsBtn}
+                    textStyle={{fontSize: hp('1.2'), color: '#525252'}}
+                  />
+                </View>
               </View>
-            </View>
-            <View style={styles.divider} />
-          </>
-        )}
+              <View style={styles.divider} />
+            </>
+          )}
 
-        <View style={styles.bottomView}>
-          <Touchable
-            style={styles.leftRightView}
-            onPress={async () => {
-              functionToUpdateLike(index);
-              await likeAndDisLikeEvent.mutateAsync(item?.id);
-              if (refetch) refetch();
-              if (refetechKeys)
-                refetechKeys.map(res => queryClient.invalidateQueries([res]));
-            }}>
-            <Image
-              source={item?.is_liked ? heartFilledLike : heartTheme}
-              resizeMode="contain"
-              tintColor={'rgba(255, 0, 55, 1)'}
-              style={{
-                width: wp('4'),
-                marginRight: wp('1'),
-                height: hp('3'),
-              }}
-            />
-            <TextComponent
-              text={`${item?.likes_count} Likes`}
-              styles={{
-                fontSize: hp('1.2'),
-              }}
-            />
-          </Touchable>
-          <Touchable
-            style={styles.leftRightView}
-            onPress={() => {
-              shareEvent.mutateAsync({event_id: item?.id});
-            }}>
-            <Image
-              source={shareTheme}
-              resizeMode="contain"
-              style={{width: wp('4'), height: hp('3')}}
-              tintColor={'black'}
-            />
-            <TextComponent
-              text={'Share'}
-              styles={{
-                marginLeft: wp('1'),
-                fontSize: hp('1.2'),
-              }}
-            />
-          </Touchable>
-        </View>
-      </Pressable>
-    </View>
+          <View style={styles.bottomView}>
+            <Touchable
+              style={styles.leftRightView}
+              onPress={async () => {
+                functionToUpdateLike(index);
+                await likeAndDisLikeEvent.mutateAsync(item?.id);
+                if (refetch) refetch();
+                if (refetechKeys)
+                  refetechKeys.map(res => queryClient.invalidateQueries([res]));
+              }}>
+              <Image
+                source={item?.is_liked ? heartFilledLike : heartTheme}
+                resizeMode="contain"
+                tintColor={'rgba(255, 0, 55, 1)'}
+                style={{
+                  width: wp('4'),
+                  marginRight: wp('1'),
+                  height: hp('3'),
+                }}
+              />
+              <TextComponent
+                text={`${item?.likes_count} Likes`}
+                styles={{
+                  fontSize: hp('1.2'),
+                }}
+              />
+            </Touchable>
+            <Touchable
+              style={styles.leftRightView}
+              onPress={() => {
+                setModal(true);
+                // shareEvent.mutateAsync({event_id: item?.id});
+              }}>
+              <Image
+                source={shareTheme}
+                resizeMode="contain"
+                style={{width: wp('4'), height: hp('3')}}
+                tintColor={'black'}
+              />
+              <TextComponent
+                text={'Share'}
+                styles={{
+                  marginLeft: wp('1'),
+                  fontSize: hp('1.2'),
+                }}
+              />
+            </Touchable>
+          </View>
+        </Pressable>
+      </View>
+      {Boolean(modal) && (
+        <BottomViewModal
+          isModal={modal}
+          onBackPress={() => setModal(false)}
+          childrenComp={
+            <View style={{paddingHorizontal: wp('2')}}>
+              <TextComponent
+                text={'Share with friends'}
+                styles={styles.modalText}
+                size={hp('1.5')}
+                onPress={() => {
+                  setModal(false);
+                  NavigationService.navigate('SelectFriendListScreem', {
+                    onSelectValue: res => {},
+                    selectedValue: [],
+                    urlName: chatUserListUrl,
+                    isMultiSelect: true,
+                    title: 'Select Friends',
+                    btnTitle: 'Share',
+                    onBtnPress: selectedList => {
+                      console.log(
+                        'selectedListselectedListselectedListselectedListselectedList',
+                        selectedList,
+                      );
+                      shareEventInChat.mutateAsync({
+                        event_id: item?.id,
+                        conversation_ids: getIdsFromArry(
+                          selectedList,
+                          'conversation_id',
+                        ),
+                      });
+                    },
+                  });
+                }}
+              />
+              <TextComponent
+                text={'Share on your feed'}
+                styles={{...styles.modalText, marginTop: hp('1.5')}}
+                size={hp('1.5')}
+                onPress={() => {
+                  setModal(false);
+                  shareEvent.mutateAsync({event_id: item?.id});
+                }}
+              />
+            </View>
+          }
+        />
+      )}
+    </>
   );
 };
 
@@ -845,5 +905,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // backgroundColor: 'red',
     paddingHorizontal: wp('1'),
+  },
+  modalText: {
+    backgroundColor: Colors.bgGray,
+    paddingHorizontal: wp('3'),
+    paddingVertical: hp('1'),
+    width: wp('85'),
+    borderRadius: 10,
+    overflow: 'hidden',
   },
 });

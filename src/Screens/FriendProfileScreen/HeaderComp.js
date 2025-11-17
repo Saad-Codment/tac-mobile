@@ -132,7 +132,7 @@ const HeaderComp = ({userData, myUserData}) => {
   const onImagePress = () => {
     dispatch({
       payload: userData?.profile_image,
-      type: types.openModal,
+      type: types.openModalCircle,
     });
   };
 

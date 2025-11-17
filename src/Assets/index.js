@@ -85,6 +85,11 @@ export {default as manageSub} from './Icons/manageSub.png';
 export {default as selectedCheck} from './Icons/selectedCheck.png';
 export {default as tacFilterIcon} from './Icons/tacFilterIcon.png';
 
+export {default as mapCity} from './Icons/mapCity.png';
+export {default as mapState} from './Icons/mapState.png';
+
+export {default as homeSearch} from './Icons/homeSearch.png';
+
 export {default as blockUser} from './Icons/blockUser.png';
 export {default as replyIcon} from './Icons/replyIcon.png';
 

@@ -43,7 +43,7 @@ const App = () => {
   const appState = useRef(AppState.currentState);
   const {isloading} = getState('isloading');
   const {isLogin, userData} = getState('Auth');
-  const {image, modalType} = getState('modalState');
+  const {image, modalType, isCircle} = getState('modalState');
   const isFetching = useIsFetching();
 
   /* This code snippet is defining a `useMutation` hook called `sendFriendReq` that will handle making a
@@ -282,7 +282,13 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
   return (
     <>
       {isVisible === true ? Splash_Screen : <MainNavigator />}
-      {modalType && <ImagePreviewComp visible={modalType} images={image} />}
+      {modalType && (
+        <ImagePreviewComp
+          visible={modalType}
+          images={image}
+          isCircle={isCircle}
+        />
+      )}
       {isInAppMsg?.conversation_id && isLogin && (
         <MessageShowComp
           onDismiss={() => setIsInAppMsg(null)}

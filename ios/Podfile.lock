@@ -1160,6 +1160,49 @@ PODS:
     - Google-Maps-iOS-Utils (= 4.2.2)
     - GoogleMaps (= 7.4.0)
     - React-Core
+  - react-native-image-editor (4.3.0):
+    - DoubleConversion
+    - glog
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-RCTImage
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - react-native-image-picker (8.2.1):
+    - DoubleConversion
+    - glog
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-image-resizer (3.0.11):
     - React-Core
   - react-native-maps (1.10.3):
@@ -1214,6 +1257,48 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - react-native-video/Video (6.16.1):
+    - DoubleConversion
+    - glog
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - react-native-view-shot (4.0.3):
+    - DoubleConversion
+    - glog
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - react-native-webview (13.16.0):
     - DoubleConversion
     - glog
     - RCT-Folly (= 2024.01.01.00)
@@ -1667,6 +1752,8 @@ DEPENDENCIES:
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
+  - "react-native-image-editor (from `../node_modules/@react-native-community/image-editor`)"
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-image-resizer (from `../node_modules/@bam.tech/react-native-image-resizer`)"
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
@@ -1674,6 +1761,8 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-sqlite-storage (from `../node_modules/react-native-sqlite-storage`)
   - react-native-video (from `../node_modules/react-native-video`)
+  - react-native-view-shot (from `../node_modules/react-native-view-shot`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1831,6 +1920,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-get-random-values"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-image-editor:
+    :path: "../node_modules/@react-native-community/image-editor"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-image-resizer:
     :path: "../node_modules/@bam.tech/react-native-image-resizer"
   react-native-maps:
@@ -1845,6 +1938,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-sqlite-storage"
   react-native-video:
     :path: "../node_modules/react-native-video"
+  react-native-view-shot:
+    :path: "../node_modules/react-native-view-shot"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-nativeconfig:
     :path: "../node_modules/react-native/ReactCommon"
   React-NativeModulesApple:
@@ -1998,6 +2095,8 @@ SPEC CHECKSUMS:
   react-native-geolocation-service: 32b2c2a3b91e70ce2a8d0c684801aaeb0a07e0ec
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-google-maps: 98754480fbb4fd5ccd016d0f75a2168a6c84ebc5
+  react-native-image-editor: dc23e5805ede28915f302a9fcabb0f56831f5688
+  react-native-image-picker: ad4f2ac85a6a97612cdf658b6bbac595c660f213
   react-native-image-resizer: 24c5d06fae2176dc0caed4b6396e02befb44064a
   react-native-maps: 6f92b1fd37f9421b171c977a42785270703875dc
   react-native-orientation-locker: cc6f357b289a2e0dd2210fea0c52cb8e0727fdaa
@@ -2005,6 +2104,8 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: b72c4611af2e86d80a59ac76279043d8f75f454c
   react-native-sqlite-storage: 0c84826214baaa498796c7e46a5ccc9a82e114ed
   react-native-video: 2513c6653ebdc705c28eec559008924bc605b156
+  react-native-view-shot: cc7d84a404adac14716493bd3f121e187c7dd276
+  react-native-webview: f99c0eda2fc7d3e83259948c4cb2371215bb77d4
   React-nativeconfig: fa5de9d8f4dbd5917358f8ad3ad1e08762f01dcb
   React-NativeModulesApple: 89753ff61fc97da340c95e1fe7b58cabf21ae124
   React-perflogger: 7bb9ba49435ff66b666e7966ee10082508a203e8

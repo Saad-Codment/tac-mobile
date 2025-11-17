@@ -29,8 +29,9 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
 
   const [filterVal, setFilterVal] = useState({
     location: [],
-    minPrice: 0,
-    maxPrice: maxPriceVal?.data?.max_price ?? 9999999,
+    minPrice: '0',
+    maxPrice:
+      Math.floor(Number(maxPriceVal?.data?.max_price))?.toString() ?? 9999999,
     intersetedFriends: [],
     eventTypes: [],
     assocations: [],
@@ -66,7 +67,7 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
     refetch,
     isStale,
   } = useInfiniteQuery({
-    queryKey: [params?.url],
+    queryKey: ['GlobalEventsScreen'],
     queryFn: async ({pageParam = 1}) => {
       setTimeout(() => {
         dispatch(loadingFalse());
@@ -154,7 +155,7 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => (pages?.length ?? 0) + 1,
-    enabled: false,
+    enabled: Boolean(maxPriceVal?.data?.max_price),
     cacheTime: 0, // 👈 Don't cache the data
   });
 

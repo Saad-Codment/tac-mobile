@@ -16,6 +16,8 @@ import {
   galleryYellow,
   handShake,
   handShakeLottie,
+  homeSearch,
+  location,
   notificationWhite,
   redDotBell,
   searchIcon,
@@ -40,11 +42,12 @@ const HomeHeader = ({
   const {dispatch, getState} = useReduxStore();
 
   const {isNotification} = getState('isNotification');
+  const {userData} = getState('Auth');
 
   const onImagePress = () => {
     dispatch({
       payload: userDataImg,
-      type: types.openModal,
+      type: types.openModalCircle,
     });
   };
 
@@ -91,26 +94,49 @@ const HomeHeader = ({
               <Lottie
                 source={handShakeLottie}
                 resizeMode="contain"
-                style={{width: wp('8')}}
+                style={{width: wp('7'), height: hp('3')}}
                 loop
                 autoPlay
               />
             </View>
-            <TextComponent
-              text={'Welcome back'}
-              styles={{
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
                 top: hp('-0.7'),
-                color: Colors.textGray,
-                fontSize: hp('1.2'),
-              }}
-            />
+              }}>
+              {userData?.state ? (
+                <>
+                  <Image
+                    source={location}
+                    resizeMode="contain"
+                    style={{width: wp('3'), height: hp('2')}}
+                  />
+                  <TextComponent
+                    text={' ' + userData?.state + ', ' + (userData?.city ?? '')}
+                    styles={{
+                      color: Colors.textGray,
+                      fontSize: hp('1.2'),
+                    }}
+                  />
+                </>
+              ) : (
+                <TextComponent
+                  text={'Welcome back!'}
+                  styles={{
+                    color: Colors.textGray,
+                    fontSize: hp('1.2'),
+                  }}
+                />
+              )}
+            </View>
           </View>
         </Touchable>
         <Touchable
           onPress={() => NavigationService.navigate('GlobalSearchScreen')}>
           {/* onPress={() => NavigationService.navigate('EventFilterScreen')}> */}
           <Image
-            source={searchIcon}
+            source={homeSearch}
             resizeMode="contain"
             style={styles.setIcon}
             tintColor={'white'}
@@ -182,7 +208,7 @@ const styles = StyleSheet.create({
     // marginTop: hp('2.5'),
   },
   notiIcon: {width: wp('5'), marginTop: hp('1')},
-  setIcon: {width: wp('5'), marginTop: hp('1')},
+  setIcon: {width: wp('5.5'), marginTop: hp('1')},
   headingView: {
     flexDirection: 'row',
     justifyContent: 'space-between',

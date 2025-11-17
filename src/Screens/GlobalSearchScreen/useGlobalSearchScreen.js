@@ -19,7 +19,10 @@ const useGloabalSearchScreen = () => {
   const {userData} = getState('Auth');
   const [searchVal, setSearchVal] = useState(null);
   const [modal, setModal] = useState(null); // Flag to check if more data exists
-  const [selectedVal, setSelectedVal] = useState({name: 'All', id: 'all'});
+  const [selectedVal, setSelectedVal] = useState({
+    name: 'Events',
+    id: 'Events',
+  });
   const [pages, setPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false); // Combined list of events
   var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -31,8 +34,9 @@ const useGloabalSearchScreen = () => {
 
   const [filterVal, setFilterVal] = useState({
     location: [],
-    minPrice: 0,
-    maxPrice: maxPriceVal?.data?.max_price ?? 99999999,
+    minPrice: '0',
+    maxPrice:
+      Math.floor(Number(maxPriceVal?.data?.max_price))?.toString() ?? 9999999,
     intersetedFriends: [],
     eventTypes: [],
     assocations: [],
@@ -63,7 +67,7 @@ const useGloabalSearchScreen = () => {
 
   const {data, refetch} = useQuery({
     queryKey: ['globalSearchUrlForAllData'],
-    queryFn: async () => API.get(globalSearchUrl + searchVal),
+    queryFn: async () => API.get(globalSearchUrl + (searchVal ?? '')),
     enabled: false,
     cacheTime: 0, // 👈 Don't cache the data
   });
@@ -84,10 +88,6 @@ const useGloabalSearchScreen = () => {
         : selectUrl[selectedVal?.id],
     ],
     queryFn: async ({pageParam = 1}) => {
-      setTimeout(() => {
-        dispatch(loadingFalse());
-      }, 100);
-
       // Helper to convert array of objects to repeated query params
       const buildArrayParams = (array, key, paramName) => {
         if (!array || array.length === 0) return '';
@@ -163,13 +163,16 @@ const useGloabalSearchScreen = () => {
 
       const url = isParams
         ? `${globalSearchEventsWithFilterUrl}${queryParams}`
-        : `${selectUrl[selectedVal?.id]}${searchVal}&per_page=10&page=${pages}`;
+        : `${selectUrl[selectedVal?.id]}${
+            searchVal ?? ''
+          }&per_page=10&page=${pages}`;
       console.log('dsvjksdbvjbsdjkbvdsbvjksdbvkjsdbvkjksdbjvsdkjvsbd', url);
       return API.get(url);
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => (pages?.length ?? 0) + 1,
-    cacheTime: 0, // 👈 Don't cache the data
+    // cacheTime: 0, // 👈 Don't cache the data
+    enabled: true,
     // staleTime: 1000,
   });
   const {
@@ -265,16 +268,27 @@ const useGloabalSearchScreen = () => {
 
   const refetchWhenParams = async () => {
     if (isParams) {
+      setIsLoading(true);
+
       await allDataRefetch();
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+
       // queryClient.invalidateQueries([`${selectUrl[selectedVal?.id]}onlyEvnts`]);
-      setSelectedVal({name: '', id: ''});
-      setSelectedVal({name: 'Events', id: 'Events'});
+      setTimeout(() => {
+        setSelectedVal({name: '', id: ''});
+        setSelectedVal({name: 'Events', id: 'Events'});
+      }, 1000);
     }
   };
 
   useEffect(() => {
     if (maxPriceVal?.data?.max_price) {
-      setFilterVal(prev => ({...prev, maxPrice: maxPriceVal?.data?.max_price}));
+      setFilterVal(prev => ({
+        ...prev,
+        maxPrice: Math.floor(Number(maxPriceVal?.data?.max_price))?.toString(),
+      }));
     }
     // return () => {
     //   queryClient.removeQueries({
@@ -288,6 +302,11 @@ const useGloabalSearchScreen = () => {
     allData?.pages?.flatMap(page => {
       return page.data?.data;
     }) || [];
+
+  console.log(
+    'kjsdbvksjdbvksjdbvksjdbvkjsdbvkjsdbvkjsdbvkjsdbv',
+    Math.floor(Number(maxPriceVal?.data?.max_price)),
+  );
 
   return {
     selectedVal,

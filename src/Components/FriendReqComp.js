@@ -25,7 +25,7 @@ const FriendReqComp = ({
   const onImagePress = () => {
     dispatch({
       payload: item?.sender?.profile_image,
-      type: types.openModal,
+      type: types.openModalCircle,
     });
   };
 
@@ -34,8 +34,9 @@ const FriendReqComp = ({
     <View style={styles.cardView}>
       <Pressable onPress={onImagePress}>
         <CircleImage
-          uri={imageUrl(item?.sender?.profile_image)}
+          image={imageUrl(item?.sender?.profile_image)}
           styles={styles.circleImg}
+          uri
         />
       </Pressable>
       <View style={styles.secView}>

@@ -38,6 +38,8 @@ import {
   userAdd,
   syncContact,
   editPicBtn,
+  mapState,
+  mapCity,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
@@ -50,8 +52,10 @@ import {AlertDesign} from '../../Components/AlertDesign';
 import {
   calculateAge,
   capitalizeFirstLetter,
+  convertToPNG,
   uploadFromCamera,
   uploadFromGalary,
+  uploadFromGalleryWithEditor,
 } from '../../Services/GlobalFunctions';
 import {getMyFriendsUrl, imageUrl} from '../../Utils/Urls';
 import useReduxStore from '../../Hooks/UseReduxStore';
@@ -61,6 +65,8 @@ import usePorfileScreen from './useProfileScreen';
 import IconBtnView from '../../Components/IconBtnView';
 import {Touchable} from '../../Components/Touchable';
 import SettingModal from '../SettingScreen/SettingModal';
+import {states} from '../../Utils/localDB';
+import {statesWithCities} from '../../Utils/statesWithCities';
 
 const ProfileScreen = ({navigation}) => {
   const {
@@ -101,11 +107,25 @@ const ProfileScreen = ({navigation}) => {
       onPress: () => onOpenModal('age_view'),
     },
     {
-      title: capitalizeFirstLetter(userData?.gender ?? 'Not Availabe'),
+      title: capitalizeFirstLetter(userData?.gender ?? 'Not Available'),
       leftIcon: profileIcon,
       rightText: 'Edit',
       onPress: () => onOpenModal('user_gender'),
     },
+    {
+      title: capitalizeFirstLetter(userData?.state ?? 'Select your state'),
+      leftIcon: mapState,
+      rightText: 'Edit',
+      onPress: () => onOpenModal('state'),
+    },
+    userData?.state
+      ? {
+          title: capitalizeFirstLetter(userData?.city ?? 'Select your city'),
+          leftIcon: mapCity,
+          rightText: 'Edit',
+          onPress: () => onOpenModal('city'),
+        }
+      : {},
   ];
   const bottomView = [
     {
@@ -126,7 +146,7 @@ const ProfileScreen = ({navigation}) => {
   const onImagePress = () => {
     dispatch({
       payload: userData?.profile_image,
-      type: types.openModal,
+      type: types.openModalCircle,
     });
   };
 
@@ -167,15 +187,21 @@ const ProfileScreen = ({navigation}) => {
                       {
                         text: 'Camera',
                         onPress: async () => {
-                          const img = await uploadFromCamera(false, true);
-                          justUploadImg(img);
+                          const img = await uploadFromCamera(false, false);
+                          navigation.navigate('CropScreen', {
+                            image: img,
+                            afterCropImg: e => justUploadImg({...img, uri: e}),
+                          });
                         },
                       },
                       {
                         text: 'Gallery', // Just a dismissal button
                         onPress: async () => {
-                          const img = await uploadFromGalary(false, true);
-                          justUploadImg(img);
+                          const img = await uploadFromGalary(false, false);
+                          navigation.navigate('CropScreen', {
+                            image: img,
+                            afterCropImg: e => justUploadImg({...img, uri: e}),
+                          });
                         },
                       },
                       {
@@ -250,7 +276,16 @@ const ProfileScreen = ({navigation}) => {
       {modalVal && (
         <SettingModal
           activeTags={activeTags[onPressKey] ?? []}
-          allData={allData ?? []}
+          allData={
+            Boolean(onPressKey == 'state' || onPressKey == 'city')
+              ? onPressKey == 'state'
+                ? states
+                : onPressKey == 'city'
+                ? statesWithCities[userData?.state ?? ''] || []
+                : []
+              : allData ?? []
+          }
+          // allData={allData ?? []}
           heading={onPressKey}
           isModal={modalVal}
           onSelect={() => {}}

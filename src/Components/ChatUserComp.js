@@ -14,7 +14,11 @@ import NavigationService from '../Services/NavigationService';
 import useReduxStore from '../Hooks/UseReduxStore';
 import {imageUrl} from '../Utils/Urls';
 import {Colors} from '../Theme/Variables';
-import {convertToCustomDateTimeFormat} from '../Services/GlobalFunctions';
+import {
+  convertToCustomDateTimeFormat,
+  convertToLocalTime,
+  getDateMonthYear,
+} from '../Services/GlobalFunctions';
 
 const ChatUserComp = ({mainViewStyles, item, index, userDataProp}) => {
   const {getState} = useReduxStore();
@@ -70,7 +74,13 @@ const ChatUserComp = ({mainViewStyles, item, index, userDataProp}) => {
         <TextComponent
           text={
             item?.last_message?.created_at
-              ? convertToCustomDateTimeFormat(item?.last_message?.created_at)
+              ? getDateMonthYear(item?.last_message?.created_at)?.monthName +
+                '/' +
+                getDateMonthYear(item?.last_message?.created_at)?.day +
+                ' ' +
+                convertToLocalTime(item?.last_message?.created_at)?.time +
+                ' ' +
+                convertToLocalTime(item?.last_message?.created_at)?.period
               : ''
           }
           fade

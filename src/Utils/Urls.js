@@ -64,6 +64,10 @@ export const allFriendEventsUrl = '/home/friends-events';
 export const allSuggestedEventsUrl = '/home/suggested-events';
 export const likeUnlikeUrl = '/react/like/';
 
+export const shareEventInChatUrl = '/v1/chat/share-event';
+
+export const chatUserListUrl = '/v1/chat/list';
+
 export const getFriendEventsUrl = '/user/events/?user_id=';
 
 export const getConversationIdUrl = 'v1/chat/get-conversation-id?user_id=';

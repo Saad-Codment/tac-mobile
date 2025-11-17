@@ -62,7 +62,7 @@ const EventsDetailScreen = ({navigation, route}) => {
           ? JSON.parse(eventData?.images)
           : ''
         : eventData?.user?.profile_image,
-      type: types.openModal,
+      type: isEvent ? types.openModal : types.openModalCircle,
     });
   };
 
@@ -123,21 +123,20 @@ const EventsDetailScreen = ({navigation, route}) => {
       onPress: () => {},
       rightTextStyles: {color: Colors.primaryColor},
     },
-    // {
-    //   ...(eventData?.performances.length > 0
-    //     ? {
-    //         title: 'Performances',
-    //         onPress: () =>
-    //           navigation.navigate(
-    //             'PerformancesScreen',
-    //             eventData?.performances,
-    //           ),
-    //         rightIcon: arrRightPurple,
-    //         rightIconColor: Colors.primaryColor,
-    //         rightStyle: {width: wp('3')},
-    //       }
-    //     : null),
-    // },
+    {
+      title:
+        eventData?.performances.length > 0
+          ? 'Performances'
+          : 'No Performances available',
+      onPress: () => {
+        if (eventData?.performances.length > 0)
+          navigation.navigate('PerformancesScreen', eventData?.performances);
+      },
+      rightIcon: eventData?.performances.length > 0 ? arrRightPurple : null,
+      rightIconColor: Colors.primaryColor,
+      rightStyle: {width: wp('3')},
+    },
+
     {
       title: 'Event Confirmation',
       rightText: eventData?.is_confirmed == 0 ? 'Planning' : 'Confirmed',
@@ -260,7 +259,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                 eventData?.user?.profile_image || !eventData?.suggested,
               )}
               styles={styles.tacImg}
-              radius={5}
+              size={0.1}
             />
           </Pressable>
           <TextComponent
@@ -528,13 +527,13 @@ const EventsDetailScreen = ({navigation, route}) => {
           onCancel={() => setModalVisible(false)}
           subtitle={
             eventData?.is_followed
-              ? 'Are you sure you want to remove this from your calendar?'
-              : 'Are you sure you want to add this to your calendar?'
+              ? 'Do you want to remove this event to your TAC calendar?'
+              : 'Do you want to add this event to your TAC calendar?'
           }
           checkBoxText={
             eventData?.is_followed
-              ? 'Want to remove this event to your calendar?'
-              : 'Want to add this event to your calendar?'
+              ? 'Also remove this event with my device calendar'
+              : 'Also sync this event with my device calendar'
           }
           onConfirm={(checked, id) => {
             console.log('User confirmed:', checked);

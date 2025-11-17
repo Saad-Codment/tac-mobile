@@ -70,8 +70,8 @@ const GlobalSearchScreen = ({navigation}) => {
   } = useGloabalSearchScreen(navigation);
 
   console.log(
-    'allSearchDataallSearchsdDataallSearchDataallSearchDataallSsdsdsearchData',
-    selectTabAllData,
+    'allSearchDataallSearchsdDataallSearchDataallSearchDataallSsdsdsearchDataslkdnvlksdn',
+    selectTabAllData?.length,
   );
 
   const DynamicViewForSearch = useCallback(
@@ -130,7 +130,11 @@ const GlobalSearchScreen = ({navigation}) => {
                         index={index}
                         refetechKeys={refetchKeys}
                         functionToUpdateLike={() => {}}
-                        mainViewStyle={{marginTop: hp('1')}}
+                        mainViewStyle={{
+                          marginTop: hp('1'),
+                          alignSelf: 'center',
+                          marginBottom: hp('1'),
+                        }}
                         openBottomSheet={id => setModal({id, type: 'post'})}
                         refetch={isNotRefreshing ? undefined : refetch}
                       />
@@ -188,8 +192,10 @@ const GlobalSearchScreen = ({navigation}) => {
             )}
             ListFooterComponent={
               selectTabAllData.length >= 9 &&
-              !isSeeAll &&
-              (isFetchingNextPage ? null : (
+              isSeeAll != true &&
+              (isFetchingNextPage ? (
+                <ActivityIndicator size="small" color="gray" />
+              ) : (
                 <ThemeButton
                   title={'Load More'}
                   style={{
@@ -248,9 +254,9 @@ const GlobalSearchScreen = ({navigation}) => {
                 searchVal == null || searchVal == '' || searchVal == undefined,
               );
               if (!isSearch) {
-                setSelectedVal({name: 'All', id: 'all'});
+                setSelectedVal({name: 'Events', id: 'Events'});
                 setIsLoading(true);
-                await onSearch();
+                await allDataRefetch();
                 setIsLoading(false);
               }
             }}
@@ -272,11 +278,16 @@ const GlobalSearchScreen = ({navigation}) => {
                   selectedVal: filterVal,
                 });
               }}>
-              <Image
+              <TextComponent
+                text={'Advanced Search'}
+                isLightThemeColor
+                size={hp('1.3')}
+              />
+              {/* <Image
                 source={tacFilterIcon}
                 resizeMode="contain"
-                style={styles.searchIcon}
-              />
+                style={{...styles.searchIcon, width: wp('5'), height: hp('2')}}
+              /> */}
             </Touchable>
           )}
         </View>
@@ -284,10 +295,10 @@ const GlobalSearchScreen = ({navigation}) => {
       <View style={styles.mainView}>
         <MultiSelectButton
           items={[
-            {name: 'All', id: 'all'},
+            {name: 'Events', id: 'Events'},
             {name: 'Users', id: 'Users'},
             {name: 'Posts', id: 'Posts'},
-            {name: 'Events', id: 'Events'},
+            {name: 'All', id: 'all'},
           ]}
           selectedBgColor={Colors.headerBg}
           selectedAlter={selectedVal}
@@ -343,18 +354,20 @@ const GlobalSearchScreen = ({navigation}) => {
           )}
         </ScrollView>
       )}
-      {selectTabAllData != null && selectedVal?.id != 'all' && (
-        <ScrollView
-          contentContainerStyle={{paddingBottom: hp('10')}}
-          showsVerticalScrollIndicator={false}>
-          <DynamicViewForSearch
-            title={selectedVal?.name}
-            array={selectTabAllData}
-            flatViewStyle={{alignItem: 'center'}}
-            isNotRefreshing={true}
-          />
-        </ScrollView>
-      )}
+      {selectTabAllData != null &&
+        selectedVal?.id != 'all' &&
+        selectTabAllData?.length > 0 && (
+          <ScrollView
+            contentContainerStyle={{paddingBottom: hp('10')}}
+            showsVerticalScrollIndicator={false}>
+            <DynamicViewForSearch
+              title={selectedVal?.name}
+              array={selectTabAllData}
+              flatViewStyle={{alignItem: 'center'}}
+              isNotRefreshing={true}
+            />
+          </ScrollView>
+        )}
       {/* <View style={styles.sectionContainer}>
         <View style={styles.titleView}>
           <TextComponent text={'Peoples'} styles={styles.titleText} />
@@ -384,7 +397,7 @@ const GlobalSearchScreen = ({navigation}) => {
           )}
         />
       </View> */}
-      {isFetching || (isLoading && <Overlay />)}
+      {Boolean(isLoading) && <Overlay />}
       {Boolean(modal != null) && (
         <BottomModalComponent
           isVisible={Boolean(modal != null)}

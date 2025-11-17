@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: hp('1'),
   },
-  tacImg: {width: wp('7'), height: hp('4'), marginRight: wp('2')},
+  tacImg: {marginRight: wp('2')},
   followView: {
     flexDirection: 'row',
     alignItems: 'center',

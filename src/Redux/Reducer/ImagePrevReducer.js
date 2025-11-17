@@ -3,6 +3,7 @@ import {types} from '../types';
 const initial_state = {
   image: '',
   modalType: false,
+  isCircle: false,
 };
 
 const actionMap = {
@@ -10,6 +11,13 @@ const actionMap = {
     return {
       image: act.payload,
       modalType: true,
+    };
+  },
+  [types.openModalCircle]: (state, act) => {
+    return {
+      image: act.payload,
+      modalType: true,
+      isCircle: true,
     };
   },
   [types.closeModal]: () => initial_state,

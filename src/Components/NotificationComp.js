@@ -17,7 +17,7 @@ const NotificationComp = ({item, index, acceptReq, declineReq}) => {
   const onImagePress = () => {
     dispatch({
       payload: item?.profile_image,
-      type: types.openModal,
+      type: types.openModalCircle,
     });
   };
 

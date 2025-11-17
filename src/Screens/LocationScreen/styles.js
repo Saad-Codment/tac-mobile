@@ -10,25 +10,13 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  backButton: {
-    paddingTop: hp('1'),
-    paddingLeft: wp('3'),
-    width: wp('100'),
-    flexDirection: 'row',
-    alignItems: 'center',
-    // backgroundColor: Colors.darkThemeTextColor,
-  },
-  backIcon: {
-    width: wp('6'),
-    height: hp('4'),
-  },
   text: {
     position: 'absolute',
     bottom: 10,
     backgroundColor: 'lightblue',
   },
   btnStyle: {
-    marginBottom: Platform.OS == 'ios' ? hp('10') : hp('5'),
+    marginBottom: Platform.OS == 'ios' ? hp('3') : hp('5'),
     width: wp('80'),
     textAlign: 'center',
     backgroundColor: Colors.backgroundTheme,
@@ -47,7 +35,7 @@ export const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: Colors.primaryColor,
     right: 20,
-    bottom: hp('20'),
+    bottom: 100,
   },
   dropDown: {
     alignSelf: 'center',

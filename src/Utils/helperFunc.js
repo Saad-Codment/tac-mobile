@@ -330,6 +330,21 @@ const formDataFunc = async (url, body, imageKey, isArray, inewArryKey) => {
     });
   }
 
+  if (inewArryKey && body[inewArryKey].length > 0) {
+    body[inewArryKey].map((performance, index) => {
+      formData.append(`performances[${index}][title]`, performance.title || '');
+      formData.append(`performances[${index}][date]`, performance.date || '');
+      formData.append(
+        `performances[${index}][start_time]`,
+        performance.start_time || '',
+      );
+      formData.append(
+        `performances[${index}][end_time]`,
+        performance.end_time || '',
+      );
+    });
+  }
+
   // Add other fields
   Object.entries(body).forEach(([key, value]) => {
     if (key !== imageKey) {

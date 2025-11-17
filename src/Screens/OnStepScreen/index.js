@@ -25,7 +25,7 @@ import {TextComponent} from '../../Components/TextComponent';
 import ThemeButton from '../../Components/ThemeButton';
 import {Picker} from '@react-native-picker/picker';
 import ErrorInputComponent from '../../Components/ErrorInputComponent';
-import {step2, step3, step5} from '../../Utils/localDB';
+import {states, step2, step3, step5} from '../../Utils/localDB';
 import {Colors} from '../../Theme/Variables';
 import {Touchable} from '../../Components/Touchable';
 import {allAssociatesUrl, allEventTypeUrl} from '../../Utils/Urls';
@@ -36,6 +36,8 @@ import {
   formatDateToLong,
 } from '../../Services/GlobalFunctions';
 import {logOutAuth} from '../../Redux/Action/AuthAction';
+import SettingModal from '../SettingScreen/SettingModal';
+import {statesWithCities} from '../../Utils/statesWithCities';
 
 const OnStepScreen = ({navigation}) => {
   const {
@@ -54,6 +56,13 @@ const OnStepScreen = ({navigation}) => {
     modalState,
     setModalState,
     dispatch,
+    modalVal,
+    setModalVal,
+    onPressKey,
+    activeTags,
+    city,
+    state,
+    onOpenModal,
   } = useOnStepScreen(navigation);
 
   // Calculate 13 years ago from today
@@ -203,6 +212,53 @@ const OnStepScreen = ({navigation}) => {
       return (
         <View>
           <TextComponent
+            text={'Select is your home town?'}
+            styles={styles.tagline}
+          />
+          {/* <TextComponent
+            text={'Salungat sa kaalaman ng marami.'}
+            styles={styles.innerTitle}
+            fade={true}
+          /> */}
+          <Touchable
+            style={{...styles.inputMain, backgroundColor: 'transparent'}}
+            onPress={() => onOpenModal('state')}>
+            <TextComponent
+              text={state?.name ?? 'Select your state'}
+              styles={{...styles.btnTextTwo, color: 'black'}}
+            />
+            <Image
+              source={arrRightPurple}
+              style={styles.arrowImage}
+              tintColor={'black'}
+            />
+          </Touchable>
+          {state?.name && (
+            <Touchable
+              style={{
+                ...styles.inputMain,
+                backgroundColor: 'transparent',
+                marginTop: hp('2'),
+              }}
+              onPress={() => onOpenModal('city')}>
+              <TextComponent
+                text={city?.name ?? 'Select your city'}
+                styles={{...styles.btnTextTwo, color: 'black'}}
+              />
+              <Image
+                source={arrRightPurple}
+                style={styles.arrowImage}
+                tintColor={'black'}
+              />
+            </Touchable>
+          )}
+        </View>
+      );
+    },
+    5: () => {
+      return (
+        <View>
+          <TextComponent
             text={'What type of events are you interested in?'}
             styles={styles.tagline}
           />
@@ -241,7 +297,7 @@ const OnStepScreen = ({navigation}) => {
         </View>
       );
     },
-    5: () => {
+    6: () => {
       return (
         <>
           <TextComponent
@@ -418,6 +474,25 @@ const OnStepScreen = ({navigation}) => {
           }}
         />
       </View>
+      {modalVal && (
+        <SettingModal
+          activeTags={activeTags[onPressKey] ?? []}
+          allData={
+            onPressKey == 'state'
+              ? states
+              : onPressKey == 'city'
+              ? statesWithCities[state?.name ?? ''] || []
+              : []
+          }
+          heading={onPressKey}
+          isModal={modalVal}
+          onBackPress={() => setModalVal(false)}
+          onPress={e => {
+            setModalVal(false);
+            onSelectValue(onPressKey, e[onPressKey]);
+          }}
+        />
+      )}
     </>
   );
 };

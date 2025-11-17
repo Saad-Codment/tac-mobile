@@ -41,7 +41,7 @@ const MyFriendComp = ({
   const onImagePress = () => {
     dispatch({
       payload: item?.profile_image,
-      type: types.openModal,
+      type: types.openModalCircle,
     });
   };
 
