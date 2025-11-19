@@ -146,6 +146,11 @@ const useLocationScreen = ({navigate, addListener, params}) => {
       console.log('Error getting location:', error);
     }
   };
+
+  useEffect(() => {
+    getCurrentLocation(); // Trigger location fetch on mount
+  }, []);
+
   const queryClient = useQueryClient();
   const {mutateAsync: updateCoordinates} = useMutation({
     mutationFn: async ({latitude, longitude}) =>
@@ -223,10 +228,6 @@ const useLocationScreen = ({navigate, addListener, params}) => {
       getLocationFunction(locationName, currentLocation);
     }
   };
-
-  useEffect(() => {
-    getCurrentLocation(); // Trigger location fetch on mount
-  }, []);
 
   return {
     mapRef,

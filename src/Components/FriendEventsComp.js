@@ -68,7 +68,9 @@ const FriendEventsComp = ({
         NavigationService.navigate('EventsDetailScreen', {id: item?.id});
       }}>
       <View style={styles.upperImage}>
-        <Pressable onPress={onImagePress}>
+        <Pressable
+          onPress={onImagePress}
+          disabled={!Boolean(item?.user_image ?? item?.profile_image)}>
           <CircleImage
             size={0.15}
             image={

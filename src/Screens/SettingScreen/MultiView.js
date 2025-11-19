@@ -36,6 +36,7 @@ export const MultiView = ({
           textStyle={titleStyles}
           leftStyle={leftStyles}
           rightStyle={rightStyles}
+          titleChildComp={item?.titleChildComp}
         />
       </Touchable>
     );

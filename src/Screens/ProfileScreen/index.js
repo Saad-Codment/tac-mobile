@@ -45,7 +45,7 @@ import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
 import {hp, wp} from '../../Config/responsive';
 import {styles} from './styles';
-import {Colors} from '../../Theme/Variables';
+import {Colors, FontSize} from '../../Theme/Variables';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import NavigationService from '../../Services/NavigationService';
 import {AlertDesign} from '../../Components/AlertDesign';
@@ -113,19 +113,71 @@ const ProfileScreen = ({navigation}) => {
       onPress: () => onOpenModal('user_gender'),
     },
     {
-      title: capitalizeFirstLetter(userData?.state ?? 'Select your state'),
+      // title: userData?.city
+      //   ? `Home Town (${userData?.state}, ${userData?.city})`
+      //   : 'Select your home town',
       leftIcon: mapState,
+      titleChildComp: (
+        <>
+          {userData?.city ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                textAlign: 'left',
+                marginLeft: wp('3'),
+                flex: 1,
+              }}>
+              <TextComponent
+                text={'Home Town '}
+                styles={{
+                  fontSize: hp('1.2'),
+                }}
+                fade
+              />
+              <TextComponent
+                text={
+                  userData?.city
+                    ? `(${userData?.state}, ${userData?.city})`
+                    : ''
+                }
+                styles={{
+                  fontSize: hp('1.2'),
+                }}
+              />
+            </View>
+          ) : (
+            <TextComponent
+              text={'Select your home town'}
+              styles={{
+                fontSize: hp('1.2'),
+                textAlign: 'left',
+                marginLeft: wp('3'),
+                flex: 1,
+              }}
+            />
+          )}
+        </>
+      ),
       rightText: 'Edit',
-      onPress: () => onOpenModal('state'),
+      onPress: () =>
+        navigation.navigate('StateCityScreen', {
+          // 1. Callback – REQUIRED (to get selected city back)
+          onSelectValue: selected => {
+            console.log('User selected:', selected);
+            // → { state: "California", city: "Los Angeles" }  or  null
+            // Save it wherever you want (state, context, redux, etc.)
+            // setSelectedLocation(selected);
+          },
+          listArray: states.map(item => ({id: item, name: item})),
+          // 2. Pre-selected value – OPTIONAL (if you want to show already selected city)
+          selectedValue: [{id: userData?.state, name: userData?.state}],
+          onSelectedPress: true,
+          title: 'Select State',
+          // OR pass null if nothing selected yet
+          // selectedValue: null,
+        }),
     },
-    userData?.state
-      ? {
-          title: capitalizeFirstLetter(userData?.city ?? 'Select your city'),
-          leftIcon: mapCity,
-          rightText: 'Edit',
-          onPress: () => onOpenModal('city'),
-        }
-      : {},
   ];
   const bottomView = [
     {

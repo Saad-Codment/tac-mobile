@@ -20,6 +20,7 @@ const IconBtnView = ({
   rightIconColor,
   leftIconColor,
   rightChilderView,
+  titleChildComp,
 }) => {
   return (
     <Touchable
@@ -33,7 +34,9 @@ const IconBtnView = ({
           tintColor={leftIconColor ?? Colors.primaryColor}
         />
       ) : null}
-      <TextComponent text={title} styles={{...styles.text, ...textStyle}} />
+      {titleChildComp ?? (
+        <TextComponent text={title} styles={{...styles.text, ...textStyle}} />
+      )}
       {rightChilderView ??
         (rightText ? (
           <TextComponent

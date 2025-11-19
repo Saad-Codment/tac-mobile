@@ -173,6 +173,18 @@ function MainNavigator() {
               name="GlobalEventsScreen"
               component={Screens.GlobalEventsScreen}
             />
+            <Stack.Screen
+              name="StateCityScreen"
+              component={Screens.StateViewScreen}
+            />
+            <Stack.Screen
+              name="SelectCityScreen"
+              component={Screens.SelectCityScreen}
+            />
+            <Stack.Screen
+              name="AllNearByEventScreen"
+              component={Screens.AllNearByEventScreen}
+            />
             <Stack.Screen name="CropScreen" component={Screens.CropScreen} />
             <Stack.Screen
               name="LocationScreen"

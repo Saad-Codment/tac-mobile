@@ -175,7 +175,13 @@ const UpcomingEventsComp = ({
   return (
     <>
       <Pressable
-        style={{...styles.mainView, ...mainViewStyle}}
+        style={{
+          ...styles.mainView,
+          ...mainViewStyle,
+          backgroundColor: Boolean(item?.user_image ?? item?.profile_image)
+            ? 'white'
+            : 'rgba(255, 247, 233, 1)',
+        }}
         onPress={() => {
           NavigationService.navigate('EventsDetailScreen', {id: item?.id});
         }}>
@@ -189,7 +195,9 @@ const UpcomingEventsComp = ({
               });
             }
           }}>
-          <Pressable onPress={onImagePress}>
+          <Pressable
+            onPress={onImagePress}
+            disabled={!Boolean(item?.user_image ?? item?.profile_image)}>
             <CircleImage
               size={0.12}
               image={
@@ -271,9 +279,13 @@ const UpcomingEventsComp = ({
         <View style={styles.priceMainView}>
           <TextComponent
             text={item?.title}
-            styles={{fontWeight: 'bold', width: wp('70'), fontSize: hp('1.5')}}
+            styles={{
+              fontWeight: 'bold',
+              width: wp('70'),
+              fontSize: hp('1.5'),
+              opacity: item?.first_name ? 1 : 0,
+            }}
             numberOfLines={1}
-            isWhite={item?.first_name ? false : true}
           />
           <View style={styles.priceView}>
             <Image
@@ -382,15 +394,15 @@ const UpcomingEventsComp = ({
       </View> */}
         <View style={styles.divider} />
 
-        {item?.event_types && (
-          <>
-            <View style={styles.centerView}>
-              <TextComponent text={'Event types:'} styles={styles.leftText} />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
+        <>
+          <View style={styles.centerView}>
+            <TextComponent text={'Event types:'} styles={styles.leftText} />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              {item?.event_types ? (
                 <MultiSelectButton
                   items={showFirstThreeAndCountRest(
                     convertToArray(item?.event_types),
@@ -399,20 +411,22 @@ const UpcomingEventsComp = ({
                   btnStyle={styles.tagsBtn}
                   textStyle={{fontSize: hp('1.2'), color: '#525252'}}
                 />
-              </View>
+              ) : (
+                <TextComponent text={'Not Selected'} size={hp('1.2')} />
+              )}
             </View>
-            <View style={styles.divider} />
-          </>
-        )}
-        {item?.associations && (
-          <>
-            <View style={styles.centerView}>
-              <TextComponent text={'assoc:'} styles={styles.leftText} />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
+          </View>
+          <View style={styles.divider} />
+        </>
+        <>
+          <View style={styles.centerView}>
+            <TextComponent text={'Assoc:'} styles={styles.leftText} />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              {item?.associations ? (
                 <MultiSelectButton
                   items={showFirstThreeAndCountRest(
                     convertToArray(item?.associations),
@@ -421,11 +435,13 @@ const UpcomingEventsComp = ({
                   btnStyle={styles.tagsBtn}
                   textStyle={{fontSize: hp('1.2'), color: '#525252'}}
                 />
-              </View>
+              ) : (
+                <TextComponent text={'Not Selected'} size={hp('1.2')} />
+              )}
             </View>
-            <View style={styles.divider} />
-          </>
-        )}
+          </View>
+          <View style={styles.divider} />
+        </>
 
         <View style={styles.bottomView}>
           <Touchable

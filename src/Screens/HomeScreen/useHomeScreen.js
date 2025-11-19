@@ -6,6 +6,7 @@ import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import API from '../../Utils/helperFunc';
 import {
   allUpComingEventsUrl,
+  globalSearchEventsWithFilterUrl,
   homeSuggestedFriendsUrl,
   homeTimeLineUrl,
   homeUpcomingEventsUrl,
@@ -14,9 +15,14 @@ import {loadingFalse} from '../../Redux/Action/isloadingAction';
 import {hp} from '../../Config/responsive';
 import {debounce} from 'lodash'; // or your preferred debounce utility
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {PermissionsAndroid, Platform} from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
+import Geolocationios from '@react-native-community/geolocation';
 
 const HomeScreen = ({navigate}) => {
   const [search, setSearch] = useState('');
+
+  const [locationCoords, setLocationCoords] = useState({lat: null, lng: null});
 
   const {queryClient, getState, dispatch} = useReduxStore();
   const [page, setPage] = useState(1); // Current page for pagination
@@ -37,10 +43,88 @@ const HomeScreen = ({navigate}) => {
     queryKey: ['homeSuggestedFriends'],
     queryFn: () => API.get(homeSuggestedFriendsUrl),
   });
+
   const upComingEvents = useQuery({
     queryKey: ['homeUpcomingEvents'],
     queryFn: () => API.get(homeUpcomingEventsUrl),
   });
+  const nearByEvents = useQuery({
+    queryKey: ['homeNearByEvents'],
+    queryFn: () =>
+      API.get(
+        `${globalSearchEventsWithFilterUrl}latitude=${locationCoords?.lat}&longitude=${locationCoords?.lng}`,
+      ),
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      Geolocationios.requestAuthorization();
+      const requestLocationPermission = async () => {
+        try {
+          // Retrieve the current location once permission is granted
+          Geolocation.getCurrentPosition(
+            position => {
+              const {latitude, longitude} = position.coords;
+              setLocationCoords({
+                lat: latitude,
+                lng: longitude,
+              });
+            },
+            error => {
+              console.log('Error getting location:', error.message);
+            },
+            {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+          );
+        } catch (err) {
+          console.warn('Error requesting location permission:', err);
+        }
+      };
+
+      requestLocationPermission();
+    }
+    return () => {
+      Geolocation.clearWatch();
+    };
+  }, []);
+
+  const getCurrentLocation = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        Geolocation.getCurrentPosition(
+          async position => {
+            const {latitude, longitude} = position.coords;
+
+            setLocationCoords({
+              lat: latitude,
+              lng: longitude,
+            });
+          },
+          error => {
+            console.log('Error getting current location:', error.message);
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
+      } else {
+        console.log('Location permission denied');
+      }
+    } catch (error) {
+      console.log('Error getting location:', error);
+    }
+  };
+
+  useEffect(() => {
+    getCurrentLocation(); // Trigger location fetch on mount
+  }, []);
+
+  useEffect(() => {
+    if (locationCoords?.lat && locationCoords?.lng) {
+      nearByEvents.refetch();
+    }
+  }, [locationCoords]);
 
   const {
     data,
@@ -186,6 +270,8 @@ const HomeScreen = ({navigate}) => {
     isRefetching,
     loadMoreDebounced,
     hasNextPage,
+    locationCoords,
+    nearByEvents: nearByEvents?.data?.data?.data ?? [],
     sendReq: async id => {
       await sendFriendReq.mutateAsync(id);
       queryClient.invalidateQueries({queryKey: ['myFriends']});

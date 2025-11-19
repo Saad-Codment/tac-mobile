@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import {boldDivider, crossWhite, editPicBtn} from '../../Assets';
+import {boldDivider, crossWhite, editPicBtn, searchIcon} from '../../Assets';
 import {styles} from './styles';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
@@ -88,6 +88,39 @@ const SettingModal = ({
   const onChangeVal = (key, val) => {
     updateState({[key]: val});
   };
+
+  const [filterData, setFilterData] = useState([]);
+  const [text, setText] = useState('');
+
+  function searchFun(e) {
+    var text = e;
+    if (text) {
+      // Inserted text is not blank
+      // Filter the masterDataSource and update FilteredDataSource
+      const newData = allData
+        .map(res => ({
+          id: res,
+          name: res,
+        }))
+        .filter(function (item) {
+          // Applying filter for the inserted text in search bar
+          const itemData = (item.name || '').toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        });
+      console.log('newDatanewDatanewDatanewData', newData);
+      setFilterData(newData);
+      setText(text);
+    } else {
+      setFilterData(
+        allData.map(res => ({
+          id: res,
+          name: res,
+        })),
+      );
+      setText(text);
+    }
+  }
 
   const AgeChangeView = () => {
     return (
@@ -221,50 +254,110 @@ const SettingModal = ({
     city: {
       title: onPress ? 'Update City' : 'City',
       renderView: (
-        <MultiSelectButton
-          items={allData.map(res => ({
-            id: res,
-            name: res,
-          }))}
-          selectedAlter={city}
-          btnStyle={{
-            height: 'auto',
-            paddingVertical: hp('0.5'),
-            paddingHorizontal: wp('2'),
-          }}
-          selectedBgColor={Colors.backgroundTheme}
-          onSelectVal={(objId, item) => {
-            onChangeVal('city', item);
-          }}
-        />
+        <>
+          <View style={styles.searchMain}>
+            <Image
+              source={searchIcon}
+              style={styles.inputImage}
+              tintColor={Colors.backgroundTheme}
+            />
+            <TextInput
+              style={styles.inputStyle}
+              placeholder={'Search'}
+              placeholderTextColor={Colors.textGray}
+              value={text}
+              onChangeText={e => searchFun(e)}
+            />
+          </View>
+          <MultiSelectButton
+            items={
+              allData.map(res => ({
+                id: res,
+                name: res,
+              })) != null &&
+              allData.map(res => ({
+                id: res,
+                name: res,
+              }))?.length > 0 &&
+              (filterData.length >= 0 && text != ''
+                ? filterData
+                : allData.map(res => ({
+                    id: res,
+                    name: res,
+                  })))
+            }
+            // items={allData.map(res => ({
+            //   id: res,
+            //   name: res,
+            // }))}
+            selectedAlter={city}
+            btnStyle={{
+              height: 'auto',
+              paddingVertical: hp('0.5'),
+              paddingHorizontal: wp('2'),
+            }}
+            selectedBgColor={Colors.backgroundTheme}
+            onSelectVal={(objId, item) => {
+              onChangeVal('city', item);
+            }}
+          />
+        </>
       ),
     },
     state: {
       title: onPress ? 'Update State' : 'State',
       renderView: (
-        <MultiSelectButton
-          items={allData.map(res => ({
-            id: res,
-            name: res,
-          }))}
-          selectedAlter={state}
-          btnStyle={{
-            height: 'auto',
-            paddingVertical: hp('0.5'),
-            paddingHorizontal: wp('2'),
-          }}
-          selectedBgColor={Colors.backgroundTheme}
-          onSelectVal={(objId, item) => {
-            console.log('selected state item', item);
-            onChangeVal('state', item);
-            // if (Boolean(state?.find(res => res?.id == item?.id))) {
-            //   onChangeVal(
-            //     'state',
-            //     state?.filter(res => res?.id != item?.id),
-            //   );
-            // } else onChangeVal('state', [item]);
-          }}
-        />
+        <>
+          <View style={styles.searchMain}>
+            <Image
+              source={searchIcon}
+              style={styles.inputImage}
+              tintColor={Colors.backgroundTheme}
+            />
+            <TextInput
+              style={styles.inputStyle}
+              placeholder={'Search'}
+              placeholderTextColor={Colors.textGray}
+              value={text}
+              onChangeText={e => searchFun(e)}
+            />
+          </View>
+          <MultiSelectButton
+            items={
+              allData.map(res => ({
+                id: res,
+                name: res,
+              })) != null &&
+              allData.map(res => ({
+                id: res,
+                name: res,
+              }))?.length > 0 &&
+              (filterData.length >= 0 && text != ''
+                ? filterData
+                : allData.map(res => ({
+                    id: res,
+                    name: res,
+                  })))
+            }
+            selectedAlter={state}
+            btnStyle={{
+              height: 'auto',
+              paddingVertical: hp('0.5'),
+              paddingHorizontal: wp('2'),
+            }}
+            selectedBgColor={Colors.backgroundTheme}
+            onSelectVal={(objId, item) => {
+              console.log('selected state item', item);
+              onChangeVal('state', item);
+              // if (Boolean(state?.find(res => res?.id == item?.id))) {
+              //   onChangeVal(
+              //     'state',
+              //     state?.filter(res => res?.id != item?.id),
+              //   );
+              // } else onChangeVal('state', [item]);
+            }}
+          />
+        </>
       ),
     },
     user_gender: {

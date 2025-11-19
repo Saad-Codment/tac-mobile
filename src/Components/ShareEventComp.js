@@ -258,7 +258,9 @@ const ShareEventComp = ({
                 id: item?.user_id,
               })
             }>
-            <Pressable onPress={onImagePress}>
+            <Pressable
+              onPress={onImagePress}
+              disabled={!Boolean(item?.user_image ?? item?.profile_image)}>
               <CircleImage
                 size={0.07}
                 image={

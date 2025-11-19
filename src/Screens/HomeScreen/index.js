@@ -33,7 +33,11 @@ import ThemeButton from '../../Components/ThemeButton';
 import UpcomingEventsComp from '../../Components/UpCommingEventsComp';
 import FriendEventsComp from '../../Components/FriendEventsComp';
 import AddFriendComp from '../../Components/AddFriendComp';
-import {allSuggestedEventsUrl, allUpComingEventsUrl} from '../../Utils/Urls';
+import {
+  allSuggestedEventsUrl,
+  allUpComingEventsUrl,
+  globalSearchEventsWithFilterUrl,
+} from '../../Utils/Urls';
 import Overlay from '../../Components/Overlay';
 import {keyExtractor} from '../../Utils';
 import {DataNotFound} from '../../Components/DataNotFound';
@@ -71,13 +75,15 @@ const HomeScreen = ({navigation}) => {
     isRefetching,
     loadMoreDebounced,
     hasNextPage,
+    nearByEvents,
+    locationCoords,
   } = useHomeScreen(navigation);
 
   const scrollOffset = useRef(0);
 
   console.log(
     'suggestedFriendssuggestedFriendssuggestedFriendssuggestedFriendssuggestedFriends',
-    suggestedFriends[0],
+    nearByEvents,
   );
 
   const renderItem = useCallback(({item, index}) => {
@@ -87,15 +93,31 @@ const HomeScreen = ({navigation}) => {
         index={index}
         functionToUpdateLike={() => {}}
         openBottomSheet={id => setModal({id, type: 'event'})}
-        mainViewStyle={{width: wp('90'), marginLeft: wp('2')}}
+        mainViewStyle={{
+          width: wp('90'),
+          marginLeft: wp('2'),
+          height: 'auto',
+        }}
         refetechKeys={['homeSuggestedFriends']}
         disabled={true}
       />
     );
   }, []);
-
-  const friendEvents = useCallback(({item}) => {
-    return <FriendEventsComp />;
+  const renderItemNearBy = useCallback(({item, index}) => {
+    return (
+      <UpcomingEventsComp
+        item={item}
+        index={index}
+        functionToUpdateLike={() => {}}
+        openBottomSheet={id => setModal({id, type: 'event'})}
+        mainViewStyle={{
+          width: wp('90'),
+          marginLeft: wp('2'),
+          height: 'auto',
+        }}
+        refetechKeys={['homeNearByEvents']}
+      />
+    );
   }, []);
 
   const renderItemAddFriend = useCallback(({item}) => {
@@ -150,6 +172,35 @@ const HomeScreen = ({navigation}) => {
             <FlatList
               data={upcommingEvents}
               renderItem={renderItem}
+              horizontal // Enable horizontal scrolling
+              keyExtractor={item => item.toString()}
+              showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
+              contentContainerStyle={{paddingHorizontal: 10}} // Padding around the list
+            />
+          </>
+        )}
+        {nearByEvents.length > 0 && (
+          <>
+            <View style={styles.innerView}>
+              <TextComponent
+                styles={{color: Colors.black, ...styles.upcoming}}
+                text={'Near By Events'}
+              />
+              <TextComponent
+                styles={{color: Colors.black, ...styles.viewall}}
+                text={'View All'}
+                onPress={() => {
+                  dynamicRoute('AllNearByEventScreen', {
+                    url: `${globalSearchEventsWithFilterUrl}latitude=${locationCoords?.lat}&longitude=${locationCoords?.lng}`,
+                    key: 'nearByEvents',
+                    title: 'Near By Events',
+                  });
+                }}
+              />
+            </View>
+            <FlatList
+              data={nearByEvents}
+              renderItem={renderItemNearBy}
               horizontal // Enable horizontal scrolling
               keyExtractor={item => item.toString()}
               showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
