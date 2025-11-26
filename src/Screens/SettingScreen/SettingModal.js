@@ -139,6 +139,7 @@ const SettingModal = ({
               ...styles.gender(Boolean(innerDataState?.userAge == null)),
               marginTop: hp('2'),
               justifyContent: 'center',
+              width: wp('90'),
             }}
             // key={item?.id}
             onPress={() => onChangeVal('userAge', null)}>

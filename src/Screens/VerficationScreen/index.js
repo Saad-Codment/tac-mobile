@@ -1,6 +1,6 @@
 import React, {memo} from 'react';
-import {View, Text, ImageBackground} from 'react-native';
-import {arrowBack, stepBg} from '../../Assets';
+import {View, Text, ImageBackground, Image} from 'react-native';
+import {arrowBack, backIcon, stepBg} from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {styles} from './styles';
 import {CodeField, Cursor} from 'react-native-confirmation-code-field';
@@ -10,6 +10,7 @@ import {hp, wp} from '../../Config/responsive';
 import CountDownTimer from 'react-native-countdown-timer-hooks';
 import {Colors} from '../../Theme/Variables';
 import KeyBoardWrapper from '../../Components/KeyBoardWrapper';
+import {Touchable} from '../../Components/Touchable';
 
 const VerficationScreen = ({route, navigation}) => {
   const {
@@ -29,12 +30,35 @@ const VerficationScreen = ({route, navigation}) => {
     timerOnProgressFunc,
     sendVerfication,
   } = useVerificationScreen(navigation, route);
-
+  // isBack
   return (
     <>
-      <ImageBackground
-        source={stepBg}
-        style={styles.container}></ImageBackground>
+      <ImageBackground source={stepBg} style={styles.container}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Touchable
+            onPress={() => {
+              navigation.goBack();
+            }}
+            disabled={Boolean(route.params?.isBack)}>
+            <Image
+              source={backIcon}
+              resizeMode="contain"
+              style={{
+                width: wp('6'),
+                height: wp('6'),
+                marginTop: hp('8'),
+                marginLeft: wp('2'),
+                display: !route.params?.isBack ? 'flex' : 'none',
+              }}
+            />
+          </Touchable>
+        </View>
+      </ImageBackground>
       <KeyBoardWrapper>
         <TextComponent
           text={'Verification Code'}

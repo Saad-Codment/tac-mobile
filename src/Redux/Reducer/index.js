@@ -14,6 +14,7 @@ import IsContactAllow from './IsContactAllow';
 import ImagePrevReducer from './ImagePrevReducer';
 import NotificationReducer from './NotificationReducer';
 import ChatNotifyReducer from './ChatNotifyReducer';
+import CheckVersionReducer from './CheckVersionReducer';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -58,6 +59,7 @@ const reducers = {
   isChatNotify: persistReducer(ChatNotifyConfig, ChatNotifyReducer),
   isloading: loadingReducer,
   isAlert: AlertReucer,
+  isUpdateNeed: CheckVersionReducer,
   getCategory: getTrainingCatReducer,
   contacts: ContactsReducer,
   modalState: ImagePrevReducer,

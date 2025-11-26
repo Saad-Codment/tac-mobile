@@ -11,33 +11,24 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  Animated,
+  PanResponder,
+  ImageBackground,
+  StyleSheet,
 } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
 import ViewShot from 'react-native-view-shot';
-import Svg, {
-  Defs,
-  Filter,
-  FeColorMatrix,
-  Image as SvgImage,
-} from 'react-native-svg';
-import {
-  PinchGestureHandler,
-  RotationGestureHandler,
-  PanGestureHandler,
-  State,
-} from 'react-native-gesture-handler';
-import {hp} from '../../Config/responsive';
 
-const CROP_SIZE = 400;
+const CROP_SIZE = 350;
 
 const FILTERS = [
-  {name: 'Normal', type: 'none'},
-  {name: 'Sepia', type: 'sepia'},
-  {name: 'Grayscale', type: 'grayscale'},
-  {name: 'Vintage', type: 'vintage'},
-  {name: 'Bright', type: 'bright'},
-  {name: 'Cool', type: 'cool'},
-  {name: 'Warm', type: 'warm'},
+  {name: 'Normal', overlay: null},
+  {name: 'Sepia', overlay: 'rgba(160, 120, 80, 0.3)'},
+  {name: 'Grayscale', overlay: 'rgba(0, 0, 0, 0.6)'},
+  {name: 'Vintage', overlay: 'rgba(180, 140, 80, 0.25)'},
+  {name: 'Bright', overlay: 'rgba(255, 255, 255, 0.15)'},
+  {name: 'Cool', overlay: 'rgba(100, 150, 255, 0.2)'},
+  {name: 'Warm', overlay: 'rgba(255, 150, 100, 0.2)'},
 ];
 
 const TEXT_COLORS = [
@@ -51,146 +42,106 @@ const TEXT_COLORS = [
   '#FF9800',
 ];
 
-function MovableText({item, isSelected, onSelect, onUpdate, onDelete}) {
-  const [position, setPosition] = useState({
-    x: item.x || 100,
-    y: item.y || 150,
-  });
-  const [scale, setScale] = useState(item.scale || 1);
-  const [rotate, setRotate] = useState(item.rotate || 0);
+// FULLY STABLE TEXT (NO gesture-handler, NO SVG)
+const MovableText = ({item, isSelected, onSelect, onUpdate, onDelete}) => {
+  const pan = useRef(
+    new Animated.ValueXY({x: item.x || 100, y: item.y || 150}),
+  ).current;
+  const scale = useRef(new Animated.Value(item.scale || 1)).current;
+  const rotate = useRef(new Animated.Value(0)).current;
 
-  const lastOffset = useRef({x: position.x, y: position.y});
-  const lastScale = useRef(scale);
-  const lastRotate = useRef(rotate);
-
-  const onPanGestureEvent = event => {
-    event.persist();
-    if (event.nativeEvent.state === State.ACTIVE) {
-      const tx = event.nativeEvent.translationX || 0;
-      const ty = event.nativeEvent.translationY || 0;
-      setPosition({
-        x: lastOffset.current.x + tx,
-        y: lastOffset.current.y + ty,
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onMoveShouldSetPanResponder: () => true,
+    onPanResponderGrant: () => {
+      pan.setOffset({x: pan.x._value, y: pan.y._value});
+    },
+    onPanResponderMove: (evt, gesture) => {
+      if (evt.nativeEvent.touches.length === 1) {
+        pan.setValue({x: gesture.dx, y: gesture.dy});
+      } else if (evt.nativeEvent.touches.length === 2) {
+        const dx =
+          evt.nativeEvent.touches[1].pageX - evt.nativeEvent.touches[0].pageX;
+        const dy =
+          evt.nativeEvent.touches[1].pageY - evt.nativeEvent.touches[0].pageY;
+        const distance = Math.hypot(dx, dy);
+        const newScale = Math.max(0.5, Math.min(distance / 120, 5));
+        scale.setValue(newScale);
+      }
+    },
+    onPanResponderRelease: () => {
+      pan.flattenOffset();
+      onUpdate({
+        ...item,
+        x: pan.x._value,
+        y: pan.y._value,
+        scale: scale._value,
       });
-    }
-  };
-
-  const onPanHandlerStateChange = event => {
-    event.persist();
-    if (event.nativeEvent.state === State.END) {
-      lastOffset.current = position;
-      onUpdate({...item, x: position.x, y: position.y, scale, rotate});
-    }
-  };
-
-  const onPinchGestureEvent = event => {
-    event.persist();
-    if (event.nativeEvent.state === State.ACTIVE) {
-      const newScale = lastScale.current * (event.nativeEvent.scale || 1);
-      setScale(Math.max(0.5, Math.min(newScale, 4)));
-    }
-  };
-
-  const onPinchHandlerStateChange = event => {
-    event.persist();
-    if (event.nativeEvent.state === State.END) {
-      lastScale.current = scale;
-      onUpdate({...item, x: position.x, y: position.y, scale, rotate});
-    }
-  };
-
-  const onRotateGestureEvent = event => {
-    event.persist();
-    if (event.nativeEvent.state === State.ACTIVE) {
-      setRotate(lastRotate.current + (event.nativeEvent.rotation || 0));
-    }
-  };
-
-  const onRotateHandlerStateChange = event => {
-    event.persist();
-    if (event.nativeEvent.state === State.END) {
-      lastRotate.current = rotate;
-      onUpdate({...item, x: position.x, y: position.y, scale, rotate});
-    }
-  };
+    },
+  });
 
   return (
-    <PanGestureHandler
-      onGestureEvent={onPanGestureEvent}
-      onHandlerStateChange={onPanHandlerStateChange}
-      minPointers={1}>
-      <View style={{position: 'absolute'}}>
-        <PinchGestureHandler
-          onGestureEvent={onPinchGestureEvent}
-          onHandlerStateChange={onPinchHandlerStateChange}>
-          <View>
-            <RotationGestureHandler
-              onGestureEvent={onRotateGestureEvent}
-              onHandlerStateChange={onRotateHandlerStateChange}>
-              <View
-                style={{
-                  transform: [
-                    {translateX: position.x},
-                    {translateY: position.y},
-                    {scale},
-                    {rotate: `${rotate}rad`},
-                  ],
-                }}>
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  onPress={() => onSelect(item.id)}
-                  style={{
-                    paddingHorizontal: 16,
-                    paddingVertical: 10,
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    borderRadius: 14,
-                    borderWidth: isSelected ? 3 : 0,
-                    borderColor: '#4CAF50',
-                  }}>
-                  <Text
-                    style={{
-                      color: item.color || '#FFFFFF',
-                      fontSize: (item.fontSize || 36) * scale,
-                      fontWeight: 'bold',
-                      textShadowColor: 'rgba(0,0,0,0.9)',
-                      textShadowOffset: {width: 2, height: 2},
-                      textShadowRadius: 8,
-                    }}>
-                    {item.text}
-                  </Text>
-                  {isSelected && (
-                    <TouchableOpacity
-                      onPress={onDelete}
-                      style={{
-                        position: 'absolute',
-                        top: -14,
-                        right: -14,
-                        backgroundColor: '#F44336',
-                        borderRadius: 16,
-                        width: 32,
-                        height: 32,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 18,
-                          fontWeight: 'bold',
-                        }}>
-                        ×
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                </TouchableOpacity>
-              </View>
-            </RotationGestureHandler>
-          </View>
-        </PinchGestureHandler>
-      </View>
-    </PanGestureHandler>
+    <Animated.View
+      {...panResponder.panHandlers}
+      style={{
+        position: 'absolute',
+        transform: [
+          {translateX: pan.x},
+          {translateY: pan.y},
+          {scale},
+          {
+            rotate: rotate.interpolate({
+              inputRange: [-180, 180],
+              outputRange: ['-180deg', '180deg'],
+            }),
+          },
+        ],
+      }}>
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={() => onSelect(item.id)}
+        style={{
+          paddingHorizontal: 16,
+          paddingVertical: 10,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          borderRadius: 14,
+          borderWidth: isSelected ? 3 : 0,
+          borderColor: '#4CAF50',
+        }}>
+        <Text
+          style={{
+            color: item.color || '#FFFFFF',
+            fontSize: (item.fontSize || 36) * scale._value,
+            fontWeight: 'bold',
+            textShadowColor: 'black',
+            textShadowOffset: {width: 2, height: 2},
+            textShadowRadius: 8,
+          }}>
+          {item.text}
+        </Text>
+        {isSelected && (
+          <TouchableOpacity
+            onPress={onDelete}
+            style={{
+              position: 'absolute',
+              top: -14,
+              right: -14,
+              backgroundColor: '#F44336',
+              borderRadius: 16,
+              width: 32,
+              height: 32,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: 'white', fontSize: 18, fontWeight: 'bold'}}>
+              ×
+            </Text>
+          </TouchableOpacity>
+        )}
+      </TouchableOpacity>
+    </Animated.View>
   );
-}
+};
 
 function CropScreen({route, navigation}) {
   const {image} = route.params;
@@ -204,17 +155,19 @@ function CropScreen({route, navigation}) {
 
   const addText = () => {
     if (!currentText.trim()) return;
-    const newText = {
-      id: Date.now(),
-      text: currentText,
-      x: 100,
-      y: 150,
-      color: selectedColor,
-      fontSize: 36,
-      scale: 1,
-      rotate: 0,
-    };
-    setTexts(prev => [...prev, newText]);
+    setTexts(prev => [
+      ...prev,
+      {
+        id: Date.now(),
+        text: currentText,
+        x: 100,
+        y: 150,
+        color: selectedColor,
+        fontSize: 36,
+        scale: 1,
+        rotate: 0,
+      },
+    ]);
     setCurrentText('');
     setShowTextModal(false);
   };
@@ -224,10 +177,8 @@ function CropScreen({route, navigation}) {
   };
 
   const deleteText = () => {
-    if (selectedTextId !== null) {
-      setTexts(prev => prev.filter(t => t.id !== selectedTextId));
-      setSelectedTextId(null);
-    }
+    setTexts(prev => prev.filter(t => t.id !== selectedTextId));
+    setSelectedTextId(null);
   };
 
   const handleConfirm = async () => {
@@ -242,7 +193,6 @@ function CropScreen({route, navigation}) {
 
   return (
     <View style={{flex: 1, backgroundColor: '#000'}}>
-      {/* Crop Area */}
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ViewShot
           ref={cropRef}
@@ -252,7 +202,6 @@ function CropScreen({route, navigation}) {
             height: CROP_SIZE,
             borderRadius: CROP_SIZE / 2,
             overflow: 'hidden',
-            backgroundColor: '#000',
           }}>
           <ImageZoom
             cropWidth={CROP_SIZE}
@@ -261,57 +210,34 @@ function CropScreen({route, navigation}) {
             imageHeight={CROP_SIZE}
             minScale={1}
             maxScale={5}>
-            <Svg width={CROP_SIZE} height={CROP_SIZE}>
-              <Defs>
-                {selectedFilter.type !== 'none' && (
-                  <Filter id="filter">
-                    {selectedFilter.type === 'sepia' && (
-                      <FeColorMatrix values="0.393 0.769 0.189 0 0   0.349 0.686 0.168 0 0   0.272 0.534 0.131 0 0   0 0 0 1 0" />
-                    )}
-                    {selectedFilter.type === 'grayscale' && (
-                      <FeColorMatrix type="saturate" values="0.22" />
-                    )}
-                    {selectedFilter.type === 'vintage' && (
-                      <FeColorMatrix values="1.1 0.1 0   0 0   0.1 1.0 0.1 0 0   0   0.1 1.1 0 0   0 0 0 1 0" />
-                    )}
-                    {selectedFilter.type === 'bright' && (
-                      <FeColorMatrix values="1.4 0 0 0 0.1   0 1.4 0 0 0.1   0 0 1.4 0 0.1   0 0 0 1 0" />
-                    )}
-                    {selectedFilter.type === 'cool' && (
-                      <FeColorMatrix values="1 0 0 0 0.05   0 1 0.1 0 0.05   0 0.1 1.1 0 0.05   0 0 0 1 0" />
-                    )}
-                    {selectedFilter.type === 'warm' && (
-                      <FeColorMatrix values="1.2 0 0 0 0.1   0 1.1 0 0 0.05   0 0 1 0 0   0 0 0 1 0" />
-                    )}
-                  </Filter>
-                )}
-              </Defs>
-              <SvgImage
-                href={{uri: image.uri}}
-                width={CROP_SIZE}
-                height={CROP_SIZE}
-                preserveAspectRatio="xMidYMid slice"
-                filter={
-                  selectedFilter.type !== 'none' ? 'url(#filter)' : undefined
-                }
-              />
-            </Svg>
-
-            {texts.map(txt => (
-              <MovableText
-                key={txt.id}
-                item={txt}
-                isSelected={selectedTextId === txt.id}
-                onSelect={setSelectedTextId}
-                onUpdate={updateText}
-                onDelete={deleteText}
-              />
-            ))}
+            <ImageBackground
+              source={{uri: image.uri}}
+              style={{width: CROP_SIZE, height: CROP_SIZE}}
+              resizeMode="cover">
+              {selectedFilter.overlay && (
+                <View
+                  style={{
+                    ...StyleSheet.absoluteFillObject,
+                    backgroundColor: selectedFilter.overlay,
+                  }}
+                />
+              )}
+              {texts.map(txt => (
+                <MovableText
+                  key={txt.id}
+                  item={txt}
+                  isSelected={selectedTextId === txt.id}
+                  onSelect={setSelectedTextId}
+                  onUpdate={updateText}
+                  onDelete={deleteText}
+                />
+              ))}
+            </ImageBackground>
           </ImageZoom>
         </ViewShot>
       </View>
 
-      {/* Filter Bar */}
+      {/* FILTER BAR */}
       <View style={{height: 100, backgroundColor: '#111'}}>
         <ScrollView
           horizontal
@@ -332,11 +258,13 @@ function CropScreen({route, navigation}) {
                   borderColor:
                     selectedFilter.name === f.name ? '#4CAF50' : '#555',
                 }}>
-                <Image
+                <ImageBackground
                   source={{uri: image.uri}}
-                  style={{width: 70, height: 70}}
-                  resizeMode="cover"
-                />
+                  style={{width: 70, height: 70}}>
+                  {f.overlay && (
+                    <View style={{flex: 1, backgroundColor: f.overlay}} />
+                  )}
+                </ImageBackground>
               </View>
               <Text style={{color: '#fff', marginTop: 6, fontSize: 12}}>
                 {f.name}
@@ -346,7 +274,7 @@ function CropScreen({route, navigation}) {
         </ScrollView>
       </View>
 
-      {/* Bottom Toolbar */}
+      {/* BOTTOM BAR */}
       <View
         style={{
           padding: 15,
@@ -366,7 +294,7 @@ function CropScreen({route, navigation}) {
               style={{...btn, backgroundColor: '#D32F2F'}}>
               <Text style={btnTxt}>Delete</Text>
             </TouchableOpacity>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <ScrollView horizontal>
               {TEXT_COLORS.map(col => (
                 <TouchableOpacity
                   key={col}
@@ -400,7 +328,7 @@ function CropScreen({route, navigation}) {
         </TouchableOpacity>
       </View>
 
-      {/* FIXED KEYBOARD MODAL */}
+      {/* TEXT MODAL */}
       <Modal visible={showTextModal} transparent animationType="slide">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View
@@ -410,93 +338,62 @@ function CropScreen({route, navigation}) {
               justifyContent: 'flex-end',
             }}>
             <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-              style={{width: '100%'}}>
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
               <View
                 style={{
                   backgroundColor: '#111',
                   padding: 20,
                   borderTopLeftRadius: 20,
                   borderTopRightRadius: 20,
-                  maxHeight: hp('70'),
                 }}>
-                <ScrollView keyboardShouldPersistTaps="handled">
-                  <TextInput
-                    placeholder="Enter your text..."
-                    placeholderTextColor="#888"
-                    value={currentText}
-                    onChangeText={setCurrentText}
-                    style={{
-                      backgroundColor: '#222',
-                      color: '#fff',
-                      padding: 18,
-                      borderRadius: 14,
-                      fontSize: 22,
-                      marginBottom: 20,
-                    }}
-                    autoFocus
-                    returnKeyType="done"
-                  />
-
-                  <Text style={{color: '#aaa', marginBottom: 12, fontSize: 16}}>
-                    Choose Color:
-                  </Text>
-                  <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    style={{
-                      marginBottom: 25,
-                    }}>
-                    {TEXT_COLORS.map(col => (
-                      <TouchableOpacity
-                        key={col}
-                        onPress={() => setSelectedColor(col)}
-                        style={{
-                          width: 56,
-                          height: 56,
-                          borderRadius: 28,
-                          backgroundColor: col,
-                          marginHorizontal: 10,
-                          borderWidth: selectedColor === col ? 5 : 3,
-                          borderColor: '#fff',
-                        }}
-                      />
-                    ))}
-                  </ScrollView>
-
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'flex-end',
-                      marginTop: 10,
-                    }}>
+                <TextInput
+                  placeholder="Enter text..."
+                  placeholderTextColor="#888"
+                  value={currentText}
+                  onChangeText={setCurrentText}
+                  style={{
+                    backgroundColor: '#222',
+                    color: '#fff',
+                    padding: 18,
+                    borderRadius: 14,
+                    fontSize: 22,
+                    marginBottom: 20,
+                  }}
+                  autoFocus
+                />
+                <ScrollView horizontal style={{marginBottom: 20}}>
+                  {TEXT_COLORS.map(col => (
                     <TouchableOpacity
-                      onPress={() => {
-                        Keyboard.dismiss();
-                        setShowTextModal(false);
-                      }}>
-                      <Text style={{color: '#888', padding: 14, fontSize: 16}}>
-                        Cancel
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        addText();
-                        Keyboard.dismiss();
-                      }}>
-                      <Text
-                        style={{
-                          color: '#4CAF50',
-                          padding: 14,
-                          fontWeight: 'bold',
-                          fontSize: 16,
-                        }}>
-                        Add Text
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+                      key={col}
+                      onPress={() => setSelectedColor(col)}
+                      style={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: 28,
+                        backgroundColor: col,
+                        marginHorizontal: 10,
+                        borderWidth: selectedColor === col ? 5 : 3,
+                        borderColor: '#fff',
+                      }}
+                    />
+                  ))}
                 </ScrollView>
+                <View
+                  style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                  <TouchableOpacity onPress={() => setShowTextModal(false)}>
+                    <Text style={{color: '#888', padding: 14}}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={addText}>
+                    <Text
+                      style={{
+                        color: '#4CAF50',
+                        padding: 14,
+                        fontWeight: 'bold',
+                      }}>
+                      Add
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </KeyboardAvoidingView>
           </View>

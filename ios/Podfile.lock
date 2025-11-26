@@ -6,7 +6,6 @@ PODS:
   - AppAuth/ExternalUserAgent (1.7.6):
     - AppAuth/Core
   - BEMCheckBox (1.4.1)
-  - Bolts/Tasks (1.9.0)
   - boost (1.83.0)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.74.3)
@@ -1183,9 +1182,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-image-filter-kit (0.8.0):
-    - Bolts/Tasks (= 1.9.0)
-    - React
   - react-native-image-picker (8.2.1):
     - DoubleConversion
     - glog
@@ -1552,7 +1548,7 @@ PODS:
     - React-Core
   - RNCPushNotificationIOS (1.11.0):
     - React-Core
-  - RNDeviceInfo (10.14.0):
+  - RNDeviceInfo (15.0.1):
     - React-Core
   - RNFastImage (8.6.3):
     - React-Core
@@ -1572,7 +1568,7 @@ PODS:
     - RNFBApp
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.29.0):
+  - RNGestureHandler (2.21.2):
     - DoubleConversion
     - glog
     - RCT-Folly (= 2024.01.01.00)
@@ -1675,7 +1671,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNSVG (15.15.0):
+  - RNSVG (13.14.0):
     - React-Core
   - RNVectorIcons (10.2.0):
     - DoubleConversion
@@ -1759,7 +1755,6 @@ DEPENDENCIES:
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - "react-native-image-editor (from `../node_modules/@react-native-community/image-editor`)"
-  - react-native-image-filter-kit (from `../node_modules/react-native-image-filter-kit`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-image-resizer (from `../node_modules/@bam.tech/react-native-image-resizer`)"
   - react-native-maps (from `../node_modules/react-native-maps`)
@@ -1820,7 +1815,6 @@ SPEC REPOS:
   trunk:
     - AppAuth
     - BEMCheckBox
-    - Bolts
     - Firebase
     - FirebaseAnalytics
     - FirebaseAppCheckInterop
@@ -1931,8 +1925,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-image-editor:
     :path: "../node_modules/@react-native-community/image-editor"
-  react-native-image-filter-kit:
-    :path: "../node_modules/react-native-image-filter-kit"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-image-resizer:
@@ -2047,7 +2039,6 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   BEMCheckBox: 5ba6e37ade3d3657b36caecc35c8b75c6c2b1a4e
-  Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   FBLazyVector: 7e977dd099937dc5458851233141583abba49ff2
@@ -2110,7 +2101,6 @@ SPEC CHECKSUMS:
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-google-maps: 98754480fbb4fd5ccd016d0f75a2168a6c84ebc5
   react-native-image-editor: dc23e5805ede28915f302a9fcabb0f56831f5688
-  react-native-image-filter-kit: 1871556126f9aa134ea2b7ee0fe899a74ef6666c
   react-native-image-picker: ad4f2ac85a6a97612cdf658b6bbac595c660f213
   react-native-image-resizer: 24c5d06fae2176dc0caed4b6396e02befb44064a
   react-native-maps: 6f92b1fd37f9421b171c977a42785270703875dc
@@ -2152,20 +2142,20 @@ SPEC CHECKSUMS:
   RNCCheckbox: 450ce156f3e29e25efa0315c96cfbabe5a39ded1
   RNCPicker: ba7ceb25a6e7c1d98aec9fa5a0d842934c7b316e
   RNCPushNotificationIOS: 6c4ca3388c7434e4a662b92e4dfeeee858e6f440
-  RNDeviceInfo: 98bb51ba1519cd3f19f14e7236b5bb1c312c780f
+  RNDeviceInfo: 36d7f232bfe7c9b5c494cb7793230424ed32c388
   RNFastImage: 462a183c4b0b6b26fdfd639e1ed6ba37536c3b87
   RNFBApp: 20bfba7e2a61a959518c1d57e5d48817c62ed3f6
   RNFBAuth: 71ecb2cdb13dbcaf0f8453e5a6cd23340498cb53
   RNFBMessaging: 5ab773eae06da10716d17a5e8de915537043628c
   RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
-  RNGestureHandler: 4093a26228f7c9cd39d5af62b72da644a6bbe943
+  RNGestureHandler: 8efe50c2f8d57ec3af024a75a0a088c167906419
   RNGoogleSignin: 629df9e1ea81e2a17c4db5aae0e8a98309e4723a
   RNImageCropPicker: 0987c372cc7ccce774491c452d188980aaec7e7f
   RNNotifee: 8768d065bf1e2f9f8f347b4bd79147431c7eacd6
   RNPermissions: d8586cf8c080e1dd995778d7523a58de579bf409
   RNPurchases: 3ff3901439eb08eaa433a5743c1f2a5bef0317f8
   RNScreens: a7ecc7df176f79e2514ef4519a3eed3eeec4a3f4
-  RNSVG: adbd96951dce29f1637dd78e0decdd9dc8f19ae7
+  RNSVG: 4cab00c621b328a4a2fedaaedc15d8822216723e
   RNVectorIcons: 04732dca6e1fc6ab6fac54a0cd4611570153b54e
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
@@ -2173,6 +2163,6 @@ SPEC CHECKSUMS:
   TOCropViewController: 797deaf39c90e6e9ddd848d88817f6b9a8a09888
   Yoga: 04f1db30bb810187397fa4c37dd1868a27af229c
 
-PODFILE CHECKSUM: 6ea355e84623d24db0059973ae374254050fd325
+PODFILE CHECKSUM: 1d5d2dd745bf276c028c89ea5acef0d51deb4072
 
 COCOAPODS: 1.16.2

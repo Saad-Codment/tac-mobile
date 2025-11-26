@@ -713,6 +713,8 @@ const uploadFromGalary = async (isMulti, isCircle, maxFiles) => {
     avoidEmptySpaceAroundImage: true,
     showCropFrame: true,
     enableRotationGesture: true,
+    width: 800,
+    height: 2000,
   });
 
   const getOrientation = (width, height) => {
@@ -861,6 +863,8 @@ const uploadFromCamera = async (isMulti, isCircle, maxFiles) => {
     multiple: isMulti ?? false,
     cropperCircleOverlay: isCircle, // 👈 Enables circular cropping
     maxFiles,
+    width: 800,
+    height: 2000,
   });
 
   const checkOrientation = img => {

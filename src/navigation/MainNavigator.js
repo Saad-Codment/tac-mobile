@@ -9,7 +9,6 @@ import Orientation from 'react-native-orientation-locker';
 import {useQuery} from '@tanstack/react-query';
 import API from '../Utils/helperFunc';
 import {mergeIds} from '../Services/GlobalFunctions';
-import MessageShowComp from '../Components/MessageShowComp';
 import {io} from 'socket.io-client';
 
 const Stack = createNativeStackNavigator();
@@ -85,6 +84,10 @@ function MainNavigator() {
                 component={Screens.SubscribeScreen}
               />
             )}
+            {/* <Stack.Screen
+              name="UpdateAppScreen"
+              component={Screens.UpdateAppScreen}
+            /> */}
             <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
             <Stack.Screen
               name="SubscriptionScreen"

@@ -19,6 +19,7 @@ export {default as tacLogo} from './Images/tacLogo.png';
 export {default as syncView} from './Images/syncView.png';
 export {default as maleImg} from './Images/maleImg.png';
 export {default as femaleImg} from './Images/femaleImg.png';
+export {default as subBg} from './Images/subBg.png';
 
 //  Icons
 
@@ -84,6 +85,11 @@ export {default as bigHorseNail} from './Icons/bigHorseNail.png';
 export {default as manageSub} from './Icons/manageSub.png';
 export {default as selectedCheck} from './Icons/selectedCheck.png';
 export {default as tacFilterIcon} from './Icons/tacFilterIcon.png';
+export {default as tickFrameYellow} from './Icons/tickFrameYellow.png';
+export {default as save25} from './Icons/save25.png';
+export {default as popular} from './Icons/popular.png';
+
+export {default as updateIcon} from './Icons/updateIcon.png';
 
 export {default as mapCity} from './Icons/mapCity.png';
 export {default as mapState} from './Icons/mapState.png';

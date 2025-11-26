@@ -219,15 +219,15 @@ export const styles = StyleSheet.create({
     width: wp('95'),
     // marginVertical: hp('0.5'),
     alignSelf: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 3.84,
 
-    elevation: 5,
+    // elevation: 5,
     overflow: 'hidden',
     marginVertical: hp('1'),
   },

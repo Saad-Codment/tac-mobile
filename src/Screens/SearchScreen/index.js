@@ -120,38 +120,38 @@ const SearchScreen = ({navigation}) => {
                 }}
               />
             ),
-            ListFooterComponent: (
-              <>
-                {selectedVal.id == 'YourFriends' &&
-                  listData?.friends?.length > 7 && (
-                    <ThemeButton
-                      title={`View All ${listData?.friendsCount} friend(s)`}
-                      style={{
-                        width: wp('95'),
-                        alignSelf: 'center',
-                        height: hp('5'),
-                        marginTop: hp('1'),
-                        marginBottom: hp('1'),
-                      }}
-                      textStyle={{fontSize: hp('1.5')}}
-                    />
-                  )}
-                {selectedVal.id == 'FriendRequests' &&
-                  listData?.request?.length > 7 && (
-                    <ThemeButton
-                      title={`View All ${listData?.request} request(s)`}
-                      style={{
-                        width: wp('95'),
-                        alignSelf: 'center',
-                        height: hp('5'),
-                        marginTop: hp('1'),
-                        marginBottom: hp('1'),
-                      }}
-                      textStyle={{fontSize: hp('1.5')}}
-                    />
-                  )}
-              </>
-            ),
+            // ListFooterComponent: (
+            //   <>
+            //     {selectedVal.id == 'YourFriends' &&
+            //       listData?.friends?.length > 7 && (
+            //         <ThemeButton
+            //           title={`View All ${listData?.friendsCount} friend(s)`}
+            //           style={{
+            //             width: wp('95'),
+            //             alignSelf: 'center',
+            //             height: hp('5'),
+            //             marginTop: hp('1'),
+            //             marginBottom: hp('1'),
+            //           }}
+            //           textStyle={{fontSize: hp('1.5')}}
+            //         />
+            //       )}
+            //     {selectedVal.id == 'FriendRequests' &&
+            //       listData?.request?.length > 7 && (
+            //         <ThemeButton
+            //           title={`View All ${listData?.request} request(s)`}
+            //           style={{
+            //             width: wp('95'),
+            //             alignSelf: 'center',
+            //             height: hp('5'),
+            //             marginTop: hp('1'),
+            //             marginBottom: hp('1'),
+            //           }}
+            //           textStyle={{fontSize: hp('1.5')}}
+            //         />
+            //       )}
+            //   </>
+            // ),
           }}
           InnerCompnonet={(item, index) =>
             selectedVal.id == 'YourFriends' ? (

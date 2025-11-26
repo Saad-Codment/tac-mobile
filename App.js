@@ -29,7 +29,17 @@ import {io} from 'socket.io-client';
 import MessageShowComp from './src/Components/MessageShowComp';
 import {mergeIds} from './src/Services/GlobalFunctions';
 import API from './src/Utils/helperFunc';
-import {changeUserChatStatusUrl, GetChatListUrl} from './src/Utils/Urls';
+import {
+  changeUserChatStatusUrl,
+  checkVersionUrl,
+  GetChatListUrl,
+} from './src/Utils/Urls';
+import DeviceInfo from 'react-native-device-info';
+import {types} from './src/Redux/types';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import * as Screens from './src/Screens/index';
+import {NavigationContainer} from '@react-navigation/native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const SOCKET_URL = 'https://messaging.theappforcowboys.com/'; // Use your socket URL
 
@@ -42,6 +52,7 @@ const App = () => {
 
   const appState = useRef(AppState.currentState);
   const {isloading} = getState('isloading');
+  const {isUpdateNeed} = getState('isUpdateNeed');
   const {isLogin, userData} = getState('Auth');
   const {image, modalType, isCircle} = getState('modalState');
   const isFetching = useIsFetching();
@@ -221,6 +232,7 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
     queryFn: () => API.get(GetChatListUrl),
     refetchOnReconnect: true,
     retry: 5,
+    // enabled: isLogin,
   });
   console.log(
     'datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata',
@@ -277,11 +289,33 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
       });
     }
   }, [data, userData?.id, isLogin]);
-
+  const Stack = createNativeStackNavigator();
   const getNameFunc = NavigationService.getCurrentRoute();
   return (
-    <>
-      {isVisible === true ? Splash_Screen : <MainNavigator />}
+    <GestureHandlerRootView style={{flex: 1}}>
+      {isVisible === true ? (
+        Splash_Screen
+      ) : isUpdateNeed ? (
+        <NavigationContainer
+          ref={ref => {
+            NavigationService.setRef(ref);
+            // const p = NavigationService.getCurrentRoute(ref.getCurrentRoute());
+          }}>
+          <Stack.Navigator
+            screenOptions={{
+              headerTransparent: true,
+              headerTitle: null,
+              headerShown: false,
+            }}>
+            <Stack.Screen
+              name="UpdateAppScreen"
+              component={Screens.UpdateAppScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      ) : (
+        <MainNavigator />
+      )}
       {modalType && (
         <ImagePreviewComp
           visible={modalType}
@@ -311,10 +345,13 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
         Boolean(getNameFunc?.getCurrentRoute()?.name != 'GlobalSearchScreen') &&
         Boolean(getNameFunc?.getCurrentRoute()?.name != 'GlobalEventsScreen') &&
         Boolean(
+          getNameFunc?.getCurrentRoute()?.name != 'AllNearByEventScreen',
+        ) &&
+        Boolean(
           getNameFunc?.getCurrentRoute()?.name != 'FriendProfileScreen',
         ) && <Overlay />}
       {/* <StackNavigatior />; */}
-    </>
+    </GestureHandlerRootView>
   );
 };
 

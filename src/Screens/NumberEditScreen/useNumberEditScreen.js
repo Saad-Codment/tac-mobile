@@ -96,6 +96,7 @@ const useNumberEditScreen = ({navigate, goBack}) => {
           ...userData,
           phone: number,
           original_phone: formattedNumber,
+          isBack: true,
         },
       });
     } else
@@ -138,7 +139,7 @@ const useNumberEditScreen = ({navigate, goBack}) => {
     formattedNumber,
     updateState,
     edit,
-    phoneNumber: userData?.phone,
+    phoneNumber: userData?.original_phone || '',
     skipVerification,
     alert,
     isVerified,

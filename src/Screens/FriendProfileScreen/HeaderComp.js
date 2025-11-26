@@ -36,7 +36,11 @@ const HeaderComp = ({userData, myUserData}) => {
         onPress={onPress}
         disabled={userData?.privacy == 1}>
         <TextComponent text={num ?? 0} isWhite styles={{fontSize: hp('1.2')}} />
-        <TextComponent text={' ' + title} fade styles={{fontSize: hp('1.2')}} />
+        <TextComponent
+          text={' ' + (num > 1 ? `${title}s` : title)}
+          fade
+          styles={{fontSize: hp('1.2')}}
+        />
       </Touchable>
     );
   };
@@ -60,11 +64,11 @@ const HeaderComp = ({userData, myUserData}) => {
   const [friendCountArry, setFriendCountArry] = useState([
     {
       num: userData?.event_count,
-      title: 'Events',
+      title: 'Event',
     },
     {
       num: userData?.friends_count,
-      title: 'Friends',
+      title: 'Friend',
       onPress: () =>
         NavigationService.navigate('FriendLists', {
           url: getUserFriendsUrl + userData?.id + '?',
@@ -78,7 +82,7 @@ const HeaderComp = ({userData, myUserData}) => {
       setFriendCountArry(prev => [
         {
           num: userData?.event_count,
-          title: 'Events',
+          title: 'Event',
           onPress: () =>
             NavigationService.navigate('AllEventsScreen', {
               url: getFriendEventsUrl + userData?.id,
@@ -89,7 +93,7 @@ const HeaderComp = ({userData, myUserData}) => {
         },
         {
           num: userData?.friends_count,
-          title: 'Friends',
+          title: 'Friend',
           onPress: () =>
             NavigationService.navigate('FriendLists', {
               url: getUserFriendsUrl + userData?.id + '?',

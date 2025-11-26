@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
     // width: wp('60'),
     textAlignVertical: 'center',
     // justifyContent: 'center',
+    marginTop: Platform.OS == 'android' ? hp('1') : 0,
   },
   HeaderLeft: {
     flex: 0.5,

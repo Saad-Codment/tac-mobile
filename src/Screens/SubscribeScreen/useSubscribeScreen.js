@@ -15,9 +15,9 @@ const SKU = Platform.select({
   ios: ['monthly_12062025', 'yearly_12062025'],
 });
 
-const useSubscribeScreen = () => {
+const useSubscribeScreen = ({goBack}, {params}) => {
   const [products, setProducts] = useState([]);
-
+  const [selectedPkg, setSelectedPkg] = useState(null);
   const {getState, dispatch} = useReduxStore();
 
   const {userData} = getState('Auth');
@@ -39,7 +39,7 @@ const useSubscribeScreen = () => {
           },
         });
         successMessage('User subscribed successfully');
-        // if (data?.start_trial_at) goBack();
+        if (params) goBack();
       } else {
         dispatch(loadingFalse());
         console.log('lkndklsnkslndvklsdnkvnsdvkndvksd', data);
@@ -77,16 +77,17 @@ const useSubscribeScreen = () => {
 
   const buySubscription = async PurchasesPackage => {
     const currentDate = new Date();
-
+    console.log(
+      'selectedPkgselectedPkgselectedPkgselectedPkgselectedPkgselectedPkgselectedPkg',
+      selectedPkg,
+    );
     // Format the date and time
     const formattedDate = currentDate.toISOString().replace('Z', '.000000Z');
 
     dispatch(loadingTrue());
 
     try {
-      const {customerInfo} = await Purchases.purchaseStoreProduct(
-        PurchasesPackage,
-      );
+      const {customerInfo} = await Purchases.purchaseStoreProduct(selectedPkg);
       console.log(
         'lkdbvklsbdklvbsdklbvlsdbvksdbvklsdbvlksdbvklsd',
         customerInfo.entitlements.active,
@@ -124,6 +125,7 @@ const useSubscribeScreen = () => {
       const monthlyPackages = allProducts.filter(
         res => res.subscriptionPeriod == 'P1M',
       )[0];
+      setSelectedPkg(yearlyPackages);
       setProducts([yearlyPackages, monthlyPackages]);
       dispatch(loadingFalse());
     } catch (error) {
@@ -144,6 +146,8 @@ const useSubscribeScreen = () => {
     userData,
     getProductsFromStore,
     dispatch,
+    selectedPkg,
+    setSelectedPkg,
   };
 };
 

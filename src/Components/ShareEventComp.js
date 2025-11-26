@@ -175,16 +175,29 @@ const ShareEventComp = ({
           backgroundColor: '#fff',
           // marginVertical: hp('1'),
           paddingVertical: hp('1'),
+          shadowOpacity: 0.25,
+          shadowRadius: 4,
+          elevation: 3,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 2,
+            height: 2,
+          },
           // marginBottom: hp('0.5'),
           ...upperMainView,
         }}>
         <Pressable
           style={styles.upperView}
-          onPress={() =>
-            NavigationService.navigate('FriendProfileScreen', {
-              id: item?.shared_by_user_id,
-            })
-          }>
+          onPress={() => {
+            if (userData?.id == item?.shared_by_user_id) {
+              NavigationService.navigate('MyProfileScreen', {
+                id: userData?.id,
+              });
+            } else
+              NavigationService.navigate('FriendProfileScreen', {
+                id: item?.shared_by_user_id,
+              });
+          }}>
           <CircleImage
             image={imageUrl(item?.sharer_image ?? item?.sharer_image)}
             uri
@@ -253,11 +266,16 @@ const ShareEventComp = ({
           }}>
           <Pressable
             style={styles.upperImage}
-            onPress={() =>
-              NavigationService.navigate('FriendProfileScreen', {
-                id: item?.user_id,
-              })
-            }>
+            onPress={() => {
+              if (userData?.id == item?.user_id) {
+                NavigationService.navigate('MyProfileScreen', {
+                  id: userData?.id,
+                });
+              } else
+                NavigationService.navigate('FriendProfileScreen', {
+                  id: item?.user_id,
+                });
+            }}>
             <Pressable
               onPress={onImagePress}
               disabled={!Boolean(item?.user_image ?? item?.profile_image)}>
@@ -523,7 +541,9 @@ const ShareEventComp = ({
                 }}
               />
               <TextComponent
-                text={`${item?.likes_count} Likes`}
+                text={`${item?.likes_count} ${
+                  item?.likes_count <= 1 ? 'Like' : 'Likes'
+                }`}
                 styles={{
                   fontSize: hp('1.2'),
                 }}
@@ -776,15 +796,15 @@ const styles = StyleSheet.create({
   mainView: {
     width: wp('87'),
     borderRadius: 20,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 10,
+    // overflow: 'hidden',
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 2,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 4,
+    // elevation: 10,
     backgroundColor: 'white',
     paddingVertical: hp('1'),
     paddingHorizontal: wp('2'),

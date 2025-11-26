@@ -27,8 +27,8 @@ const BottomViewModal = memo(
       <View style={styles.modalView}>
         <Modal
           isVisible={isModal}
-          animationInTiming={100}
-          animationOutTiming={100}
+          // animationInTiming={100}
+          // animationOutTiming={100}
           avoidKeyboard
           animationType="fade"
           // hideModalContentWhileAnimating
@@ -68,7 +68,7 @@ const BottomViewModal = memo(
                   alignSelf: 'center',
                 }}
                 fade
-                size={'1.6'}
+                size={hp('1.6')}
               />
               <ScrollView
                 showsVerticalScrollIndicator={false}

@@ -43,6 +43,7 @@ export {default as GlobalEventsScreen} from './GlobalEventsScreen';
 export {default as CropScreen} from './CropScreen';
 export {default as AllNearByEventScreen} from './AllNearByEventScreen';
 export {default as StateViewScreen} from './StateCityScreen';
+export {default as UpdateAppScreen} from './UpdateAppScreen';
 export {default as SelectCityScreen} from './SelectCityScreen';
 
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

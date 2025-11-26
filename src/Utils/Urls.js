@@ -10,12 +10,12 @@ const getCredentials = () => {
   else {
     console.log = () => {};
     return {
-      // baseURL: 'https://theappforcowboys.com/tac-backend/api',
-      // imageURL: 'https://tac-app-bucket.s3.us-east-2.amazonaws.com/',
-      // socketURL: 'https://messaging.theappforcowboys.com/',
-      baseURL: 'https://theappforcowboys.com/backend-staging/api',
-      imageURL: 'https://tac-staging.s3.us-east-2.amazonaws.com/',
+      baseURL: 'https://theappforcowboys.com/tac-backend/api',
+      imageURL: 'https://tac-app-bucket.s3.us-east-2.amazonaws.com/',
       socketURL: 'https://messaging.theappforcowboys.com/',
+      // baseURL: 'https://theappforcowboys.com/backend-staging/api',
+      // imageURL: 'https://tac-staging.s3.us-east-2.amazonaws.com/',
+      // socketURL: 'https://messaging.theappforcowboys.com/',
     };
   }
 };
@@ -63,6 +63,8 @@ export const allUpComingEventsUrl = '/home/upcoming-events';
 export const allFriendEventsUrl = '/home/friends-events';
 export const allSuggestedEventsUrl = '/home/suggested-events';
 export const likeUnlikeUrl = '/react/like/';
+
+export const checkVersionUrl = 'version-check';
 
 export const shareEventInChatUrl = '/v1/chat/share-event';
 

@@ -10,7 +10,7 @@ end
 node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
 require_relative '../node_modules/react-native-permissions/scripts/setup'
-platform :ios, 13.4
+platform :ios, 14.4
 prepare_react_native_project!
 
 pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'

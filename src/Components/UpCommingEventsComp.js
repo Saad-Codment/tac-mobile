@@ -58,6 +58,7 @@ import {errorMessage, successMessage} from '../Config/NotificationMessage';
 import ReactNativeCalendarEvents from 'react-native-calendar-events';
 import BottomModalComponent from './BottomModalComponent';
 import BottomViewModal from './BottomViewModal';
+import {max} from 'moment';
 
 const tags = [
   {
@@ -190,9 +191,14 @@ const UpcomingEventsComp = ({
           style={styles.upperImage}
           onPress={() => {
             if (item?.type != 6 && item?.type != 4) {
-              NavigationService.navigate('FriendProfileScreen', {
-                id: item?.user_id,
-              });
+              if (userData?.id == item?.user_id) {
+                NavigationService.navigate('MyProfileScreen', {
+                  id: userData?.id,
+                });
+              } else
+                NavigationService.navigate('FriendProfileScreen', {
+                  id: item?.user_id,
+                });
             }
           }}>
           <Pressable
@@ -281,9 +287,11 @@ const UpcomingEventsComp = ({
             text={item?.title}
             styles={{
               fontWeight: 'bold',
-              width: wp('70'),
+              // width: wp('68'),
               fontSize: hp('1.5'),
               opacity: item?.first_name ? 1 : 0,
+              // backgroundColor: 'red',
+              width: wp('65'),
             }}
             numberOfLines={1}
           />
@@ -291,7 +299,11 @@ const UpcomingEventsComp = ({
             <Image
               source={dollarCircle}
               resizeMode="contain"
-              tintColor={'white'}
+              tintColor={
+                Boolean(item?.user_image ?? item?.profile_image)
+                  ? 'white'
+                  : 'rgba(255, 247, 233, 1)'
+              }
               style={styles.dollarIcon}
             />
             <TextComponent
@@ -464,7 +476,9 @@ const UpcomingEventsComp = ({
               }}
             />
             <TextComponent
-              text={`${item?.likes_count} Likes`}
+              text={`${item?.likes_count} ${
+                item?.likes_count <= 1 ? 'Like' : 'Likes'
+              }`}
               styles={{
                 fontSize: hp('1.2'),
               }}
@@ -494,7 +508,9 @@ const UpcomingEventsComp = ({
               }}
             />
             <TextComponent
-              text={`${item?.comments_count} Comments`}
+              text={`${item?.comments_count} ${
+                item?.comments_count <= 1 ? 'Comment' : 'Comments'
+              }`}
               styles={{
                 fontSize: hp('1.2'),
               }}
@@ -730,14 +746,14 @@ const styles = StyleSheet.create({
     width: wp('87'),
     borderRadius: 20,
     overflow: 'hidden',
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 3,
     shadowColor: '#000',
     shadowOffset: {
       width: 2,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 10,
     backgroundColor: 'white',
     paddingVertical: hp('1'),
     paddingHorizontal: wp('2'),

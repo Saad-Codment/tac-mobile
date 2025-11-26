@@ -1,4 +1,4 @@
-import {View, Text, Image, Platform} from 'react-native';
+import {View, Text, Image, Platform, ImageBackground} from 'react-native';
 import React from 'react';
 import useSubscribeScreen from './useSubscribeScreen';
 import {styles} from './styles';
@@ -6,11 +6,22 @@ import {TextComponent} from '../../Components/TextComponent';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Colors, FontSize} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
-import {backIcon, heart, logout, medalstar, tickCircle} from '../../Assets';
+import {
+  backIcon,
+  heart,
+  logout,
+  medalstar,
+  popular,
+  save25,
+  subBg,
+  tickCircle,
+  tickFrameYellow,
+} from '../../Assets';
 import ThemeButton from '../../Components/ThemeButton';
 import {Touchable} from '../../Components/Touchable';
 import {types} from '../../Redux/types';
 import {logOutAuth} from '../../Redux/Action/AuthAction';
+import DividerLine from '../../Components/DividerLine';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -27,7 +38,9 @@ const SubscribeScreen = ({navigation, route}) => {
     userData,
     getProductsFromStore,
     dispatch,
-  } = useSubscribeScreen();
+    selectedPkg,
+    setSelectedPkg,
+  } = useSubscribeScreen(navigation, route);
 
   const TickCircle = ({text, tintColor, TextColor}) => (
     <View
@@ -139,8 +152,17 @@ const SubscribeScreen = ({navigation, route}) => {
     </View>
   );
 
+  const feArry = [
+    'Find rodeo events near you instantly',
+    'See suggested events & friends',
+    'Chat in real-time',
+    'Create & manage rodeo events',
+    'Sync events to your calendar',
+    'Search users, posts & events',
+  ];
+
   return (
-    <View style={styles.container}>
+    <ImageBackground style={styles.container} source={subBg}>
       <View style={styles.subsCon}>
         <View
           style={{
@@ -152,17 +174,25 @@ const SubscribeScreen = ({navigation, route}) => {
             marginBottom: hp('2'),
             // backgroundColor: 'red',
           }}>
-          {route?.params && (
-            <Touchable onPress={() => navigation.goBack()}>
-              <Image
-                source={backIcon}
-                resizeMode="contain"
-                style={{width: wp('5'), height: hp('3')}}
-                tintColor={'black'}
-              />
-            </Touchable>
-          )}
-          <TextComponent text={'Subscription plan'} styles={styles.subs} />
+          <Touchable
+            onPress={() => navigation.goBack()}
+            disabled={!Boolean(route?.params)}>
+            <Image
+              source={backIcon}
+              resizeMode="contain"
+              style={{
+                width: wp('5'),
+                height: hp('3'),
+                opacity: route?.params ? 1 : 0,
+              }}
+              // tintColor={'black'}
+            />
+          </Touchable>
+          <TextComponent
+            text={'Subscription plan'}
+            styles={styles.subs}
+            isWhite
+          />
 
           {!route?.params && (
             <Touchable
@@ -182,14 +212,221 @@ const SubscribeScreen = ({navigation, route}) => {
           )}
         </View>
         {userData?.trial_start_at == null && (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              alignSelf: 'center',
+            }}>
+            <TextComponent
+              text={'Start Your 30-Day'}
+              isWhite
+              size={hp('2.5')}
+              fontFamily={'bold'}
+            />
+            <TextComponent
+              text={' Free Trial'}
+              styles={{color: 'rgba(255, 195, 83, 1)'}}
+              size={hp('2.5')}
+              fontFamily={'bold'}
+            />
+          </View>
+        )}
+        <TextComponent
+          text={'Full access. No limits. Cancel anytime.'}
+          size={hp('1.5')}
+          fontFamily={'bold'}
+          fade
+          styles={{marginTop: hp('1')}}
+        />
+        <DividerLine
+          DividerLineStyle={{
+            borderBottomColor: 'rgba(157, 157, 157, 1)',
+            width: wp('85'),
+            marginVertical: hp('2'),
+          }}
+        />
+        <TextComponent
+          text={'What You Get Today'}
+          isWhite
+          size={hp('2.5')}
+          styles={{alignSelf: 'flex-start'}}
+          fontFamily={'bold'}
+        />
+        {userData?.trial_start_at == null && (
+          <TextComponent
+            text={'Today You Pay: $0.00'}
+            isWhite
+            styles={{
+              alignSelf: 'flex-start',
+              color: 'rgba(203, 149, 49, 1)',
+              marginTop: hp('1'),
+            }}
+          />
+        )}
+        <TextComponent
+          text={'What You Get Today'}
+          isWhite
+          styles={{
+            alignSelf: 'flex-start',
+            color: 'rgba(203, 149, 49, 1)',
+            marginTop: hp('0.5'),
+          }}
+        />
+        <View style={{marginTop: hp('1'), alignSelf: 'flex-start'}}>
+          {feArry.map(res => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  alignSelf: 'flex-start',
+                }}>
+                <Image
+                  source={tickFrameYellow}
+                  resizeMode="contain"
+                  style={{width: wp('5'), height: hp('2')}}
+                />
+                <TextComponent
+                  text={res}
+                  styles={{
+                    color: Colors.textGray,
+                    marginLeft: wp('2'),
+                    paddingVertical: hp('0.5'),
+                    alignSelf: 'flex-start',
+                  }}
+                  size={hp('1.5')}
+                />
+              </View>
+            );
+          })}
+        </View>
+        <View
+          style={{
+            marginTop: hp('5'),
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            // alignSelf: 'flex-start',
+            width: wp('92'),
+          }}>
+          <Touchable
+            style={{
+              width: wp('43'),
+              paddingVertical: hp('1'),
+              borderRadius: 10,
+              borderColor:
+                selectedPkg?.priceString == products[0]?.priceString
+                  ? 'rgba(255, 195, 83, 1)'
+                  : 'rgba(255, 255, 255, 0.05)',
+              borderWidth: 1,
+              paddingHorizontal: wp('2.5'),
+              backgroundColor:
+                selectedPkg?.priceString == products[0]?.priceString
+                  ? 'rgba(203, 149, 49, 0.1)'
+                  : 'rgba(255, 255, 255, 0.05)',
+
+              // justifyContent: 'center',
+              // alignItems: 'center',
+            }}
+            onPress={() => setSelectedPkg(products[0])}>
+            <Image
+              source={popular}
+              resizeMode="contain"
+              style={{
+                width: wp('15'),
+                height: hp('5'),
+                position: 'absolute',
+                right: wp('-3'),
+                top: hp('-0.4'),
+              }}
+            />
+            <TextComponent text={'Yearly Access'} isWhite fontFamily={'600'} />
+            <Image
+              source={save25}
+              resizeMode="contain"
+              style={{
+                width: wp('15'),
+                height: hp('3'),
+                marginVertical: hp('1'),
+              }}
+            />
+            <TextComponent
+              text={`${products[0]?.priceString}`}
+              isWhite
+              fontFamily={'600'}
+            />
+          </Touchable>
+          <Touchable
+            style={{
+              width: wp('43'),
+              paddingVertical: hp('1'),
+              borderRadius: 10,
+              borderColor:
+                selectedPkg?.priceString == products[1]?.priceString
+                  ? 'rgba(255, 195, 83, 1)'
+                  : 'rgba(255, 255, 255, 0.05)',
+              borderWidth: 1,
+              paddingHorizontal: wp('2.5'),
+              backgroundColor:
+                selectedPkg?.priceString == products[1]?.priceString
+                  ? 'rgba(203, 149, 49, 0.1)'
+                  : 'rgba(255, 255, 255, 0.05)',
+
+              // justifyContent: 'center',
+              // alignItems: 'center',
+            }}
+            onPress={() => setSelectedPkg(products[1])}>
+            <TextComponent text={'Monthly Access'} isWhite fontFamily={'600'} />
+            <Image
+              source={save25}
+              resizeMode="contain"
+              style={{
+                width: wp('15'),
+                height: hp('3'),
+                marginVertical: hp('1'),
+                opacity: 0,
+              }}
+            />
+            <TextComponent
+              text={`${products[1]?.priceString}`}
+              isWhite
+              fontFamily={'600'}
+            />
+          </Touchable>
+        </View>
+        {selectedPkg != null && (
+          <ThemeButton
+            title={
+              userData?.trial_start_at == null
+                ? 'Start free trial'
+                : 'Continoue'
+            }
+            isYellowTheme
+            style={{borderRadius: 30, marginTop: hp('10')}}
+            onPress={() => buySubscription()}
+          />
+        )}
+        {userData?.trial_start_at == null && (
+          <TextComponent
+            text={'Cancel anytime before the trial ends to avoid charges.'}
+            styles={{
+              color: Colors.textGray,
+              marginLeft: wp('2'),
+              paddingVertical: hp('0.5'),
+            }}
+            size={hp('1.5')}
+          />
+        )}
+        {/* {userData?.trial_start_at == null && (
           <Text style={styles.subsDes} numberOfLines={2}>
             Start with <Text style={styles.boldText}>30 day free trial</Text>{' '}
             upgrade or downgrade any time.
           </Text>
-        )}
+        )} */}
       </View>
 
-      <Tab.Navigator
+      {/* <Tab.Navigator
         screenOptions={{
           tabBarInactiveTintColor: Colors.textGray,
           tabBarActiveTintColor: Colors.textGray,
@@ -230,23 +467,8 @@ const SubscribeScreen = ({navigation, route}) => {
           name="Yearly"
           children={() => <PlanCard plan={products[0]} isMonthly={false} />}
         />
-      </Tab.Navigator>
-      {/* {userData?.trial_start_at == null && (
-        <ThemeButton
-          title={'Start free trial'}
-          isYellowTheme
-          textStyle={{fontSize: hp('1.5')}}
-          style={{
-            position: 'absolute',
-            bottom: hp('10'),
-            width: wp('90'),
-            alignSelf: 'center',
-            height: hp('5'),
-          }}
-          onPress={startFreeTrial}
-        />
-      )} */}
-    </View>
+      </Tab.Navigator> */}
+    </ImageBackground>
   );
 };
 

@@ -220,7 +220,7 @@ const ProfileScreen = ({navigation}) => {
           <View style={styles.upperWhiteView}>
             <Pressable style={styles.imgView} onPress={onImagePress}>
               <CircleImage
-                size={Platform.OS == 'ios' ? 0.3 : 0.35}
+                size={Platform.OS == 'ios' ? 0.3 : 0.29}
                 image={imageUrl(userData?.profile_image)}
                 uri={true}
               />

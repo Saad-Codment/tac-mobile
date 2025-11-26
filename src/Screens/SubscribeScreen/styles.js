@@ -5,7 +5,7 @@ import {Colors, FontSize} from '../../Theme/Variables';
 export const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     borderRadius: 10,
   },
   subsCon: {
@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
   subs: {
     fontWeight: '600',
     fontSize: FontSize.scale18,
-    color: Colors.black,
+    // color: Colors.black,
     marginLeft: wp('24'),
     // marginBottom: hp('2'),
   },

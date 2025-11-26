@@ -77,12 +77,14 @@ const HomeScreen = ({navigation}) => {
     hasNextPage,
     nearByEvents,
     locationCoords,
+    nearByEventsRefetch,
   } = useHomeScreen(navigation);
 
   const scrollOffset = useRef(0);
 
   console.log(
     'suggestedFriendssuggestedFriendssuggestedFriendssuggestedFriendssuggestedFriends',
+    1 + 1,
     nearByEvents,
   );
 
@@ -103,22 +105,26 @@ const HomeScreen = ({navigation}) => {
       />
     );
   }, []);
-  const renderItemNearBy = useCallback(({item, index}) => {
-    return (
-      <UpcomingEventsComp
-        item={item}
-        index={index}
-        functionToUpdateLike={() => {}}
-        openBottomSheet={id => setModal({id, type: 'event'})}
-        mainViewStyle={{
-          width: wp('90'),
-          marginLeft: wp('2'),
-          height: 'auto',
-        }}
-        refetechKeys={['homeNearByEvents']}
-      />
-    );
-  }, []);
+  const renderItemNearBy = useCallback(
+    ({item, index}) => {
+      return (
+        <UpcomingEventsComp
+          item={item}
+          index={index}
+          functionToUpdateLike={() => {}}
+          openBottomSheet={id => setModal({id, type: 'event'})}
+          mainViewStyle={{
+            width: wp('90'),
+            marginLeft: wp('2'),
+            height: 'auto',
+          }}
+          refetch={nearByEventsRefetch}
+          refetechKeys={['homeNearByEvents']}
+        />
+      );
+    },
+    [nearByEvents],
+  );
 
   const renderItemAddFriend = useCallback(({item}) => {
     return (
@@ -175,7 +181,11 @@ const HomeScreen = ({navigation}) => {
               horizontal // Enable horizontal scrolling
               keyExtractor={item => item.toString()}
               showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
-              contentContainerStyle={{paddingHorizontal: 10}} // Padding around the list
+              contentContainerStyle={{
+                paddingHorizontal: 10,
+                // backgroundColor: 'red',
+                paddingVertical: Platform.OS == 'android' ? hp('1') : '0',
+              }} // Padding around the list
             />
           </>
         )}
@@ -184,7 +194,7 @@ const HomeScreen = ({navigation}) => {
             <View style={styles.innerView}>
               <TextComponent
                 styles={{color: Colors.black, ...styles.upcoming}}
-                text={'Near By Events'}
+                text={'NearBy Events'}
               />
               <TextComponent
                 styles={{color: Colors.black, ...styles.viewall}}
@@ -204,7 +214,10 @@ const HomeScreen = ({navigation}) => {
               horizontal // Enable horizontal scrolling
               keyExtractor={item => item.toString()}
               showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
-              contentContainerStyle={{paddingHorizontal: 10}} // Padding around the list
+              contentContainerStyle={{
+                paddingHorizontal: 10,
+                paddingVertical: Platform.OS == 'android' ? hp('1') : '0',
+              }} // Padding around the list
             />
           </>
         )}
@@ -225,7 +238,10 @@ const HomeScreen = ({navigation}) => {
           horizontal // Enable horizontal scrolling
           keyExtractor={item => item.toString()}
           showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
-          contentContainerStyle={{paddingHorizontal: wp('1')}} // Padding around the list
+          contentContainerStyle={{
+            paddingHorizontal: wp('2'),
+            paddingVertical: Platform.OS == 'android' ? hp('1') : '0',
+          }} // Padding around the list
         />
         {/* 
         <InfiniteScrollView

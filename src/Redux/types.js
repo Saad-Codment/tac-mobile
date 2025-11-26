@@ -30,4 +30,6 @@ export const types = {
   isNotifyTrue: 'isNotifyTrue',
   isChatNotifyTrue: 'isChatNotifyTrue',
   isChatNotifyFalse: 'isChatNotifyFalse',
+  isUpdateNeedTrue: 'isUpdateNeedTrue',
+  isUpdateNeedFalse: 'isUpdateNeedFalse',
 };

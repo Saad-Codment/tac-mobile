@@ -1,6 +1,6 @@
 import {View, Text, ImageBackground, Image} from 'react-native';
 import React, {memo} from 'react';
-import {heart, logout, stepBg} from '../../Assets';
+import {backIcon, heart, logout, stepBg} from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {InputComponent} from '../../Components/InputComponent';
 import ThemeButton from '../../Components/ThemeButton';
@@ -15,7 +15,7 @@ import KeyBoardWrapper from '../../Components/KeyBoardWrapper';
 import {parsePhoneNumberFromString} from 'libphonenumber-js';
 import {logOutAuth} from '../../Redux/Action/AuthAction';
 
-const NumberEditScreen = ({navigation}) => {
+const NumberEditScreen = ({navigation, route}) => {
   const {
     goBack,
     formattedNumber,
@@ -40,22 +40,46 @@ const NumberEditScreen = ({navigation}) => {
   return (
     <>
       <ImageBackground source={stepBg} style={styles.container}>
-        <Touchable
-          onPress={() => {
-            dispatch(logOutAuth());
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}>
-          <Image
-            source={logout}
-            resizeMode="contain"
-            style={{
-              width: wp('6'),
-              height: wp('6'),
-              marginTop: hp('8'),
-              alignSelf: 'flex-end',
-              marginRight: wp('2'),
+          <Touchable
+            onPress={() => {
+              navigation.goBack();
             }}
-          />
-        </Touchable>
+            disabled={!Boolean(route.params)}>
+            <Image
+              source={backIcon}
+              resizeMode="contain"
+              style={{
+                width: wp('6'),
+                height: wp('6'),
+                marginTop: hp('8'),
+                marginLeft: wp('2'),
+                display: route.params ? 'flex' : 'none',
+              }}
+            />
+          </Touchable>
+          <Touchable
+            onPress={() => {
+              dispatch(logOutAuth());
+            }}>
+            <Image
+              source={logout}
+              resizeMode="contain"
+              style={{
+                width: wp('6'),
+                height: wp('6'),
+                marginTop: hp('8'),
+                alignSelf: 'flex-end',
+                marginRight: wp('2'),
+              }}
+            />
+          </Touchable>
+        </View>
       </ImageBackground>
       <KeyBoardWrapper>
         <TextComponent
@@ -79,7 +103,9 @@ const NumberEditScreen = ({navigation}) => {
             <TextComponent
               text={'Edit'}
               styles={{fontSize: hp('2'), color: 'gray'}}
-              onPress={() => updateState({edit: true})}
+              onPress={() =>
+                updateState({edit: true, number: '', formattedNumber: ''})
+              }
             />
           </View>
         )}
@@ -106,6 +132,10 @@ const NumberEditScreen = ({navigation}) => {
                   blurOnSubmit: true,
                   padding: 0,
                   maxLength: maxLength, // Add maxLength restriction
+                  style: {
+                    // backgroundColor: 'red',
+                    height: hp('2'),
+                  },
                 }}
                 textContainerStyle={{backgroundColor: 'transparent'}}
               />

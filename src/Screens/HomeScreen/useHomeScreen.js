@@ -2,10 +2,11 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {TextComponent} from '../../Components/TextComponent';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import useFriendServices from '../../Services/FriendServices';
-import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
+import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import API from '../../Utils/helperFunc';
 import {
   allUpComingEventsUrl,
+  checkVersionUrl,
   globalSearchEventsWithFilterUrl,
   homeSuggestedFriendsUrl,
   homeTimeLineUrl,
@@ -15,9 +16,12 @@ import {loadingFalse} from '../../Redux/Action/isloadingAction';
 import {hp} from '../../Config/responsive';
 import {debounce} from 'lodash'; // or your preferred debounce utility
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {PermissionsAndroid, Platform} from 'react-native';
+import {Alert, Linking, PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import Geolocationios from '@react-native-community/geolocation';
+import DeviceInfo from 'react-native-device-info';
+import {types} from '../../Redux/types';
+import GeolocationAndroid from 'react-native-geolocation-service';
 
 const HomeScreen = ({navigate}) => {
   const [search, setSearch] = useState('');
@@ -83,45 +87,95 @@ const HomeScreen = ({navigate}) => {
 
       requestLocationPermission();
     }
-    return () => {
-      Geolocation.clearWatch();
-    };
   }, []);
 
-  const getCurrentLocation = async () => {
-    try {
+  const requestLocationPermission = async () => {
+    if (Platform.OS === 'android') {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        Geolocation.getCurrentPosition(
-          async position => {
-            const {latitude, longitude} = position.coords;
-
-            setLocationCoords({
-              lat: latitude,
-              lng: longitude,
-            });
-          },
-          error => {
-            console.log('Error getting current location:', error.message);
-          },
-          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-        );
-      } else {
-        console.log('Location permission denied');
-      }
-    } catch (error) {
-      console.log('Error getting location:', error);
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
     }
   };
 
+  const getCurrentLocation = async () => {
+    await requestLocationPermission();
+    return new Promise((resolve, reject) => {
+      Geolocation.getCurrentPosition(
+        async position => {
+          // const locationName = await getLocationName(
+          //   position.coords.latitude,
+          //   position.coords.longitude,
+          // );
+          setLocationCoords({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          resolve({ok: true, description: 'locationName'});
+        },
+        error => {
+          console.log('Error getting location:', error);
+          reject({ok: false, description: error});
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 30000,
+          maximumAge: 0,
+          forceLocationManager: true,
+        },
+      );
+    });
+  };
+
   useEffect(() => {
-    getCurrentLocation(); // Trigger location fetch on mount
+    if (Platform.OS == 'android') {
+      const requestLocationPermission = async () => {
+        try {
+          if (Platform.OS === 'android') {
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+              {
+                title: 'Location Permission',
+                message: 'This app needs access to your location.',
+                buttonPositive: 'OK',
+              },
+            );
+            if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+              console.log('Location permission denied');
+              return;
+            }
+          }
+
+          // Retrieve the current location once permission is granted
+          Geolocation.getCurrentPosition(
+            position => {
+              const {latitude, longitude} = position.coords;
+              setLocationCoords({
+                lat: latitude,
+                lng: longitude,
+              });
+            },
+            error => {
+              console.log('Error getting location:', error.message);
+            },
+            {enableHighAccuracy: true, maximumAge: 10000},
+          );
+        } catch (err) {
+          console.warn('Error requesting location permission:', err);
+        }
+      };
+
+      requestLocationPermission();
+
+      return () => {
+        Geolocation.clearWatch();
+      };
+    }
   }, []);
 
   useEffect(() => {
     if (locationCoords?.lat && locationCoords?.lng) {
+      console.log('locationCoordslocationCoords', locationCoords);
       nearByEvents.refetch();
     }
   }, [locationCoords]);
@@ -163,6 +217,7 @@ const HomeScreen = ({navigate}) => {
     refetch();
     upComingEvents.refetch();
     suggestedFriends.refetch();
+    nearByEvents.refetch();
     setRefresh(false);
   }, []);
 
@@ -238,6 +293,65 @@ const HomeScreen = ({navigate}) => {
     };
   }, [loadMoreDebounced]);
 
+  const isVersionLower = (v1, v2) => {
+    const a = v1.split('.').map(Number);
+    const b = v2.split('.').map(Number);
+    for (let i = 0; i < 3; i++) {
+      if ((a[i] || 0) < (b[i] || 0)) return true;
+      if ((a[i] || 0) > (b[i] || 0)) return false;
+    }
+    return false;
+  };
+
+  const {mutate} = useMutation({
+    mutationFn: data => {
+      return API.post(checkVersionUrl, {
+        platform: Platform.OS,
+        current_version: DeviceInfo.getVersion(),
+      });
+    },
+    onSuccess: ({ok, data}) => {
+      const currentVersion = DeviceInfo.getVersion();
+      if (ok) {
+        console.log('version check data', data);
+
+        const optionalUpdate = isVersionLower(
+          currentVersion,
+          data?.latest_version,
+        );
+        if (data?.force_update) {
+          dispatch({
+            type:
+              data?.force_update == true
+                ? types.isUpdateNeedTrue
+                : types.isUpdateNeedFalse,
+          });
+        }
+        if (!data?.force_update && optionalUpdate) {
+          Alert.alert('New Version Available', data?.optional_update_message, [
+            {text: 'Later', style: 'cancel'},
+            {
+              text: 'Update Now',
+              onPress: () => {
+                if (Platform.OS == 'ios') {
+                  Linking.openURL(
+                    'https://apps.apple.com/us/app/tac-the-app-for-cowboys/id6738097899',
+                  );
+                } else {
+                  Linking.openURL('market://details?id=com.tac.codment');
+                }
+              },
+            },
+          ]);
+        }
+      }
+    },
+    onError: () => {},
+  });
+  useEffect(() => {
+    mutate();
+  }, []);
+
   return {
     search,
     setSearch,
@@ -272,6 +386,7 @@ const HomeScreen = ({navigate}) => {
     hasNextPage,
     locationCoords,
     nearByEvents: nearByEvents?.data?.data?.data ?? [],
+    nearByEventsRefetch: nearByEvents?.refetch,
     sendReq: async id => {
       await sendFriendReq.mutateAsync(id);
       queryClient.invalidateQueries({queryKey: ['myFriends']});

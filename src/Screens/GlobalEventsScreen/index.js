@@ -6,6 +6,7 @@ import {
   Pressable,
   FlatList,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import React, {memo, useCallback} from 'react';
 import {HeaderComponent} from '../../Components/HeaderComponent';
@@ -143,7 +144,7 @@ const GlobalEventsScreen = ({navigation, route}) => {
             styles={{
               height: hp('2'),
               fontSize: hp('1.5'),
-              marginTop: hp('-1.5'),
+              marginTop: Platform.OS == 'ios' ? hp('-1.5') : hp('1'),
             }}
           />
         }

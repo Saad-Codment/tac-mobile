@@ -9,6 +9,10 @@ apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
  * By default you don't need to apply any configuration, just uncomment the lines you need.
  */
 react {
+    project.ext.react = [
+    enableHermes: true,
+    hermesEnabled: true   // ← THIS LINE FIXES THE ERROR 100%
+]
     /* Folders */
     //   The root of your project, i.e. where "package.json" lives. Default is '..'
     // root = file("../")
@@ -81,7 +85,7 @@ android {
         applicationId "com.tac.codment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
+        versionCode 9
         versionName "1.0"
     }
     signingConfigs {

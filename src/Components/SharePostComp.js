@@ -225,15 +225,28 @@ const SharePostComp = ({
         // marginVertical: hp('1'),
         marginBottom: hp('1'),
         paddingVertical: hp('1'),
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 2,
+          height: 2,
+        },
         ...upperMainView,
       }}>
       <Pressable
         style={styles.upperView}
-        onPress={() =>
-          NavigationService.navigate('FriendProfileScreen', {
-            id: item?.shared_by_user_id,
-          })
-        }>
+        onPress={() => {
+          if (userData?.id == item?.shared_by_user_id) {
+            NavigationService.navigate('MyProfileScreen', {
+              id: userData?.id,
+            });
+          } else
+            NavigationService.navigate('FriendProfileScreen', {
+              id: item?.shared_by_user_id,
+            });
+        }}>
         <CircleImage
           image={imageUrl(item?.sharer_image ?? item?.sharer_image)}
           uri
@@ -299,11 +312,16 @@ const SharePostComp = ({
         {/* Header Section */}
         <Pressable
           style={styles.upperView}
-          onPress={() =>
-            NavigationService.navigate('FriendProfileScreen', {
-              id: item?.user_id,
-            })
-          }>
+          onPress={() => {
+            if (userData?.id == item?.user_id) {
+              NavigationService.navigate('MyProfileScreen', {
+                id: userData?.id,
+              });
+            } else
+              NavigationService.navigate('FriendProfileScreen', {
+                id: item?.user_id,
+              });
+          }}>
           <CircleImage
             image={imageUrl(item?.profile_image ?? item?.user_image)}
             uri
@@ -370,7 +388,9 @@ const SharePostComp = ({
               style={{width: wp('4'), marginRight: wp('1')}}
             />
             <TextComponent
-              text={`${item?.likes_count} Likes`}
+              text={`${item?.likes_count} ${
+                item?.likes_count <= 1 ? 'Like' : 'Likes'
+              }`}
               isThemeColor={true}
               styles={{
                 fontSize: hp('1.3'),
@@ -398,7 +418,9 @@ const SharePostComp = ({
               style={{width: wp('4'), marginRight: wp('1')}}
             />
             <TextComponent
-              text={`${item?.comments_count} Comment`}
+              text={`${item?.comments_count} ${
+                item?.comments_count <= 1 ? 'Comment' : 'Comments'
+              }`}
               isThemeColor={true}
               styles={{
                 fontSize: hp('1.3'),
@@ -437,11 +459,11 @@ const styles = StyleSheet.create({
     borderRadius: wp('5'),
     overflow: 'hidden',
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {width: 2, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 10,
+    // shadowColor: '#000',
+    // shadowOffset: {width: 2, height: 2},
+    // shadowOpacity: 0.25,
+    // shadowRadius: 4,
+    // elevation: 10,
     paddingVertical: hp('1'),
     alignSelf: 'center',
   },

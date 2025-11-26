@@ -4,6 +4,7 @@ import {
   SendChatNotificationUrl,
   VerifyUserUrl,
   baseURL,
+  checkVersionUrl,
   fcmTokenUrl,
   homeSuggestedFriendsUrl,
   likeUnlikeUrl,
@@ -36,6 +37,7 @@ const hideLoaderAPIs = [
   SendChatNotificationUrl,
   sendMsgUrl,
   GetChatListUrl,
+  checkVersionUrl,
 ];
 // const hideLoaderAPIs = ['/playcount', '/playlist', '/home-content'];
 

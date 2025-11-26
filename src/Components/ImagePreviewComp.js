@@ -90,7 +90,7 @@ const ImagePreviewComp = ({visible, onClose, images, isCircle}) => {
                   enableDoubleClickZoom>
                   {isCircle ? (
                     <CircleImage
-                      size={Platform.OS == 'ios' ? 0.9 : 0.35}
+                      size={0.9}
                       image={imageUrl(item)}
                       uri={true}
                       styles={{alignSelf: 'center', marginTop: hp('20')}}
