@@ -149,9 +149,9 @@ const ShareEventComp = ({
           onPress: async () => {
             console.log('klsdbvklsbdkvlbsdklvbksdbvlsd', item);
             await deleteEvent.mutateAsync(item?.id);
-            await removeCalendarEvent();
             refetch();
             functionToDelete(index);
+            await removeCalendarEvent();
             // setTimeout(() => {
             // }, 500);
             // Call your delete mutation here

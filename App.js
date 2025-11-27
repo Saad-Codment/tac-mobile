@@ -67,14 +67,14 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
 
   useEffect(() => {
     const sub = AppState.addEventListener('change', state => {
-      if (state === 'active') {
+      if (state === 'active' && isLogin) {
         mutateAsync({is_online: 0});
-      } else if (state === 'background') {
+      } else if (state === 'background' && isLogin) {
         mutateAsync({is_online: 1});
       }
     });
     return () => sub.remove();
-  }, []);
+  }, [isLogin]);
 
   useEffect(() => {
     if (isLogin) {
