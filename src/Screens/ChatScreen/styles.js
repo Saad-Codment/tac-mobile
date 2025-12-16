@@ -88,7 +88,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 0.2,
     minHeight: Platform.OS == 'ios' ? hp('5') : hp('3'),
-    maxHeight: Platform.OS == 'ios' ? hp('14') : hp('10'),
+    maxHeight: Platform.OS == 'ios' ? hp('14') : hp('5'),
     paddingHorizontal: wp('1.8'),
     overflow: 'hidden',
     borderRadius: 30,
@@ -110,7 +110,7 @@ export const styles = StyleSheet.create({
     fontSize: hp('1.5'),
     flex: 1,
     color: 'black',
-    marginBottom: hp('1'),
+    marginBottom: Platform.OS == 'ios' ? hp('1') : 0,
     backgroundColor: 'white',
   },
   sendBtnStyle: {

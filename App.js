@@ -184,7 +184,7 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
 
   useEffect(async () => {
     GoogleSignin.configure({
-      offlineAccess: true,
+      // offlineAccess: true,
       iosClientId:
         '433413678709-2dkgedloqvurj77k6474e09slpatdfta.apps.googleusercontent.com',
       webClientId:

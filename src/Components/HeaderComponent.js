@@ -86,7 +86,12 @@ export const HeaderComponent = ({
             style={{...styles.filterIcon, ...rightIconStyle}}
           />
         </Touchable>
-        <Touchable style={styles.backMain} onPress={onRightPress}>
+        <Touchable
+          style={{
+            ...styles.backMain,
+            top: Platform.OS == 'android' ? hp('1') : 0,
+          }}
+          onPress={onRightPress}>
           <Image
             source={rightIconImg ?? saveReset}
             style={{...styles.filterIcon, ...rightIconStyle}}

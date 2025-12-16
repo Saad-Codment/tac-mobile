@@ -85,38 +85,40 @@ const loginSaga = function* ({payload: {datas, type}}) {
     //         error,
     // );
 
-    switch (error?.code || error?.message) {
-      case statusCodes.SIGN_IN_CANCELLED:
-      case '1001':
-        errorMessage('Cancelled');
-        break;
-      case statusCodes.IN_PROGRESS:
-        console.log('In progress');
-        break;
-      case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-        errorMessage('Play services not available or outdated');
-        break;
-      case appleAuth.Error.CANCELED:
-        errorMessage('Apple Sign-In was canceled by the user.');
-        break;
-      case appleAuth.Error.NOT_HANDLED:
-        errorMessage('Apple Sign-In request could not be handled.');
-        break;
-      case appleAuth.Error.FAILED:
-        errorMessage('Apple Sign-In failed. Please try again.');
-        break;
-      case appleAuth.Error.INVALID_RESPONSE:
-        errorMessage('Invalid response received from Apple Sign-In.');
-        break;
-      default:
-        errorMessage(
-          error?.message.split(' ').slice(1).join(' ') ??
-            error ??
-            error?.message ??
-            'Something went wrong',
-        );
-        break;
-    }
+    // switch (error?.code || error?.message) {
+    //   case statusCodes.SIGN_IN_CANCELLED:
+    //   case '1001':
+    //     errorMessage('Cancelled');
+    //     break;
+    //   case statusCodes.IN_PROGRESS:
+    //     console.log('In progress');
+    //     break;
+    //   case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+    //     errorMessage('Play services not available or outdated');
+    //     break;
+    //   case appleAuth.Error.CANCELED:
+    //     errorMessage('Apple Sign-In was canceled by the user.');
+    //     break;
+    //   case appleAuth.Error.NOT_HANDLED:
+    //     errorMessage('Apple Sign-In request could not be handled.');
+    //     break;
+    //   case appleAuth.Error.FAILED:
+    //     errorMessage('Apple Sign-In failed. Please try again.');
+    //     break;
+    //   case appleAuth.Error.INVALID_RESPONSE:
+    //     errorMessage('Invalid response received from Apple Sign-In.');
+    //     break;
+    //   default:
+    //     errorMessage(
+    //       error?.message.split(' ').slice(1).join(' ') ??
+    //         error ??
+    //         error?.message ??
+    //         'Something went wrong',
+    //     );
+    //     break;
+    // }
+
+    errorMessage(error?.toString());
 
     // errorMessage(
     //   error?.message.split(' ').slice(1).join(' ') ?? error ?? error?.message,
@@ -166,10 +168,13 @@ function* registerSaga({payload: {datas}}) {
     //         error?.message ??
     //         error,
     // );
+    // errorMessage(error?.toString());
     errorMessage(
-      error?.message.split(' ').slice(1).join(' ') ?? error ?? error?.message,
+      error?.message?.split(' ')?.slice(1)?.join(' ') ??
+        error?.message ??
+        error,
     );
-    console.log('err', newError.toString());
+    console.log('err', newError?.toString());
   } finally {
     // delay(4000);
     yield put(loadingFalse());

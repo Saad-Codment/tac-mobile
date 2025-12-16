@@ -143,7 +143,7 @@ const HomeScreen = ({navigation}) => {
         onNotificarioPress={() => dynamicRoute('NotificationScreen')}
         userDataImg={userData?.profile_image}
         onProfilePress={() =>
-          dynamicRoute('FriendProfileScreen', {id: userData?.id})
+          dynamicRoute('MyProfileScreen', {id: userData?.id})
         }
       />
 

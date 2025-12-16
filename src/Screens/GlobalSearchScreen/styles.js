@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {hp, wp} from '../../Config/responsive';
 import {Colors} from '../../Theme/Variables';
 
@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   searchInputWrapper: {
     width: wp('95'),
     alignSelf: 'center',
-    height: hp('4'),
+    height: Platform.OS == 'ios' ? hp('4') : hp('6'),
     borderRadius: 10,
     marginVertical: hp('1'),
     flexDirection: 'row',
