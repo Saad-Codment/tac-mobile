@@ -1,4 +1,4 @@
-import {View, Text, ImageBackground, Image} from 'react-native';
+import {View, Text, ImageBackground, Image, Platform} from 'react-native';
 import React, {memo} from 'react';
 import {backIcon, heart, logout, stepBg} from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
@@ -135,6 +135,7 @@ const NumberEditScreen = ({navigation, route}) => {
                   style: {
                     // backgroundColor: 'red',
                     height: hp('2'),
+                    color: 'black',
                   },
                 }}
                 textContainerStyle={{backgroundColor: 'transparent'}}
@@ -154,7 +155,7 @@ const NumberEditScreen = ({navigation, route}) => {
             title={'Send'}
             isYellowTheme
             style={{
-              marginTop: hp('5'),
+              marginTop: Platform.OS == 'android' ? hp('10') : hp('5'),
               height: hp('4'),
               width: wp('85'),
               alignSelf: 'center',
