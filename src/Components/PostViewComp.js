@@ -467,7 +467,7 @@ const styles = StyleSheet.create({
     height: hp('35'),
     // aspectRatio: 1,
     borderRadius: wp('2'),
-    backgroundColor: 'yellow',
+    // backgroundColor: 'yellow',
   },
   threeImagesContainer: {
     flexDirection: 'column',

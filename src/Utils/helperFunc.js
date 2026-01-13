@@ -221,6 +221,10 @@ const fetchGetWithToken = async (url, isUpdate) => {
         const getData = await getUserDataFromRevenewCat();
         const activeSubscriptions =
           getData.entitlements.active['Tac subscription group'] ?? undefined;
+        console.log(
+          'activeSubscriptionsactiveSubscriptionsactiveSubscriptionsactiveSubscriptionsactiveSubscriptionsactiveSubscriptions',
+          activeSubscriptions,
+        );
         if (activeSubscriptions != undefined) {
           store.dispatch({
             type: types.UpdateProfile,

@@ -57,6 +57,40 @@ const App = () => {
   const {image, modalType, isCircle} = getState('modalState');
   const isFetching = useIsFetching();
 
+  const {data, refetch, isSuccess} = useQuery({
+    queryKey: ['chatList'],
+    queryFn: () => API.get(GetChatListUrl),
+    refetchOnReconnect: true,
+    retry: 5,
+    enabled: false,
+  });
+  console.log(
+    'datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata',
+    data?.data,
+  );
+
+  const hitChatListApi = async () => {
+    if (isLogin) {
+      await refetch();
+      if (isSuccess) {
+        socketRef.current = io(SOCKET_URL, {
+          transports: ['websocket'],
+          reconnection: true,
+          reconnectionAttempts: 5,
+        });
+        socketRef.current.on('connect', () =>
+          console.log('Socket connectedklsdnlkbsdklvbklsdbvlkbsdlkbvklsd'),
+        );
+        socketRef.current.on('disconnect', () =>
+          console.log('Socket disconnected'),
+        );
+        socketRef.current.on('error', err =>
+          console.error('Socket error:', err),
+        );
+      }
+    }
+  };
+
   /* This code snippet is defining a `useMutation` hook called `sendFriendReq` that will handle making a
 POST request to the `sendFriendReqUrl` endpoint with the provided data. */
   const {mutateAsync} = useMutation({
@@ -100,7 +134,7 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
 
   useEffect(() => {
     /* It's a function that registers the device to receive push notifications. */
-    if (isLogin) {
+    if (isLogin && isSuccess) {
       setTimeout(() => {
         fcmService.register(
           onRegister,
@@ -109,10 +143,11 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
           () => {},
         );
       }, 1000);
+      hitChatListApi();
     }
     return () => {
       /* It's a function that unregisters the device from receiving push notifications. */
-      if (isLogin) {
+      if (isLogin && isSuccess) {
         fcmService.unRegister();
       }
     };
@@ -227,66 +262,51 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
   const socketRef = useRef(null);
   const [isInAppMsg, setIsInAppMsg] = useState(null);
 
-  const {data, refetch} = useQuery({
-    queryKey: ['chatList'],
-    queryFn: () => API.get(GetChatListUrl),
-    refetchOnReconnect: true,
-    retry: 5,
-    // enabled: isLogin,
-  });
-  console.log(
-    'datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata',
-    data?.data,
-  );
-
   // Initialize Socket.io directly in useEffect
-  useEffect(() => {
-    socketRef.current = io(SOCKET_URL, {
-      transports: ['websocket'],
-      reconnection: true,
-      reconnectionAttempts: 5,
-    });
-    socketRef.current.on('connect', () =>
-      console.log('Socket connectedklsdnlkbsdklvbklsdbvlkbsdlkbvklsd'),
-    );
-    socketRef.current.on('disconnect', () =>
-      console.log('Socket disconnected'),
-    );
-    socketRef.current.on('error', err => console.error('Socket error:', err));
-    // return () => {
-    //   if (socketRef.current) {
-    //     socketRef.current.disconnect();
-    //   }
-    // };
-  }, []);
+  // useEffect(async() => {
+
+  //   // return () => {
+  //   //   if (socketRef.current) {
+  //   //     socketRef.current.disconnect();
+  //   //   }
+  //   // };
+  // }, []);
 
   // Setup socket listeners and fetch chats
   useEffect(() => {
-    if (userData?.id && data?.data && data?.data.length > 0 && isLogin) {
+    if (
+      userData?.id &&
+      Array.isArray(data?.data) &&
+      data?.data.length > 0 &&
+      isLogin &&
+      isSuccess
+    ) {
       // Initialize chats with isTyping: false
-      setChats(data.data);
+      setChats(data?.data ?? []);
 
       // Join all chat rooms
-      data.data.forEach(chat => {
-        socketRef.current.emit('join', userData?.id);
-      });
+      if (Array.isArray(data?.data)) {
+        data.data.forEach(chat => {
+          socketRef.current.emit('join', userData?.id);
+        });
 
-      // Socket listeners
-      socketRef.current.on('newMessage', payload => {
-        const index = chats.findIndex(
-          c => c.conversation_id === payload.conversation_id,
-        );
-        if (index !== -1) {
-          console.log(
-            'New message received ChatLjsdhbvckjsdbvjkbsdkjvbdjksbvjkdsbkjvbksdist:',
-            payload,
+        // Socket listeners
+        socketRef.current.on('newMessage', payload => {
+          const index = chats.findIndex(
+            c => c.conversation_id === payload.conversation_id,
           );
-          setIsInAppMsg(payload);
-          setTimeout(() => {
-            setIsInAppMsg(null);
-          }, 5000);
-        }
-      });
+          if (index !== -1) {
+            console.log(
+              'New message received ChatLjsdhbvckjsdbvjkbsdkjvbdjksbvjkdsbkjvbksdist:',
+              payload,
+            );
+            setIsInAppMsg(payload);
+            setTimeout(() => {
+              setIsInAppMsg(null);
+            }, 5000);
+          }
+        });
+      }
     }
   }, [data, userData?.id, isLogin]);
   const Stack = createNativeStackNavigator();

@@ -152,7 +152,7 @@ const HomeHeader = ({
       </View>
       <View style={styles.searchComponent}>
         <ThemeButton
-          title={'Write something'}
+          title={"What's on your mind?"}
           style={{
             ...styles.upperBtn,
             justifyContent: 'flex-start',
@@ -162,6 +162,12 @@ const HomeHeader = ({
           image={editYellow}
           textStyle={{fontSize: hp('1.2')}}
           onPress={() => NavigationService.navigate('CreatePostScreen')}
+          isRightImg={galleryYellow}
+          rightImgStyle={{
+            width: wp('5'),
+            height: hp('3'),
+            marginLeft: wp('48'),
+          }}
         />
         {/* <ThemeButton
           image={galleryYellow}
@@ -230,11 +236,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   upperBtn: {
-    width: wp('92'),
+    width: wp('93'),
     borderRadius: 30,
     height: hp('4.5'),
     borderWidth: 0.5,
     borderColor: Colors.grayBorder,
+    marginRight: wp('2'),
   },
   imgStyle: {marginRight: wp('0.2'), width: wp('5')},
   searchStyle: {

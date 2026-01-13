@@ -246,15 +246,30 @@ const SubscribeScreen = ({navigation, route}) => {
             marginVertical: hp('2'),
           }}
         />
-        <TextComponent
-          text={'What You Get Today'}
-          isWhite
-          size={hp('2.5')}
-          styles={{alignSelf: 'flex-start'}}
-          fontFamily={'bold'}
-        />
         {userData?.trial_start_at == null && (
-          <TextComponent
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              alignSelf: 'flex-start',
+            }}>
+            <TextComponent
+              text={'Today You Pay:'}
+              isWhite
+              size={hp('2.5')}
+              // styles={{alignSelf: 'flex-start'}}
+              fontFamily={'bold'}
+            />
+            <TextComponent
+              text={' $0.00'}
+              // isWhite
+              size={hp('2.5')}
+              styles={{alignSelf: 'flex-start', color: 'rgba(255, 195, 83, 1)'}}
+              fontFamily={'bold'}
+            />
+          </View>
+        )}
+        {/* <TextComponent
             text={'Today You Pay: $0.00'}
             isWhite
             styles={{
@@ -262,15 +277,14 @@ const SubscribeScreen = ({navigation, route}) => {
               color: 'rgba(203, 149, 49, 1)',
               marginTop: hp('1'),
             }}
-          />
-        )}
+          /> */}
         <TextComponent
-          text={'What You Get Today'}
+          text={'What You Get:'}
           isWhite
           styles={{
             alignSelf: 'flex-start',
             color: 'rgba(203, 149, 49, 1)',
-            marginTop: hp('0.5'),
+            marginTop: hp('2'),
           }}
         />
         <View style={{marginTop: hp('1'), alignSelf: 'flex-start'}}>
@@ -346,7 +360,7 @@ const SubscribeScreen = ({navigation, route}) => {
               source={save25}
               resizeMode="contain"
               style={{
-                width: wp('15'),
+                width: wp('18'),
                 height: hp('3'),
                 marginVertical: hp('1'),
               }}
@@ -398,9 +412,7 @@ const SubscribeScreen = ({navigation, route}) => {
         {selectedPkg != null && (
           <ThemeButton
             title={
-              userData?.trial_start_at == null
-                ? 'Start free trial'
-                : 'Continoue'
+              userData?.trial_start_at == null ? 'Start free trial' : 'Continue'
             }
             isYellowTheme
             style={{borderRadius: 30, marginTop: hp('10')}}

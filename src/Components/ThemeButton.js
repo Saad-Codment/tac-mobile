@@ -14,6 +14,8 @@ const ThemeButton = ({
   imageStyle,
   isDisable,
   isYellowTheme,
+  isRightImg,
+  rightImgStyle,
 }) => {
   return (
     // <ShadowButton>
@@ -46,6 +48,17 @@ const ThemeButton = ({
         style={[styles.text, {marginLeft: image ? wp('1') : 0, ...textStyle}]}>
         {title}
       </Text>
+      {isRightImg && (
+        <Image
+          source={isRightImg}
+          style={{
+            ...styles.image,
+            marginRight: isRightImg ? wp('1') : 0,
+            ...rightImgStyle,
+          }}
+          resizeMode="contain"
+        />
+      )}
     </Touchable>
     // </ShadowButton>
   );
