@@ -180,6 +180,16 @@ const HomeScreen = ({navigate}) => {
     }
   }, [locationCoords]);
 
+  useEffect(() => {
+    if (
+      userData?.subscription_status != 'expired' &&
+      userData?.subscription_status != null &&
+      userData?.subscription_status != 'cancelled'
+    ) {
+      navigate('CancelSubScreen');
+    }
+  }, []);
+
   const {
     data,
     isFetchingNextPage,

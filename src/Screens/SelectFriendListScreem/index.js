@@ -55,6 +55,7 @@ const SelectFriendListScreem = ({navigation, route}) => {
     isMultiSelect,
     btnTitle,
     onBtnPress,
+    isSelectedReq,
   } = route?.params;
 
   const {data, error} = useQuery({
@@ -98,19 +99,21 @@ const SelectFriendListScreem = ({navigation, route}) => {
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const newData = data?.data?.data?.filter(function (item) {
+      const newData = (data?.data?.data || data?.data)?.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = (
-          `${item.first_name} ${item?.last_name}` || ''
+          `${item?.first_name ?? item?.other_user?.first_name} ${
+            item?.last_name ?? item?.other_user?.last_name
+          }` || ''
         ).toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
-      console.log('newDatanewDatanewDatanewData', newData);
-      setFilterData(newData);
+      console.log('newDatanewDatanewDatanewDatadsfsdfsdf', newData);
+      setFilterData(newData ?? []);
       setText(text);
     } else {
-      setFilterData(data?.data?.data);
+      setFilterData(data?.data?.data || data?.data);
       setText(text);
     }
   }
@@ -132,6 +135,7 @@ const SelectFriendListScreem = ({navigation, route}) => {
           <TextComponent
             text={btnTitle ?? 'Save'}
             styles={styles.saveText}
+            disable={Boolean(btnTitle == 'Share' && selectedList.length == 0)}
             onPress={() => {
               navigation.goBack();
               if (onBtnPress) onBtnPress(selectedList);
@@ -157,6 +161,46 @@ const SelectFriendListScreem = ({navigation, route}) => {
           />
         </View>
       </View>
+
+      <TextComponent
+        text={
+          Boolean(
+            data?.data?.data?.length ||
+              data?.data?.length == selectedList?.length,
+          )
+            ? 'Deselect All'
+            : 'Select All'
+        }
+        isThemeColor
+        size={'1.5'}
+        styles={{
+          marginBottom: hp('1.5'),
+          alignSelf: 'flex-end',
+          marginRight: wp('5'),
+        }}
+        onPress={() => {
+          console.log(
+            'ertyuioiuytrtyuiiuytrtyuiuytrtyuiuytrtyul',
+            data?.data?.data || data?.data,
+          );
+          if (
+            data?.data?.data?.length ||
+            data?.data?.length == selectedList?.length
+          ) {
+            setSelectedList([]);
+          } else {
+            setSelectedList(
+              (Array.isArray(filterData) && filterData.length > 0
+                ? filterData
+                : data?.data?.data || data?.data || []
+              ).map(item => ({
+                ...item,
+                id: item.other_user?.conversation_id ?? item.id,
+              })),
+            );
+          }
+        }}
+      />
       <ScrollView
         contentContainerStyle={styles.btnsMain}
         showsVerticalScrollIndicator={false}>
@@ -180,7 +224,7 @@ const SelectFriendListScreem = ({navigation, route}) => {
         /> */}
         {(data?.data?.data || data?.data) != null &&
           (data?.data?.data?.length || data?.data.length) > 0 &&
-          (filterData.length >= 0 && text != ''
+          (Array.isArray(filterData) && filterData.length >= 0 && text != ''
             ? filterData
             : data?.data?.data || data?.data
           )?.map((item, index) => (

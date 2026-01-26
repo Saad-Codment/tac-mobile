@@ -10,7 +10,7 @@ import {styles} from './styles';
 import FriendReqComp from '../../Components/FriendReqComp';
 
 const FriendReqScreen = ({navigation}) => {
-  const {acceptReq, declineReq, friendList, onRefresh, refetch} =
+  const {acceptReq, declineReq, friendList, onRefresh, refetch, isSuccess} =
     useFriendReqScreen(navigation);
   return (
     <>
@@ -25,16 +25,18 @@ const FriendReqScreen = ({navigation}) => {
         onRefresh={onRefresh}
         flatListProps={{
           numColumns: 1,
-          ListEmptyComponent: (
-            <DataNotFound
-              onpress={onRefresh}
-              btnStyles={{width: wp('80')}}
-              // title={'The Stable’s Quiet – No Requests'}
-              // subTitle={
-              //   'Looks like no new friend requests for now. Keep the rodeo spirit alive and grow your TAC crew!'
-              // }
-            />
-          ),
+          ListEmptyComponent: Array.isArray(friendList) &&
+            friendList.length == 0 &&
+            isSuccess && (
+              <DataNotFound
+                onpress={onRefresh}
+                btnStyles={{width: wp('80')}}
+                // title={'The Stable’s Quiet – No Requests'}
+                // subTitle={
+                //   'Looks like no new friend requests for now. Keep the rodeo spirit alive and grow your TAC crew!'
+                // }
+              />
+            ),
         }}
         InnerCompnonet={(item, index) => (
           <FriendReqComp

@@ -6,26 +6,27 @@ export const styles = StyleSheet.create({
   mainView: {flexGrow: 1, backgroundColor: 'white'},
   scrollView: {flexGrow: 1, paddingBottom: hp('20')},
 
-  container: {
-    marginTop: hp('1'),
-    // backgroundColor: 'red',
-    // alignSelf: 'center',
-    // height: hp('16'),
-    justifyContent: 'center',
+  // Carousel
+  carouselContainer: {
+    // marginVertical: hp('1'),
+    marginBottom: hp('1'),
+    // justifyContent: 'center',
     alignItems: 'center',
+    // marginTop: hp('-1'),
+    // backgroundColor: 'red',
   },
   imgScrollView: {
     width: wp('95'),
   },
   slide: {
     width: wp('95'),
-    height: hp('20'),
+    height: hp('25'),
     justifyContent: 'center',
     alignItems: 'center',
   },
-  imgStyle: {
+  carouselImage: {
     width: wp('95'),
-    height: hp('15'),
+    height: hp('25'),
     alignSelf: 'center',
     borderRadius: 15,
   },
@@ -45,45 +46,116 @@ export const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
 
-  imgStyle: {
-    width: wp('95'),
-    height: hp('20'),
-    alignSelf: 'center',
-    // marginTop: hp('1'),
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
   systemView: {
     width: wp('95'),
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: hp('1'),
+    justifyContent: 'space-between',
   },
   tacImg: {marginRight: wp('2')},
+
   followView: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    // width: wp('50'),
   },
   checkImg: {
     width: wp('6'),
     height: hp('3'),
-    marginRight: wp('2'),
-    // marginRight: wp('-2'),
+    marginRight: wp('1'),
   },
+  addedMoneyText: {
+    textAlign: 'right',
+  },
+
   titleStyle: {
     fontWeight: 'bold',
     marginLeft: wp('3'),
     fontSize: hp('1.8'),
   },
+
   bottomView: {
     flexDirection: 'row',
     alignItems: 'center',
-    // marginLeft: wp('3'),
     marginTop: hp('2'),
   },
+
+  // Status badges row
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: wp('2'),
+    marginTop: hp('1'),
+    justifyContent: 'space-between',
+  },
+  statusLeftGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: wp('65'),
+  },
+  statusItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginRight: wp('2'),
+  },
+  statusIcon: {
+    width: wp('5'),
+    height: hp('4'),
+    marginRight: wp('1'),
+  },
+  viewPerformances: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  arrRightIcon: {
+    width: wp('5'),
+    height: hp('3'),
+    marginRight: wp('1'),
+  },
+
+  dividerFullWidth: {
+    width: wp('95'),
+    marginVertical: hp('0.5'),
+    alignSelf: 'center',
+  },
+
+  eventTimeViewGray: {
+    paddingVertical: hp('0.5'),
+    paddingHorizontal: wp('3'),
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sectionSmallTitle: {
+    fontSize: hp('1.2'),
+  },
+  timeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  eventCallImg: {
+    width: wp('5'),
+    height: hp('4'),
+    marginRight: wp('1'),
+  },
+  timeIconMarginLeft: {
+    marginLeft: wp('4'),
+  },
+  timeText: {
+    fontSize: hp('1.2'),
+  },
+
+  locationTitle: {
+    fontSize: hp('1.2'),
+    marginLeft: wp('2'),
+    marginTop: hp('1'),
+  },
+
   locationView: {
     flexDirection: 'row',
     width: wp('95'),
@@ -92,65 +164,82 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: hp('2'),
   },
-  locationImg: {width: wp('3.5'), height: hp('2'), marginRight: wp('2')},
-  eventTimeViewGray: {
-    backgroundColor: Colors.bgGray,
-    paddingVertical: hp('2'),
-    paddingHorizontal: wp('3'),
-    justifyContent: 'space-between',
-  },
-  eventTimeView: {
+  locationLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
   },
-  eventCallImg: {
-    width: wp('6'),
-    height: hp('4'),
-    marginRight: wp('1'),
+  locationImg: {
+    width: wp('3.5'),
+    height: hp('2'),
+    marginRight: wp('2'),
   },
-  eventTypeView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: wp('3'),
-    paddingVertical: hp('1.5'),
-    backgroundColor: Colors.lightInnerColor,
-    marginVertical: hp('2'),
+  addressText: {
+    width: wp('60'),
+    fontSize: hp('1.2'),
   },
-  typeHeading: {fontWeight: 'bold', fontSize: hp('1.5')},
-  typeStyle: {fontSize: hp('1.3')},
-  multiViewStyle: {
+  viewLocationLink: {
+    color: Colors.lightBlueTextColor,
+    fontSize: hp('1.2'),
+  },
+
+  // Categories section
+  arryMainView: {
     width: wp('98'),
-    backgroundColor: Colors.lightInnerColor,
-    paddingVertical: hp('1.5'),
-    marginTop: hp('2'),
+    marginHorizontal: wp('3'),
+    marginVertical: hp('1.5'),
   },
-  dividerStyle: {width: wp('95'), marginLeft: wp('1.5')},
-  btnStyle: {
-    marginTop: hp('4'),
-    width: wp('85'),
-    alignSelf: 'center',
-    borderRadius: 30,
-    height: hp('5'),
+  sectionTitle: {
+    fontSize: hp('1.2'),
+  },
+  multiMainView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: hp('0.5'),
   },
   selectedValStyle: {
     paddingHorizontal: wp('2.5'),
-    // backgroundColor: Colors.thridColor,
     overflow: 'hidden',
     height: 'auto',
     paddingVertical: hp('0.5'),
     borderWidth: 1,
     borderColor: Colors.thridColor,
   },
-  arryMainView: {
-    width: wp('98'),
-    marginHorizontal: wp('3'),
-    marginVertical: hp('3'),
+  multiSelectText: {
+    fontSize: hp('1.2'),
+    color: 'black',
   },
-  multiMainView: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: hp('1.5'),
+  notSelectedText: {
+    fontSize: hp('1.2'),
+  },
+  dividerSection: {
+    width: wp('95'),
+    marginVertical: hp('1'),
+  },
+
+  // Bottom button
+  btnStyle: {
+    marginTop: hp('4'),
+    width: wp('85'),
+    alignSelf: 'center',
+    borderRadius: 30,
+    height: hp('5'),
+    // backgroundColor: 'transparent',
+  },
+  btnText: {
+    fontSize: hp('1.5'),
+    // color: Colors.primaryColor,
+  },
+  btnCalendarIcon: {
+    tintColor: 'white',
+    width: wp('5'),
+  },
+
+  // Old styles kept for compatibility (you can remove unused ones later)
+  container: {marginVertical: hp('1'), marginBottom: hp('2')},
+  imgStyle: {width: wp('95'), height: hp('20'), borderRadius: 20},
+  systemUserName: {
+    fontSize: hp('1.5'),
+    width: wp('61'),
+    marginLeft: wp('-5'),
   },
 });

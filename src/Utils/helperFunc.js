@@ -223,18 +223,18 @@ const fetchGetWithToken = async (url, isUpdate) => {
           getData.entitlements.active['Tac subscription group'] ?? undefined;
         console.log(
           'activeSubscriptionsactiveSubscriptionsactiveSubscriptionsactiveSubscriptionsactiveSubscriptionsactiveSubscriptions',
-          activeSubscriptions,
+          data?.user,
         );
         if (activeSubscriptions != undefined) {
-          store.dispatch({
-            type: types.UpdateProfile,
-            payload: {
-              ...data,
-              planName:
-                allSubID[activeSubscriptions?.productIdentifier] ?? null,
-              identifier: activeSubscriptions?.productIdentifier,
-            },
-          });
+          // store.dispatch({
+          //   type: types.UpdateProfile,
+          //   payload: {
+          //     ...data,
+          //     planName:
+          //       allSubID[activeSubscriptions?.productIdentifier] ?? null,
+          //     identifier: activeSubscriptions?.productIdentifier,
+          //   },
+          // });
         }
         store.dispatch({
           type: types.UpdateProfile,

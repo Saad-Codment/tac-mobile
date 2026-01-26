@@ -243,7 +243,7 @@ const MyProfileScreen = ({navigation, route}) => {
           onRefresh={onRefresh}
           flatListProps={{
             ListEmptyComponent:
-              eventsList != null && eventsList?.length == 0 ? (
+              eventsList != null && eventsList?.length == 0 && isSuccess ? (
                 <DataNotFound
                   btnStyles={{width: wp('80')}}
                   title={'Your Profile is Waiting for Your First Post'}

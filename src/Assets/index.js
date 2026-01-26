@@ -90,6 +90,7 @@ export {default as save25} from './Icons/save25.png';
 export {default as popular} from './Icons/popular.png';
 
 export {default as updateIcon} from './Icons/updateIcon.png';
+export {default as dollarCircleLight} from './Icons/dollarCircleLight.png';
 
 export {default as mapCity} from './Icons/mapCity.png';
 export {default as mapState} from './Icons/mapState.png';

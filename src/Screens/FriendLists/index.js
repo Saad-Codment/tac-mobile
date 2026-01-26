@@ -22,6 +22,7 @@ const FriendLists = ({navigation, route}) => {
     params,
     isLoading,
     url,
+    lastPage,
   } = useFriendLists(navigation, route);
 
   const renderData = useCallback(
@@ -63,21 +64,23 @@ const FriendLists = ({navigation, route}) => {
               (isFetchingNextPage ? (
                 <ActivityIndicator size="small" color="gray" />
               ) : (
-                <ThemeButton
-                  title={'Load More'}
-                  style={{
-                    marginTop: hp('2'),
-                    width: wp('30'),
-                    height: hp('4'),
-                    alignSelf: 'center',
-                    marginBottom: hp('5'),
-                  }}
-                  textStyle={{fontSize: hp('1.5')}}
-                  onPress={async () => {
-                    await fetchNextPage();
-                    // afterFetchNextPage();
-                  }}
-                />
+                !lastPage && (
+                  <ThemeButton
+                    title={'Load More'}
+                    style={{
+                      marginTop: hp('2'),
+                      width: wp('30'),
+                      height: hp('4'),
+                      alignSelf: 'center',
+                      marginBottom: hp('5'),
+                    }}
+                    textStyle={{fontSize: hp('1.5')}}
+                    onPress={async () => {
+                      await fetchNextPage();
+                      // afterFetchNextPage();
+                    }}
+                  />
+                )
               )),
             // onEndReachedThreshold: 0.5, // Trigger fetch when 50% of the list is scrolled
 

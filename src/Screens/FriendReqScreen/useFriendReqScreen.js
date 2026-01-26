@@ -9,7 +9,7 @@ const useFriendReqScreen = () => {
   const {queryClient} = useReduxStore();
   const {acceptFriendReq, rejectFriendReq} = useFriendServices();
 
-  const {data, error, refetch} = useQuery({
+  const {data, error, refetch, isSuccess} = useQuery({
     queryKey: ['friendRequests'],
     queryFn: () => API.get(getFriendReqUrl),
   });
@@ -35,6 +35,7 @@ const useFriendReqScreen = () => {
     },
     onRefresh,
     refetch,
+    isSuccess,
   };
 };
 

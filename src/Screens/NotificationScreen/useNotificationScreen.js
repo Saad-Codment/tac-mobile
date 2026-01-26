@@ -5,6 +5,7 @@ import API from '../../Utils/helperFunc';
 import {getAllNotificationsUrl} from '../../Utils/Urls';
 import {useCallback, useEffect, useLayoutEffect} from 'react';
 import {types} from '../../Redux/types';
+import notifee from '@notifee/react-native';
 
 const useNotificationScreen = () => {
   const {queryClient, dispatch} = useReduxStore();
@@ -27,7 +28,17 @@ const useNotificationScreen = () => {
     dispatch({type: types.isNotifyFalse});
   };
 
+  const clearAppBadge = async () => {
+    try {
+      await notifee.setBadgeCount(0);
+      console.log('Badge cleared successfully');
+    } catch (e) {
+      console.log('Failed to clear badge:', e);
+    }
+  };
+
   useEffect(() => {
+    clearAppBadge();
     setTimeout(() => {
       clearNotification();
     }, 1000);

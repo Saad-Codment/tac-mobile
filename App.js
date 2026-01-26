@@ -49,7 +49,8 @@ const App = () => {
     setIsVisible(false);
   };
   const {getState, dispatch} = useReduxStore();
-
+  const [chats, setChats] = useState([]);
+  const socketRef = useRef(null);
   const appState = useRef(AppState.currentState);
   const {isloading} = getState('isloading');
   const {isUpdateNeed} = getState('isUpdateNeed');
@@ -258,8 +259,6 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
       style={styles.SplashScreen_RootView}></ImageBackground>
   );
 
-  const [chats, setChats] = useState([]);
-  const socketRef = useRef(null);
   const [isInAppMsg, setIsInAppMsg] = useState(null);
 
   // Initialize Socket.io directly in useEffect
@@ -279,7 +278,8 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
       Array.isArray(data?.data) &&
       data?.data.length > 0 &&
       isLogin &&
-      isSuccess
+      isSuccess &&
+      socketRef.current
     ) {
       // Initialize chats with isTyping: false
       setChats(data?.data ?? []);

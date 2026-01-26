@@ -35,11 +35,9 @@ export const AniFlatOneByOne = ({
   const renderItem = useCallback(
     ({item, index}) => {
       return (
-        <Animatable.View
-          animation={'fadeIn'}
-          delay={Number(index.toString() + '0')}>
+        <View animation={'fadeIn'} delay={Number(index.toString() + '0')}>
           {InnerCompnonet(item, index)}
-        </Animatable.View>
+        </View>
       );
     },
     [data],

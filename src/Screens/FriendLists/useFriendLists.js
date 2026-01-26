@@ -9,6 +9,7 @@ const useFriendLists = ({navigation, route}, {params}) => {
   const {getState} = useReduxStore();
   const queryClient = useQueryClient();
   const {userData} = getState('Auth');
+  const [pages, setPages] = useState(0);
 
   const {
     data,
@@ -22,6 +23,8 @@ const useFriendLists = ({navigation, route}, {params}) => {
   } = useInfiniteQuery({
     queryKey: [params?.key],
     queryFn: async ({pageParam = 1}) => {
+      setPages(pageParam);
+
       return API.get(`${params?.url}page=${pageParam}`);
     },
     initialPageParam: 1,
@@ -49,8 +52,8 @@ const useFriendLists = ({navigation, route}, {params}) => {
     }, [refetch]),
   );
   console.log(
-    'datadatadatadatadatadatadatadata',
-    data?.pages?.flatMap(page => page.data?.data),
+    'datadatadatadatadatadatadatadataskdjbvksdbvjksbvksbdkvbksdbvsbdjkvbsjdkbvsbvos',
+    data?.pages?.flatMap(page => page.data),
   );
   const list =
     data?.pages?.flatMap(page => {
@@ -69,6 +72,7 @@ const useFriendLists = ({navigation, route}, {params}) => {
     params,
     isLoading,
     url: params?.url,
+    lastPage: Boolean(data?.pages[0]?.data?.total_pages == pages),
   };
 };
 

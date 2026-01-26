@@ -67,11 +67,13 @@ const GlobalSearchScreen = ({navigation}) => {
     refetchWhenParams,
     isLoading,
     setIsLoading,
+    totalPages,
+    pages,
   } = useGloabalSearchScreen(navigation);
 
   console.log(
     'allSearchDataallSearchsdDataallSearchDataallSearchDataallSsdsdsearchDataslkdnvlksdn',
-    selectTabAllData?.length,
+    Boolean(totalPages != pages),
   );
 
   const DynamicViewForSearch = useCallback(
@@ -143,7 +145,7 @@ const GlobalSearchScreen = ({navigation}) => {
                 )}
                 {title == 'Events' ? (
                   <>
-                    {item?.type == 5 ? (
+                    {item?.type == 5 || item?.type == 6 ? (
                       <ShareEventComp
                         item={item}
                         index={index}
@@ -170,7 +172,7 @@ const GlobalSearchScreen = ({navigation}) => {
                         openBottomSheet={id => setModal({id, type: 'event'})}
                         refetch={isNotRefreshing ? undefined : refetch}
                       />
-                    ) : item?.type == 2 ? (
+                    ) : item?.type == 2 || item?.type == 4 ? (
                       <UpcomingEventsComp
                         item={item}
                         index={index}
@@ -190,30 +192,9 @@ const GlobalSearchScreen = ({navigation}) => {
                 ) : null}
               </>
             )}
-            ListFooterComponent={
-              selectTabAllData.length >= 9 &&
-              isSeeAll != true &&
-              (isFetchingNextPage ? (
-                <ActivityIndicator size="small" color="gray" />
-              ) : (
-                <ThemeButton
-                  title={'Load More'}
-                  style={{
-                    marginTop: hp('2'),
-                    width: wp('30'),
-                    height: hp('4'),
-                    alignSelf: 'center',
-                    marginBottom: hp('5'),
-                  }}
-                  textStyle={{fontSize: hp('1.5')}}
-                  onPress={async () => {
-                    setPages(prev => prev + 1);
-                    await fetchNextPage();
-                    // afterFetchNextPage();
-                  }}
-                />
-              )) // Show loading spinner at the bottom
-            }
+            //   ListFooterComponent={
+            //  // Show loading spinner at the bottom
+            //   }
           />
         </View>
       );
@@ -331,12 +312,42 @@ const GlobalSearchScreen = ({navigation}) => {
           contentContainerStyle={{paddingBottom: hp('10')}}
           showsVerticalScrollIndicator={false}>
           {allSearchData?.users?.length > 0 && (
-            <DynamicViewForSearch
-              title={'Users'}
-              array={allSearchData?.users}
-              isSeeAll={true}
-              flatViewStyle={{marginTop: hp('1')}}
-            />
+            <>
+              <DynamicViewForSearch
+                title={'Users'}
+                array={allSearchData?.users}
+                isSeeAll={true}
+                flatViewStyle={{marginTop: hp('1')}}
+              />
+              {/* {
+                    selectTabAllData.length >= 9 &&
+              isSeeAll != true &&
+              (isFetchingNextPage ? (
+                <ActivityIndicator size="small" color="gray" />
+              ) : (
+                Boolean(totalPages != pages) && (
+                  <ThemeButton
+                    title={'Load More'}
+                    style={{
+                      marginTop: hp('2'),
+                      width: wp('30'),
+                      height: hp('4'),
+                      alignSelf: 'center',
+                      marginBottom: hp('5'),
+                    }}
+                    textStyle={{fontSize: hp('1.5')}}
+                    onPress={async () => {
+                      setPages(prev => prev + 1);
+                      setTimeout(async () => {
+                        await fetchNextPage();
+                      }, 100);
+                      // afterFetchNextPage();
+                    }}
+                  />
+                )
+              ))
+              } */}
+            </>
           )}
           {allSearchData?.posts?.length > 0 && (
             <DynamicViewForSearch
@@ -366,6 +377,31 @@ const GlobalSearchScreen = ({navigation}) => {
               flatViewStyle={{alignItem: 'center'}}
               isNotRefreshing={true}
             />
+            {selectTabAllData.length >= 9 &&
+              (isFetchingNextPage ? (
+                <ActivityIndicator size="small" color="gray" />
+              ) : (
+                Boolean(totalPages != pages) && (
+                  <ThemeButton
+                    title={'Load More'}
+                    style={{
+                      marginTop: hp('2'),
+                      width: wp('30'),
+                      height: hp('4'),
+                      alignSelf: 'center',
+                      marginBottom: hp('5'),
+                    }}
+                    textStyle={{fontSize: hp('1.5')}}
+                    onPress={async () => {
+                      setPages(prev => prev + 1);
+                      setTimeout(async () => {
+                        await fetchNextPage();
+                      }, 100);
+                      // afterFetchNextPage();
+                    }}
+                  />
+                )
+              ))}
           </ScrollView>
         )}
       {/* <View style={styles.sectionContainer}>

@@ -151,7 +151,7 @@ const SettingScreen = ({navigate, goBack}) => {
     if (isSave) {
       mutateAsync({
         first_name: modalUpdateData?.firstName ?? userData?.first_name,
-        last_name: modalUpdateData?.lastName ?? userData?.last_name,
+        last_name: modalUpdateData?.lastName ?? userData?.last_name ?? '',
         // age: userData?.age ?? '',
         // gender: modalUpdateData?.userGender?.id ?? userData?.gender,
         // profile_image: modalUpdateData?.profileImg?.type

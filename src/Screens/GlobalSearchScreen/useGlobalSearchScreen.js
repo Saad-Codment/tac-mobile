@@ -304,8 +304,9 @@ const useGloabalSearchScreen = () => {
     }) || [];
 
   console.log(
-    'kjsdbvksjdbvksjdbvksjdbvkjsdbvkjsdbvkjsdbvkjsdbv',
-    Math.floor(Number(maxPriceVal?.data?.max_price)),
+    'kjsdbvksjdbvksjdbvksjdbvkjsdbvkjlksdnfklsdnflksdnflnsdklfnklsdnfklnsdklfnlsdnfksndfnlsnkdsdbvkjsdbvkjsdbv',
+    JSON.stringify(allData?.pages[0]?.data?.total_pages),
+    pages,
   );
 
   return {
@@ -344,6 +345,8 @@ const useGloabalSearchScreen = () => {
     refetchWhenParams,
     isLoading,
     setIsLoading,
+    totalPages: allData?.pages[0]?.data?.total_pages,
+    pages,
   };
 };
 export default useGloabalSearchScreen;

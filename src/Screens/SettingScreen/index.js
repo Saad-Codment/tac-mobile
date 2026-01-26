@@ -189,20 +189,20 @@ const SettingScreen = ({navigation}) => {
     title: 'General',
     arryView: [
       {
-        title: `Subscriptions`,
+        title: `Manage Subscriptions`,
         leftIcon: medalstar,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
-        onPress: () => NavigationService.navigate('SubscriptionScreen', true),
+        onPress: () => NavigationService.navigate('CancelSubScreen', true),
       },
-      {
-        title: `Manage Subscriptions`,
-        leftIcon: manageSub,
-        rightIcon: arrRight,
-        rightIconColor: Colors.black,
-        onPress: () =>
-          NavigationService.navigate('SubscriptionInfoScreen', true),
-      },
+      // {
+      //   title: `Manage Subscriptions`,
+      //   leftIcon: manageSub,
+      //   rightIcon: arrRight,
+      //   rightIconColor: Colors.black,
+      //   onPress: () =>
+      //     NavigationService.navigate('SubscriptionInfoScreen', true),
+      // },
       {
         title: 'Notifications',
         leftIcon: notificationWhite,

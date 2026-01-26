@@ -12,11 +12,15 @@ import {hp, wp} from '../../Config/responsive';
 import {
   arrRight,
   arrRightPurple,
+  calender,
+  dollarCircle,
+  dollarCircleLight,
   filledCalender,
   filledClock,
   filledLocation,
   locationGray,
   tacLogo,
+  tickSquare,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import MutualFriends from '../../Components/MutualFriendsComponent';
@@ -39,6 +43,7 @@ import {MultiSelectButton} from '../../Components/MultiSelectButton';
 import DividerLine from '../../Components/DividerLine';
 import CustomModalComp from '../../Components/CustomModalComp';
 import {useRef, useState} from 'react';
+import {Touchable} from '../../Components/Touchable';
 
 const EventsDetailScreen = ({navigation, route}) => {
   const {
@@ -53,8 +58,6 @@ const EventsDetailScreen = ({navigation, route}) => {
 
   const {dispatch} = useReduxStore();
 
-  console.log('sjkdbvkjlsdbkjvbsdkbvsdbvksdlbvksdbvlsd', eventData);
-
   const onImagePress = isEvent => {
     dispatch({
       payload: isEvent
@@ -65,100 +68,6 @@ const EventsDetailScreen = ({navigation, route}) => {
       type: isEvent ? types.openModal : types.openModalCircle,
     });
   };
-
-  const centerView = [
-    {
-      title: `${getDateMonthYear(eventData?.from_date)?.dayName}. ${
-        getDateMonthYear(eventData?.from_date)?.monthName
-      } ${getDateMonthYear(eventData?.from_date)?.day} - ${
-        getDateMonthYear(eventData?.from_date)?.year
-      }`,
-      leftIcon: filledCalender,
-      rightText: 'Start Date',
-      onPress: () => {},
-    },
-    {
-      title: `${convertToLocalTime(eventData?.start_time)?.time} ${
-        convertToLocalTime(eventData?.start_time)?.period
-      }`,
-      leftIcon: filledClock,
-      onPress: () => {},
-      rightText: 'Start Time',
-    },
-    {
-      title: `${getDateMonthYear(eventData?.to_date)?.dayName}. ${
-        getDateMonthYear(eventData?.to_date)?.monthName
-      } ${getDateMonthYear(eventData?.to_date)?.day} - ${
-        getDateMonthYear(eventData?.to_date)?.year
-      }`,
-      leftIcon: filledCalender,
-      rightText: 'End Date',
-      onPress: () => {},
-    },
-
-    {
-      title: `${convertToLocalTime(eventData?.end_time)?.time} ${
-        convertToLocalTime(eventData?.end_time)?.period
-      }`,
-      leftIcon: filledClock,
-      onPress: () => {},
-      rightText: 'End Time',
-    },
-    {
-      title: eventData?.address,
-      leftIcon: filledLocation,
-    },
-  ];
-
-  const bottomView = [
-    {
-      title: 'Added Money',
-      rightText: `${formatPrice(eventData?.added_money)}` ?? 'Not Available',
-      onPress: () => {},
-      rightTextStyles: {color: Colors.primaryColor},
-    },
-    {
-      title: 'Tour',
-      rightText: eventData?.tour?.name ?? 'Not Available',
-      onPress: () => {},
-      rightTextStyles: {color: Colors.primaryColor},
-    },
-    {
-      title:
-        eventData?.performances.length > 0
-          ? 'Performances'
-          : 'No Performances available',
-      onPress: () => {
-        if (eventData?.performances.length > 0)
-          navigation.navigate('PerformancesScreen', eventData?.performances);
-      },
-      rightIcon: eventData?.performances.length > 0 ? arrRightPurple : null,
-      rightIconColor: Colors.primaryColor,
-      rightStyle: {width: wp('3')},
-    },
-
-    {
-      title: 'Event Confirmation',
-      rightText: eventData?.is_confirmed == 0 ? 'Planning' : 'Confirmed',
-      onPress: () => {},
-      rightTextStyles: {color: Colors.primaryColor},
-    },
-  ];
-  const performanceArry =
-    eventData?.performances && eventData?.performances?.length > 0
-      ? eventData?.performances?.map(res => ({
-          title: res?.title,
-          rightText: `${getDateMonthYear(res?.date)?.day}-${
-            getDateMonthYear(res?.date)?.monthName
-          } |  ${convertToLocalTime(res?.start_time)?.time} - ${
-            convertToLocalTime(eventData?.end_time)?.time
-          } ${convertToLocalTime(eventData?.end_time)?.period}.`,
-          onPress: () => {},
-          rightTextStyles: {color: Colors.primaryColor},
-        }))
-      : [];
-
-  console.log('eventDataeventDataeventDataeventData', eventData);
 
   const scrollViewRef = useRef(null);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -188,61 +97,10 @@ const EventsDetailScreen = ({navigation, route}) => {
         goBack={() => navigation.goBack()}
         isBack
       />
+
       <ScrollView
         contentContainerStyle={styles.scrollView}
         showsVerticalScrollIndicator={false}>
-        {images.length > 0 && (
-          <View style={styles.container}>
-            <ScrollView
-              ref={scrollViewRef}
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              onScroll={handleScroll}
-              scrollEventThrottle={16} // Matches 60fps
-              style={styles.imgScrollView}>
-              {images.map((item, index) => (
-                <Pressable
-                  key={index}
-                  onPress={() => onImagePress(true)}
-                  style={styles.slide}>
-                  <BlurImage
-                    isURI
-                    uri={imageUrl(item)}
-                    styles={styles.imgStyle}
-                    radius={15}
-                  />
-                </Pressable>
-              ))}
-            </ScrollView>
-            {images.length > 1 && (
-              <View style={styles.pagination}>
-                {images.map((_, index) => (
-                  <Pressable
-                    key={index}
-                    onPress={() => scrollToIndex(index)}
-                    style={[
-                      styles.dot,
-                      activeSlide === index && styles.activeDot,
-                    ]}
-                  />
-                ))}
-              </View>
-            )}
-          </View>
-        )}
-        {/* <Pressable onPress={() => onImagePress(true)}>
-          <BlurImage
-            isURI
-            uri={
-              eventData?.images
-                ? imageUrl(JSON.parse(eventData?.images)[0])
-                : ''
-            }
-            styles={styles.imgStyle}
-            radius={15}
-          />
-        </Pressable> */}
         <View style={styles.systemView}>
           <Pressable
             onPress={() => onImagePress(false)}
@@ -262,6 +120,7 @@ const EventsDetailScreen = ({navigation, route}) => {
               size={0.1}
             />
           </Pressable>
+
           <TextComponent
             text={
               eventData?.user?.first_name
@@ -270,25 +129,66 @@ const EventsDetailScreen = ({navigation, route}) => {
                   }`
                 : 'System suggested'
             }
-            styles={{
-              fontSize: hp('1.5'),
-              width: wp('61'),
-            }}
+            styles={styles.systemUserName}
           />
-          {/* {userData?.id != eventData?.user?.id && (
-            <Touchable
-              style={styles.followView}
-              onPress={() => followUnFollowEvent(eventData?.id)}>
-              <Image
-                source={eventData?.is_followed ? tickSquare : unCheck}
-                resizeMode="contain"
-                style={styles.checkImg}
-              />
-              <TextComponent text={'Follow Event'} styles={styles.typeStyle} />
-            </Touchable>
-          )} */}
+
+          <Touchable style={styles.followView}>
+            <Image
+              source={dollarCircleLight}
+              resizeMode="contain"
+              style={styles.checkImg}
+            />
+            <TextComponent
+              text={formatPrice(eventData?.added_money ?? 0)}
+              size={'1.6'}
+              styles={styles.addedMoneyText}
+            />
+          </Touchable>
         </View>
+        {images.length > 0 && (
+          <View style={styles.carouselContainer}>
+            <ScrollView
+              ref={scrollViewRef}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={handleScroll}
+              scrollEventThrottle={16}
+              style={styles.imgScrollView}>
+              {images.map((item, index) => (
+                <Pressable
+                  key={index}
+                  onPress={() => onImagePress(true)}
+                  style={styles.slide}>
+                  <BlurImage
+                    isURI
+                    uri={imageUrl(item)}
+                    styles={styles.carouselImage}
+                    radius={15}
+                  />
+                </Pressable>
+              ))}
+            </ScrollView>
+
+            {images.length > 1 && (
+              <View style={styles.pagination}>
+                {images.map((_, index) => (
+                  <Pressable
+                    key={index}
+                    onPress={() => scrollToIndex(index)}
+                    style={[
+                      styles.dot,
+                      activeSlide === index && styles.activeDot,
+                    ]}
+                  />
+                ))}
+              </View>
+            )}
+          </View>
+        )}
+
         <TextComponent text={eventData?.title} styles={styles.titleStyle} />
+
         {eventData?.likes_count > 0 && (
           <View style={styles.bottomView}>
             <MutualFriends
@@ -301,16 +201,156 @@ const EventsDetailScreen = ({navigation, route}) => {
             />
           </View>
         )}
-        {/* <View style={styles.eventTypeView}>
-          <TextComponent text={'Event Type'} styles={styles.typeHeading} />
-          <TextComponent
-            text={eventData?.event_type?.name}
-            isLightThemeColor
-            styles={styles.typeStyle}
-          />
-        </View> */}
+
+        {Boolean(
+          eventData?.tour_id == 7 ||
+            eventData?.is_confirmed != 0 ||
+            eventData?.performances.length > 0,
+        ) && (
+          <>
+            <View style={styles.statusRow}>
+              <View style={styles.statusLeftGroup}>
+                {eventData?.tour_id == 7 && (
+                  <View style={styles.statusItem}>
+                    <Image
+                      source={tickSquare}
+                      resizeMode="contain"
+                      style={styles.statusIcon}
+                      tintColor={'#32CE37'}
+                    />
+                    <TextComponent text={'Tour'} size={hp('1.3')} />
+                  </View>
+                )}
+
+                {eventData?.is_confirmed != 0 && (
+                  <View style={styles.statusItem}>
+                    <Image
+                      source={tickSquare}
+                      resizeMode="contain"
+                      style={styles.statusIcon}
+                      tintColor={'#32CE37'}
+                    />
+                    <TextComponent text={'Event confirmed'} size={hp('1.3')} />
+                  </View>
+                )}
+              </View>
+
+              {eventData?.performances.length > 0 && (
+                <View style={styles.viewPerformances}>
+                  <TextComponent text={'View Performances'} size={hp('1.3')} />
+                  <Image
+                    source={arrRight}
+                    resizeMode="contain"
+                    style={styles.arrRightIcon}
+                    tintColor={Colors.primaryColor}
+                  />
+                </View>
+              )}
+            </View>
+
+            <DividerLine
+              DividerLineStyle={{
+                ...styles.dividerFullWidth,
+                marginVertical: hp('1'),
+              }}
+            />
+          </>
+        )}
+
+        <View style={styles.eventTimeViewGray}>
+          <View>
+            <TextComponent
+              text={'Starts At:'}
+              styles={styles.sectionSmallTitle}
+              fade
+            />
+            <View style={styles.timeRow}>
+              <Image
+                source={filledCalender}
+                resizeMode="contain"
+                style={styles.eventCallImg}
+              />
+              <TextComponent
+                text={`${getDateMonthYear(eventData?.from_date)?.monthName} ${
+                  getDateMonthYear(eventData?.from_date)?.day
+                }, ${getDateMonthYear(eventData?.from_date)?.year}`}
+                styles={styles.timeText}
+              />
+              {eventData?.start_time && (
+                <>
+                  <Image
+                    source={filledClock}
+                    resizeMode="contain"
+                    style={[styles.eventCallImg, styles.timeIconMarginLeft]}
+                  />
+                  <TextComponent
+                    text={
+                      eventData?.start_time
+                        ? `${convertToLocalTime(eventData?.start_time)?.time} ${
+                            convertToLocalTime(eventData?.start_time)?.period ??
+                            ''
+                          }`
+                        : 'Not Confirmed'
+                    }
+                    styles={styles.timeText}
+                  />
+                </>
+              )}
+            </View>
+          </View>
+
+          <View>
+            <TextComponent
+              text={'Ends At:'}
+              styles={styles.sectionSmallTitle}
+              fade
+            />
+            <View style={styles.timeRow}>
+              <Image
+                source={filledCalender}
+                resizeMode="contain"
+                style={styles.eventCallImg}
+              />
+              <TextComponent
+                text={`${getDateMonthYear(eventData?.to_date)?.monthName} ${
+                  getDateMonthYear(eventData?.to_date)?.day
+                }, ${getDateMonthYear(eventData?.to_date)?.year}`}
+                styles={styles.timeText}
+              />
+              {eventData?.end_time && (
+                <>
+                  <Image
+                    source={filledClock}
+                    resizeMode="contain"
+                    style={[styles.eventCallImg, styles.timeIconMarginLeft]}
+                  />
+                  <TextComponent
+                    text={
+                      eventData?.end_time
+                        ? `${convertToLocalTime(eventData?.end_time)?.time} ${
+                            convertToLocalTime(eventData?.end_time)?.period ??
+                            ''
+                          }`
+                        : 'Not Confirmed'
+                    }
+                    styles={styles.timeText}
+                  />
+                </>
+              )}
+            </View>
+          </View>
+        </View>
+
+        <DividerLine DividerLineStyle={styles.dividerFullWidth} />
+
+        <TextComponent
+          text={'Event Location:'}
+          styles={styles.locationTitle}
+          fade
+        />
+
         <View style={styles.locationView}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={styles.locationLeft}>
             <Image
               source={locationGray}
               tintColor={Colors.primaryColor}
@@ -319,13 +359,14 @@ const EventsDetailScreen = ({navigation, route}) => {
             <TextComponent
               text={eventData?.address}
               numberOfLines={3}
-              styles={{width: wp('60'), fontSize: hp('1.2')}}
+              styles={styles.addressText}
             />
           </View>
+
           {eventData?.latitude && (
             <TextComponent
               text={'View Location'}
-              styles={{color: Colors.lightBlueTextColor, fontSize: hp('1.2')}}
+              styles={styles.viewLocationLink}
               onPress={() =>
                 Linking.openURL(
                   `https://www.google.com/maps/search/?api=1&query=${eventData?.latitude}%2C${eventData?.longitude}`,
@@ -335,193 +376,71 @@ const EventsDetailScreen = ({navigation, route}) => {
           )}
         </View>
 
-        <View style={styles.eventTimeViewGray}>
-          <View style={styles.eventTimeView}>
-            <TextComponent
-              text={'Starts At'}
-              styles={{fontSize: hp('1.2')}}
-              fade
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-              }}>
-              <Image
-                source={filledCalender}
-                resizeMode="contain"
-                style={{
-                  ...styles.eventCallImg,
-                  // marginLeft: wp('20'),
-                }}
-              />
-              <TextComponent
-                text={`${getDateMonthYear(eventData?.from_date)?.monthName} ${
-                  getDateMonthYear(eventData?.from_date)?.day
-                }, ${getDateMonthYear(eventData?.from_date)?.year}`}
-                // text={`${formatDateToLong(eventData?.from_date)}`}
-                // sep 4, 2025
-                styles={{fontSize: hp('1.2')}}
-              />
-              <Image
-                source={filledClock}
-                resizeMode="contain"
-                style={{...styles.eventCallImg, marginLeft: wp('4')}}
-              />
-              <TextComponent
-                text={
-                  eventData?.start_time
-                    ? `${convertToLocalTime(eventData?.start_time)?.time} ${
-                        convertToLocalTime(eventData?.start_time)?.period ?? ''
-                      }`
-                    : 'Not Confirmed'
-                }
-                styles={{fontSize: hp('1.2')}}
-              />
-            </View>
-          </View>
-          <DividerLine
-            DividerLineStyle={{width: wp('95'), marginVertical: hp('2')}}
-          />
-          <View style={styles.eventTimeView}>
-            <TextComponent
-              text={'Ends At'}
-              fade
-              styles={{fontSize: hp('1.2')}}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={filledCalender}
-                resizeMode="contain"
-                style={{
-                  ...styles.eventCallImg,
-                  marginLeft: wp('32'),
-                }}
-              />
-              <TextComponent
-                text={`${getDateMonthYear(eventData?.to_date)?.monthName} ${
-                  getDateMonthYear(eventData?.to_date)?.day
-                }, ${getDateMonthYear(eventData?.to_date)?.year}`}
-                // text={formatDateToLong(eventData?.to_date)}
-                styles={{fontSize: hp('1.2')}}
-              />
-              <Image
-                source={filledClock}
-                resizeMode="contain"
-                style={{...styles.eventCallImg, marginLeft: wp('4')}}
-              />
-              <TextComponent
-                text={
-                  eventData?.end_time
-                    ? `${convertToLocalTime(eventData?.end_time)?.time} ${
-                        convertToLocalTime(eventData?.end_time)?.period ?? ''
-                      }`
-                    : 'Not Confirmed'
-                }
-                styles={{fontSize: hp('1.2')}}
-              />
-            </View>
-          </View>
-        </View>
+        <DividerLine DividerLineStyle={styles.dividerFullWidth} />
 
-        {/* <MultiView
-          viewStyle={{width: wp('98')}}
-          data={centerView.filter(res =>
-            checkParagraphForUndefined(res?.title),
-          )}
-          dividerStyles={{display: 'none'}}
-        /> */}
         <View style={styles.arryMainView}>
-          <TextComponent text={'Event Type'} styles={{fontSize: hp('1.2')}} />
+          <TextComponent text={'Event Type'} styles={styles.sectionTitle} />
+
           <View style={styles.multiMainView}>
             {eventData?.event_types?.length > 0 ? (
               <MultiSelectButton
                 isDisable={true}
                 items={eventData?.event_types ?? []}
                 btnStyle={styles.selectedValStyle}
-                textStyle={{fontSize: hp('1.2'), color: 'black'}}
+                textStyle={styles.multiSelectText}
               />
             ) : (
               <TextComponent
                 text={'Event types are not selected.'}
                 fade
-                styles={{fontSize: hp('1.2')}}
+                styles={styles.notSelectedText}
               />
             )}
           </View>
-          <DividerLine
-            DividerLineStyle={{width: wp('95'), marginVertical: hp('2')}}
-          />
-          <TextComponent text={'Associations'} styles={{fontSize: hp('1.2')}} />
+
+          <DividerLine DividerLineStyle={styles.dividerSection} />
+
+          <TextComponent text={'Associations'} styles={styles.sectionTitle} />
+
           <View style={styles.multiMainView}>
             {eventData?.associations?.length > 0 ? (
               <MultiSelectButton
                 isDisable={true}
                 items={eventData?.associations ?? []}
                 btnStyle={styles.selectedValStyle}
-                textStyle={{fontSize: hp('1.2'), color: 'black'}}
+                textStyle={styles.multiSelectText}
               />
             ) : (
               <TextComponent
                 text={'Associations are not selected.'}
                 fade
-                styles={{fontSize: hp('1.2')}}
+                styles={styles.notSelectedText}
               />
             )}
           </View>
-          <DividerLine
-            DividerLineStyle={{width: wp('95'), marginVertical: hp('2')}}
-          />
-          <TextComponent text={'Circuits'} styles={{fontSize: hp('1.2')}} />
+
+          <DividerLine DividerLineStyle={styles.dividerSection} />
+
+          <TextComponent text={'Circuits'} styles={styles.sectionTitle} />
+
           <View style={styles.multiMainView}>
             {eventData?.circuits?.length > 0 ? (
               <MultiSelectButton
                 isDisable={true}
                 items={eventData?.circuits ?? []}
                 btnStyle={styles.selectedValStyle}
-                textStyle={{fontSize: hp('1.2'), color: 'black'}}
+                textStyle={styles.multiSelectText}
               />
             ) : (
               <TextComponent
                 text={'Circuits are not selected.'}
                 fade
-                styles={{fontSize: hp('1.2')}}
+                styles={styles.notSelectedText}
               />
             )}
           </View>
         </View>
-        <MultiView
-          viewStyle={styles.multiViewStyle}
-          data={bottomView}
-          dividerStyles={styles.dividerStyle}
-          titleStyles={{fontSize: hp('1.2')}}
-          rightTextStyles={{fontSize: hp('1.2')}}
-          rightStyles={{marginRight: wp('3')}}
-        />
-        {/* {eventData?.performances && performanceArry.length > 0 && (
-          <>
-            <TextComponent
-              text={'Previous Performances'}
-              styles={{
-                ...styles.titleStyle,
-                marginTop: hp('2'),
-                marginBottom: hp('-1'),
-              }}
-            />
-            <MultiView
-              viewStyle={styles.multiViewStyle}
-              data={performanceArry}
-              dividerStyles={styles.dividerStyle}
-              titleStyles={{fontSize: hp('1.2')}}
-              rightTextStyles={{fontSize: hp('1.2')}}
-            />
-          </>
-        )} */}
+
         <CustomModalComp
           visible={modalVisible}
           onCancel={() => setModalVisible(false)}
@@ -541,6 +460,7 @@ const EventsDetailScreen = ({navigation, route}) => {
           }}
           isAleadyAddedToCalender={isAleadyAddedToCalender}
         />
+
         {userData?.id != eventData?.user?.id && (
           <ThemeButton
             title={
@@ -549,9 +469,11 @@ const EventsDetailScreen = ({navigation, route}) => {
                 : 'Add to my calender'
             }
             style={styles.btnStyle}
-            textStyle={{fontSize: hp('1.2')}}
-            isYellowTheme
+            textStyle={styles.btnText}
             onPress={() => setModalVisible(true)}
+            image={calender}
+            isYellowTheme
+            imageStyle={styles.btnCalendarIcon}
           />
         )}
       </ScrollView>

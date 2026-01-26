@@ -67,7 +67,7 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
     refetch,
     isStale,
   } = useInfiniteQuery({
-    queryKey: ['GlobalEventsScreen'],
+    queryKey: ['GlobalEventsScreenOnly'],
     queryFn: async ({pageParam = 1}) => {
       setTimeout(() => {
         dispatch(loadingFalse());
@@ -119,7 +119,9 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
       const locationParams = buildLocationParams(location);
 
       // Other params
-      const priceParams = `min_price=${minPrice}&max_price=${maxPrice}`;
+      const priceParams = `min_price=${minPrice}&max_price=${
+        isNaN(maxPrice) ? maxPriceVal?.data?.max_price : maxPrice
+      }`;
       const pageParams = `page=${pageParam}`;
       const searchKeyword = searchVal != null ? `keyword=${searchVal}` : '';
       const fromDateParams =
@@ -145,7 +147,7 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
         .filter(Boolean)
         .join('&'); // Remove empty strings and join with &
       console.log(
-        'kjsdbcjksbdjkvbjksdbvjkbsjdkvbjksdbkjvbsdjkbvksdbj',
+        'kjsdbcjksbdjkvbjksdbvjkbsjdkvbjksdbkjvbsdsdfsdfsdfsdfssdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsddfsdfkbvksdbj',
         `${globalSearchEventsWithFilterUrl}${queryParams}`,
         fromDate != currentDate,
         fromDate,
@@ -186,7 +188,13 @@ const useGlobalEventsScreen = ({navigate, addListener}, {params}) => {
     };
   }, [params, isParams, filterVal]);
 
-  console.log('paramsparamsparamsparamsparams', params, JSON.stringify(data));
+  console.log(
+    'paramsparamsparamsparaudisbdvuisbduivbiusdbviusbdiubviusdbuivbsdmsparams',
+    // params,
+    // JSON.stringify(data),
+    maxPriceVal?.data?.max_price,
+    maxPriceVal,
+  );
 
   return {
     isFetchingNextPage,

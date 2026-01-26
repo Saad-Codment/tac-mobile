@@ -65,7 +65,7 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
       return response?.data;
     },
     // staleTime: 0, // 👈 Treat data as stale immediately
-    // cacheTime: 0, // 👈 Don't cache the data
+    cacheTime: 0, // 👈 Don't cache the data
     // enabled: false, // ❌ Disable auto-fetching
   });
 

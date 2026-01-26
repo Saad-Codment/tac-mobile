@@ -84,8 +84,7 @@ const HomeScreen = ({navigation}) => {
 
   console.log(
     'suggestedFriendssuggestedFriendssuggestedFriendssuggestedFriendssuggestedFriends',
-    1 + 1,
-    nearByEvents,
+    upcommingEvents[0],
   );
 
   const renderItem = useCallback(({item, index}) => {

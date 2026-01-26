@@ -80,17 +80,23 @@ function MainNavigator() {
                 />
               </>
             )}
-            {!userData?.identifier && userData?.is_sub_granted != 1 && (
-              <Stack.Screen
-                name="SubscribeScreen"
-                component={Screens.SubscribeScreen}
-              />
-            )}
-            {/* <Stack.Screen
-              name="UpdateAppScreen"
-              component={Screens.UpdateAppScreen}
-            /> */}
+            {/* {(userData?.subscription_status == 'expired' ||
+              userData?.subscription_status == null) &&
+              userData?.is_sub_granted != 1 && (
+                <Stack.Screen
+                  name="SubscribeScreen"
+                  component={Screens.SubscribeScreen}
+                />
+                // <Stack.Screen
+                //   name="SubscribeScreen"
+                //   component={Screens.CancelSubScreen}
+                // />
+              )} */}
             <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
+            <Stack.Screen
+              name="CancelSubScreen"
+              component={Screens.CancelSubScreen}
+            />
             <Stack.Screen
               name="SubscriptionScreen"
               component={Screens.SubscribeScreen}

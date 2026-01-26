@@ -40,6 +40,7 @@ const CommentScreen = ({navigation, route}) => {
     addLikeOnCommentEvent,
     getEventCommentReplies,
     isLoading,
+    isSuccess,
   } = useCommentScreen(navigation, route);
 
   console.log(
@@ -128,12 +129,16 @@ const CommentScreen = ({navigation, route}) => {
         onContentSizeChange={handleAutoScroll}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
-          <DataNotFound
-            btnStyles={{width: wp('80')}}
-            mainViewStyles={{marginTop: hp('25')}}
-            title={'No Comments yet!'}
-            subTitle={''}
-          />
+          Array.isArray(commentsList) &&
+          commentsList.length == 0 &&
+          isSuccess && (
+            <DataNotFound
+              btnStyles={{width: wp('80')}}
+              mainViewStyles={{marginTop: hp('25')}}
+              title={'No Comments yet!'}
+              subTitle={''}
+            />
+          )
         }
       />
       <View style={styles.mainInputContainer}>

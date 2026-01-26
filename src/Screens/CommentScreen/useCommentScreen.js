@@ -25,7 +25,7 @@ const useCommentScreen = ({navigate}, {params}) => {
     addReplyOnCommentOnEvent,
   } = useFriendServices();
 
-  const {data, error, refetch, isLoading} = useQuery({
+  const {data, error, refetch, isLoading, isSuccess} = useQuery({
     queryKey: [params?.isPost ? 'postComments' : 'eventComment'],
     queryFn: () =>
       API.get(
@@ -215,6 +215,7 @@ const useCommentScreen = ({navigate}, {params}) => {
     refetch,
     getEventCommentReplies,
     isLoading,
+    isSuccess,
   };
 };
 

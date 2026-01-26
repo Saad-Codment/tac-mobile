@@ -10,8 +10,9 @@ import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import ReactNativeCalendarEvents from 'react-native-calendar-events';
 import {getCalenderPerComfirm} from '../../Services/GlobalFunctions';
+import {Alert} from 'react-native';
 
-const useEventDetailScreen = ({navigate}, {params}) => {
+const useEventDetailScreen = ({navigate, goBack}, {params}) => {
   const {getState} = useReduxStore();
 
   const {userData} = getState('Auth');
@@ -192,7 +193,15 @@ const useEventDetailScreen = ({navigate}, {params}) => {
       } else {
         await mutateAsync({id});
         await refetch();
-        if (isChecked) await AaddtToMyDeviceCalendar();
+        if (isChecked) {
+          await AaddtToMyDeviceCalendar();
+        }
+        Alert.alert('Done!', "You've successfully add the event to calender.", [
+          {
+            text: 'OK',
+            onPress: goBack,
+          },
+        ]);
         // Alert.alert(`Want to add this event to your calendar?`, '', [
         //   {
         //     text: 'Cancel',

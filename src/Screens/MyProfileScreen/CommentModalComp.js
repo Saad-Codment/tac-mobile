@@ -78,7 +78,7 @@ const CommentModalComp = ({
     addReplyOnCommentOnEvent,
   } = useFriendServices();
 
-  const {data, error, refetch} = useQuery({
+  const {data, error, refetch, isSuccess} = useQuery({
     queryKey: [(isPost ? 'postComments' : 'eventComment') + id],
     queryFn: () =>
       API.get((isPost ? getPostCommentUrl : getEventsCommentUrl) + id),
@@ -273,12 +273,16 @@ const CommentModalComp = ({
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{paddingHorizontal: wp('0.5')}}
                 ListEmptyComponent={
-                  <DataNotFound
-                    btnStyles={{width: wp('80')}}
-                    mainViewStyles={{marginTop: hp('25')}}
-                    title={'No Comments yet!'}
-                    subTitle={''}
-                  />
+                  isSuccess &&
+                  Array.isArray(data?.data?.data) &&
+                  data?.data?.data?.length == 0 && (
+                    <DataNotFound
+                      btnStyles={{width: wp('80')}}
+                      mainViewStyles={{marginTop: hp('25')}}
+                      title={'No Comments yet!'}
+                      subTitle={''}
+                    />
+                  )
                 }
               />
               {/* <View style={styles.searchMain}>

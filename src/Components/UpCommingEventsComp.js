@@ -22,6 +22,7 @@ import {
   infoCircle,
   locationGray,
   shareTheme,
+  tickSquare,
 } from '../Assets';
 import {Colors} from '../Theme/Variables';
 import {MultiSelectButton} from './MultiSelectButton';
@@ -39,6 +40,7 @@ import {Touchable} from './Touchable';
 import NavigationService from '../Services/NavigationService';
 import {
   chatUserListUrl,
+  followEventsUrl,
   getMyFriendsUrl,
   imageUrl,
   unFollowEventsUrl,
@@ -52,13 +54,16 @@ import {
   MenuOptions,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import {useState} from 'react';
+import {useRef, useState} from 'react';
 import {useMutation} from '@tanstack/react-query';
 import {errorMessage, successMessage} from '../Config/NotificationMessage';
 import ReactNativeCalendarEvents from 'react-native-calendar-events';
 import BottomModalComponent from './BottomModalComponent';
 import BottomViewModal from './BottomViewModal';
 import {max} from 'moment';
+import ThemeButton from './ThemeButton';
+import CustomModalComp from './CustomModalComp';
+import API from '../Utils/helperFunc';
 
 const tags = [
   {
@@ -89,6 +94,64 @@ const UpcomingEventsComp = ({
 }) => {
   const [modal, setModal] = useState(false);
 
+  const calendarIdRef = useRef(null);
+  const recordIdRef = useRef(null);
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const {mutateAsync} = useMutation({
+    mutationFn: data => {
+      console.log('datkjsdbjkdbjkvbsdjkbvkjsdvjkdsa', data);
+      return API.post(followEventsUrl, {
+        event_id: item?.id,
+        calendar_id: item?.calendarId,
+        record_id: item?.recordId,
+      });
+    },
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        // successMessage(data?.message);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+  });
+  const unfollowEvent = useMutation({
+    mutationFn: data => {
+      return API.post(unFollowEventsUrl, {
+        event_id: data?.id,
+        remove_from_calender: data?.isCalender,
+      });
+    },
+    onSuccess: async ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message);
+        await refetch();
+
+        // Alert.alert(`Want to remove this event to your calendar?`, '', [
+        //   {
+        //     text: 'Cancel',
+        //     style: 'cancel',
+        //   },
+        //   {
+        //     text: 'OK',
+        //     onPress: async () => {
+        //       console.log('Removing calendar event...', data);
+        //       await removeCalendarEvent(
+        //         item?.calender_id,
+        //         item?.record_id,
+        //       );
+        //     },
+        //   },
+        // ]);
+      } else {
+        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
+        errorMessage(data?.message);
+      }
+    },
+  });
+
   const removeCalendarEvent = async () => {
     try {
       const permission = await ReactNativeCalendarEvents.checkPermissions();
@@ -100,18 +163,9 @@ const UpcomingEventsComp = ({
 
       // Get all calendars
       const calendars = await ReactNativeCalendarEvents.findCalendars();
-      const modifiableCalendar = calendars.find(cal => cal.allowsModifications);
-
-      const newCalendarId = modifiableCalendar?.id || calendars[0]?.id;
-      // if (data?.data?.calender_id != newCalendarId) {
-      //   Alert.alert(
-      //     'Calendar Mismatch',
-      //     'The event does not belong to the selected calendar.',
-      //   );
-      // }
 
       const success = await ReactNativeCalendarEvents.removeEvent(
-        item?.record_id,
+        item?.record_id ?? recordIdRef.current,
       );
       if (success) {
         console.log('Event removed successfully');
@@ -120,6 +174,81 @@ const UpcomingEventsComp = ({
       }
     } catch (error) {
       console.log('Error removing event:', error);
+    }
+  };
+
+  const AaddtToMyDeviceCalendar = async eventDate => {
+    const permission = await ReactNativeCalendarEvents.checkPermissions();
+    if (permission !== 'authorized') {
+      await ReactNativeCalendarEvents.requestPermissions();
+    }
+
+    await getCalenderPerComfirm(); // assuming this fetches a valid calendar list
+
+    // Get all calendars
+    const calendars = await ReactNativeCalendarEvents.findCalendars();
+    const modifiableCalendar = calendars.find(cal => cal.allowsModifications);
+
+    const calendarId = modifiableCalendar?.id || calendars[0]?.id;
+
+    if (!calendarId) {
+      console.log('No writable calendar found.');
+      return;
+    }
+
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    const recordId = await ReactNativeCalendarEvents.saveEvent(item?.title, {
+      calendarId,
+      startDate: new Date(item?.from_date).toISOString(),
+      endDate: new Date(item?.to_date).toISOString(),
+      location: item.address,
+      notes: item?.address,
+      timeZone,
+    });
+    recordIdRef.current = recordId;
+    calendarIdRef.current = calendarId;
+    mutateAsync({
+      id: item?.id,
+      calendarId,
+      recordId,
+    });
+  };
+
+  const onClickCalendarOption = async (isChecked, id) => {
+    setModalVisible(false);
+    console.log(
+      'sljdblksdbvlksbdklvbklsdbvklbsdlvblksdbvlksdbklvbsdklvbklsd',
+      isChecked,
+      id,
+    );
+    if (item.is_followed == 1) {
+      await unfollowEvent.mutateAsync({
+        id,
+        url: unFollowEventsUrl,
+        isCalender: isChecked ? 1 : 0,
+      });
+      if (refetch) refetch();
+      if (refetechKeys) {
+        refetechKeys.map(res => queryClient.invalidateQueries([res]));
+      }
+      if (isChecked) await removeCalendarEvent();
+    } else {
+      await mutateAsync({id});
+      if (refetch) {
+        refetch();
+      }
+      if (refetechKeys) {
+        refetechKeys.map(res => queryClient.invalidateQueries([res]));
+      }
+      if (isChecked) {
+        await AaddtToMyDeviceCalendar();
+      }
+      // Alert.alert('Done!', "You've successfully add the event to calender.", [
+      //   {
+      //     text: 'OK',
+      //   },
+      // ]);
     }
   };
 
@@ -187,7 +316,7 @@ const UpcomingEventsComp = ({
           NavigationService.navigate('EventsDetailScreen', {id: item?.id});
         }}>
         <Pressable
-          disabled={disabled}
+          // disabled={disabled}
           style={styles.upperImage}
           onPress={() => {
             if (item?.type != 6 && item?.type != 4) {
@@ -199,7 +328,8 @@ const UpcomingEventsComp = ({
                 NavigationService.navigate('FriendProfileScreen', {
                   id: item?.user_id,
                 });
-            }
+            } else
+              NavigationService.navigate('EventsDetailScreen', {id: item?.id});
           }}>
           <Pressable
             onPress={onImagePress}
@@ -536,6 +666,37 @@ const UpcomingEventsComp = ({
               }}
             />
           </Touchable>
+          <ThemeButton
+            title={
+              Boolean(item?.is_followed == 1)
+                ? 'Added to calender'
+                : 'Add to Calendar'
+            }
+            image={Boolean(item?.is_followed == 1) ? tickSquare : calendar}
+            style={{
+              height: hp('3'),
+              width: wp('32'),
+              marginLeft: wp('3'),
+              borderRadius: 7,
+              backgroundColor: Boolean(item?.is_followed == 1)
+                ? '#EEEEEE'
+                : Colors.primaryColor,
+            }}
+            imageStyle={{
+              width: wp('4'),
+              height: hp('3'),
+              tintColor: Boolean(item?.is_followed == 1) ? '#32CE37' : 'white',
+            }}
+            textStyle={{
+              fontSize: hp('1.2'),
+              color: Boolean(item?.is_followed == 1) ? 'black' : 'white',
+            }}
+            isYellowTheme={Boolean(item?.is_followed == 0)}
+            isDisable={Boolean(item?.is_followed == 1)}
+            onPress={() => {
+              setModalVisible(true);
+            }}
+          />
         </View>
       </Pressable>
 
@@ -585,6 +746,29 @@ const UpcomingEventsComp = ({
               />
             </View>
           }
+        />
+      )}
+      {modalVisible && (
+        <CustomModalComp
+          visible={modalVisible}
+          onCancel={() => setModalVisible(false)}
+          subtitle={
+            item?.is_followed == 1
+              ? 'Do you want to remove this event to your TAC calendar?'
+              : 'Do you want to add this event to your TAC calendar?'
+          }
+          checkBoxText={
+            item?.is_followed == 1
+              ? 'Also remove this event with my device calendar'
+              : 'Also sync this event with my device calendar'
+          }
+          onConfirm={(checked, id) => {
+            console.log('User confirmed:', checked);
+            onClickCalendarOption(checked, item?.id);
+          }}
+          isAleadyAddedToCalender={Boolean(
+            item?.calendar_id && item?.is_followed == 0,
+          )}
         />
       )}
     </>
@@ -758,7 +942,10 @@ const styles = StyleSheet.create({
     paddingVertical: hp('1'),
     paddingHorizontal: wp('2'),
   },
-  upperImage: {flexDirection: 'row', alignItems: 'center'},
+  upperImage: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   nameView: {
     marginLeft: wp('2'),
     width: wp('61'),
@@ -867,6 +1054,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: hp('0.4'),
+    // width: wp('60'),
     // marginVertical: hp('-1.5'),
   },
   leftRightView: {

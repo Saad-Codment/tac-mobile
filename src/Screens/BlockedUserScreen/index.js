@@ -9,7 +9,12 @@ import MyFriendComp from '../../Components/MyFriendComp';
 import useBlockUSerScreen from './useBlockedUserScreen';
 
 const BlockedUserScreen = () => {
-  const {blockUserList, refetch, isLoading} = useBlockUSerScreen();
+  const {blockUserList, refetch, isLoading, isSuccess} = useBlockUSerScreen();
+
+  console.log(
+    'datadatadatadadsfsdfsdfsdfsdfsdsdsdfsdfsdtadatadatadatadata',
+    Array.isArray(blockUserList) && blockUserList.length == 0 && isSuccess,
+  );
 
   const renderData = useCallback(
     (item, index) => {
@@ -37,23 +42,25 @@ const BlockedUserScreen = () => {
           flatListProps={{
             //   extraData: friendListData,
             numColumns: 1,
-            ListEmptyComponent: (
-              <DataNotFound
-                btnStyles={{width: wp('80')}}
-                title={'No block user found'}
-                subTitle={''}
-                // title={
-                //   url == getMyFriendsUrl
-                //     ? 'No Rodeo Crew Yet'
-                //     : 'Data not found'
-                // }
-                // subTitle={
-                //   url == getMyFriendsUrl
-                //     ? 'Search for friends or sync your contacts to see which rodeo enthusiasts are already on TAC.'
-                //     : 'No data, please try again later'
-                // }
-              />
-            ),
+            ListEmptyComponent: Array.isArray(blockUserList) &&
+              blockUserList.length == 0 &&
+              isSuccess && (
+                <DataNotFound
+                  btnStyles={{width: wp('80')}}
+                  title={'No block user found'}
+                  subTitle={''}
+                  // title={
+                  //   url == getMyFriendsUrl
+                  //     ? 'No Rodeo Crew Yet'
+                  //     : 'Data not found'
+                  // }
+                  // subTitle={
+                  //   url == getMyFriendsUrl
+                  //     ? 'Search for friends or sync your contacts to see which rodeo enthusiasts are already on TAC.'
+                  //     : 'No data, please try again later'
+                  // }
+                />
+              ),
           }}
           InnerCompnonet={(item, index) => {
             return renderData(item, index);
