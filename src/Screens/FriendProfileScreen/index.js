@@ -51,7 +51,13 @@ const FriendProfileScreen = ({navigation, route}) => {
     functionToUpdateLike,
     functionToDelete,
     functionToUpdateComment,
+    functionToUpdateFollow,
   } = useFriendProfileScreen(navigation, route);
+
+  console.log(
+    'eventsListeventsListeventsListeventsListsdoifnskdnfkosdn',
+    eventsList[0],
+  );
 
   const renderItem = useCallback(
     (item, index) => {
@@ -67,7 +73,7 @@ const FriendProfileScreen = ({navigation, route}) => {
               openBottomSheet={id => setModal({id, type: 'event'})}
               refetch={refetch}
               functionToDelete={functionToDelete}
-
+              functionToUpdateFollow={functionToUpdateFollow}
               // likePost={likePost}
             />
           )}
@@ -81,6 +87,7 @@ const FriendProfileScreen = ({navigation, route}) => {
               openBottomSheet={id => setModal({id, type: 'event'})}
               refetch={refetch}
               functionToDelete={functionToDelete}
+              functionToUpdateFollow={functionToUpdateFollow}
               upperMainView={{
                 width: wp('100'),
                 marginBottom: hp('1'),

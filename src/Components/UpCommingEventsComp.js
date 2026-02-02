@@ -90,6 +90,7 @@ const UpcomingEventsComp = ({
   functionToUpdatePostOrEvent,
   functionToUpdateComment,
   setCommentModal,
+  functionToUpdateFollow,
   disabled,
 }) => {
   const [modal, setModal] = useState(false);
@@ -110,6 +111,7 @@ const UpcomingEventsComp = ({
     },
     onSuccess: ({ok, data}) => {
       if (ok) {
+        functionToUpdateFollow(index);
         // successMessage(data?.message);
       } else {
         console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
@@ -128,7 +130,6 @@ const UpcomingEventsComp = ({
       if (ok) {
         successMessage(data?.message);
         await refetch();
-
         // Alert.alert(`Want to remove this event to your calendar?`, '', [
         //   {
         //     text: 'Cancel',

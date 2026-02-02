@@ -8,6 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import React, {memo} from 'react';
+import Video from 'react-native-video'; // added for video preview
 import {HeaderComponentProfile} from '../../Components/HeaderComponentProfile';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import {crossFill, uploadGallery} from '../../Assets';
@@ -38,7 +39,7 @@ const CreatePostScreen = ({navigation, route}) => {
     handleOrientationCheck,
   } = useCreatePostScreen(navigation, route);
 
-  console.log('postImgspostImgspostImgspostImgs', postImgs);
+  console.log('postImgs →', postImgs);
 
   const imgHeight = {
     1: orientation => ({
@@ -46,6 +47,18 @@ const CreatePostScreen = ({navigation, route}) => {
       height: orientation == 'portrait' ? hp('80') : hp('30'),
     }),
     [postImgs.length > 1]: () => ({}),
+  };
+
+  const isVideo = item => {
+    const type = item?.type?.toLowerCase?.() || '';
+    const uri = item?.uri?.toLowerCase?.() || '';
+    return (
+      type.startsWith('video/') ||
+      uri.endsWith('.mp4') ||
+      uri.endsWith('.mov') ||
+      uri.endsWith('.m4v') ||
+      type == 'video/mp4'
+    );
   };
 
   return (
@@ -78,13 +91,13 @@ const CreatePostScreen = ({navigation, route}) => {
         }
         onRightPress={async () => {
           Alert.alert(
-            'Pick to choose image',
+            'Pick to choose',
             '',
             [
               {
                 text: 'Camera',
                 onPress: async () => {
-                  const images = await uploadFromCamera(true);
+                  const images = await uploadFromCamera(true, true);
                   onChangeVal(
                     'postImgs',
                     isEditPost ? [...postImgs, images] : [images],
@@ -92,30 +105,19 @@ const CreatePostScreen = ({navigation, route}) => {
                 },
               },
               {
-                text: 'Gallery', // Just a dismissal button
+                text: 'Gallery',
                 onPress: async () => {
-                  const images = await uploadFromGalary(true);
+                  // allowVideos = true → now supports video + image selection
+                  const media = await uploadFromGalary(true, true);
                   onChangeVal(
                     'postImgs',
-                    isEditPost ? [...postImgs, ...images] : images,
+                    isEditPost ? [...postImgs, ...media] : media,
                   );
                 },
               },
               {
-                text: 'Cancel', // Just a dismissal button
+                text: 'Cancel',
                 style: 'destructive',
-                onPress: async () => {
-                  // console.log(
-                  //   'slkdbvklsdbvklsdbklvbskdlv',
-                  //   value?.length,
-                  // );
-                  // const imgData = await uploadFromGalary(
-                  //   true,
-                  //   false,
-                  //   Math.max(0, 5 - (value?.length ?? 0)),
-                  // );
-                  // onChange([...(value ?? []), ...imgData]);
-                },
               },
             ],
             {cancelable: true},
@@ -145,9 +147,56 @@ const CreatePostScreen = ({navigation, route}) => {
         </View>
         <View style={styles.imgMainView(Boolean(postImgs.length > 1))}>
           {postImgs.map((res, index) => {
-            return (
+            const mediaUri = res?.isEdit ? imageUrl(res?.uri) : res?.uri;
+            const videoItem = isVideo(res);
+
+            return videoItem ? (
+              <View
+                style={{
+                  ...styles.bgImg(Boolean(postImgs.length > 1)),
+                  ...(postImgs.length === 1
+                    ? imgHeight[postImgs.length](
+                        res?.orientation != null ? res?.orientation : '',
+                      )
+                    : {}),
+                }}>
+                <Touchable
+                  onPress={() => {
+                    postImgs.splice(index, 1);
+                    onChangeVal('postText', postText);
+                  }}
+                  style={{
+                    position: 'absolute',
+                    zIndex: 1,
+                  }}>
+                  <Image
+                    source={crossFill}
+                    resizeMode="contain"
+                    style={styles.crossIcon(Boolean(postImgs.length > 1))}
+                  />
+                </Touchable>
+                <Video
+                  source={{uri: res?.uri}}
+                  style={{
+                    ...styles.bgImg(Boolean(postImgs.length > 1)),
+                    ...(postImgs.length === 1
+                      ? imgHeight[postImgs.length](
+                          res?.orientation != null ? res?.orientation : '',
+                        )
+                      : {}),
+                  }}
+                  resizeMode="cover"
+                  paused={false}
+                  muted={true}
+                  repeat={true}
+                  playInBackground={false}
+                  controls={false}
+                />
+              </View>
+            ) : (
               <ImageBackground
-                source={{uri: res?.isEdit ? imageUrl(res?.uri) : res?.uri}}
+                key={index}
+                source={videoItem ? {} : {uri: mediaUri}}
                 style={{
                   ...styles.bgImg(Boolean(postImgs.length > 1)),
                   ...(postImgs.length === 1
@@ -172,13 +221,6 @@ const CreatePostScreen = ({navigation, route}) => {
           })}
         </View>
       </ScrollView>
-
-      {/* <ThemeButton
-        title={'Post'}
-        isYellowTheme
-        style={styles.createBtnStyle}
-        onPress={createPost}
-      /> */}
     </View>
   );
 };

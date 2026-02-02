@@ -112,7 +112,7 @@ const ChatUsersScreen = ({navigation}) => {
       </View>
       <SwipeListView
         showsVerticalScrollIndicator={false}
-        style={styles.listMain}
+        contentContainerStyle={styles.listMain}
         useFlatList
         data={
           users != null &&

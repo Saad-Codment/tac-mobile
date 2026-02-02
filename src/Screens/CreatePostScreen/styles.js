@@ -10,9 +10,6 @@ export const styles = StyleSheet.create({
   userName: {marginLeft: wp('2'), fontWeight: 'bold'},
   inputView: isImgs => ({
     width: wp('95'),
-    // height: isImgs ? hp('7') : hp('40'),
-    // alignItems: 'center',
-    // justifyContent: 'center',
     alignSelf: 'center',
     marginTop: hp('2'),
   }),

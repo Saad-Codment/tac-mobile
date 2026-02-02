@@ -38,8 +38,9 @@ export const styles = StyleSheet.create({
   },
 
   listMain: {
-    flex: 1,
+    flexGrow: 1,
     width: wp('100'),
+    paddingBottom: hp('25'),
     // backgroundColor: 'red',
   },
   chatItem: {

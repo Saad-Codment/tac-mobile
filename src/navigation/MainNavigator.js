@@ -94,6 +94,10 @@ function MainNavigator() {
               )} */}
             <Stack.Screen name="MybottomTabs" component={MybottomTabs} />
             <Stack.Screen
+              name="VideoPlayScreen"
+              component={Screens.VideoPlayScreen}
+            />
+            <Stack.Screen
               name="CancelSubScreen"
               component={Screens.CancelSubScreen}
             />

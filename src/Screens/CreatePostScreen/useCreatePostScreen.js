@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {useMutation} from '@tanstack/react-query';
-import {formDataFunc} from '../../Utils/helperFunc';
+import {createPostFormData, formDataFunc} from '../../Utils/helperFunc';
 import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import {createPostUrl, updatePostUrl} from '../../Utils/Urls';
 import {checkImageOrientation} from '../../Services/GlobalFunctions';
@@ -40,7 +40,8 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
   const {mutateAsync} = useMutation({
     mutationFn: data => {
       console.log('dataldfknbkldnflbndklfbnldfnklb', data);
-      return formDataFunc(createPostUrl, data, 'images', true);
+      const options = {imageKey: 'images', isArrayImages: true};
+      return createPostFormData(createPostUrl, data, options);
     },
     onSuccess: ({ok, data}) => {
       console.log('hjsvxjksdkjvkjsdvkjsdkjvkjsdjkvksjdvkjsdv', data);

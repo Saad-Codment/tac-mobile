@@ -99,30 +99,40 @@ const SearchScreen = ({navigation}) => {
           onRefresh={refetch}
           flatListProps={{
             numColumns: 1,
-            ListEmptyComponent:
-              selectedVal.id == 'YourFriends'
-                ? Array.isArray(listData?.friends)
-                : Array.isArray(listData?.request) && (
+            ListEmptyComponent: (
+              // selectedVal.id == 'YourFriends'
+              //   ? listData?.friendsCount == 0
+              //   : listData?.requestCount == 0 && (
+              <>
+                {selectedVal.id == 'YourFriends' &&
+                  Array.isArray(listData?.friends) &&
+                  listData?.friends.length == 0 && (
                     <DataNotFound
                       btnStyles={{width: wp('85')}}
                       imgStyles={{width: wp('30')}}
-                      // title={
-                      //   selectedVal.id == 'YourFriends'
-                      //     ? 'No Rodeo Crew Yet'
-                      //     : 'The Stable’s Quiet – No Requests'
-                      // }
-                      // subTitle={
-                      //   selectedVal.id == 'YourFriends'
-                      //     ? 'Search for friends or sync your contacts to see which rodeo enthusiasts are already on TAC.'
-                      //     : 'Looks like no new friend requests for now. Keep the rodeo spirit alive and grow your TAC crew!'
-                      // }
                       mainViewStyles={{
                         flex: 1,
                         paddingTop: hp('10'),
                         width: wp('100'),
                       }}
                     />
-                  ),
+                  )}
+                {selectedVal.id == 'FriendRequests' &&
+                  Array.isArray(listData?.request) &&
+                  listData?.request.length == 0 && (
+                    <DataNotFound
+                      btnStyles={{width: wp('85')}}
+                      imgStyles={{width: wp('30')}}
+                      mainViewStyles={{
+                        flex: 1,
+                        paddingTop: hp('10'),
+                        width: wp('100'),
+                      }}
+                    />
+                  )}
+              </>
+            ),
+            // ),
             // ListFooterComponent: (
             //   <>
             //     {selectedVal.id == 'YourFriends' &&

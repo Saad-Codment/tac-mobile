@@ -382,6 +382,155 @@ const formDataFunc = async (url, body, imageKey, isArray, inewArryKey) => {
   }
 };
 
-export {formDataFunc, fetchPostWithToken, fetchGetWithToken};
+const createPostFormData = async (url, body, options = {}) => {
+  const {Auth} = store.getState();
+  store.dispatch(loadingTrue());
+
+  const {
+    imageKey, // field name for images array (or single)
+    videoKey, // field name for videos array (or single)
+    isArrayImages, // true = expect array of images
+    isArrayVideos, // true = expect array of videos
+  } = options;
+
+  const myHeaders = new Headers();
+  myHeaders.append('Accept', 'application/json');
+  myHeaders.append('Authorization', `Bearer ${Auth.token}`);
+
+  const formData = new FormData();
+
+  // ────────────────────────────────────────────────
+  //  Helper: Try to convert image → PNG (your original logic)
+  // ────────────────────────────────────────────────
+  const convertImageToPNG = async imageUri => {
+    try {
+      const ext = (imageUri.split('.').pop() || '').toLowerCase();
+      if (ext === 'png') return imageUri;
+
+      const newPath = `${RNFS.TemporaryDirectoryPath}/${Date.now()}.png`;
+      const base64 = await RNFS.readFile(imageUri, 'base64');
+      await RNFS.writeFile(newPath, base64, 'base64');
+      return newPath;
+    } catch (err) {
+      console.warn('Image conversion failed:', err);
+      return imageUri; // fallback
+    }
+  };
+
+  // ────────────────────────────────────────────────
+  //  1. Handle IMAGES
+  // ────────────────────────────────────────────────
+  if (body[imageKey]) {
+    if (
+      isArrayImages &&
+      Array.isArray(body[imageKey]) &&
+      body[imageKey].length > 0
+    ) {
+      // Multiple images
+      for (const [idx, file] of body[imageKey].entries()) {
+        if (!file?.uri) continue;
+
+        const finalUri = await convertImageToPNG(file.uri);
+
+        formData.append(`${imageKey}[${idx}]`, {
+          uri: Platform.OS === 'ios' ? finalUri : file.uri,
+          type: 'image/png',
+          name: file.name || `photo_${idx + 1}.png`,
+        });
+      }
+    } else if (body[imageKey]?.uri) {
+      // Single image
+      const finalUri = await convertImageToPNG(body[imageKey].uri);
+
+      formData.append(imageKey, {
+        uri: Platform.OS === 'ios' ? finalUri : body[imageKey].uri,
+        type: 'image/png',
+        name: body[imageKey].name || 'photo.png',
+      });
+    }
+  }
+
+  // ────────────────────────────────────────────────
+  //  2. Handle VIDEOS (no conversion needed)
+  // ────────────────────────────────────────────────
+  if (body[videoKey]) {
+    if (
+      isArrayVideos &&
+      Array.isArray(body[videoKey]) &&
+      body[videoKey].length > 0
+    ) {
+      // Multiple videos
+      body[videoKey].forEach((file, idx) => {
+        if (!file?.uri) return;
+
+        formData.append(`${videoKey}[${idx}]`, {
+          uri: file.uri,
+          type: file.type || 'video/mp4', // most common
+          name: file.name || `video_${idx + 1}.mp4`,
+        });
+      });
+    } else if (body[videoKey]?.uri) {
+      // Single video
+      formData.append(videoKey, {
+        uri: body[videoKey].uri,
+        type: body[videoKey].type || 'video/mp4',
+        name: body[videoKey].name || 'video.mp4',
+      });
+    }
+  }
+
+  // ────────────────────────────────────────────────
+  //  3. Add all other fields (text, arrays, etc.)
+  // ────────────────────────────────────────────────
+  Object.entries(body).forEach(([key, value]) => {
+    // Skip media keys — already handled
+    if (key === imageKey || key === videoKey) return;
+
+    if (Array.isArray(value)) {
+      value.forEach((item, idx) => {
+        formData.append(`${key}[${idx}]`, item ?? '');
+      });
+    } else if (value != null) {
+      formData.append(key, value);
+    }
+  });
+
+  // Optional: still here from your code (adapt if needed)
+  if (body.performances?.length > 0) {
+    body.performances.forEach((perf, idx) => {
+      formData.append(`performances[${idx}][title]`, perf.title || '');
+      formData.append(`performances[${idx}][date]`, perf.date || '');
+      formData.append(
+        `performances[${idx}][start_time]`,
+        perf.start_time || '',
+      );
+      formData.append(`performances[${idx}][end_time]`, perf.end_time || '');
+    });
+  }
+
+  const requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: formData,
+  };
+
+  try {
+    const response = await fetch(baseURL + url, requestOptions);
+    const data = await response.json();
+    store.dispatch(loadingFalse());
+    return {data, ok: response.ok && !data?.errors};
+  } catch (error) {
+    console.error('Post creation failed:', error);
+    store.dispatch(loadingFalse());
+    return {data: error, ok: false};
+  }
+};
+
+export {
+  formDataFunc,
+  fetchPostWithToken,
+  fetchGetWithToken,
+  createPostFormData,
+};
 
 export default API;

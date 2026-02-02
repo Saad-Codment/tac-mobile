@@ -702,66 +702,85 @@ const resizeImage = async (image, targetWidth = 800, targetHeight = 800) => {
   }
 };
 //GET IMAGE From Mobile
-const uploadFromGalary = async (isMulti, isCircle, maxFiles) => {
-  const imageData = await ImageCropPicker.openPicker({
-    cropping: false,
-    // compressImageQuality: 0.8,
-    multiple: isMulti ?? false,
-    cropperCircleOverlay: isCircle, // 👈 Enables circular cropping
-    maxFiles: maxFiles ?? 200,
-    freeStyleCropEnabled: true,
-    avoidEmptySpaceAroundImage: true,
-    showCropFrame: true,
-    enableRotationGesture: true,
-    width: 800,
-    height: 2000,
-  });
+const uploadFromGalary = async (isMulti, allowVideos, isCircle, maxFiles) => {
+  // When allowing videos → we MUST disable cropping (videos can't be cropped this way)
+  const shouldCrop = !allowVideos && isCircle;
 
-  const getOrientation = (width, height) => {
-    if (width > height) return 'landscape';
-    if (height > width) return 'portrait';
-    return 'square';
+  const pickerOptions = {
+    cropping: false,
+    cropperCircleOverlay: false,
+    multiple: isMulti,
+    maxFiles,
+    freeStyleCropEnabled: false,
+    avoidEmptySpaceAroundImage: true,
+    showCropFrame: false,
+    enableRotationGesture: shouldCrop,
+    // width: 1000, // slightly higher for better quality
+    // height: 2000,
+    mediaType: allowVideos ? 'any' : 'photo', // ← key change
+    // Optional: you can add these if needed
+    // compressImageQuality: 0.85,
+    // includeExif: true,
+    // smartAlbums: ['UserLibrary', 'Favorites', 'Selfies', 'Screenshots', 'Videos'],
   };
 
-  if (Array.isArray(imageData)) {
-    const processedImages = await Promise.all(
-      imageData.map(async res => {
-        const baseImage = {
-          uri: Platform.OS === 'ios' ? res?.sourceURL : `file://${res?.path}`,
-          name: res?.filename || 'photo.jpg',
-          type: res?.mime,
-          orientation: getOrientation(res?.width, res?.height),
-        };
-        return await resizeImage(baseImage);
-      }),
-    );
-    return processedImages;
-  } else {
-    const {
-      height,
-      width,
-      size,
-      path,
-      filename,
-      sourceURL,
-      localIdentifier,
-      mime,
-    } = imageData;
-    const uri = Platform.OS === 'ios' ? sourceURL : path;
-    const fileName = filename || 'photo.png';
-    const baseImage = {
-      uri: Platform.OS === 'ios' ? sourceURL : `file://${path}`,
-      name: filename || 'photo.jpg',
-      type: mime,
-      orientation: getOrientation(width, height),
+  try {
+    const data = await ImageCropPicker.openPicker(pickerOptions);
+
+    const getOrientation = (width, height) => {
+      if (width > height) return 'landscape';
+      if (height > width) return 'portrait';
+      return 'square';
     };
-    return await resizeImage(baseImage);
-    // return {
-    //   uri,
-    //   name: fileName,
-    //   type: mime,
-    //   orientation: getOrientation(width, height),
-    // };
+
+    const processItem = async res => {
+      const isVideo = res.mime?.startsWith('video/') || false;
+
+      console.log(
+        'lsdnvklsdnklvnsdklvnskldnvklsndlknsdlkvnsklndvlknsdv',
+        getOrientation(res.width, res.height),
+        res,
+      );
+
+      const base = {
+        uri:
+          Platform.OS === 'ios'
+            ? res.uri || res.path || res.sourceURL
+            : `file://${res.path}`,
+        name: res.filename || (isVideo ? 'video.mp4' : 'photo.jpg'),
+        type: res.mime,
+        orientation: getOrientation(res.width, res.height),
+        width: res.width,
+        height: res.height,
+        size: res.size,
+        // video-specific
+        ...(isVideo && {duration: res.duration || null}),
+      };
+
+      // Resize only images (skip for videos – most apps don't resize videos here)
+      if (!isVideo) {
+        return await resizeImage(base); // ← your existing resize function
+      }
+
+      // For videos: return as-is (or add video compression later if needed)
+      return base;
+    };
+
+    if (Array.isArray(data)) {
+      // Multiple items (photos + videos mixed)
+      const processed = await Promise.all(data.map(processItem));
+      return processed;
+    } else {
+      // Single item
+      return await processItem(data);
+    }
+  } catch (err) {
+    if (err.code === 'E_PICKER_CANCELLED') {
+      // User cancelled → just return null or empty
+      return isMulti ? [] : null;
+    }
+    console.error('Picker error:', err);
+    throw err; // or return [] / null depending on your needs
   }
 };
 
@@ -857,79 +876,80 @@ const uploadFromGalleryWithEditor = async (
   });
 };
 //GET IMAGE From Mobile
-const uploadFromCamera = async (isMulti, isCircle, maxFiles) => {
-  const imageData = await ImageCropPicker.openCamera({
-    cropping: false,
-    multiple: isMulti ?? false,
-    cropperCircleOverlay: isCircle, // 👈 Enables circular cropping
-    maxFiles,
-    width: 800,
-    height: 2000,
-  });
+const uploadFromCamera = async (isMulti, allowVideo, isCircle, maxFiles) => {
+  // Cropping + video usually doesn't work well → disable cropping if video allowed
+  const allowCropping = !allowVideo && false; // you had cropping: false originally, keeping it off
 
-  const checkOrientation = img => {
-    return img.height >= img.width ? 'portrait' : 'landscape';
+  const cameraOptions = {
+    cropping: allowCropping,
+    cropperCircleOverlay: allowCropping && isCircle,
+    multiple: isMulti,
+    maxFiles: maxFiles,
+    width: 1000, // better quality than 800
+    height: 2000,
+    mediaType: allowVideo ? 'any' : 'photo', // ← key change: 'any' allows photo + video toggle in camera
+    // Optional: includeExif: true, compressImageQuality: 0.85, etc.
   };
 
-  if (Array.isArray(imageData)) {
-    return imageData.map(res => ({
-      uri: Platform.OS === 'ios' ? res?.path : `file://${res?.path}`,
-      name: res?.filename || 'photo.jpg',
-      type: res?.mime,
-      orientation: checkOrientation(res),
-    }));
-  } else {
-    const {
-      height,
-      width,
-      size,
-      path,
-      filename,
-      sourceURL,
-      localIdentifier,
-      mime,
-    } = imageData;
+  try {
+    const data = await ImageCropPicker.openCamera(cameraOptions);
 
-    const uri = Platform.OS === 'ios' ? path : `file://${sourceURL}`;
-    const fileName = filename || 'photo.jpg';
-    const orientation = checkOrientation(imageData);
-
-    return {
-      uri: Platform.OS === 'ios' ? path : `file://${path}`,
-      name: fileName,
-      type: mime,
-      orientation,
+    const checkOrientation = img => {
+      if (!img.width || !img.height) return 'portrait'; // fallback
+      return img.height >= img.width ? 'portrait' : 'landscape';
     };
+
+    const processItem = res => {
+      const isVideo = res.mime?.startsWith('video/') || false;
+
+      const uri =
+        Platform.OS === 'ios'
+          ? res.uri || res.path || res.sourceURL
+          : `file://${res.path}`;
+
+      return {
+        uri,
+        name: res.filename || (isVideo ? 'video.mp4' : 'photo.jpg'),
+        type: res.mime,
+        orientation: isVideo ? 'landscape' : checkOrientation(res), // videos usually landscape
+        width: res.width,
+        height: res.height,
+        size: res.size,
+        // useful for videos
+        ...(isVideo && {duration: res.duration || null}),
+      };
+    };
+
+    if (Array.isArray(data)) {
+      // Multiple (though camera rarely returns multiple unless forced)
+      return data.map(processItem);
+    } else {
+      // Single capture
+      return processItem(data);
+    }
+  } catch (err) {
+    if (err?.code === 'E_PICKER_CANCELLED') {
+      return isMulti ? [] : null;
+    }
+    console.error('Camera error:', err);
+    throw err; // or return [] / null as you prefer
   }
 };
 
-function formatDateToCustomFormat(isoDate) {
-  var originalDate = new Date(isoDate);
+function formatDateToCustomFormat(
+  isoDate,
+  timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone,
+) {
+  if (!isoDate) return '';
 
-  // Define an array of month names
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+  const date = new Date(isoDate);
 
-  // Get the month name using the array
-  var monthName = monthNames[originalDate.getMonth()];
-
-  var year = originalDate.getUTCFullYear();
-  var day = originalDate.getUTCDate();
-
-  var formattedDate = `${monthName} ${day}, ${year}`;
-  return formattedDate;
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone, // 🔥 dynamic timezone
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
 }
 
 //For Time Format Convert Function

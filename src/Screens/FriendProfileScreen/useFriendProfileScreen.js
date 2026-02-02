@@ -74,6 +74,16 @@ const useFriendProfileScreen = ({navigate, goBack}, {params}) => {
       return prev;
     });
   };
+  const functionToUpdateFollow = index => {
+    setEventsList(prev => {
+      console.log(
+        'weoiropweuropweurpouewporuweuoruweporuwpeurpowe',
+        prev[index],
+      );
+      prev[index].is_followed = prev[index].is_followed == 0 ? 1 : 0;
+      return prev;
+    });
+  };
   const functionToUpdateComment = (index, isComment) => {
     console.log('index', index, 'isComment', isComment);
     if (isComment)
@@ -133,6 +143,7 @@ const useFriendProfileScreen = ({navigate, goBack}, {params}) => {
     functionToUpdateComment,
     isHitFirstTime,
     blockUser: () => mutate(),
+    functionToUpdateFollow,
   };
 };
 
