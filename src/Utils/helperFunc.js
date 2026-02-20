@@ -10,6 +10,7 @@ import {
   likeUnlikeUrl,
   postLikeUrl,
   sendMsgUrl,
+  uploadVideoForCloudfareUrl,
 } from './Urls';
 import {store} from '../Redux/Reducer';
 import {loadingFalse, loadingTrue} from '../Redux/Action/isloadingAction';
@@ -38,6 +39,7 @@ const hideLoaderAPIs = [
   sendMsgUrl,
   GetChatListUrl,
   checkVersionUrl,
+  uploadVideoForCloudfareUrl,
 ];
 // const hideLoaderAPIs = ['/playcount', '/playlist', '/home-content'];
 
@@ -526,11 +528,186 @@ const createPostFormData = async (url, body, options = {}) => {
   }
 };
 
+const createPutFormDataForVideo = async (url, body, options = {}) => {
+  const {Auth} = store.getState();
+  store.dispatch(loadingTrue());
+
+  const {
+    imageKey, // field name for images array (or single)
+    videoKey, // field name for videos array (or single)
+    isArrayImages, // true = expect array of images
+    isArrayVideos, // true = expect array of videos
+  } = options;
+
+  const myHeaders = new Headers();
+  myHeaders.append('Accept', 'application/json');
+  myHeaders.append('Authorization', `Bearer ${Auth.token}`);
+
+  const formData = new FormData();
+
+  // ────────────────────────────────────────────────
+  //  Helper: Try to convert image → PNG
+  // ────────────────────────────────────────────────
+  const convertImageToPNG = async imageUri => {
+    try {
+      const ext = (imageUri.split('.').pop() || '').toLowerCase();
+      if (ext === 'png') return imageUri;
+
+      const newPath = `${RNFS.TemporaryDirectoryPath}/${Date.now()}.png`;
+      const base64 = await RNFS.readFile(imageUri, 'base64');
+      await RNFS.writeFile(newPath, base64, 'base64');
+      return newPath;
+    } catch (err) {
+      console.warn('Image conversion failed:', err);
+      return imageUri; // fallback
+    }
+  };
+
+  // ────────────────────────────────────────────────
+  //  Helper: Read file as base64 → binary-ish upload
+  // ────────────────────────────────────────────────
+  const getBinaryFileEntry = async (
+    fileUri,
+    fallbackType = 'video/mp4',
+    fallbackName = 'video.mp4',
+  ) => {
+    try {
+      const base64Content = await RNFS.readFile(fileUri, 'base64');
+      // On many React Native setups this works directly in FormData
+      return {
+        uri: `data:${fallbackType};base64,${base64Content}`,
+        type: fallbackType,
+        name: fileUri.split('/').pop() || fallbackName,
+      };
+    } catch (e) {
+      console.warn('Could not read video as base64:', e);
+      // Fallback to original file URI (still binary, just OS-handled)
+      return {
+        uri: fileUri,
+        type: fallbackType,
+        name: fileUri.split('/').pop() || fallbackName,
+      };
+    }
+  };
+
+  // ────────────────────────────────────────────────
+  //  1. Handle IMAGES (still using file URI + optional PNG conversion)
+  // ────────────────────────────────────────────────
+  if (body[imageKey]) {
+    if (
+      isArrayImages &&
+      Array.isArray(body[imageKey]) &&
+      body[imageKey].length > 0
+    ) {
+      // Multiple images
+      for (const [idx, file] of body[imageKey].entries()) {
+        if (!file?.uri) continue;
+
+        const finalUri = await convertImageToPNG(file.uri);
+
+        formData.append(`${imageKey}[${idx}]`, {
+          uri: Platform.OS === 'ios' ? finalUri : file.uri,
+          type: 'image/png',
+          name: file.name || `photo_${idx + 1}.png`,
+        });
+      }
+    } else if (body[imageKey]?.uri) {
+      // Single image
+      const finalUri = await convertImageToPNG(body[imageKey].uri);
+
+      formData.append(imageKey, {
+        uri: Platform.OS === 'ios' ? finalUri : body[imageKey].uri,
+        type: 'image/png',
+        name: body[imageKey].name || 'photo.png',
+      });
+    }
+  }
+
+  // ────────────────────────────────────────────────
+  //  2. Handle VIDEOS — now reading as binary (base64 → data URI)
+  // ────────────────────────────────────────────────
+  if (body[videoKey]) {
+    if (
+      isArrayVideos &&
+      Array.isArray(body[videoKey]) &&
+      body[videoKey].length > 0
+    ) {
+      // Multiple videos — binary style
+      for (const [idx, file] of body[videoKey].entries()) {
+        if (!file?.uri) continue;
+
+        const entry = await getBinaryFileEntry(
+          file.uri,
+          file.type || 'video/mp4',
+          file.name || `video_${idx + 1}.mp4`,
+        );
+
+        formData.append(`${videoKey}[${idx}]`, entry);
+      }
+    } else if (body[videoKey]?.uri) {
+      // Single video — binary style
+      const entry = await getBinaryFileEntry(
+        body[videoKey].uri,
+        body[videoKey].type || 'video/mp4',
+        body[videoKey].name || 'video.mp4',
+      );
+
+      formData.append(videoKey, entry);
+    }
+  }
+
+  // ────────────────────────────────────────────────
+  //  3. Add all other fields (text, arrays, etc.)
+  // ────────────────────────────────────────────────
+  Object.entries(body).forEach(([key, value]) => {
+    if (key === imageKey || key === videoKey) return;
+
+    if (Array.isArray(value)) {
+      value.forEach((item, idx) => {
+        formData.append(`${key}[${idx}]`, item ?? '');
+      });
+    } else if (value != null) {
+      formData.append(key, value);
+    }
+  });
+
+  // Optional: performances block (kept as-is)
+  if (body.performances?.length > 0) {
+    body.performances.forEach((perf, idx) => {
+      formData.append(`performances[${idx}][title]`, perf.title || '');
+      formData.append(`performances[${idx}][date]`, perf.date || '');
+      formData.append(
+        `performances[${idx}][start_time]`,
+        perf.start_time || '',
+      );
+      formData.append(`performances[${idx}][end_time]`, perf.end_time || '');
+    });
+  }
+
+  const requestOptions = {
+    method: 'PUT',
+    headers: myHeaders,
+    body: formData,
+  };
+
+  try {
+    const response = await fetch(baseURL + url, requestOptions);
+    const data = await response.json();
+    store.dispatch(loadingFalse());
+    return {data, ok: response.ok && !data?.errors};
+  } catch (error) {
+    console.error('Post creation failed:', error);
+    store.dispatch(loadingFalse());
+    return {data: error, ok: false};
+  }
+};
+
 export {
   formDataFunc,
   fetchPostWithToken,
   fetchGetWithToken,
   createPostFormData,
+  createPutFormDataForVideo,
 };
 
 export default API;

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Alert, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {TextComponent} from './TextComponent';
 import {hp, wp} from '../Config/responsive';
@@ -10,19 +10,19 @@ import {
   heartFilledLike,
   heartTheme,
   shareTheme,
+  playIcon,
 } from '../Assets';
 import {Colors} from '../Theme/Variables';
 import BlurImage from './BlurImage';
 import NavigationService from '../Services/NavigationService';
 import useFriendServices from '../Services/FriendServices';
 import useReduxStore from '../Hooks/UseReduxStore';
-import {imageUrl} from '../Utils/Urls';
+import {imageUrl, videoUrl} from '../Utils/Urls';
 import {
   checkImageOrientation,
   formatDateToCustomFormat,
 } from '../Services/GlobalFunctions';
 import {types} from '../Redux/types';
-// somewhere in your app
 import {
   Menu,
   MenuOptions,
@@ -30,124 +30,203 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
-const images = [
-  'https://images.pexels.com/photos/27305813/pexels-photo-27305813/free-photo-of-a-woman-taking-a-photo-with-her-camera.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-  //   'https://images.pexels.com/photos/27305813/pexels-photo-27305813/free-photo-of-a-woman-taking-a-photo-with-her-camera.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-  //   'https://images.pexels.com/photos/27305813/pexels-photo-27305813/free-photo-of-a-woman-taking-a-photo-with-her-camera.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-  //   'https://images.pexels.com/photos/27305813/pexels-photo-27305813/free-photo-of-a-woman-taking-a-photo-with-her-camera.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-  'https://images.pexels.com/photos/27305813/pexels-photo-27305813/free-photo-of-a-woman-taking-a-photo-with-her-camera.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
-];
+// ────────────────────────────────────────────────
+// Helper: prepare unified media list (images + videos)
+// ────────────────────────────────────────────────
+const prepareMedia = (images = [], videos = []) => {
+  const media = [];
 
-const RenderImages = ({images, onImagePress}) => {
-  const [orientation, setOrientation] = useState('');
+  images.forEach(img => {
+    media.push({
+      type: 'image',
+      url: imageUrl(img),
+    });
+  });
 
-  if (images.length == 1) {
-    const handleOrientationCheck = async () => {
+  videos.forEach(vid => {
+    media.push({
+      type: 'video',
+      url: videoUrl(vid.thumbnail_path),
+      videoData: vid, // optional — keep full video object if needed
+    });
+  });
+
+  return media;
+};
+
+// ────────────────────────────────────────────────
+// Unified renderer for images + videos
+// ────────────────────────────────────────────────
+const RenderMedia = ({images = [], videos = [], onMediaPress}) => {
+  const [orientation, setOrientation] = useState('landscape');
+
+  const media = prepareMedia(images, videos);
+  const count = media.length;
+
+  // Orientation check — only for single item
+  useEffect(() => {
+    if (count !== 1) return;
+
+    const check = async () => {
       try {
-        const orientationType = await checkImageOrientation(
-          imageUrl(images[0]),
-        );
-        setOrientation(orientationType);
-      } catch (error) {
-        console.log('Error checking image orientation:', error);
+        const ori = await checkImageOrientation(media[0].url);
+        setOrientation(ori || 'landscape');
+      } catch (err) {
+        console.log('Orientation check failed:', err);
       }
     };
-    handleOrientationCheck();
+    check();
+  }, [count, media]);
+
+  if (count === 0) return null;
+
+  // ─── 1 item ────────────────────────────────────────────
+  if (count === 1) {
+    const item = media[0];
     return (
-      <Pressable onPress={onImagePress}>
-        <BlurImage
-          uri={imageUrl(images[0])}
-          isURI
-          styles={styles.singleImage(orientation)}
-          // resizeMode={'contain'}
-        />
+      <Pressable onPress={() => onMediaPress?.(item, 0)}>
+        <View style={{position: 'relative'}}>
+          <BlurImage
+            uri={item.url}
+            isURI
+            styles={styles.singleImage(orientation)}
+          />
+          {item.type === 'video' && (
+            <Image
+              source={playIcon}
+              style={styles.playIcon}
+              resizeMode="contain"
+            />
+          )}
+        </View>
       </Pressable>
     );
-  } else if (images.length == 2) {
+  }
+
+  // ─── 2 items ───────────────────────────────────────────
+  if (count === 2) {
     return (
-      <Touchable style={styles.twoImagesContainer} onPress={onImagePress}>
-        {images.map((img, index) => (
-          <BlurImage uri={imageUrl(img)} isURI styles={styles.twoImage} />
+      <View style={styles.twoImagesContainer}>
+        {media.map((item, index) => (
+          <Pressable
+            key={index}
+            style={{flex: 1}}
+            onPress={() => onMediaPress?.(item, index)}>
+            <View style={{position: 'relative', flex: 1}}>
+              <BlurImage uri={item.url} isURI styles={styles.twoImage} />
+              {item.type === 'video' && (
+                <Image
+                  source={playIcon}
+                  style={styles.playIcon}
+                  resizeMode="contain"
+                />
+              )}
+            </View>
+          </Pressable>
         ))}
-      </Touchable>
+      </View>
     );
-  } else if (images.length == 3) {
+  }
+
+  // ─── 3 items ───────────────────────────────────────────
+  if (count === 3) {
     return (
-      <Touchable style={styles.twoImagesContainer} onPress={onImagePress}>
-        {images.slice(0, 1).map((img, index) => (
-          <BlurImage
-            uri={imageUrl(img)}
-            isURI
-            styles={{
-              width: wp('46'),
-              height: hp('40'),
-              // aspectRatio: 0,
-            }}
-            // resizeMode={'contain'}
-          />
-          // {/* {index === 3 && images.length > 4 && (
-          //   <View style={styles.overlay}>
-          //     <Text style={styles.overlayText}>+{images.length - 4}</Text>
-          //   </View>
-          // )} */}
-        ))}
-        <View style={{justifyContent: 'space-between'}}>
-          {images.slice(1, 3).map((img, index) => (
+      <View style={styles.twoImagesContainer}>
+        {/* Left big */}
+        <Pressable
+          style={{width: wp('46')}}
+          onPress={() => onMediaPress?.(media[0], 0)}>
+          <View style={{position: 'relative'}}>
             <BlurImage
-              uri={imageUrl(img)}
+              uri={media[0].url}
               isURI
               styles={{
-                width: wp('42'),
-                height: hp('19.8'),
-                // aspectRatio: 0,
+                width: wp('46'),
+                height: hp('40'),
+                borderRadius: wp('2'),
               }}
-              // resizeMode={'contain'}
             />
-            // {/* {index === 3 && images.length > 4 && (
-            //   <View style={styles.overlay}>
-            //     <Text style={styles.overlayText}>+{images.length - 4}</Text>
-            //   </View>
-            // )} */}
+            {media[0].type === 'video' && (
+              <Image
+                source={playIcon}
+                style={styles.playIcon}
+                resizeMode="contain"
+              />
+            )}
+          </View>
+        </Pressable>
+
+        {/* Right column - two small */}
+        <View style={{justifyContent: 'space-between', width: wp('42')}}>
+          {media.slice(1).map((item, idx) => (
+            <Pressable
+              key={idx + 1}
+              onPress={() => onMediaPress?.(item, idx + 1)}>
+              <View style={{position: 'relative'}}>
+                <BlurImage
+                  uri={item.url}
+                  isURI
+                  styles={{
+                    width: wp('42'),
+                    height: hp('19.8'),
+                    borderRadius: wp('2'),
+                  }}
+                />
+                {item.type === 'video' && (
+                  <Image
+                    source={playIcon}
+                    style={styles.playIcon}
+                    resizeMode="contain"
+                  />
+                )}
+              </View>
+            </Pressable>
           ))}
         </View>
-
-        {/* {images.map((img, index) => (
-          <BlurImage
-            key={index}
-            uri={imageUrl(img)}
-            isURI
-            styles={styles.threeImage}
-            // resizeMode={'contain'}
-          />
-        ))} */}
-      </Touchable>
+      </View>
     );
-  } else {
-    return (
-      <Touchable style={styles.gridContainer} onPress={onImagePress}>
-        {images.slice(0, 4).map((img, index) => (
-          <View key={index} style={styles.gridItem}>
+  }
+
+  // ─── 4+ items (grid) ───────────────────────────────────
+  return (
+    <View style={styles.gridContainer}>
+      {media.slice(0, 4).map((item, index) => (
+        <Pressable
+          key={index}
+          style={styles.gridItem}
+          onPress={() => onMediaPress?.(item, index)}>
+          <View style={{position: 'relative', flex: 1}}>
             <BlurImage
-              uri={imageUrl(img)}
+              uri={item.url}
               isURI
               styles={{
                 ...styles.gridImage,
                 marginTop: index > 1 ? hp('0.5') : 0,
               }}
-              // resizeMode={'contain'}
             />
-            {index === 3 && images.length > 4 && (
-              <View style={styles.overlay}>
-                <Text style={styles.overlayText}>+{images.length - 4}</Text>
-              </View>
+            {item.type === 'video' && (
+              <Image
+                source={playIcon}
+                style={styles.playIcon}
+                resizeMode="contain"
+              />
             )}
           </View>
-        ))}
-      </Touchable>
-    );
-  }
+
+          {index === 3 && count > 4 && (
+            <View style={styles.overlay}>
+              <Text style={styles.overlayText}>+{count - 4}</Text>
+            </View>
+          )}
+        </Pressable>
+      ))}
+    </View>
+  );
 };
 
+// ────────────────────────────────────────────────
+// Just text post fallback
+// ────────────────────────────────────────────────
 const JustTextRenderPost = ({title}) => {
   return (
     <View style={styles.textPostView}>
@@ -160,6 +239,9 @@ const JustTextRenderPost = ({title}) => {
   );
 };
 
+// ────────────────────────────────────────────────
+// MAIN SHARED POST COMPONENT
+// ────────────────────────────────────────────────
 const SharePostComp = ({
   item,
   refetechKeys,
@@ -173,29 +255,42 @@ const SharePostComp = ({
   functionToUpdatePostOrEvent,
   setCommentModal,
   upperMainView,
+  isRefectechForVideo,
 }) => {
-  const {likeAndDisLikeEvent, addLikeOnPost, sharePost, deletePost} =
-    useFriendServices();
+  const {addLikeOnPost, sharePost, deletePost} = useFriendServices();
 
   const {getState, dispatch, queryClient} = useReduxStore();
 
-  const onImagePress = () => {
-    dispatch({
-      payload: JSON.parse(item?.images),
-      type: types.openModal,
-    });
+  const images = JSON.parse(item?.images || '[]');
+  const videos = item?.videos || [];
+
+  const hasMedia = images.length > 0 || videos.length > 0;
+
+  const handleMediaPress = (mediaItem, clickedIndex) => {
+    if (mediaItem.type === 'video') {
+      NavigationService.navigate('VideoPlayScreen', {
+        videos: item.videos,
+        userData: item,
+        startIndex: clickedIndex, // optional improvement
+        refectKeys: refetechKeys ?? isRefectechForVideo ?? [],
+      });
+    } else {
+      // Open image viewer/gallery
+      dispatch({
+        payload: images,
+        type: types.openModal,
+      });
+    }
   };
 
-  const onEditPost = item => {
-    // Navigate to edit screen or open modal
+  const onEditPost = () => {
     NavigationService.navigate('CreatePostScreen', {
       post: item,
       functionToUpdatePostOrEvent: data => functionToUpdatePostOrEvent(data),
     });
   };
 
-  const onDeletePost = item => {
-    // Show confirmation and then delete
+  const onDeletePost = () => {
     Alert.alert(
       'Confirm Delete',
       'Are you sure you want to delete this post?',
@@ -206,10 +301,7 @@ const SharePostComp = ({
           style: 'destructive',
           onPress: async () => {
             await deletePost.mutateAsync(item?.id);
-            // refetch();
             functionToDelete(index);
-            // Call your delete mutation here
-            // deletePost.mutateAsync(item?.id);
           },
         },
       ],
@@ -222,47 +314,42 @@ const SharePostComp = ({
     <View
       style={{
         backgroundColor: '#fff',
-        // marginVertical: hp('1'),
         marginBottom: hp('1'),
         paddingVertical: hp('1'),
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 3,
         shadowColor: '#000',
-        shadowOffset: {
-          width: 2,
-          height: 2,
-        },
+        shadowOffset: {width: 2, height: 2},
         ...upperMainView,
       }}>
+      {/* Sharer header */}
       <Pressable
         style={styles.upperView}
         onPress={() => {
-          if (userData?.id == item?.shared_by_user_id) {
+          if (userData?.id === item?.shared_by_user_id) {
             NavigationService.navigate('MyProfileScreen', {
               id: userData?.id,
             });
-          } else
+          } else {
             NavigationService.navigate('FriendProfileScreen', {
               id: item?.shared_by_user_id,
             });
+          }
         }}>
-        <CircleImage
-          image={imageUrl(item?.sharer_image ?? item?.sharer_image)}
-          uri
-        />
+        <CircleImage image={imageUrl(item?.sharer_image)} uri />
         <View style={styles.userDetails}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TextComponent
               text={
-                item?.sharer_first_name +
+                (item?.sharer_first_name || '') +
                 ' ' +
-                (item?.sharer_last_name ? item?.sharer_last_name : '')
+                (item?.sharer_last_name || '')
               }
               styles={styles.userName}
             />
             <TextComponent
-              text={' Shared a post'}
+              text=" Shared a post"
               styles={styles.userName}
               fade
             />
@@ -272,15 +359,13 @@ const SharePostComp = ({
             styles={styles.postTime}
           />
         </View>
-        {userData?.id != item?.shared_by_user_id ? (
+
+        {userData?.id !== item?.shared_by_user_id ? (
           <TextComponent
             text={'Report'}
             fade
             styles={styles.reportText}
-            onPress={() => {
-              if (userData?.id != item?.shared_by_user_id)
-                openBottomSheet(item?.shared_by_user_id);
-            }}
+            onPress={() => openBottomSheet?.(item?.shared_by_user_id)}
           />
         ) : (
           <Menu>
@@ -292,35 +377,28 @@ const SharePostComp = ({
               />
             </MenuTrigger>
             <MenuOptions>
-              <MenuOption
-                onSelect={() => onEditPost(item)}
-                text="Edit"
-                style={{color: 'black'}}
-                customStyles={{color: 'black'}}
-              />
-              <MenuOption
-                onSelect={() => onDeletePost(item)}
-                text="Delete"
-                style={{color: 'black'}}
-                customStyles={{color: 'black'}}
-              />
+              <MenuOption onSelect={onEditPost} text="Edit" />
+              <MenuOption onSelect={onDeletePost} text="Delete" />
             </MenuOptions>
           </Menu>
         )}
       </Pressable>
+
+      {/* Original post container */}
       <View style={{...styles.mainView, ...mainViewStyle}}>
-        {/* Header Section */}
+        {/* Original poster header */}
         <Pressable
           style={styles.upperView}
           onPress={() => {
-            if (userData?.id == item?.user_id) {
+            if (userData?.id === item?.user_id) {
               NavigationService.navigate('MyProfileScreen', {
                 id: userData?.id,
               });
-            } else
+            } else {
               NavigationService.navigate('FriendProfileScreen', {
                 id: item?.user_id,
               });
+            }
           }}>
           <CircleImage
             image={imageUrl(item?.profile_image ?? item?.user_image)}
@@ -343,34 +421,31 @@ const SharePostComp = ({
           </View>
         </Pressable>
 
-        {JSON.parse(item?.images)?.length > 0 ? (
+        {hasMedia ? (
           <View style={styles.contentView}>
-            {item?.title != null && (
+            {item?.title ? (
               <TextComponent
-                text={item?.title}
+                text={item.title}
                 styles={styles.caption}
                 numberOfLines={100}
               />
-            )}
-            <RenderImages
-              images={JSON.parse(item?.images)}
-              onImagePress={onImagePress}
+            ) : null}
+
+            <RenderMedia
+              images={images}
+              videos={videos}
+              onMediaPress={handleMediaPress}
             />
           </View>
         ) : (
-          <View>
-            <View
-              style={{
-                ...styles.divider,
-                marginTop: hp('1'),
-                // marginVertical: hp('-1'),
-                // marginBottom: hp('-1'),
-              }}
-            />
+          <>
+            <View style={{...styles.divider, marginTop: hp('1')}} />
             <JustTextRenderPost title={item?.title} />
-          </View>
+          </>
         )}
+
         <View style={styles.divider} />
+
         <View style={styles.bottomView}>
           <Touchable
             style={styles.leftRightView}
@@ -378,8 +453,11 @@ const SharePostComp = ({
               functionToUpdateLike(index);
               await addLikeOnPost.mutateAsync(item?.id);
               if (refetch) refetch();
-              if (refetechKeys)
-                refetechKeys.map(res => queryClient.invalidateQueries([res]));
+              if (refetechKeys) {
+                refetechKeys.forEach(key =>
+                  queryClient.invalidateQueries([key]),
+                );
+              }
             }}>
             <Image
               source={item?.is_liked ? heartFilledLike : heartTheme}
@@ -392,16 +470,16 @@ const SharePostComp = ({
                 item?.likes_count <= 1 ? 'Like' : 'Likes'
               }`}
               isThemeColor={true}
-              styles={{
-                fontSize: hp('1.3'),
-              }}
+              styles={{fontSize: hp('1.3')}}
             />
           </Touchable>
+
           <Touchable
             style={styles.leftRightView}
             onPress={() => {
-              if (setCommentModal) setCommentModal(item?.id, item?.index);
-              else
+              if (setCommentModal) {
+                setCommentModal(item?.id, item?.index);
+              } else {
                 NavigationService.navigate('CommentScreen', {
                   id: item?.id,
                   refetechKeys,
@@ -410,6 +488,7 @@ const SharePostComp = ({
                   functionToUpdateComment,
                   index,
                 });
+              }
             }}>
             <Image
               source={commentIcon}
@@ -422,11 +501,10 @@ const SharePostComp = ({
                 item?.comments_count <= 1 ? 'Comment' : 'Comments'
               }`}
               isThemeColor={true}
-              styles={{
-                fontSize: hp('1.3'),
-              }}
+              styles={{fontSize: hp('1.3')}}
             />
           </Touchable>
+
           <Touchable
             style={styles.leftRightView}
             onPress={() => sharePost.mutate({post_id: item?.id})}>
@@ -437,12 +515,9 @@ const SharePostComp = ({
               style={{width: wp('4')}}
             />
             <TextComponent
-              text={'Share'}
+              text="Share"
               isThemeColor={true}
-              styles={{
-                marginLeft: wp('1'),
-                fontSize: hp('1.3'),
-              }}
+              styles={{marginLeft: wp('1'), fontSize: hp('1.3')}}
             />
           </Touchable>
         </View>
@@ -451,19 +526,12 @@ const SharePostComp = ({
   );
 };
 
-export default SharePostComp;
-
 const styles = StyleSheet.create({
   mainView: {
     width: wp('95'),
     borderRadius: wp('5'),
     overflow: 'hidden',
     backgroundColor: '#fff',
-    // shadowColor: '#000',
-    // shadowOffset: {width: 2, height: 2},
-    // shadowOpacity: 0.25,
-    // shadowRadius: 4,
-    // elevation: 10,
     paddingVertical: hp('1'),
     alignSelf: 'center',
   },
@@ -494,39 +562,23 @@ const styles = StyleSheet.create({
     marginBottom: hp('1'),
   },
   textPostView: {
-    flex: 1,
-    // alignItems: 'center',
-    justifyContent: 'center',
     paddingVertical: hp('2'),
     paddingHorizontal: wp('2'),
   },
   singleImage: orientationType => ({
     width: wp('90'),
-    height: orientationType == 'portrait' ? hp('70') : hp('30'),
+    height: orientationType === 'portrait' ? hp('70') : hp('30'),
     borderRadius: wp('2'),
-    // aspectRatio: 1,
   }),
   twoImagesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   twoImage: {
-    width: wp('44'),
+    flex: 1,
     height: hp('35'),
-    // aspectRatio: 1,
     borderRadius: wp('2'),
-    backgroundColor: 'yellow',
-  },
-  threeImagesContainer: {
-    flexDirection: 'column',
-  },
-  threeImage: {
-    // width: '100%',
-    // height: hp('20'),
-    aspectRatio: 1,
-    borderRadius: wp('2'),
-    marginBottom: hp('1'),
-    resizeMode: 'contain',
+    marginHorizontal: wp('1'), // small gap between items
   },
   gridContainer: {
     flexDirection: 'row',
@@ -538,22 +590,25 @@ const styles = StyleSheet.create({
     height: hp('20'),
     borderRadius: wp('2'),
     overflow: 'hidden',
-    position: 'relative',
+    marginBottom: hp('0.5'),
   },
   gridImage: {
-    // width: '100%',
-    // height: '100%',
-    aspectRatio: 1,
+    width: '100%',
+    height: '100%',
     borderRadius: wp('2'),
-    resizeMode: 'contain',
+  },
+  playIcon: {
+    position: 'absolute',
+    alignSelf: 'center',
+    top: '40%',
+    width: wp('10'),
+    height: wp('10'),
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    top: hp('0.5'),
-    overflow: 'hidden',
   },
   overlayText: {
     color: '#fff',
@@ -570,23 +625,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    // marginVertical: hp('-2'),
     height: hp('3'),
     marginTop: hp('1'),
     paddingHorizontal: wp('3'),
-    // width: wp('90'),
-    // backgroundColor: 'red',
   },
   leftRightView: {
     flexDirection: 'row',
-    // width: wp('31.5'),
     alignItems: 'center',
   },
   reportText: {
     fontSize: hp('1.2'),
     top: hp('-0.5'),
     textAlign: 'right',
-    // marginLeft: hp('2'),
     right: wp('2'),
   },
 });
+
+export default SharePostComp;

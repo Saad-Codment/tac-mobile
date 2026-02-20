@@ -125,6 +125,7 @@ const GlobalSearchScreen = ({navigation}) => {
                         functionToUpdateLike={() => {}}
                         refetch={isNotRefreshing ? undefined : refetch}
                         openBottomSheet={id => setModal({id, type: 'post'})}
+                        isRefectechForVideo={refetchKeys}
                       />
                     ) : item?.type == 1 ? (
                       <PostViewComp
@@ -139,6 +140,7 @@ const GlobalSearchScreen = ({navigation}) => {
                         }}
                         openBottomSheet={id => setModal({id, type: 'post'})}
                         refetch={isNotRefreshing ? undefined : refetch}
+                        isRefectechForVideo={refetchKeys}
                       />
                     ) : null}
                   </>

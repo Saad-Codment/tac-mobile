@@ -26,7 +26,7 @@ import {
 import {Touchable} from '../Components/Touchable';
 import Lottie from 'lottie-react-native';
 import {CircleImage} from './CircleImage';
-import {imageUrl} from '../Utils/Urls';
+import {globalSearchEventsWithFilterUrl, imageUrl} from '../Utils/Urls';
 import ThemeButton from './ThemeButton';
 import NavigationService from '../Services/NavigationService';
 import useReduxStore from '../Hooks/UseReduxStore';
@@ -38,6 +38,7 @@ const HomeHeader = ({
   onNotificarioPress,
   userDataImg,
   onProfilePress,
+  locationCoords,
 }) => {
   const {dispatch, getState} = useReduxStore();
 
@@ -147,6 +148,21 @@ const HomeHeader = ({
             source={isNotification ? redDotBell : notificationWhite}
             resizeMode="contain"
             style={styles.notiIcon}
+          />
+        </Touchable>
+        <Touchable
+          onPress={() => {
+            NavigationService.navigate('AllNearByEventScreen', {
+              url: `${globalSearchEventsWithFilterUrl}latitude=${locationCoords?.lat}&longitude=${locationCoords?.lng}`,
+              key: 'nearByEvents',
+              title: 'Near By Events',
+            });
+          }}>
+          <Image
+            source={location}
+            resizeMode="contain"
+            style={styles.notiIcon}
+            tintColor={'white'}
           />
         </Touchable>
       </View>

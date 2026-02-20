@@ -1,70 +1,29 @@
 import React, {useState, useRef, useCallback} from 'react';
-import {
-  FlatList,
-  Dimensions,
-  View,
-  Text,
-  ActivityIndicator,
-} from 'react-native';
-import Video from 'react-native-video'; // ← this is the import
+import {Dimensions} from 'react-native';
+import {useQuery} from '@tanstack/react-query';
+import useReduxStore from '../../Hooks/UseReduxStore';
+import API from '../../Utils/helperFunc';
+import {getSinglePostUrl} from '../../Utils/Urls';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-const useViewPlayScreen = () => {
-  const [reels, setReels] = useState([
-    {
-      id: '1',
-      videoUrl:
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      username: 'testuser1',
-    },
-    {
-      id: '2',
-      videoUrl:
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-      username: 'testuser2',
-    },
-    {
-      id: '3',
-      videoUrl:
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-      username: 'testuser3',
-    },
-    {
-      id: '4',
-      videoUrl:
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-      username: 'testuser4',
-    },
-    {
-      id: '5',
-      videoUrl:
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-      username: 'testuser5',
-    },
-    {
-      id: '6',
-      videoUrl:
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
-      username: 'testuser6',
-    },
-    {
-      id: '7',
-      videoUrl:
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
-      username: 'testuser7',
-    },
-    {
-      id: '8',
-      videoUrl:
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
-      username: 'testuser8',
-    },
-  ]); // your array of reel data [{ id, videoUrl, username, ... }]
+const useViewPlayScreen = route => {
+  const {params} = route;
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const {getState} = useReduxStore();
+  const {userData: myUserData} = getState('Auth');
+
+  const {data} = useQuery({
+    queryKey: ['postVideoAPI'],
+    queryFn: () => API.get(getSinglePostUrl + (params?.userData?.id || '')),
+  });
+
   const viewabilityConfig = useRef({
-    viewAreaCoveragePercentThreshold: 70, // start playing at ~70% visible
+    itemVisiblePercentThreshold: 50, // ← lowered from 70 → better auto-play feel
+    minimumViewTime: 100,
+    waitForInteraction: false,
   }).current;
 
   const onViewableItemsChanged = useCallback(({viewableItems}) => {
@@ -84,11 +43,14 @@ const useViewPlayScreen = () => {
   ]).current;
 
   return {
-    reels,
     currentIndex,
     viewabilityConfig,
     viewabilityConfigCallbackPairs,
     SCREEN_HEIGHT,
+    videosArry: data?.data?.videos ?? [],
+    userData: data?.data,
+    myUserData,
+    refectKeys: params?.refectKeys ?? [],
   };
 };
 

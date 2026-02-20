@@ -89,6 +89,13 @@ export {default as tickFrameYellow} from './Icons/tickFrameYellow.png';
 export {default as save25} from './Icons/save25.png';
 export {default as popular} from './Icons/popular.png';
 
+export {default as playIcon} from './Icons/playIcon.png';
+
+export {default as commentCircle} from './Icons/commentCircle.png';
+export {default as shareCIrcle} from './Icons/shareCIrcle.png';
+export {default as heartFillCircle} from './Icons/heartFillCircle.png';
+export {default as heartCircle} from './Icons/heartCIrcle.png';
+
 export {default as updateIcon} from './Icons/updateIcon.png';
 export {default as dollarCircleLight} from './Icons/dollarCircleLight.png';
 

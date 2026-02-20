@@ -20,12 +20,15 @@ import {imageUrl} from '../../Utils/Urls';
 import {styles} from './styles';
 import ThemeButton from '../../Components/ThemeButton';
 import {
+  isVideo,
   uploadFromCamera,
   uploadFromGalary,
 } from '../../Services/GlobalFunctions';
 import BlurImage from '../../Components/BlurImage';
 import {Touchable} from '../../Components/Touchable';
 import {Colors} from '../../Theme/Variables';
+import Overlay from '../../Components/Overlay';
+import {errorMessage} from '../../Config/NotificationMessage';
 
 const CreatePostScreen = ({navigation, route}) => {
   const {
@@ -37,6 +40,8 @@ const CreatePostScreen = ({navigation, route}) => {
     isEditPost,
     orientation,
     handleOrientationCheck,
+    getVideoUrlOfCloudFare,
+    videoAfterUpload,
   } = useCreatePostScreen(navigation, route);
 
   console.log('postImgs →', postImgs);
@@ -47,18 +52,6 @@ const CreatePostScreen = ({navigation, route}) => {
       height: orientation == 'portrait' ? hp('80') : hp('30'),
     }),
     [postImgs.length > 1]: () => ({}),
-  };
-
-  const isVideo = item => {
-    const type = item?.type?.toLowerCase?.() || '';
-    const uri = item?.uri?.toLowerCase?.() || '';
-    return (
-      type.startsWith('video/') ||
-      uri.endsWith('.mp4') ||
-      uri.endsWith('.mov') ||
-      uri.endsWith('.m4v') ||
-      type == 'video/mp4'
-    );
   };
 
   return (
@@ -86,42 +79,77 @@ const CreatePostScreen = ({navigation, route}) => {
               fontWeight: 'bold',
               color: Colors.primaryColor,
             }}
+            // isDisable={Boolean(postImgs?.length == 5)}
             onPress={createPost}
           />
         }
         onRightPress={async () => {
-          Alert.alert(
-            'Pick to choose',
-            '',
-            [
-              {
-                text: 'Camera',
-                onPress: async () => {
-                  const images = await uploadFromCamera(true, true);
-                  onChangeVal(
-                    'postImgs',
-                    isEditPost ? [...postImgs, images] : [images],
-                  );
+          if (postImgs?.length < 5) {
+            Alert.alert(
+              'Pick to choose',
+              '',
+              [
+                {
+                  text: 'Camera',
+                  onPress: async () => {
+                    const images = await uploadFromCamera(
+                      true,
+                      true,
+                      Math.max(0, 5 - (postImgs?.length ?? 0)),
+                    );
+                    const videoItems = images.filter(item => isVideo(item));
+                    if (videoItems.length > 0) {
+                      videoItems.map(res => {
+                        getVideoUrlOfCloudFare.mutate({
+                          filename: res.name || 'video/mp4',
+                          mime_type: res.type || 'video.mp4',
+                          uri: res?.uri,
+                        });
+                      });
+                    }
+
+                    onChangeVal(
+                      'postImgs',
+                      [...postImgs, ...images],
+                      // isEditPost ? [...postImgs, ...images] : images,
+                    );
+                  },
                 },
-              },
-              {
-                text: 'Gallery',
-                onPress: async () => {
-                  // allowVideos = true → now supports video + image selection
-                  const media = await uploadFromGalary(true, true);
-                  onChangeVal(
-                    'postImgs',
-                    isEditPost ? [...postImgs, ...media] : media,
-                  );
+                {
+                  text: 'Gallery',
+                  onPress: async () => {
+                    // allowVideos = true → now supports video + image selection
+                    const media = await uploadFromGalary(
+                      true,
+                      true,
+                      Math.max(0, 5 - (postImgs?.length ?? 0)),
+                    );
+                    const videoItems = media.filter(item => isVideo(item));
+                    if (videoItems.length > 0) {
+                      videoItems.map(res => {
+                        getVideoUrlOfCloudFare.mutate({
+                          filename: res.name || 'video/mp4',
+                          mime_type: res.type || 'video.mp4',
+                          uri: res?.uri,
+                        });
+                      });
+                    }
+
+                    onChangeVal(
+                      'postImgs',
+                      [...postImgs, ...media],
+                      // isEditPost ? [...postImgs, ...media] : media,
+                    );
+                  },
                 },
-              },
-              {
-                text: 'Cancel',
-                style: 'destructive',
-              },
-            ],
-            {cancelable: true},
-          );
+                {
+                  text: 'Cancel',
+                  style: 'destructive',
+                },
+              ],
+              {cancelable: true},
+            );
+          } else errorMessage('You can only upload maximum 5 media files');
         }}
       />
       <View style={styles.userView}>
@@ -192,6 +220,8 @@ const CreatePostScreen = ({navigation, route}) => {
                   playInBackground={false}
                   controls={false}
                 />
+                {!videoAfterUpload.find(item => item?.uri == res?.uri)
+                  ?.videoId && <Overlay />}
               </View>
             ) : (
               <ImageBackground

@@ -1127,6 +1127,27 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-compressor (1.16.0):
+    - DoubleConversion
+    - glog
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-contacts (7.0.8):
     - React-Core
   - react-native-date-picker (5.0.7):
@@ -1671,6 +1692,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNSha256 (1.4.10):
+    - React-Core
   - RNSVG (13.14.0):
     - React-Core
   - RNVectorIcons (10.2.0):
@@ -1748,6 +1771,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - react-native-aes (from `../node_modules/react-native-aes-crypto`)
   - react-native-blurhash (from `../node_modules/react-native-blurhash`)
+  - react-native-compressor (from `../node_modules/react-native-compressor`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
@@ -1807,6 +1831,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNPurchases (from `../node_modules/react-native-purchases`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSha256 (from `../node_modules/react-native-sha256`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -1911,6 +1936,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-aes-crypto"
   react-native-blurhash:
     :path: "../node_modules/react-native-blurhash"
+  react-native-compressor:
+    :path: "../node_modules/react-native-compressor"
   react-native-contacts:
     :path: "../node_modules/react-native-contacts"
   react-native-date-picker:
@@ -2029,6 +2056,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-purchases"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSha256:
+    :path: "../node_modules/react-native-sha256"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -2094,6 +2123,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: da4470fdf42b2e389efbc4e7af958bf96e921a0b
   react-native-aes: e38d08f68d27e85d14590b7ef0b404ceebf5f891
   react-native-blurhash: 7f3abf9c80fed21d145a8523ee4fc7d761670a74
+  react-native-compressor: e0c908b5396ef0bc226f827bcfa0b2ad12c9bd5d
   react-native-contacts: f551920b74ebfc5f7f6df307495f085e504a4369
   react-native-date-picker: 585252087d4820b4cd8f2cf80068f6e8f5b72413
   react-native-geolocation: f29ff578389a3386ce14453c17279be72533161d
@@ -2155,6 +2185,7 @@ SPEC CHECKSUMS:
   RNPermissions: d8586cf8c080e1dd995778d7523a58de579bf409
   RNPurchases: 3ff3901439eb08eaa433a5743c1f2a5bef0317f8
   RNScreens: a7ecc7df176f79e2514ef4519a3eed3eeec4a3f4
+  RNSha256: 4d35f112e967f58273d625a19376f4eafc72bd5c
   RNSVG: 4cab00c621b328a4a2fedaaedc15d8822216723e
   RNVectorIcons: 04732dca6e1fc6ab6fac54a0cd4611570153b54e
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d

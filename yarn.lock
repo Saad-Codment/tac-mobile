@@ -10348,6 +10348,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-compressor@npm:^1.16.0":
+  version: 1.16.0
+  resolution: "react-native-compressor@npm:1.16.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 2643700f2b642d07fba8a829853ec797b19cfb2cccaac74abaa587b7df8698133730c21c8c55d235f36892fc34b2f7c291f1a2460d84042b82e8a389d07dfe1b
+  languageName: node
+  linkType: hard
+
 "react-native-confirmation-code-field@npm:^7.4.0":
   version: 7.4.0
   resolution: "react-native-confirmation-code-field@npm:7.4.0"
@@ -10852,6 +10862,13 @@ __metadata:
   version: 1.0.1
   resolution: "react-native-scrollable-mixin@npm:1.0.1"
   checksum: 9017d908a93b314099cceff41344981ab0dd510b983e2655e189a79eda960bd7efe93e180b016c198d940e6a2706e0f50640abfd39830725959d2464cd537fea
+  languageName: node
+  linkType: hard
+
+"react-native-sha256@npm:^1.4.10":
+  version: 1.4.10
+  resolution: "react-native-sha256@npm:1.4.10"
+  checksum: db49be891c2eece1de582215637c463fc5636fce7d58c2e78f1e60d6847eb121d3233f12c5793f43a193df6a79852eec459ef1a7e34c70133146a9fe332f055b
   languageName: node
   linkType: hard
 
@@ -12223,6 +12240,7 @@ __metadata:
     react-native-canvas: ^0.1.40
     react-native-checkbox: ^2.0.0
     react-native-collapsible: ^1.6.2
+    react-native-compressor: ^1.16.0
     react-native-confirmation-code-field: ^7.4.0
     react-native-contacts: ^7.0.8
     react-native-countdown-timer-hooks: ^1.0.5
@@ -12258,6 +12276,7 @@ __metadata:
     react-native-responsive-screen: ^1.4.2
     react-native-safe-area-context: ^4.9.0
     react-native-screens: ^3.29.0
+    react-native-sha256: ^1.4.10
     react-native-sqlite-storage: ^6.0.1
     react-native-svg: 13.14.0
     react-native-swipe-list-view: ^3.2.9

@@ -151,5 +151,7 @@
 	</array>
 	<key>GIDClientID</key>
 	<string>433413678709-2dkgedloqvurj77k6474e09slpatdfta.apps.googleusercontent.com</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>To add profile picture , you need to allow access to your photo camera</string>
 </dict>
 </plist>

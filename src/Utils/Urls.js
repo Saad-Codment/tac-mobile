@@ -6,6 +6,7 @@ const getCredentials = () => {
       baseURL: 'https://theappforcowboys.com/backend-staging/api',
       imageURL: 'https://tac-staging.s3.us-east-2.amazonaws.com/',
       socketURL: 'https://messaging.theappforcowboys.com/',
+      cloudFareURL: 'https://pub-4c9968fb2fce4c0eb0bd4e18ceb01f05.r2.dev/',
     };
   else {
     console.log = () => {};
@@ -13,6 +14,7 @@ const getCredentials = () => {
       baseURL: 'https://theappforcowboys.com/tac-backend/api',
       imageURL: 'https://tac-app-bucket.s3.us-east-2.amazonaws.com/',
       socketURL: 'https://messaging.theappforcowboys.com/',
+      cloudFareURL: 'https://pub-4c9968fb2fce4c0eb0bd4e18ceb01f05.r2.dev/',
       // baseURL: 'https://theappforcowboys.com/backend-staging/api',
       // imageURL: 'https://tac-staging.s3.us-east-2.amazonaws.com/',
       // socketURL: 'https://messaging.theappforcowboys.com/',
@@ -20,7 +22,7 @@ const getCredentials = () => {
   }
 };
 
-export const {baseURL, imageURL, socketURL} = getCredentials();
+export const {baseURL, imageURL, socketURL, cloudFareURL} = getCredentials();
 
 export const apendUrl = url => {
   return baseURL + url;
@@ -28,6 +30,12 @@ export const apendUrl = url => {
 export const imageUrl = url => {
   return url != null
     ? imageURL + url
+    : 'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg';
+  // : 'https://res.cloudinary.com/dd6tdswt5/image/upload/v1684830799/UserImages/mhysa2zj0sbmvnw69b35.jpg';
+};
+export const videoUrl = url => {
+  return url != null
+    ? cloudFareURL + url
     : 'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg';
   // : 'https://res.cloudinary.com/dd6tdswt5/image/upload/v1684830799/UserImages/mhysa2zj0sbmvnw69b35.jpg';
 };
@@ -52,7 +60,10 @@ export const getEventDetailsUrl = '/events/';
 export const getSuggestedFriendsUrl = '/friends/suggestions';
 export const getMyFriendsUrl = '/friends/list?';
 export const editProfileUrl = '/profile-update';
+
 export const createPostUrl = '/posts/store';
+export const createPostWithVideosUrl = '/v2/posts/store';
+
 export const sendFriendReqUrl = '/friend-request/send/';
 export const acceptFriendReqUrl = '/friend-request/accept-request/';
 export const rejectFriendReqUrl = '/friend-request/reject-request/';
@@ -63,6 +74,10 @@ export const allUpComingEventsUrl = '/home/upcoming-events';
 export const allFriendEventsUrl = '/home/friends-events';
 export const allSuggestedEventsUrl = '/home/suggested-events';
 export const likeUnlikeUrl = '/react/like/';
+
+export const getSinglePostUrl = '/v2/posts/get-single-post/';
+
+export const uploadVideoForCloudfareUrl = '/v2/video-processor/get-upload-url';
 
 export const checkVersionUrl = 'version-check';
 

@@ -16,6 +16,7 @@ const ThemeButton = ({
   isYellowTheme,
   isRightImg,
   rightImgStyle,
+  isWhite,
 }) => {
   return (
     // <ShadowButton>
@@ -29,6 +30,8 @@ const ThemeButton = ({
           justifyContent: 'center',
           backgroundColor: isYellowTheme
             ? Colors.primaryColor
+            : isWhite
+            ? Colors.white
             : Colors.backgroundTheme,
           ...style,
         },
@@ -45,7 +48,14 @@ const ThemeButton = ({
         />
       )}
       <Text
-        style={[styles.text, {marginLeft: image ? wp('1') : 0, ...textStyle}]}>
+        style={[
+          styles.text,
+          {
+            marginLeft: image ? wp('1') : 0,
+            color: isWhite ? 'black' : 'white',
+            ...textStyle,
+          },
+        ]}>
         {title}
       </Text>
       {isRightImg && (

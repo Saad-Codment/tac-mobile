@@ -144,6 +144,7 @@ const HomeScreen = ({navigation}) => {
         onProfilePress={() =>
           dynamicRoute('MyProfileScreen', {id: userData?.id})
         }
+        locationCoords={locationCoords}
       />
 
       <ScrollView
@@ -188,7 +189,7 @@ const HomeScreen = ({navigation}) => {
             />
           </>
         )}
-        {nearByEvents.length > 0 && (
+        {/* {nearByEvents.length > 0 && (
           <>
             <View style={styles.innerView}>
               <TextComponent
@@ -219,7 +220,7 @@ const HomeScreen = ({navigation}) => {
               }} // Padding around the list
             />
           </>
-        )}
+        )} */}
         <View style={styles.innerView}>
           <TextComponent
             styles={{color: Colors.black, ...styles.upcoming}}
@@ -340,6 +341,7 @@ const HomeScreen = ({navigation}) => {
                     mainViewStyle={styles.cardStyles}
                     functionToUpdateLike={() => {}}
                     openBottomSheet={id => setModal({id, type: 'post'})}
+                    isRefectechForVideo={refetchKey}
                   />
                 ) : item?.type == 1 ? (
                   <PostViewComp
@@ -349,6 +351,7 @@ const HomeScreen = ({navigation}) => {
                     mainViewStyle={styles.cardStyles}
                     functionToUpdateLike={() => {}}
                     openBottomSheet={id => setModal({id, type: 'post'})}
+                    isRefectechForVideo={refetchKey}
                   />
                 ) : item?.type == 5 ? (
                   <ShareEventComp

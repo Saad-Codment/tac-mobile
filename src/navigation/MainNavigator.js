@@ -34,12 +34,12 @@ function MainNavigator() {
         }}>
         {!isLogin && (
           <>
-            {!onboarding && (
+            {/* {!onboarding && (
               <Stack.Screen
                 name="OnBoardScreen"
                 component={Screens.OnBoardScreen}
               />
-            )}
+            )} */}
             {/* <Stack.Screen
               name="EventsDetailScreen"
               component={Screens.EventsDetailScreen}
@@ -278,22 +278,6 @@ function MainNavigator() {
               component={Screens.FriendProfileScreen}
             />
             <Stack.Screen name="ChatScreen" component={Screens.ChatScreen} />
-            {/* <Stack.Screen
-              name="SkeletonScreen"
-              component={Screens.SkeletonScreen}
-            /> */}
-            {/* <Stack.Screen
-              name="SkeletonScreen"
-              component={Screens.SkeletonScreen}
-            /> */}
-            {/* <Stack.Screen
-              name="EmergencyContactScreen"
-              component={Screens.EmergencyContactScreen}
-            /> */}
-            {/* <Stack.Screen
-              name="TrainingScreen"
-              component={Screens.TrainingScreen}
-            /> */}
           </>
         )}
       </Stack.Navigator>

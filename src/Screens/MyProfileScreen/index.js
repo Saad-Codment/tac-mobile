@@ -37,6 +37,7 @@ const MyProfileScreen = ({navigation, route}) => {
     isHitFirstTime,
     commentModal,
     modalType,
+    refetchKey,
     setModalType,
     setCommentModal,
     setModal,
@@ -80,6 +81,7 @@ const MyProfileScreen = ({navigation, route}) => {
               functionToUpdatePostOrEvent={newItem =>
                 functionToUpdatePostOrEvent(index, newItem)
               }
+              isRefectechForVideo={refetchKey}
             />
           ) : item?.type == 3 ? (
             <SharePostComp
@@ -102,6 +104,7 @@ const MyProfileScreen = ({navigation, route}) => {
               upperMainView={{
                 width: wp('100'),
               }}
+              isRefectechForVideo={refetchKey}
             />
           ) : item?.type == 5 ? (
             <ShareEventComp

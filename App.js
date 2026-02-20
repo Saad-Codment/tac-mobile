@@ -369,7 +369,10 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
         ) &&
         Boolean(
           getNameFunc?.getCurrentRoute()?.name != 'FriendProfileScreen',
-        ) && <Overlay />}
+        ) &&
+        Boolean(getNameFunc?.getCurrentRoute()?.name != 'VideoPlayScreen') && (
+          <Overlay />
+        )}
       {/* <StackNavigatior />; */}
     </GestureHandlerRootView>
   );

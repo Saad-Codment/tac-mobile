@@ -230,6 +230,7 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
     setStateForModalData,
     modalType,
     setModalType,
+    refetchKey: [`myProfilePosts${userData?.id}`, page],
   };
 };
 
