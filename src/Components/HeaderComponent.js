@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, Image, View, Platform, TextInput} from 'react-native';
 import {TextComponent} from './TextComponent';
 import {Touchable} from './Touchable';
-import {arrow, arrowBack, arrowLeft} from '../Assets';
+import {arrow, arrowBack, arrowLeft, cameraBlack} from '../Assets';
 import {hp, wp} from '../Config/responsive';
 import {Colors} from '../Theme/Variables';
 import NavigationService from '../Services/NavigationService';
@@ -30,6 +30,7 @@ export const HeaderComponent = ({
   isAnotherRightChildern,
   isAllowSearch,
   onGoBack,
+  isNewRightImg,
 }) => {
   return (
     <View style={[styles.TopHeader, {...style}]}>
@@ -80,18 +81,25 @@ export const HeaderComponent = ({
         )}
       </View>
       <View style={styles.HeaderRight}>
-        <Touchable style={styles.styleCheck} onPress={onRightPress}>
+        {/* <Touchable style={styles.styleCheck} onPress={onRightPress}>
           <Image
             source={icon}
             style={{...styles.filterIcon, ...rightIconStyle}}
           />
-        </Touchable>
+        </Touchable> */}
         <Touchable
           style={{
             ...styles.backMain,
             top: Platform.OS == 'android' ? hp('1') : 0,
           }}
           onPress={onRightPress}>
+          {/* {isNewRightImg && (
+            <Image
+              source={cameraBlack}
+              tintColor={Colors.primaryColor}
+              style={{...styles.filterIcon, ...rightIconStyle}}
+            />
+          )} */}
           <Image
             source={rightIconImg ?? saveReset}
             style={{...styles.filterIcon, ...rightIconStyle}}
@@ -139,7 +147,7 @@ const styles = StyleSheet.create({
     // width: wp('60'),
     textAlignVertical: 'center',
     // justifyContent: 'center',
-    marginTop: Platform.OS == 'android' ? hp('1') : 0,
+    marginTop: Platform.OS == 'android' ? hp('1') : hp('0.5'),
   },
   HeaderLeft: {
     flex: 0.5,

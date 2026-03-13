@@ -81,7 +81,7 @@ const useMyProfileScreen = ({navigate, addListener, setParams}, {params}) => {
   );
   const onRefresh = useCallback(() => {
     setPage(1); // Reset to the first page
-    setEventsList([]); // Clear existing data
+    setEventsList(null); // Clear existing data
     refetch();
     // queryClient.invalidateQueries(['profilePosts']); // Refetch data
   }, [queryClient]);

@@ -14,10 +14,11 @@ const getCredentials = () => {
       baseURL: 'https://theappforcowboys.com/tac-backend/api',
       imageURL: 'https://tac-app-bucket.s3.us-east-2.amazonaws.com/',
       socketURL: 'https://messaging.theappforcowboys.com/',
-      cloudFareURL: 'https://pub-4c9968fb2fce4c0eb0bd4e18ceb01f05.r2.dev/',
+      cloudFareURL: 'https://pub-f793bae7e632416691bfd14b5c709d03.r2.dev/',
       // baseURL: 'https://theappforcowboys.com/backend-staging/api',
       // imageURL: 'https://tac-staging.s3.us-east-2.amazonaws.com/',
       // socketURL: 'https://messaging.theappforcowboys.com/',
+      // cloudFareURL: 'https://pub-4c9968fb2fce4c0eb0bd4e18ceb01f05.r2.dev/',
     };
   }
 };
@@ -78,6 +79,8 @@ export const likeUnlikeUrl = '/react/like/';
 export const getSinglePostUrl = '/v2/posts/get-single-post/';
 
 export const uploadVideoForCloudfareUrl = '/v2/video-processor/get-upload-url';
+
+export const deleteVideoForCloudfareUrl = '/v2/video-processor/delete/';
 
 export const checkVersionUrl = 'version-check';
 
@@ -152,6 +155,9 @@ export const shareEventUrl = '/events/share';
 export const updateEventUrl = '/events/update/';
 export const deleteEventUrl = '/events/delete/';
 export const updatePostUrl = '/posts/update/';
+
+export const updatePostWithVideoUrl = '/v2/posts/update/';
+
 export const deletePostUrl = '/posts/delete/';
 
 export const GetChatListUrl = '/v1/chat/list';

@@ -707,12 +707,16 @@ const resizeImage = async (image, targetWidth = 800, targetHeight = 800) => {
   }
 };
 // GET IMAGE From Mobile
-const uploadFromGalary = async (isMulti, allowVideos, isCircle, maxFiles) => {
-  // When allowing videos → we MUST disable cropping (videos can't be cropped this way)
-  const shouldCrop = !allowVideos && isCircle;
+const uploadFromGalary = async (
+  isMulti = true,
+  allowVideos = true,
+  maxFiles = 5,
+  isCircle = false, // kept for compatibility but ignored
+) => {
+  const shouldCrop = false; // Facebook style → no cropping by default
 
   const pickerOptions = {
-    cropping: false,
+    cropping: shouldCrop,
     cropperCircleOverlay: false,
     multiple: isMulti,
     maxFiles,
@@ -720,18 +724,10 @@ const uploadFromGalary = async (isMulti, allowVideos, isCircle, maxFiles) => {
     avoidEmptySpaceAroundImage: true,
     showCropFrame: false,
     enableRotationGesture: shouldCrop,
-    // width: 1000,
-    // height: 2000,
     mediaType: allowVideos ? 'any' : 'photo',
-    // compressImageQuality: 0.85,
+    // compressImageQuality: 0.92,          // optional - enable if you want
     // includeExif: true,
   };
-
-  // ────────────────────────────────────────────────
-  // Import at the top of your file (or here if you prefer)
-  // import { Video } from 'react-native-compressor';
-
-  // Constants (should match your camera file – move to shared constants if possible)
 
   try {
     const data = await ImageCropPicker.openPicker(pickerOptions);
@@ -743,63 +739,57 @@ const uploadFromGalary = async (isMulti, allowVideos, isCircle, maxFiles) => {
     };
 
     const processItem = async res => {
-      const isVideo = res.mime?.startsWith('video/') || false;
+      const isVid = res.mime?.startsWith('video/') || false;
       const fileSizeBytes = res.size || 0;
-
       let finalUri =
         Platform.OS === 'ios'
           ? res.uri || res.path || res.sourceURL
           : `file://${res.path}`;
-
       let finalSizeBytes = fileSizeBytes;
 
-      // Check & compress video
-      if (isVideo) {
+      // Video compression
+      if (isVid) {
         const originalSizeMB = fileSizeBytes / (1024 * 1024);
         console.log(
           `Gallery video original size: ${originalSizeMB.toFixed(1)} MB`,
         );
 
-        // Only compress if obviously too big (optional optimization)
         if (originalSizeMB > TARGET_COMPRESSED_SIZE_MB * 1.5) {
           Alert.alert(
             'Compressing video...',
             'This may take a few seconds...',
             [],
-            {cancelable: false},
+            {
+              cancelable: false,
+            },
           );
 
           try {
             const compressedUri = await Video.compress(
               finalUri,
               {
-                compressionMethod: 'auto', // balanced quality/size – like WhatsApp
-                // If auto is too aggressive/low-quality for your use-case, try manual:
+                compressionMethod: 'auto',
                 // compressionMethod: 'manual',
-                // maxSize: 720,          // max dimension (width or height)
-                // bitrate: 1500 * 1000,  // 1.5 Mbps example
+                // maxSize: 720,
+                // bitrate: 2500 * 1000,
               },
               progress => {
                 console.log(
                   `Compression progress: ${Math.round(progress * 100)}%`,
                 );
-                // → Later: update state → <Progress.Bar progress={progress} />
               },
             );
 
             finalUri = compressedUri;
-            // In production: use react-native-fs to get real size
+            // Optional accurate size (requires react-native-fs)
             // finalSizeBytes = (await RNFS.stat(compressedUri)).size;
-            // For now we keep original size reference (conservative)
             console.log('Compressed video saved at:', compressedUri);
           } catch (compressErr) {
             console.error('Video compression failed:', compressErr);
             Alert.alert('Compression Failed', 'Using original video instead.');
-            // finalUri & finalSizeBytes stay as original
           }
         }
 
-        // Final size enforcement (post-compression or original)
         if (finalSizeBytes > MAX_VIDEO_SIZE_BYTES) {
           Alert.alert(
             'Video Too Large',
@@ -808,47 +798,38 @@ const uploadFromGalary = async (isMulti, allowVideos, isCircle, maxFiles) => {
             )} MB.\nMaximum allowed size is ${MAX_VIDEO_SIZE_MB} MB.`,
             [{text: 'OK'}],
           );
-          return null; // reject this video
+          return null;
         }
       }
 
       const base = {
         uri: finalUri,
-        name: res.filename || (isVideo ? 'video.mp4' : 'photo.jpg'),
-        type: res.mime,
+        name: res.filename || (isVid ? 'video.mp4' : 'photo.jpg'),
+        type: res.mime || (isVid ? 'video/mp4' : 'image/jpeg'),
         orientation: getOrientation(res.width, res.height),
         width: res.width,
         height: res.height,
         size: finalSizeBytes,
-        ...(isVideo && {duration: res.duration || null}),
+        ...(isVid && {duration: res.duration || null}),
       };
 
-      // Resize only images (skip for videos) – your original logic
-      if (!isVideo) {
-        return await resizeImage(base);
+      // Resize images only (your original function - assumed to exist)
+      if (!isVid) {
+        return await resizeImage(base); // ← make sure resizeImage is imported/defined
       }
 
-      // Return (possibly compressed) video or processed image
       return base;
     };
 
     let processed;
-
     if (Array.isArray(data)) {
-      // Multiple items selected
       processed = await Promise.all(data.map(processItem));
-      // Filter out rejected (null) items
       processed = processed.filter(item => item !== null);
     } else {
-      // Single item
       processed = await processItem(data);
-      // If single video was too big → return null
-      if (processed === null) {
-        return null;
-      }
+      if (processed === null) return null;
     }
 
-    // If after filtering nothing is left (all videos were too big)
     if (Array.isArray(processed) && processed.length === 0) {
       return isMulti ? [] : null;
     }
@@ -858,8 +839,9 @@ const uploadFromGalary = async (isMulti, allowVideos, isCircle, maxFiles) => {
     if (err.code === 'E_PICKER_CANCELLED') {
       return isMulti ? [] : null;
     }
-    console.error('Picker error:', err);
-    throw err;
+    console.error('Gallery picker error:', err);
+    Alert.alert('Error', 'Failed to open gallery.');
+    return isMulti ? [] : null;
   }
 };
 
@@ -966,15 +948,43 @@ const getFileSizeMB = async uri => {
 };
 
 // ────────────────────────────────────────────────
-const uploadFromCamera = async (isMulti, allowVideo, isCircle, maxFiles) => {
-  // Note: isCircle and maxFiles are ignored here (library limitation for camera)
+const uploadFromCamera = async (
+  isMulti = false,
+  allowVideo = true,
+  isCircle = false,
+  maxFiles = 1,
+) => {
+  // Note: camera usually supports single capture only
+
+  if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Camera Permission',
+          message:
+            'This app needs camera access to take photos and record videos.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        Alert.alert('Permission Denied', 'Camera permission is required.');
+        return isMulti ? [] : null;
+      }
+    } catch (err) {
+      console.warn('Camera permission request error:', err);
+      Alert.alert('Error', 'Failed to request camera permission.');
+      return isMulti ? [] : null;
+    }
+  }
 
   if (!allowVideo) {
-    // Only photos allowed → skip choice dialog
     return takeMedia('photo', isMulti);
   }
 
-  // Both photo and video allowed → let user choose
+  // Let user choose photo or video
   return new Promise(resolve => {
     Alert.alert(
       'Camera Action',
@@ -1003,11 +1013,11 @@ const uploadFromCamera = async (isMulti, allowVideo, isCircle, maxFiles) => {
 const takeMedia = async (mediaType, isMulti) => {
   const options = {
     mediaType, // 'photo' or 'video'
-    videoQuality: 'high', // 'high' | 'medium' | 'low'
-    durationLimit: 60, // max recording time in seconds
+    videoQuality: 'high',
+    durationLimit: 60, // seconds
     saveToPhotos: false,
     includeExtra: true,
-    // quality: 0.8, // photo only
+    // quality: 0.85, // for photos
   };
 
   try {
@@ -1024,11 +1034,9 @@ const takeMedia = async (mediaType, isMulti) => {
     }
 
     const asset = response.assets?.[0];
-    if (!asset) {
-      return isMulti ? [] : null;
-    }
+    if (!asset) return isMulti ? [] : null;
 
-    const isVideo = asset.type?.startsWith('video/') || mediaType === 'video';
+    const isVid = asset.type?.startsWith('video/') || mediaType === 'video';
     let uri = asset.uri;
     if (Platform.OS === 'android' && !uri?.startsWith('file://')) {
       uri = `file://${uri}`;
@@ -1037,59 +1045,46 @@ const takeMedia = async (mediaType, isMulti) => {
     let finalUri = uri;
     let finalSizeBytes = asset.fileSize || 0;
 
-    if (isVideo) {
-      // Optional: early size check before compression
+    if (isVid) {
       const originalSizeMB = finalSizeBytes / (1024 * 1024);
-      console.log(`Original video size: ${originalSizeMB.toFixed(1)} MB`);
+      console.log(
+        `Camera video original size: ${originalSizeMB.toFixed(1)} MB`,
+      );
 
       if (originalSizeMB > TARGET_COMPRESSED_SIZE_MB * 1.5) {
-        // only compress if clearly too big
         Alert.alert(
           'Compressing video...',
           'This may take a few seconds...',
           [],
-          {cancelable: false},
+          {
+            cancelable: false,
+          },
         );
 
         try {
           const compressedUri = await Video.compress(
             uri,
-            {
-              compressionMethod: 'auto', // most balanced — like WhatsApp
-              // If you want more control (manual mode example):
-              // compressionMethod: 'manual',
-              // maxSize: 720,           // max dimension (width or height)
-              // bitrate: 1500 * 1000,   // 1.5 Mbps
-              // frameRate: 30,
-            },
+            {compressionMethod: 'auto'},
             progress => {
               console.log(
                 `Compression progress: ${Math.round(progress * 100)}%`,
               );
-              // → Here you can update a state for <Progress.Bar> or modal
             },
           );
-
           finalUri = compressedUri;
-
-          // Get new size (in real app → use react-native-fs to stat file)
-          // For demo we assume ~30-70% reduction — you should re-check
-          finalSizeBytes = 0; // Placeholder — in prod: RNFS.stat(compressedUri).size
-          console.log('Compressed video saved at:', compressedUri);
+          // finalSizeBytes = (await RNFS.stat(compressedUri)).size; // optional
         } catch (compressErr) {
-          console.error('Compression failed:', compressErr);
-          Alert.alert('Compression Failed', 'Using original video instead.');
-          // finalUri stays as original uri
+          console.error('Camera video compression failed:', compressErr);
+          Alert.alert('Compression Failed', 'Using original video.');
         }
       }
 
-      // Final size check (post-compression or original)
-      if (finalSizeBytes > MAX_VIDEO_SIZE_BYTES) {
+      if (finalSizeBytes > MAX_VIDEO_SIZE_BYTES && finalSizeBytes > 0) {
         Alert.alert(
           'Video Too Large',
-          `This video is still ${(finalSizeBytes / (1024 * 1024)).toFixed(
+          `This video is ${(finalSizeBytes / (1024 * 1024)).toFixed(
             1,
-          )} MB.\nMaximum allowed is ${MAX_VIDEO_SIZE_MB} MB.`,
+          )} MB (max ${MAX_VIDEO_SIZE_MB} MB).`,
           [{text: 'OK'}],
         );
         return isMulti ? [] : null;
@@ -1103,15 +1098,15 @@ const takeMedia = async (mediaType, isMulti) => {
 
     const resultItem = {
       uri: finalUri,
-      name: asset.fileName || (isVideo ? 'video.mp4' : 'photo.jpg'),
-      type: asset.type || (isVideo ? 'video/mp4' : 'image/jpeg'),
-      orientation: isVideo
+      name: asset.fileName || (isVid ? 'video.mp4' : 'photo.jpg'),
+      type: asset.type || (isVid ? 'video/mp4' : 'image/jpeg'),
+      orientation: isVid
         ? 'landscape'
         : checkOrientation(asset.width, asset.height),
       width: asset.width,
       height: asset.height,
       size: finalSizeBytes,
-      ...(isVideo && {duration: asset.duration || null}),
+      ...(isVid && {duration: asset.duration || null}),
     };
 
     return isMulti ? [resultItem] : resultItem;
@@ -1121,6 +1116,7 @@ const takeMedia = async (mediaType, isMulti) => {
     return isMulti ? [] : null;
   }
 };
+
 function formatDateToCustomFormat(
   isoDate,
   timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone,

@@ -53,17 +53,52 @@ const formatMessageDate = utcTimestamp => {
   const isToday = date.toDateString() === today.toDateString();
   const isYesterday = date.toDateString() === yesterday.toDateString();
 
+  const getDaySuffix = day => {
+    if (day >= 11 && day <= 13) return 'th';
+    switch (day % 10) {
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
+    }
+  };
+
   if (isToday) {
     return 'Today';
   } else if (isYesterday) {
     return 'Yesterday';
   } else {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    return `${month} ${day}${getDaySuffix(day)}, ${year}`;
+
     // Format as DD/MM/YYYY
-    return `${date.getDate().toString().padStart(2, '0')}/${(
-      date.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, '0')}/${date.getFullYear()}`;
+    // return `${date.getDate().toString().padStart(2, '0')}/${(
+    //   date.getMonth() + 1
+    // )
+    //   .toString()
+    //   .padStart(2, '0')} ${date.getFullYear()}`;
   }
 };
 
@@ -74,7 +109,11 @@ const groupMessagesByDate = messages => {
   let currentDate = null;
 
   messages.forEach((message, index) => {
-    const messageDate = formatMessageDate(message.created_at).split(' ')[0]; // Get date part (e.g., "Today" or "DD/MM/YYYY")
+    console.log(
+      'ksjdbvkjlsbdkvlbskdlvbsdbvbklsd',
+      formatMessageDate(message.created_at),
+    );
+    const messageDate = formatMessageDate(message.created_at); // Get date part (e.g., "Today" or "DD/MM/YYYY")
 
     if (messageDate !== currentDate) {
       groupedMessages.push({

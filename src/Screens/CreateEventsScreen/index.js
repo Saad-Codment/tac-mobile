@@ -137,6 +137,7 @@ const CreateEventsScreen = ({navigation, route}) => {
               <TextComponent
                 text={errorName.message ?? errorName}
                 styles={styles.errorText}
+                numberOfLines={3}
               />
             )}
           </>

@@ -8,49 +8,39 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 const UseCalendar = ({
   onSelectVal,
   selectedVal,
-  customMarkedDates = [], // default to empty array
+  customMarkedDates = [],
   onMonthChange,
 }) => {
   const today = new Date();
   today.setDate(today.getDate() + 1);
   const minDate = today.toISOString().split('T')[0];
 
-  const dotMap = {};
+  const combinedMarked = {};
 
-  // ✅ Safe check before .forEach
+  // Mark dates with a SINGLE dot
   if (Array.isArray(customMarkedDates)) {
     customMarkedDates.forEach(item => {
-      if (item && item.date && typeof item.count === 'number') {
-        dotMap[item.date] = Array.from({length: item.count}).map((_, i) => ({
-          key: `${item.date}-${i}`,
-          color: Colors.primaryColor,
-        }));
+      if (item && item.date) {
+        combinedMarked[item.date] = {
+          marked: true,
+          dotColor: Colors.primaryColor,
+          selected: item.date === selectedVal,
+          selectedColor: item.date === selectedVal ? Colors.white : undefined,
+          selectedTextColor:
+            item.date === selectedVal ? Colors.black : undefined,
+        };
       }
     });
   }
 
-  const combinedMarked = {};
-
-  if (Array.isArray(customMarkedDates)) {
-    customMarkedDates.forEach(({date}) => {
-      combinedMarked[date] = {
-        marked: true,
-        selected: date === selectedVal,
-        selectedColor: date === selectedVal ? Colors.white : undefined,
-        selectedTextColor: date === selectedVal ? Colors.black : undefined,
-        type: 'multi-dot',
-        dots: dotMap[date] || [],
-      };
-    });
-  }
-
+  // Ensure selected date always highlighted
   if (selectedVal && !combinedMarked[selectedVal]) {
     combinedMarked[selectedVal] = {
       selected: true,
       marked: true,
+      dotColor: Colors.primaryColor,
       selectedColor: Colors.primaryColor,
       selectedTextColor: Colors.white,
-      dots: [],
     };
   }
 
@@ -65,7 +55,7 @@ const UseCalendar = ({
       markedDates={combinedMarked}
       dayComponent={({date, state, marking}) => {
         const isSelected = marking?.selected;
-        const dots = marking?.dots || [];
+        const isMarked = marking?.marked;
 
         return (
           <TouchableOpacity
@@ -90,26 +80,18 @@ const UseCalendar = ({
               }}>
               {date.day}
             </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 2,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              {dots.map((dot, idx) => (
-                <View
-                  key={dot.key || idx}
-                  style={{
-                    width: 5,
-                    height: 5,
-                    borderRadius: 2.5,
-                    backgroundColor: dot.color,
-                    marginHorizontal: 1,
-                  }}
-                />
-              ))}
-            </View>
+
+            {isMarked && (
+              <View
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: 3,
+                  backgroundColor: Colors.primaryColor,
+                  marginTop: 2,
+                }}
+              />
+            )}
           </TouchableOpacity>
         );
       }}

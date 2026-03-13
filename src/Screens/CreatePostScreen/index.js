@@ -1,3 +1,4 @@
+// CreatePostScreen.jsx
 import {
   View,
   Text,
@@ -6,17 +7,17 @@ import {
   ScrollView,
   ImageBackground,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import React, {memo} from 'react';
-import Video from 'react-native-video'; // added for video preview
-import {HeaderComponentProfile} from '../../Components/HeaderComponentProfile';
-import {HeaderComponent} from '../../Components/HeaderComponent';
-import {crossFill, uploadGallery} from '../../Assets';
+import Video from 'react-native-video';
+import {HeaderComponent} from '../../Components/HeaderComponent'; // assuming this is your header
+import {crossFill, uploadGallery, cameraIcon, cameraBlack} from '../../Assets'; // ← add cameraIcon to your assets
 import {CircleImage} from '../../Components/CircleImage';
 import {TextComponent} from '../../Components/TextComponent';
 import {hp, wp} from '../../Config/responsive';
 import useCreatePostScreen from './useCreatePostScreen';
-import {imageUrl} from '../../Utils/Urls';
+import {imageUrl, videoUrl} from '../../Utils/Urls';
 import {styles} from './styles';
 import ThemeButton from '../../Components/ThemeButton';
 import {
@@ -39,12 +40,10 @@ const CreatePostScreen = ({navigation, route}) => {
     createPost,
     isEditPost,
     orientation,
-    handleOrientationCheck,
     getVideoUrlOfCloudFare,
     videoAfterUpload,
+    handleRemoveMedia,
   } = useCreatePostScreen(navigation, route);
-
-  console.log('postImgs →', postImgs);
 
   const imgHeight = {
     1: orientation => ({
@@ -52,6 +51,51 @@ const CreatePostScreen = ({navigation, route}) => {
       height: orientation == 'portrait' ? hp('80') : hp('30'),
     }),
     [postImgs.length > 1]: () => ({}),
+  };
+
+  const MAX_MEDIA = 5;
+  const remaining = MAX_MEDIA - (postImgs?.length ?? 0);
+
+  const openGallery = async () => {
+    if (remaining <= 0) {
+      errorMessage('You can only upload maximum 5 media files');
+      return;
+    }
+
+    const media = await uploadFromGalary(true, true, remaining);
+    if (!media || (Array.isArray(media) && media.length === 0)) return;
+
+    const videoItems = media.filter(item => isVideo(item));
+    videoItems.forEach(res => {
+      getVideoUrlOfCloudFare.mutate({
+        filename: res.name || 'video.mp4',
+        mime_type: res.type || 'video/mp4',
+        uri: res?.uri,
+      });
+    });
+
+    onChangeVal('postImgs', [...(postImgs || []), ...media]);
+  };
+
+  const openCamera = async () => {
+    if (remaining <= 0) {
+      errorMessage('You can only upload maximum 5 media files');
+      return;
+    }
+
+    const images = await uploadFromCamera(true, true); // allow multi? usually false for camera
+    if (!images || (Array.isArray(images) && images.length === 0)) return;
+
+    const videoItems = images.filter(item => isVideo(item));
+    videoItems.forEach(res => {
+      getVideoUrlOfCloudFare.mutate({
+        filename: res.name || 'video.mp4',
+        mime_type: res.type || 'video/mp4',
+        uri: res?.uri,
+      });
+    });
+
+    onChangeVal('postImgs', [...(postImgs || []), ...images]);
   };
 
   return (
@@ -64,94 +108,47 @@ const CreatePostScreen = ({navigation, route}) => {
         backIconStyle={{tintColor: 'black'}}
         goBack={() => navigation.goBack()}
         rightIconImg={uploadGallery}
+        isNewRightImg
+        // isAnotherRightChildern={
+        //   <ThemeButton
+        //     title={'Post'}
+        //     style={{
+        //       width: wp('10'),
+        //       height: hp('3.5'),
+        //       marginLeft: wp('2'),
+        //       borderRadius: 8,
+        //       backgroundColor: 'transparent',
+        //     }}
+        //     textStyle={{
+        //       fontSize: hp('1.8'),
+        //       fontWeight: 'bold',
+        //       color: Colors.primaryColor,
+        //     }}
+        //     onPress={createPost}
+        //   />
+        // }
         isAnotherRightChildern={
           <ThemeButton
-            title={'Post'}
             style={{
               width: wp('10'),
               height: hp('3.5'),
               marginLeft: wp('2'),
               borderRadius: 8,
               backgroundColor: 'transparent',
+              marginRight: wp('-2'),
             }}
-            textStyle={{
-              fontSize: hp('1.8'),
-              fontWeight: 'bold',
-              color: Colors.primaryColor,
+            image={cameraBlack}
+            imageStyle={{
+              width: wp('7'),
+              height: hp('3'),
+              tintColor: Colors.primaryColor,
             }}
-            // isDisable={Boolean(postImgs?.length == 5)}
-            onPress={createPost}
+            onPress={openCamera}
           />
         }
-        onRightPress={async () => {
-          if (postImgs?.length < 5) {
-            Alert.alert(
-              'Pick to choose',
-              '',
-              [
-                {
-                  text: 'Camera',
-                  onPress: async () => {
-                    const images = await uploadFromCamera(
-                      true,
-                      true,
-                      Math.max(0, 5 - (postImgs?.length ?? 0)),
-                    );
-                    const videoItems = images.filter(item => isVideo(item));
-                    if (videoItems.length > 0) {
-                      videoItems.map(res => {
-                        getVideoUrlOfCloudFare.mutate({
-                          filename: res.name || 'video/mp4',
-                          mime_type: res.type || 'video.mp4',
-                          uri: res?.uri,
-                        });
-                      });
-                    }
-
-                    onChangeVal(
-                      'postImgs',
-                      [...postImgs, ...images],
-                      // isEditPost ? [...postImgs, ...images] : images,
-                    );
-                  },
-                },
-                {
-                  text: 'Gallery',
-                  onPress: async () => {
-                    // allowVideos = true → now supports video + image selection
-                    const media = await uploadFromGalary(
-                      true,
-                      true,
-                      Math.max(0, 5 - (postImgs?.length ?? 0)),
-                    );
-                    const videoItems = media.filter(item => isVideo(item));
-                    if (videoItems.length > 0) {
-                      videoItems.map(res => {
-                        getVideoUrlOfCloudFare.mutate({
-                          filename: res.name || 'video/mp4',
-                          mime_type: res.type || 'video.mp4',
-                          uri: res?.uri,
-                        });
-                      });
-                    }
-
-                    onChangeVal(
-                      'postImgs',
-                      [...postImgs, ...media],
-                      // isEditPost ? [...postImgs, ...media] : media,
-                    );
-                  },
-                },
-                {
-                  text: 'Cancel',
-                  style: 'destructive',
-                },
-              ],
-              {cancelable: true},
-            );
-          } else errorMessage('You can only upload maximum 5 media files');
-        }}
+        onRightPress={openGallery} // ← now directly opens gallery (Facebook style)
       />
+
       <View style={styles.userView}>
         <CircleImage
           image={imageUrl(userData?.profile_image)}
@@ -160,6 +157,7 @@ const CreatePostScreen = ({navigation, route}) => {
         />
         <TextComponent text={userData?.first_name} styles={styles.userName} />
       </View>
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: hp('15')}}>
@@ -173,13 +171,42 @@ const CreatePostScreen = ({navigation, route}) => {
             value={postText}
           />
         </View>
+
+        {/* Floating camera button – Facebook-like quick access */}
+        {/* {remaining > 0 && (
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              right: wp('4'),
+              bottom: hp('2'),
+              backgroundColor: Colors.primaryColor,
+              borderRadius: 50,
+              padding: 12,
+              elevation: 5,
+              zIndex: 10,
+            }}
+            onPress={openCamera}>
+            <Image
+              source={cameraBlack} // ← add a camera icon to your Assets
+              style={{width: 28, height: 28, tintColor: 'white'}}
+            />
+          </TouchableOpacity>
+        )} */}
+
         <View style={styles.imgMainView(Boolean(postImgs.length > 1))}>
           {postImgs.map((res, index) => {
-            const mediaUri = res?.isEdit ? imageUrl(res?.uri) : res?.uri;
-            const videoItem = isVideo(res);
+            let displayUri = res.uri;
+            if (res.isExistingVideo && res.master_playlist_path) {
+              displayUri = videoUrl(res.master_playlist_path);
+            } else if (res.isEdit) {
+              displayUri = imageUrl(res.uri);
+            }
+
+            const videoItem = isVideo(res) || res.type === 'video/old';
 
             return videoItem ? (
               <View
+                key={index}
                 style={{
                   ...styles.bgImg(Boolean(postImgs.length > 1)),
                   ...(postImgs.length === 1
@@ -189,14 +216,8 @@ const CreatePostScreen = ({navigation, route}) => {
                     : {}),
                 }}>
                 <Touchable
-                  onPress={() => {
-                    postImgs.splice(index, 1);
-                    onChangeVal('postText', postText);
-                  }}
-                  style={{
-                    position: 'absolute',
-                    zIndex: 1,
-                  }}>
+                  onPress={() => handleRemoveMedia(res, index)}
+                  style={{position: 'absolute', zIndex: 1}}>
                   <Image
                     source={crossFill}
                     resizeMode="contain"
@@ -204,7 +225,7 @@ const CreatePostScreen = ({navigation, route}) => {
                   />
                 </Touchable>
                 <Video
-                  source={{uri: res?.uri}}
+                  source={{uri: displayUri}}
                   style={{
                     ...styles.bgImg(Boolean(postImgs.length > 1)),
                     ...(postImgs.length === 1
@@ -221,12 +242,13 @@ const CreatePostScreen = ({navigation, route}) => {
                   controls={false}
                 />
                 {!videoAfterUpload.find(item => item?.uri == res?.uri)
-                  ?.videoId && <Overlay />}
+                  ?.videoId &&
+                  !res.isExistingVideo && <Overlay />}
               </View>
             ) : (
               <ImageBackground
                 key={index}
-                source={videoItem ? {} : {uri: mediaUri}}
+                source={videoItem ? {} : {uri: displayUri}}
                 style={{
                   ...styles.bgImg(Boolean(postImgs.length > 1)),
                   ...(postImgs.length === 1
@@ -235,11 +257,7 @@ const CreatePostScreen = ({navigation, route}) => {
                       )
                     : {}),
                 }}>
-                <Touchable
-                  onPress={() => {
-                    postImgs.splice(index, 1);
-                    onChangeVal('postText', postText);
-                  }}>
+                <Touchable onPress={() => handleRemoveMedia(res, index)}>
                   <Image
                     source={crossFill}
                     resizeMode="contain"
@@ -251,6 +269,24 @@ const CreatePostScreen = ({navigation, route}) => {
           })}
         </View>
       </ScrollView>
+      {(postImgs.length > 0 || postText.trim()) && (
+        <ThemeButton
+          title={'Post'}
+          style={{
+            height: hp('4'),
+            position: 'absolute',
+            bottom: hp('3'),
+            alignSelf: 'center',
+            width: wp('80'),
+          }}
+          textStyle={{
+            fontSize: hp('1.5'),
+            fontWeight: 'bold',
+          }}
+          isYellowTheme
+          onPress={createPost}
+        />
+      )}
     </View>
   );
 };

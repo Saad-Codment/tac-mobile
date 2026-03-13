@@ -160,21 +160,35 @@ const eventCreateSchema = yup.object().shape({
     .max(50, 'Name must be less than 50 characters.'),
   eventImg: yup.mixed().required('Event image is required'),
   eventPrice: yup.mixed().required('Event price is required'),
+
   eventStartDate: yup
     .date()
     .required('Event start date is required')
     .min(
-      new Date(new Date().setHours(0, 0, 0, 0)), // today's date at 00:00
+      new Date(new Date().setHours(0, 0, 0, 0)),
       'Event start date cannot be in the past',
     ),
+
   eventStartTime: yup.date().required('Event start time is required'),
+
   eventEndDate: yup
     .date()
     .required('Event end date is required')
     .min(
-      new Date(new Date().setHours(0, 0, 0, 0)), // today's date at 00:00
+      new Date(new Date().setHours(0, 0, 0, 0)),
       'Event end date cannot be in the past',
+    )
+    // ← This is the important new validation
+    .test(
+      'end-date-after-start-date',
+      'End date must be on or after start date',
+      function (endDate) {
+        const {eventStartDate} = this.parent;
+        if (!eventStartDate || !endDate) return true;
+        return endDate >= eventStartDate;
+      },
     ),
+
   eventEndTime: yup
     .date()
     .required('Event end time is required')
@@ -183,22 +197,21 @@ const eventCreateSchema = yup.object().shape({
       'End time must be after start time',
       function (value) {
         const {eventStartTime} = this.parent;
-        if (eventStartTime && value) {
-          // Extract hours and minutes for comparison
-          const startHours = eventStartTime.getHours();
-          const startMinutes = eventStartTime.getMinutes();
-          const endHours = value.getHours();
-          const endMinutes = value.getMinutes();
+        if (!eventStartTime || !value) return true;
 
-          // Compare times
-          return (
-            endHours > startHours ||
-            (endHours === startHours && endMinutes > startMinutes)
-          );
-        }
-        return true;
+        const startH = eventStartTime.getHours();
+        const startM = eventStartTime.getMinutes();
+        const endH = value.getHours();
+        const endM = value.getMinutes();
+
+        return endH > startH || (endH === startH && endM > startM);
       },
     ),
+
+  // Optional: full datetime comparison (start → end) — recommended
+  // You can add this test on eventEndDate or create a separate virtual field
+  // But most people prefer to keep it simple with the two tests above
+
   eventLocation: yup.object().shape({
     locationName: yup.string().required('Event location Name is required'),
     coords: yup.object().shape({
@@ -206,38 +219,21 @@ const eventCreateSchema = yup.object().shape({
       longitude: yup.string().required('Please select location'),
     }),
   }),
+
   eventType: yup.array().of(
     yup.object().shape({
       id: yup.string(),
       name: yup.string(),
     }),
   ),
+
   privateEvent: yup.mixed().required('Specify the event type').default(0),
-  eventAssociation: yup.array().of(
-    yup.object().shape({
-      id: yup.string(),
-      name: yup.string(),
-    }),
-  ),
-  eventCircuit: yup.array().of(
-    yup.object().shape({
-      id: yup.string(),
-      name: yup.string(),
-    }),
-  ),
-  evnetTour: yup.mixed().required('Specify the event tour').default(1),
+  eventAssociation: yup.array().of(yup.object()),
+  eventCircuit: yup.array().of(yup.object()),
+  evnetTour: yup.mixed().required('Specify the event tour').default(1), // ← typo? "evnetTour" ?
   eventConfirm: yup.boolean().required('Event confirmation is required'),
   eventSync: yup.boolean(),
   perfEventList: yup.array(),
-  // .of(
-  //   yup.object().shape({
-  //     title: yup.string().required('Event title is required'),
-  //     date: yup.date().required('Event date is required'),
-  //     startTime: yup.string().required('Start time is required'),
-  //     endTime: yup.string().required('End time is required'),
-  //   }),
-  // )
-  // .min(1, 'At least one performance event is required'),
 });
 
 const Schemas = {

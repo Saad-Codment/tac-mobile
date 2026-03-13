@@ -59,6 +59,7 @@ const usePorfileScreen = ({navigate, goBack}) => {
 
   const {mutateAsync} = useMutation({
     mutationFn: data => {
+      console.log('sdiovbklsdbvksdbvksbdklvbdklvbklsdbvklsdbvklsdbklvsd', data);
       return formDataFunc(editProfileUrl, data, 'profile_image');
     },
     onSuccess: ({ok, data}) => {
@@ -164,7 +165,7 @@ const usePorfileScreen = ({navigate, goBack}) => {
           ? formatDate(modalUpdateData?.userAge)
           : userData?.age
           ? userData?.age
-          : null,
+          : '',
         gender: modalUpdateData?.userGender?.id ?? userData?.gender ?? '',
         profile_image: modalUpdateData?.profileImg?.type
           ? modalUpdateData?.profileImg

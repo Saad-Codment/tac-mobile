@@ -208,7 +208,7 @@ const VIdeoPlayComp = ({
             <ThemeButton
               title={
                 userData?.friends != 0
-                  ? 'Remove'
+                  ? 'Remove friend'
                   : userData?.requested == 0
                   ? 'Add friend'
                   : 'Requested'
@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
     bottom: hp('15'),
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: hp('30'),
+    height: hp('25'),
   },
   actionItem: {
     alignItems: 'center',

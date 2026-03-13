@@ -134,6 +134,9 @@ const HomeHeader = ({
           </View>
         </Touchable>
         <Touchable
+          style={{
+            top: hp('1.5'),
+          }}
           onPress={() => NavigationService.navigate('GlobalSearchScreen')}>
           {/* onPress={() => NavigationService.navigate('EventFilterScreen')}> */}
           <Image
@@ -143,7 +146,11 @@ const HomeHeader = ({
             tintColor={'white'}
           />
         </Touchable>
-        <Touchable onPress={onNotificarioPress}>
+        <Touchable
+          onPress={onNotificarioPress}
+          style={{
+            top: hp('1.5'),
+          }}>
           <Image
             source={isNotification ? redDotBell : notificationWhite}
             resizeMode="contain"
@@ -151,6 +158,9 @@ const HomeHeader = ({
           />
         </Touchable>
         <Touchable
+          style={{
+            top: hp('1.5'),
+          }}
           onPress={() => {
             NavigationService.navigate('AllNearByEventScreen', {
               url: `${globalSearchEventsWithFilterUrl}latitude=${locationCoords?.lat}&longitude=${locationCoords?.lng}`,
@@ -162,7 +172,7 @@ const HomeHeader = ({
             source={location}
             resizeMode="contain"
             style={styles.notiIcon}
-            tintColor={'white'}
+            tintColor={Colors.primaryColor}
           />
         </Touchable>
       </View>
@@ -179,9 +189,16 @@ const HomeHeader = ({
           textStyle={{fontSize: hp('1.2')}}
           onPress={() => NavigationService.navigate('CreatePostScreen')}
           isRightImg={galleryYellow}
+          onRightImgPress={() => {
+            NavigationService.navigate('CreatePostScreen', {
+              isOpenGallary: true,
+            });
+          }}
           rightImgStyle={{
             width: wp('5'),
             height: hp('3'),
+          }}
+          rightImgBtnStyle={{
             marginLeft: wp('48'),
           }}
         />

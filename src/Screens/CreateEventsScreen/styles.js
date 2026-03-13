@@ -106,5 +106,8 @@ export const styles = StyleSheet.create({
     color: 'red',
     marginLeft: wp('1'),
     marginBottom: hp('1'),
+    width: wp('40'),
+    // backgroundColor: 'yellow',
+    // backgroundColor: 'red',
   },
 });

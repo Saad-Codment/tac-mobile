@@ -87,6 +87,9 @@ export {default as selectedCheck} from './Icons/selectedCheck.png';
 export {default as tacFilterIcon} from './Icons/tacFilterIcon.png';
 export {default as tickFrameYellow} from './Icons/tickFrameYellow.png';
 export {default as save25} from './Icons/save25.png';
+
+export {default as cameraBlack} from './Icons/cameraBlack.png';
+
 export {default as popular} from './Icons/popular.png';
 
 export {default as playIcon} from './Icons/playIcon.png';

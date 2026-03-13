@@ -1,4 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+>   <!-- ← change if needed -->
 
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.WRITE_CALENDAR" />
@@ -13,27 +16,32 @@
   <!-- <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> -->
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-
   <application
     android:name=".MainApplication"
     android:label="@string/app_name"
     android:icon="@mipmap/ic_launcher"
     android:roundIcon="@mipmap/ic_launcher_round"
     android:allowBackup="false"
+    tools:replace="android:allowBackup"
     android:theme="@style/AppTheme">
-    <!-- <activity
-  android:name="com.your.Activity"
-  android:launchMode="standard" /> -->
+
     <meta-data
       android:name="com.google.android.geo.API_KEY"
       android:value="AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY" />
-    <activity android:name="com.ahmedadeltito.photoeditor.PhotoEditorActivity" />
-    <activity android:name="com.yalantis.ucrop.UCropActivity" />
+
+    <activity
+      android:name="com.ahmedadeltito.photoeditor.PhotoEditorActivity"
+      android:exported="false" />
+
+    <activity
+      android:name="com.yalantis.ucrop.UCropActivity"
+      android:exported="false" />
+
     <activity
       android:name=".MainActivity"
       android:label="@string/app_name"
       android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
-      android:launchMode="standard"
+      android:launchMode="singleTask"
       android:windowSoftInputMode="adjustResize"
       android:exported="true">
       <intent-filter>
@@ -41,5 +49,7 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
   </application>
+
 </manifest>

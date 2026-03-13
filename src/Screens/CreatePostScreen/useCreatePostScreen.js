@@ -1,65 +1,111 @@
-import {useState} from 'react';
+import {useLayoutEffect, useState} from 'react';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {useMutation} from '@tanstack/react-query';
-import API, {
-  createPostFormData,
-  createPutFormDataForVideo,
-  formDataFunc,
-} from '../../Utils/helperFunc';
+import API, {createPostFormData, formDataFunc} from '../../Utils/helperFunc';
 import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import {
   createPostUrl,
   createPostWithVideosUrl,
+  deleteVideoForCloudfareUrl,
   updatePostUrl,
+  updatePostWithVideoUrl,
   uploadVideoForCloudfareUrl,
 } from '../../Utils/Urls';
 import {
-  checkImageOrientation,
   findCommonById,
+  isVideo,
+  uploadFromGalary,
 } from '../../Services/GlobalFunctions';
-import RNFS from 'react-native-fs';
-import {sha256} from 'react-native-sha256';
 
 const useCreatePostScreen = ({navigate, goBack}, {params}) => {
   const {post} = params?.post ? params : {post: null};
-
-  console.log('post', post);
-
   const isEditPost = Boolean(post?.created_at);
 
   const {getState, queryClient} = useReduxStore();
+  const {userData} = getState('Auth');
 
-  const [orientation, setOrientation] = useState('');
-  const [videoAfterUpload, setVideoAfterUpload] = useState([]);
+  useLayoutEffect(() => {
+    if (params?.isOpenGallary) {
+      const MAX_MEDIA = 5;
+      const remaining = MAX_MEDIA - (postImgs?.length ?? 0);
 
-  const [postState, setPostState] = useState({
-    postText: post?.title || null,
-    postImgs: post?.images
-      ? JSON.parse(post?.images)?.map(res => {
-          return {
-            uri: res,
+      const openGallery = async () => {
+        if (remaining <= 0) {
+          errorMessage('You can only upload maximum 5 media files');
+          return;
+        }
+
+        const media = await uploadFromGalary(true, true, remaining);
+        if (!media || (Array.isArray(media) && media.length === 0)) return;
+
+        const videoItems = media.filter(item => isVideo(item));
+        videoItems.forEach(res => {
+          getVideoUrlOfCloudFare.mutate({
+            filename: res.name || 'video.mp4',
+            mime_type: res.type || 'video/mp4',
+            uri: res?.uri,
+          });
+        });
+        const onChangeVal = (key, value) => {
+          if (key === 'postText') setPostText(value);
+          if (key === 'postImgs') setPostImgs(value);
+        };
+
+        onChangeVal('postImgs', [...(postImgs || []), ...media]);
+      };
+      openGallery();
+    }
+  }, []);
+
+  // ── Main post state ──────────────────────────────────────────────
+  const [postText, setPostText] = useState(post?.title || '');
+  const [postImgs, setPostImgs] = useState(() => {
+    const items = [];
+
+    // 1. Existing images
+    if (post?.images) {
+      try {
+        const parsed = JSON.parse(post.images);
+        parsed.forEach(path => {
+          items.push({
+            uri: path,
             type: 'image/jpeg',
-            name: res.split('/').pop(),
+            name: path.split('/').pop(),
             isEdit: true,
-          };
-        })
-      : [],
+          });
+        });
+      } catch {}
+    }
+
+    // 2. Existing videos (we'll show thumbnail for preview)
+    if (post?.videos?.length) {
+      post.videos.forEach(vid => {
+        items.push({
+          uri: vid.thumbnail_path || '', // preview image
+          type: 'video/existing',
+          isEdit: true,
+          isExistingVideo: true,
+          videoId: vid.id,
+          master_playlist_path: vid.master_playlist_path,
+          thumbnail_path: vid.thumbnail_path,
+        });
+      });
+    }
+
+    return items;
   });
 
-  const {postImgs, postText} = postState;
+  const [videoAfterUpload, setVideoAfterUpload] = useState([]); // only new videos
 
-  const updateState = data => setPostState(prev => ({...prev, ...data}));
+  // ── Mutations ────────────────────────────────────────────────────
 
-  const onChangeVal = (key, val) => updateState({[key]: val});
-
-  const {mutateAsync} = useMutation({
+  // CREATE mutation (your original – unchanged)
+  const {mutateAsync: createPostMutation} = useMutation({
     mutationFn: data => {
-      console.log('dataldfknbkldnflbndklfbnldfnklb', data);
       const options = {imageKey: 'images', isArrayImages: true};
       return createPostFormData(createPostWithVideosUrl, data, options);
     },
     onSuccess: ({ok, data}) => {
-      console.log('hjsvxjksdkjvkjsdvkjsdkjvkjsdjkvksjdvkjsdv', data);
       if (ok) {
         successMessage('Post Created.');
         goBack();
@@ -68,19 +114,33 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
         errorMessage(data?.message);
       }
     },
-    onError: ({message}) => {
-      errorMessage('Problem occurred while uploading data.');
-    },
+    onError: () => errorMessage('Problem occurred while uploading data.'),
   });
-  const getVideoUrlOfCloudFare = useMutation({
-    mutationFn: data => {
-      return API.post(uploadVideoForCloudfareUrl, data);
-    },
+
+  // UPDATE mutation
+  const updatePostMutation = useMutation({
+    mutationFn: data =>
+      formDataFunc(updatePostWithVideoUrl + post?.id, data, 'images', true),
     onSuccess: ({ok, data}) => {
-      console.log(
-        'hjsvxjksdkjvkjsdvkjsdkjvkjsdjkvksjsdfsdfsdfsdfsdfsfdvkjsdv',
-        data,
-      );
+      if (ok) {
+        successMessage('Post Updated.');
+        goBack();
+        if (params?.functionToUpdatePostOrEvent) {
+          params.functionToUpdatePostOrEvent(data);
+        }
+        queryClient.invalidateQueries(['myProfilePosts']);
+        if (params?.refetch) setTimeout(() => params.refetch(), 1500);
+      } else {
+        errorMessage(data?.message);
+      }
+    },
+    onError: () => errorMessage('Problem occurred while updating post.'),
+  });
+
+  // Video upload flow (same for create & edit)
+  const getVideoUrlOfCloudFare = useMutation({
+    mutationFn: data => API.post(uploadVideoForCloudfareUrl, data),
+    onSuccess: ({ok, data}) => {
       if (ok) {
         uploadVideoUrlToCloudFare.mutate({
           url: data?.upload_url,
@@ -90,7 +150,6 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
             uri: data?.request?.uri,
           },
         });
-
         setVideoAfterUpload(prev => [
           ...prev,
           {
@@ -104,10 +163,11 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
         errorMessage(data?.message);
       }
     },
-    onError: ({message}) => {
-      errorMessage('Problem occurred while uploading data.');
-    },
   });
+
+  // Your existing upload & delete mutations here (unchanged)
+  // uploadVideoUrlToCloudFare, deleteVideo ...
+
   const uploadVideoUrlToCloudFare = useMutation({
     mutationFn: async data => {
       console.log('Uploading video to Cloudflare R2 with data:', data);
@@ -115,11 +175,9 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
       if (!videoUri) {
         throw new Error('No video URI');
       }
-
       try {
         const fetchResp = await fetch(videoUri);
         const blob = await fetchResp.blob();
-
         // Try to get size (fallback if blob.size undefined)
         let fileSize = blob.size || 0;
         if (fileSize === 0) {
@@ -127,20 +185,16 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
           // const stat = await RNFS.stat(videoUri);
           // fileSize = stat.size;
         }
-
         console.log('Uploading blob size:', fileSize);
-
         const uploadResp = await fetch(data?.url, {
           method: 'PUT',
           body: blob,
         });
-
         if (!uploadResp.ok) {
           const errText = await uploadResp.text();
           console.error('R2 full response:', uploadResp.status, errText);
           throw new Error(`Upload failed: ${errText}`);
         }
-
         console.log('Success! Status:', uploadResp.status);
         return {ok: true};
       } catch (err) {
@@ -148,7 +202,6 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
         throw err;
       }
     },
-
     onSuccess: ({ok, data}) => {
       console.log('Upload success:', data);
       if (ok) {
@@ -158,95 +211,101 @@ const useCreatePostScreen = ({navigate, goBack}, {params}) => {
         errorMessage(data?.message || 'Upload failed');
       }
     },
-
     onError: err => {
       console.error('Upload error:', err);
       errorMessage('Failed to upload video. Check file size or network.');
     },
   });
 
-  const {mutate} = useMutation({
-    mutationFn: data => {
-      console.log('dataldfknbkldnflbndklfbnldfnklb', data);
-      return formDataFunc(updatePostUrl + post?.id, data, 'images', true);
-    },
-    onSuccess: ({ok, data}) => {
-      console.log(
-        'lskdbvklbsdklvblsdbvsdbkvbsdkvbskdlvklsdbvklsdbklvbsd',
-        data,
-      );
-      if (ok) {
-        successMessage('Post Updated.');
-
-        goBack();
-        if (params?.functionToUpdatePostOrEvent) {
-          params?.functionToUpdatePostOrEvent(data);
-        }
-        queryClient.invalidateQueries(['myProfilePosts']);
-        if (params?.refetch()) {
-          setTimeout(() => {
-            params?.refetch();
-          }, 1500);
-        }
-      } else {
-        errorMessage(data?.message);
-      }
-      console.log('klsdbvklsdbvklbsdklvbklsdbvklsldvs', data);
-    },
+  const deleteVideo = useMutation({
+    mutationFn: ({videoId}) => API.delete(deleteVideoForCloudfareUrl + videoId),
+    onSuccess: () => console.log('Old video deleted'),
+    onError: () => errorMessage('Failed to delete video.'),
   });
 
-  const createPost = () => {
-    if (
-      postText != null &&
-      postText != undefined &&
-      postText != '' &&
-      postText.trim()
-    ) {
-      if (isEditPost) {
-        mutate({
-          title: postText,
-          images: postImgs.filter(res => !res?.isEdit),
-          images_array: JSON.stringify(
-            postImgs.filter(res => res?.isEdit).map(res => res.uri),
-          ),
-        });
-      } else {
-        mutateAsync({
-          title: postText,
-          images:
-            postImgs?.filter?.(
-              i => !i.type?.startsWith('video/') && i.duration == null,
-            ) ?? [],
-          video_ids:
-            findCommonById(videoAfterUpload, postImgs, 'uri')?.map(
-              i => i.videoId,
-            ) ?? [],
-        });
-      }
-    } else errorMessage('Please write or upload images to create post');
+  // ── Handlers ─────────────────────────────────────────────────────
+
+  const handleAddMedia = newMedia => {
+    const videos = newMedia.filter(isVideo);
+    const images = newMedia.filter(i => !isVideo(i));
+
+    videos.forEach(vid => {
+      getVideoUrlOfCloudFare.mutate({
+        filename: vid.name || 'video.mp4',
+        mime_type: vid.type || 'video/mp4',
+        uri: vid.uri,
+      });
+    });
+
+    setPostImgs(prev => [...prev, ...newMedia]);
   };
 
-  const handleOrientationCheck = async images => {
-    // try {
-    //   const orientationType = await checkImageOrientation(imageUrl());
-    //   setOrientation(orientationType);
-    // } catch (error) {
-    //   console.log('Error checking image orientation:', error);
-    // }
+  const handleRemoveMedia = (item, index) => {
+    if (item.isExistingVideo && item.videoId) {
+      deleteVideo.mutate({videoId: item.videoId});
+    }
+    setPostImgs(prev => {
+      const copy = [...prev];
+      copy.splice(index, 1);
+      return copy;
+    });
   };
 
-  const {userData} = getState('Auth');
+  const handleCreateOrUpdate = () => {
+    if (!postText?.trim() && postImgs.length === 0) {
+      return errorMessage('Please write something or add media');
+    }
+
+    if (isEditPost) {
+      // ── EDIT LOGIC ────────────────────────────────────────
+      const oldImages = postImgs
+        .filter(i => i.isEdit && !i.isExistingVideo)
+        .map(i => i.uri);
+
+      const newImages = postImgs.filter(i => !i.isEdit && !isVideo(i));
+
+      const keptVideoIds = postImgs
+        .filter(i => i.isExistingVideo)
+        .map(i => i.videoId);
+
+      const newVideoIds = videoAfterUpload
+        .filter(v => postImgs.some(m => m.uri === v.uri))
+        .map(v => v.videoId);
+
+      updatePostMutation.mutate({
+        title: postText,
+        images: newImages, // new image files
+        images_array: JSON.stringify(oldImages), // paths of kept old images
+        video_ids: [...newVideoIds],
+      });
+    } else {
+      // ── CREATE LOGIC – your original flow (unchanged) ──
+      createPostMutation({
+        title: postText,
+        images: postImgs.filter(i => !isVideo(i)),
+        video_ids:
+          findCommonById(videoAfterUpload, postImgs, 'uri')?.map(
+            i => i.videoId,
+          ) ?? [],
+      });
+    }
+  };
+
   return {
     userData,
-    onChangeVal,
-    postImgs,
     postText,
-    createPost,
+    setPostText,
+    postImgs,
+    onChangeVal: (key, value) => {
+      if (key === 'postText') setPostText(value);
+      if (key === 'postImgs') setPostImgs(value);
+    },
+    createPost: handleCreateOrUpdate,
     isEditPost,
-    orientation,
-    handleOrientationCheck,
     getVideoUrlOfCloudFare,
     videoAfterUpload,
+    handleRemoveMedia,
+    handleAddMedia, // optional – if you want to refactor onRightPress
   };
 };
 
