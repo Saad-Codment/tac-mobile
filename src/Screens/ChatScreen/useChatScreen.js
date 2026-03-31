@@ -18,7 +18,6 @@ import {
   uploadFromGalary,
 } from '../../Services/GlobalFunctions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RNFetchBlob from 'rn-fetch-blob';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import {loadingFalse} from '../../Redux/Action/isloadingAction';
 import initSocket from '../../Services/SocketServices'; // Use only initSocket

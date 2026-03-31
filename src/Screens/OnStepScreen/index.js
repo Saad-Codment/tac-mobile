@@ -23,7 +23,6 @@ import {
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
 import ThemeButton from '../../Components/ThemeButton';
-import {Picker} from '@react-native-picker/picker';
 import ErrorInputComponent from '../../Components/ErrorInputComponent';
 import {states, step2, step3, step5} from '../../Utils/localDB';
 import {Colors} from '../../Theme/Variables';

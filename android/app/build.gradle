@@ -9,6 +9,7 @@ apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
  * By default you don't need to apply any configuration, just uncomment the lines you need.
  */
 react {
+    autolinkLibrariesWithApp()
     project.ext.react = [
     enableHermes: true,
     hermesEnabled: true   // ← THIS LINE FIXES THE ERROR 100%
@@ -73,19 +74,25 @@ def enableProguardInReleaseBuilds = false
  * give correct results when using with locales other than en-US. Note that
  * this variant is about 6MiB larger per architecture than default.
  */
-def jscFlavor = 'org.webkit:android-jsc:+'
+def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
+packagingOptions {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
+
     namespace "com.tac.codment"
     defaultConfig {
         applicationId "com.tac.codment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 14
+        versionCode 15
         versionName "1.0"
     }
     signingConfigs {
@@ -128,7 +135,6 @@ implementation project(':react-native-vector-icons')
  implementation 'com.android.billingclient:billing:6.1.0' // ✅ or latest stable
 //  implementation 'androidx.core:core-ktx:1.12.0'
 
-     implementation project(':react-native-aes-crypto')
 implementation 'com.google.firebase:firebase-analytics'
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
@@ -137,5 +143,5 @@ implementation 'com.google.firebase:firebase-analytics'
     }
 }
 
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+// apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")

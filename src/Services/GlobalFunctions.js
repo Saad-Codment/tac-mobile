@@ -11,8 +11,6 @@ import ImageCropPicker from 'react-native-image-crop-picker';
 // import Geolocation from '@react-native-community/geolocation';
 import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
 import {MapAPIKey} from '../Utils/Urls';
-import bcrypt from 'react-native-bcrypt';
-import AES from 'react-native-aes-crypto';
 import {randomBytes} from 'react-native-get-random-values';
 import {store} from '../Redux/Reducer';
 import {femaleImg, maleImg} from '../Assets';
@@ -1463,24 +1461,6 @@ function hashPassword(password) {
 //   }
 // };
 
-/**
- * Verifies if the provided password matches the hashed password.
- * @param {string} password - The plain text password.
- * @param {string} hashed - The hashed password.
- * @param {string} key - The original encryption key.
- * @param {string} iv - The Initialization Vector used during encryption.
- * @returns {Promise<boolean>} - True if the password matches, otherwise false.
- */
-const verifyPassword = async (password, hashed, key, iv) => {
-  try {
-    const decrypted = await AES.decrypt(hashed, key, iv);
-    return decrypted === password;
-  } catch (error) {
-    console.error('Decryption Error:', error);
-    return false;
-  }
-};
-
 const checkMaleFemaleForImg = () => {
   const {Auth} = store.getState();
   if (Auth?.userData?.gender == 'male') return maleImg;
@@ -1824,7 +1804,6 @@ export {
   calculateAge,
   getFileNameFromURL,
   hashPassword,
-  verifyPassword,
   getLastNightDigit,
   checkMaleFemaleForImg,
   showFirstThreeAndCountRest,

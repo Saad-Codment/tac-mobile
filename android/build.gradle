@@ -1,33 +1,35 @@
 buildscript {
     ext {
-        buildToolsVersion = "34.0.0" // This is fine, still compatible with compileSdk 35
-        minSdkVersion = 23
-        compileSdkVersion = 35
-        targetSdkVersion = 35
-        ndkVersion = "26.1.10909125"
+        buildToolsVersion = "35.0.0"          // updated
+        minSdkVersion = 24
+        compileSdkVersion = 36                // ← Important change
+        targetSdkVersion = 36                 // ← Also update
+        ndkVersion = "27.0.12077973"
         kotlinVersion = "1.9.22"
     }
 
     repositories {
         google()
         mavenCentral()
-          maven { url 'https://maven.google.com' }
-        mavenLocal()
-          maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/../node_modules/react-native/android"
-        }
-        maven {
-            url = uri("https://storage.googleapis.com/r8-releases/raw")
-        }
     }
 
     dependencies {
         classpath("com.android.tools.build:gradle:8.6.0")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22") // ✅ match your ext.kotlinVersion
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
         classpath("com.google.gms:google-services:4.4.2")
-                classpath("com.android.tools:r8:8.1.44")
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        google()
+        maven { url 'https://www.jitpack.io' }
+
+        maven {
+            url "$rootDir/../node_modules/@notifee/react-native/android/libs"
+        }
     }
 }
 
