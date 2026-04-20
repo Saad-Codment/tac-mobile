@@ -1,11 +1,10 @@
 import {
   Image,
-  KeyboardAvoidingView,
-  Platform,
   Pressable,
   ScrollView,
   TextInput,
   View,
+  BackHandler,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import {boldDivider, crossWhite, editPicBtn, searchIcon} from '../../Assets';
@@ -13,14 +12,12 @@ import {styles} from './styles';
 import {hp, wp} from '../../Config/responsive';
 import {TextComponent} from '../../Components/TextComponent';
 import ThemeButton from '../../Components/ThemeButton';
-import {useCallback, useRef, useState} from 'react';
+import {useCallback, useRef, useState, useEffect} from 'react';
 import {CircleImage} from '../../Components/CircleImage';
 import {Touchable} from '../../Components/Touchable';
 import {Colors} from '../../Theme/Variables';
-import ErrorInputComponent from '../../Components/ErrorInputComponent';
 import {MultiSelectButton} from '../../Components/MultiSelectButton';
 import {
-  formatDateToCustomFormat,
   formatDateToLong,
   sortByNameAlphabetically,
   uploadFromGalary,
@@ -29,10 +26,26 @@ import {imageUrl} from '../../Utils/Urls';
 import DatePicker from 'react-native-date-picker';
 import {step2} from '../../Utils/localDB';
 
+// ====================== FIX FOR react-native-modal CRASH ======================
+// This safely prevents the old removeEventListener error when modal closes
+// (common issue with react-native-modal on newer React Native versions)
+const originalRemoveEventListener = BackHandler.removeEventListener;
+if (typeof originalRemoveEventListener === 'function') {
+  BackHandler.removeEventListener = function (eventName, handler) {
+    // Safely ignore calls from the library that pass undefined handler
+    if (typeof handler !== 'function') {
+      return;
+    }
+    return originalRemoveEventListener.apply(this, arguments);
+  };
+}
+// =============================================================================
+
 const ageRange = Array.from({length: 23}, (_, i) => {
   const age = 18 + i;
   return {label: String(age), value: String(age)};
 });
+
 const SettingModal = ({
   activeTags,
   isModal,
@@ -51,7 +64,6 @@ const SettingModal = ({
     state: activeTags?.state,
   });
 
-  // Calculate 13 years ago from today
   const currentDate = new Date();
   const maxSelectableDate = new Date();
   maxSelectableDate.setFullYear(currentDate.getFullYear() - 13);
@@ -59,10 +71,9 @@ const SettingModal = ({
   const [modalState, setModalState] = useState(false);
 
   const [firstName, setFirstName] = useState(activeTags?.firstName);
-
   const [lastName, setLastName] = useState(activeTags?.lastName ?? '');
 
-  const [_, forceUpdate] = useState(); // Just to trigger updates
+  const [_, forceUpdate] = useState();
 
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
@@ -95,15 +106,12 @@ const SettingModal = ({
   function searchFun(e) {
     var text = e;
     if (text) {
-      // Inserted text is not blank
-      // Filter the masterDataSource and update FilteredDataSource
       const newData = allData
         .map(res => ({
           id: res,
           name: res,
         }))
         .filter(function (item) {
-          // Applying filter for the inserted text in search bar
           const itemData = (item.name || '').toUpperCase();
           const textData = text.toUpperCase();
           return itemData.indexOf(textData) > -1;
@@ -141,14 +149,7 @@ const SettingModal = ({
               justifyContent: 'center',
               width: wp('90'),
             }}
-            // key={item?.id}
             onPress={() => onChangeVal('userAge', null)}>
-            {/* <Image
-                  source={item?.image}
-                  style={styles.catImage(
-                    Boolean(onBoardData?.gender == item.title),
-                  )}
-                /> */}
             <TextComponent
               text={step2[2]?.title}
               styles={styles.genderTitle(
@@ -167,7 +168,7 @@ const SettingModal = ({
                     ? new Date(innerDataState?.userAge)
                     : currentDate
                 }
-                maximumDate={maxSelectableDate} // 👈 This prevents dates after 13 years ago
+                maximumDate={maxSelectableDate}
                 is24hourSource="device"
                 locale="en"
                 modal
@@ -175,7 +176,6 @@ const SettingModal = ({
                   console.log('sdhvswhopierhbiobdfiohbilvhdfobhvodfbo;df', e);
                   setModalState(false);
                   onChangeVal('userAge', e);
-                  // }
                 }}
                 onCancel={() => {
                   setModalState(false);
@@ -183,14 +183,6 @@ const SettingModal = ({
               />
             </View>
           )}
-          {/* <ErrorInputComponent
-            dropDownData={ageRange}
-            dropDownPlaceholder={'Select your Age'}
-            preferenceVal={innerDataState?.userAge}
-            setPreferenceVal={val => onChangeVal('userAge', val)}
-            dividerBool
-            dividerLineBool
-          /> */}
         </View>
       </>
     );
@@ -199,7 +191,6 @@ const SettingModal = ({
   const renderObj = {
     edit_profile: {
       title: 'Edit Profile',
-      // renderView: <EditProfileView />,
     },
     age_view: {title: 'Update Your Age', renderView: <AgeChangeView />},
     event_type: {
@@ -287,10 +278,6 @@ const SettingModal = ({
                     name: res,
                   })))
             }
-            // items={allData.map(res => ({
-            //   id: res,
-            //   name: res,
-            // }))}
             selectedAlter={city}
             btnStyle={{
               height: 'auto',
@@ -350,12 +337,6 @@ const SettingModal = ({
             onSelectVal={(objId, item) => {
               console.log('selected state item', item);
               onChangeVal('state', item);
-              // if (Boolean(state?.find(res => res?.id == item?.id))) {
-              //   onChangeVal(
-              //     'state',
-              //     state?.filter(res => res?.id != item?.id),
-              //   );
-              // } else onChangeVal('state', [item]);
             }}
           />
         </>
@@ -389,19 +370,41 @@ const SettingModal = ({
 
   const [firstHit, setFirstHit] = useState(false);
 
+  // Safe back button handler
+  const handleBackButton = useCallback(() => {
+    if (firstHit && activeTags.length == 0) {
+      onPress?.({}, false);
+    } else {
+      onBackPress?.();
+    }
+    return true;
+  }, [firstHit, activeTags, onPress, onBackPress]);
+
+  useEffect(() => {
+    let subscription = null;
+    if (isModal) {
+      subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        handleBackButton,
+      );
+    }
+    return () => {
+      if (subscription?.remove) {
+        subscription.remove();
+      }
+    };
+  }, [isModal, handleBackButton]);
+
   return (
     <View style={styles.modalView}>
       <Modal
         isVisible={isModal}
         animationInTiming={100}
         animationOutTiming={100}
+        presentationStyle="pageSheet"
         avoidKeyboard
         animationType="fade"
-        // hideModalContentWhileAnimating
-        // useNativeDriver
-        onBackButtonPress={
-          firstHit && activeTags.length == 0 ? onPress : onBackPress
-        }
+        onBackButtonPress={handleBackButton}
         style={styles.bottomModal}>
         <View
           style={{
@@ -434,7 +437,6 @@ const SettingModal = ({
             />
             <ScrollView
               showsVerticalScrollIndicator={false}
-              // keyboardShouldPersistTaps="always"
               contentContainerStyle={styles.modalScroll}>
               {heading == 'edit_profile' && (
                 <>
@@ -486,7 +488,6 @@ const SettingModal = ({
               )}
               {renderObj[heading]?.renderView}
             </ScrollView>
-            {/* {firstHit && ( */}
             {onPress && (
               <ThemeButton
                 title={'Save'}
@@ -498,7 +499,6 @@ const SettingModal = ({
                 textStyle={{fontSize: hp('1.5')}}
               />
             )}
-            {/* )} */}
           </View>
         </View>
       </Modal>

@@ -15,6 +15,10 @@ import 'react-native-gesture-handler';
 
 const queryClient = new QueryClient();
 
+ErrorUtils.setGlobalHandler((error, isFatal) => {
+  console.log('REAL ERROR:', error);
+});
+
 const Tac = () => (
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>

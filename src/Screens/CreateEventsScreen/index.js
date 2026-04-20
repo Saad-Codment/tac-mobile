@@ -275,7 +275,7 @@ const CreateEventsScreen = ({navigation, route}) => {
                                       'sjkbdvklsdbvklsdbkvbsdlvbksdvb',
                                       imgData,
                                     );
-                                    onChange([...(value ?? []), imgData]);
+                                    onChange([...(value ?? []), ...imgData]);
                                   },
                                 },
                                 {

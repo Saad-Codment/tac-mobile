@@ -87,6 +87,7 @@ const BottomModalComponent = ({
   return (
     <Modal
       isVisible={isVisible}
+      presentationStyle="pageSheet"
       onBackdropPress={onClose}
       style={{
         justifyContent: showCenter ? 'center' : 'flex-end',

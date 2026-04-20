@@ -1,7 +1,7 @@
 import contact from 'react-native-contacts';
 import API from '../Utils/helperFunc';
 import {sendNumberToServerUrl, sendUpdatedAtUrl} from '../Utils/Urls';
-import SQLite from 'react-native-sqlite-storage';
+import SQLite from '@boltcode/react-native-sqlite-storage';
 import {store} from '../Redux/Reducer';
 import {types} from '../Redux/types';
 import {getLastNightDigit, hashPassword} from './GlobalFunctions';

@@ -1,17 +1,9 @@
 import {loadingFalse, loadingTrue} from '../../Redux/Action/isloadingAction';
 import {successMessage, errorMessage} from '../../Config/NotificationMessage';
 import useReduxStore from '../../Hooks/UseReduxStore';
-import auth from '@react-native-firebase/auth';
-import {forgotPasswordAction} from '../../Redux/Action/AuthAction';
 import {useRef, useState} from 'react';
-import {sendVerficationCodeTwilo} from '../../Services/TwiloServices';
 import API from '../../Utils/helperFunc';
-import {
-  SendVerficatioUrl,
-  UpdateProfileUrl,
-  sendNumberToServerUrl,
-  verifyNumberUrl,
-} from '../../Utils/Urls';
+import {SendVerficatioUrl, verifyNumberUrl} from '../../Utils/Urls';
 import {
   useBlurOnFulfill,
   useClearByFocusCell,

@@ -27,6 +27,7 @@ const BottomViewModal = memo(
       <View style={styles.modalView}>
         <Modal
           isVisible={isModal}
+          presentationStyle="pageSheet"
           // animationInTiming={100}
           // animationOutTiming={100}
           avoidKeyboard

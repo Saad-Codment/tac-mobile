@@ -1,9 +1,7 @@
 import {useEffect, useState} from 'react';
 import Schemas from '../../Utils/Validation';
 import useFormHook from '../../Hooks/UseFormHooks';
-import {useFieldArray, useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
-import RNCalendarEvents from 'react-native-calendar-events';
+import {useFieldArray} from 'react-hook-form';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   createEventUrl,
@@ -14,43 +12,42 @@ import {
 import API, {formDataFunc} from '../../Utils/helperFunc';
 import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import {
-  convertDateFormat,
-  convertDateString,
-  convertToArray,
-  convertToCustomTimeFormat,
   convertToLocalFullTime,
-  convertToLocalTime,
-  formatDateToCustomFormat,
   formatDateToYMD,
-  getCalenderPerComfirm,
   getFormattedTime,
   getFullLocalDate,
   getIdsFromArry,
-  isFutureOrNow,
 } from '../../Services/GlobalFunctions';
 import useReduxStore from '../../Hooks/UseReduxStore';
+import * as Calendar from '@shadahmad7/react-native-calendar';
+import {Alert} from 'react-native';
+
+// === SAFE DATE CONVERSION ===
+const parseBackendDate = dateStr => {
+  if (!dateStr) return null;
+  // Convert "2026-04-17 03:00:00" → proper Date object
+  return new Date(dateStr.replace(' ', 'T') + 'Z');
+};
+
+const parseBackendTime = timeStr => {
+  if (!timeStr) return null;
+  // For time-only strings like "03:00:00" → create valid Date
+  return new Date(timeStr);
+};
 
 const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
   const {event} = params?.event ? params : {event: null};
 
   const isEditEvnet = Boolean(event?.created_at);
 
-  var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const currentDate = new Date();
-  const nextDay = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // Adds 1 day in milliseconds
-  // Day after tomorrow
-  const nextNextDay = new Date(currentDate.getTime() + 2 * 24 * 60 * 60 * 1000);
-  const parseTimeString = timeStr => {
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    return hours * 60 + minutes; // Convert to minutes since midnight for comparison
-  };
+  const nextDay = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
 
-  // Set default end time to 11:59 PM next day
-  const nextDayTime = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // August 26, 2025
-  nextDayTime.setHours(23, 59, 0, 0); // Set to 11:59 PM
-  const defaultEndTime = new Date(nextDayTime); // Full Date object for August 26, 2025, 11:59 PM
+  const nextDayTime = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+  nextDayTime.setHours(23, 59, 0, 0);
+  const defaultEndTime = new Date(nextDayTime);
 
-  // Set another key for 8:00 AM next day
   const nextDayMorning = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
   nextDayMorning.setHours(8, 0, 0, 0);
   const defaultMorningTime = new Date(nextDayMorning);
@@ -61,6 +58,14 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
       const allProps = await API.get(getEventDetailsUrl + event?.id);
       if (allProps?.ok) {
         const res = allProps.data;
+        console.log(
+          'lksdnvklsndklvnsdklvnklsdnvklnsdkvlsdnlkvnsdklvnklsdnvlsd',
+          new Date(convertToLocalFullTime(res?.start_time)),
+          res,
+          res?.title,
+          res?.start_time,
+          parseBackendTime(res.start_time),
+        );
 
         setValue('eventTitle', res?.title || '');
         setValue(
@@ -76,39 +81,21 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
         );
         setValue('eventPrice', res?.added_money || '');
 
-        // inside query success
         replace(
           res?.performances
             ? res?.performances?.map(p => ({
                 title: p?.title || '',
-                date: p?.date
-                  ? new Date(getFullLocalDate(p.date))
-                  : currentDate,
+                date: p?.date ? parseBackendDate(p.date) : currentDate,
                 startTime: p?.start_time
-                  ? new Date(convertToLocalFullTime(p.start_time))
+                  ? parseBackendTime(p.start_time)
                   : defaultMorningTime,
                 endTime: p?.end_time
-                  ? new Date(convertToLocalFullTime(p.end_time))
+                  ? parseBackendTime(p.end_time)
                   : defaultEndTime,
               }))
             : [],
         );
 
-        // setValue(
-        //   'perfEventList',
-        //   res?.performances?.map(res => ({
-        //     title: res?.title || '',
-        //     date: res?.date
-        //       ? new Date(getFullLocalDate(res.date))
-        //       : currentDate,
-        //     startTime: res?.start_time
-        //       ? new Date(convertToLocalFullTime(res.start_time))
-        //       : defaultMorningTime,
-        //     endTime: res?.end_time
-        //       ? new Date(convertToLocalFullTime(res.end_time))
-        //       : defaultEndTime,
-        //   })),
-        // ); // set if you have event list data
         setValue('privateEvent', res?.private || 0);
         setValue('evnetTour', res?.tour?.id || 1);
         setValue('eventType', res?.event_types ?? null);
@@ -125,30 +112,26 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
 
         setValue(
           'eventStartDate',
-          res?.from_date ? new Date(getFullLocalDate(res.from_date)) : nextDay,
+          res?.from_date ? parseBackendDate(res.from_date) : nextDay,
         );
         setValue(
           'eventStartTime',
           res?.start_time
-            ? new Date(convertToLocalFullTime(res.start_time))
+            ? parseBackendDate(res.start_time)
             : defaultMorningTime,
         );
         setValue(
           'eventEndDate',
-          res?.to_date ? new Date(getFullLocalDate(res.to_date)) : nextDay,
+          res?.to_date ? parseBackendDate(res.to_date) : nextDay,
         );
         setValue(
           'eventEndTime',
-          res?.end_time
-            ? new Date(convertToLocalFullTime(res.end_time))
-            : defaultEndTime,
+          res?.end_time ? parseBackendDate(res.end_time) : defaultEndTime,
         );
       }
       return allProps;
     },
   });
-
-  console.log('jkdbflksfblksblksblkdfklbnlkdfnbkldfnklbndfb', data?.data);
 
   const {
     control,
@@ -157,13 +140,8 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
     clearErrors,
     reset,
     getFieldState,
-    getValues,
-    resetField,
-    setError,
-    setFocus,
     setValue,
     trigger,
-    unregister,
     watch,
     errors,
   } = useFormHook(Schemas.eventCreate, {
@@ -197,7 +175,6 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
     return () => reset();
   }, []);
 
-  // Initialize useFieldArray for perfEventList
   const {fields, append, remove, update, replace} = useFieldArray({
     control,
     name: 'perfEventList',
@@ -220,7 +197,6 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
       modalType: modalType ?? 'date',
       index,
       onChange: e => {
-        console.log(stateName, e);
         setValue(stateName, e);
       },
     });
@@ -230,15 +206,20 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
 
   const {mutateAsync} = useMutation({
     mutationFn: data => {
-      console.log('Following event with data:', data);
       return API.post(followEventsUrl, {
         event_id: data?.id,
         calendar_id: data?.calender_id,
         record_id: data?.record_id,
       });
     },
-    onSuccess: ({ok, data}) => {},
+    onSuccess: () => {},
   });
+
+  // ================== NEW CALENDAR FUNCTIONALITY ==================
+  const requestCalendarPermissions = async () => {
+    const {status} = await Calendar.requestCalendarPermission();
+    return status === 'granted';
+  };
 
   const createEventFun = async ({
     eventTitle,
@@ -298,8 +279,6 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
           : null,
       };
 
-      console.log('Request Body:', JSON.stringify(body));
-
       const {ok, data} = await formDataFunc(
         isEditEvnet ? updateEventUrl + event?.id : createEventUrl,
         body,
@@ -308,44 +287,54 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
         '[performances]',
       );
 
-      console.log('API Response:', data);
-
       if (ok) {
+        // === Sync with Device Calendar using @shadahmad7/react-native-calendar ===
         if (eventSync) {
-          const permission = await RNCalendarEvents.checkPermissions();
-          if (permission !== 'authorized') {
-            await RNCalendarEvents.requestPermissions();
+          try {
+            const hasPermission = await requestCalendarPermissions();
+            if (!hasPermission) {
+              Alert.alert(
+                'Permission Denied',
+                'Calendar permission is required.',
+              );
+            } else {
+              let defaultCalendar = await Calendar.getDefaultCalendar();
+
+              if (!defaultCalendar) {
+                const calendars = await Calendar.getCalendars();
+                defaultCalendar =
+                  calendars.find(cal => cal.isPrimary) || calendars[0];
+              }
+
+              if (defaultCalendar) {
+                const startDateMs = new Date(eventStartDate).getTime();
+                const endDateMs = new Date(eventEndDate).getTime();
+
+                const eventToSave = {
+                  title: eventTitle,
+                  startDate: startDateMs.toString(),
+                  endDate: endDateMs.toString(),
+                  location: eventLocation.locationName,
+                  notes: eventLocation.locationName || '',
+                  allDay: false,
+                };
+
+                const eventId = await Calendar.saveEvent(eventToSave);
+
+                if (eventId) {
+                  await mutateAsync({
+                    id: data?.id,
+                    calender_id: defaultCalendar.id,
+                    record_id: eventId,
+                  });
+                  console.log('Event synced to device calendar successfully');
+                }
+              }
+            }
+          } catch (calendarError) {
+            console.log('Error syncing to calendar:', calendarError);
+            // Don't block event creation if calendar fails
           }
-
-          await getCalenderPerComfirm(); // assuming this fetches a valid calendar list
-
-          // Get all calendars
-          const calendars = await RNCalendarEvents.findCalendars();
-          const modifiableCalendar = calendars.find(
-            cal => cal.allowsModifications,
-          );
-
-          const calendarId = modifiableCalendar?.id || calendars[0]?.id;
-
-          if (!calendarId) {
-            console.warn('No writable calendar found.');
-          }
-
-          const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-          const recordId = await RNCalendarEvents.saveEvent(eventTitle, {
-            calendarId,
-            startDate: new Date(eventStartDate).toISOString(),
-            endDate: new Date(eventEndDate).toISOString(),
-            location: eventLocation.locationName,
-            notes: eventLocation.locationName,
-            timeZone,
-          });
-          await mutateAsync({
-            id: data?.id,
-            calender_id: calendarId,
-            record_id: recordId,
-          });
         }
 
         // Post-save logic
@@ -393,4 +382,5 @@ const useCreateEventsScreen = ({navigate, goBack}, {params}) => {
     defaultEndTime,
   };
 };
+
 export default useCreateEventsScreen;

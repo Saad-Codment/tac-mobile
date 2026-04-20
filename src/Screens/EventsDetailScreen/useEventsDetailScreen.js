@@ -8,13 +8,13 @@ import API from '../../Utils/helperFunc';
 import {useCallback, useRef, useState} from 'react';
 import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import useReduxStore from '../../Hooks/UseReduxStore';
-import ReactNativeCalendarEvents from 'react-native-calendar-events';
-import {getCalenderPerComfirm} from '../../Services/GlobalFunctions';
+import * as Calendar from '@shadahmad7/react-native-calendar';
 import {Alert} from 'react-native';
 
 const useEventDetailScreen = ({navigate, goBack}, {params}) => {
-  const {getState} = useReduxStore();
+  console.log('ksadbkjsbdkbkjsdbvjbsdkjbvkjsdbkjvbksbdvsdkjvbsd', params);
 
+  const {getState} = useReduxStore();
   const {userData} = getState('Auth');
 
   const calendarIdRef = useRef(null);
@@ -29,15 +29,11 @@ const useEventDetailScreen = ({navigate, goBack}, {params}) => {
   });
 
   const onRefresh = useCallback(() => {
-    queryClient.fetchQuery({
-      queryKey: ['eventDetail'],
-      staleTime: 1000,
-    });
-  }, []);
+    refetch();
+  }, [refetch]);
 
   const {mutateAsync} = useMutation({
     mutationFn: data => {
-      console.log('datkjsdbjkdbjkvbsdjkbvkjsdvjkdsa', data);
       return API.post(followEventsUrl, {
         event_id: data?.id,
         calendar_id: data?.calendarId,
@@ -48,11 +44,11 @@ const useEventDetailScreen = ({navigate, goBack}, {params}) => {
       if (ok) {
         // successMessage(data?.message);
       } else {
-        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
         errorMessage(data?.message);
       }
     },
   });
+
   const unfollowEvent = useMutation({
     mutationFn: data => {
       return API.post(unFollowEventsUrl, {
@@ -64,111 +60,86 @@ const useEventDetailScreen = ({navigate, goBack}, {params}) => {
       if (ok) {
         successMessage(data?.message);
         await refetch();
-
-        // Alert.alert(`Want to remove this event to your calendar?`, '', [
-        //   {
-        //     text: 'Cancel',
-        //     style: 'cancel',
-        //   },
-        //   {
-        //     text: 'OK',
-        //     onPress: async () => {
-        //       console.log('Removing calendar event...', data);
-        //       await removeCalendarEvent(
-        //         data?.data?.calender_id,
-        //         data?.data?.record_id,
-        //       );
-        //     },
-        //   },
-        // ]);
       } else {
-        console.log('jkdsbkljsdbvklsdbvklsbklvsvd', data);
         errorMessage(data?.message);
       }
     },
   });
 
-  const removeCalendarEvent = async () => {
-    try {
-      const permission = await ReactNativeCalendarEvents.checkPermissions();
-      if (permission !== 'authorized') {
-        await ReactNativeCalendarEvents.requestPermissions();
-      }
-
-      await getCalenderPerComfirm(); // assuming this fetches a valid calendar list
-
-      console.log(
-        'New Calendar IDdsdfsdfsdf:',
-        newCalendarId,
-        data?.data?.calender_id,
-        data?.data?.record_id,
-        recordIdRef.current,
-        calendarIdRef.current,
-      );
-      // Get all calendars
-      const calendars = await ReactNativeCalendarEvents.findCalendars();
-      const modifiableCalendar = calendars.find(cal => cal.allowsModifications);
-
-      const newCalendarId = modifiableCalendar?.id || calendars[0]?.id;
-      // if (data?.data?.calender_id != newCalendarId) {
-      //   Alert.alert(
-      //     'Calendar Mismatch',
-      //     'The event does not belong to the selected calendar.',
-      //   );
-      // }
-
-      const success = await ReactNativeCalendarEvents.removeEvent(
-        data?.data?.record_id ?? recordIdRef.current,
-      );
-      if (success) {
-        console.log('Event removed successfully');
-      } else {
-        console.log('Event removal failed');
-      }
-    } catch (error) {
-      console.log('Error removing event:', error);
-    }
+  // ================== OFFICIAL API FROM @shadahmad7/react-native-calendar ==================
+  const requestCalendarPermissions = async () => {
+    const {status} = await Calendar.requestCalendarPermission();
+    return status === 'granted';
   };
 
-  const AaddtToMyDeviceCalendar = async eventDate => {
-    const permission = await ReactNativeCalendarEvents.checkPermissions();
-    if (permission !== 'authorized') {
-      await ReactNativeCalendarEvents.requestPermissions();
-    }
-
-    await getCalenderPerComfirm(); // assuming this fetches a valid calendar list
-
-    // Get all calendars
-    const calendars = await ReactNativeCalendarEvents.findCalendars();
-    const modifiableCalendar = calendars.find(cal => cal.allowsModifications);
-
-    const calendarId = modifiableCalendar?.id || calendars[0]?.id;
-
-    if (!calendarId) {
-      console.log('No writable calendar found.');
+  const AaddtToMyDeviceCalendar = async () => {
+    if (!data?.data) {
+      console.log('Event data not available yet');
       return;
     }
 
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const hasPermission = await requestCalendarPermissions();
+    if (!hasPermission) {
+      Alert.alert(
+        'Permission Denied',
+        'Calendar permission is required to add events.',
+      );
+      return;
+    }
 
-    const recordId = await ReactNativeCalendarEvents.saveEvent(
-      data?.data?.title,
-      {
-        calendarId,
-        startDate: new Date(data?.data?.from_date).toISOString(),
-        endDate: new Date(data?.data?.to_date).toISOString(),
-        location: data?.data.address,
-        notes: data?.data?.address,
-        timeZone,
-      },
+    try {
+      // Get default calendar
+      let defaultCalendar = await Calendar.getDefaultCalendar();
+
+      // Fallback
+      if (!defaultCalendar) {
+        const calendars = await Calendar.getCalendars();
+        defaultCalendar = calendars.find(cal => cal.isPrimary) || calendars[0];
+      }
+
+      if (!defaultCalendar) {
+        Alert.alert('Error', 'No calendar found on device');
+        return;
+      }
+
+      const eventToSave = {
+        title: data.data.title,
+        startDate: new Date(data.data.from_date).toISOString(),
+        endDate: new Date(data.data.to_date).toISOString(),
+        location: data.data.address || '',
+        notes: data.data.description || data.data.address || '',
+        allDay: false,
+      };
+
+      // ✅ Correct method according to package
+      const eventId = await Calendar.saveEvent(eventToSave);
+
+      if (eventId) {
+        console.log('Event added successfully with ID:', eventId);
+        recordIdRef.current = eventId;
+        calendarIdRef.current = defaultCalendar.id;
+
+        await mutateAsync({
+          id: data.data.id,
+          calendarId: defaultCalendar.id,
+          recordId: eventId,
+        });
+      }
+    } catch (error) {
+      console.log('Error adding to calendar:', error);
+      Alert.alert(
+        'Failed',
+        'Could not add event to calendar. Please try again.',
+      );
+    }
+  };
+
+  const removeCalendarEvent = async () => {
+    Alert.alert(
+      'Remove from Device Calendar',
+      'Please open your Calendar app and delete the event manually.',
+      [{text: 'OK'}],
     );
-    recordIdRef.current = recordId;
-    calendarIdRef.current = calendarId;
-    mutateAsync({
-      id: data?.data?.id,
-      calendarId,
-      recordId,
-    });
   };
 
   return {
@@ -185,7 +156,6 @@ const useEventDetailScreen = ({navigate, goBack}, {params}) => {
       if (data?.data?.is_followed) {
         await unfollowEvent.mutateAsync({
           id,
-          url: unFollowEventsUrl,
           isCalender: isChecked ? 1 : 0,
         });
         if (isChecked) await removeCalendarEvent();
@@ -202,18 +172,6 @@ const useEventDetailScreen = ({navigate, goBack}, {params}) => {
             onPress: goBack,
           },
         ]);
-        // Alert.alert(`Want to add this event to your calendar?`, '', [
-        //   {
-        //     text: 'Cancel',
-        //     style: 'cancel',
-        //   },
-        //   {
-        //     text: 'OK',
-        //     onPress: async () => {
-        //       await AaddtToMyDeviceCalendar();
-        //     },
-        //   },
-        // ]);
       }
     },
   };

@@ -12,6 +12,7 @@
 #import <GoogleSignIn/GoogleSignIn.h> // ⬅️ add the header import
 #import <AuthenticationServices/AuthenticationServices.h>
 #import <SafariServices/SafariServices.h>
+#import <ReactAppDependencyProvider/RCTAppDependencyProvider.h>   // Add this
 //#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 #import <GoogleMaps/GoogleMaps.h>
@@ -31,6 +32,7 @@
   [FIRApp configure];
   [GMSServices provideAPIKey:@"AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY"];
   self.moduleName = @"tac";
+  self.dependencyProvider = [RCTAppDependencyProvider new];   // ← Add this line
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};

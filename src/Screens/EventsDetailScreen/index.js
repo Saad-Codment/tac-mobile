@@ -56,6 +56,24 @@ const EventsDetailScreen = ({navigation, route}) => {
     isAleadyAddedToCalender,
   } = useEventDetailScreen(navigation, route);
 
+  // const {
+  //   eventData,
+  //   onRefresh,
+  //   followUnFollowEvent,
+  //   userData,
+  //   modalVisible,
+  //   setModalVisible,
+  //   isAleadyAddedToCalender,
+  // } = {
+  //   eventData: {},
+  //   onRefresh: () => {},
+  //   followUnFollowEvent: 1,
+  //   userData: {},
+  //   modalVisible: false,
+  //   setModalVisible: () => {},
+  //   isAleadyAddedToCalender: 1,
+  // };
+
   const {dispatch} = useReduxStore();
 
   const onImagePress = isEvent => {
@@ -73,6 +91,7 @@ const EventsDetailScreen = ({navigation, route}) => {
   const [activeSlide, setActiveSlide] = useState(0);
   const windowWidth = Dimensions.get('window').width;
 
+  // const images = [];
   const images = eventData?.images ? JSON.parse(eventData?.images) : [];
 
   const handleScroll = event => {
@@ -89,6 +108,11 @@ const EventsDetailScreen = ({navigation, route}) => {
       setActiveSlide(index);
     }
   };
+
+  console.log(
+    'kjsdblkvsdbklvbsdklvblksdbvlksbdlkvsdvksdlvsbdv',
+    formatPrice(eventData?.added_money ?? 0).toString(),
+  );
 
   return (
     <View style={styles.mainView}>
@@ -139,12 +163,13 @@ const EventsDetailScreen = ({navigation, route}) => {
               style={styles.checkImg}
             />
             <TextComponent
-              text={formatPrice(eventData?.added_money ?? 0)}
-              size={'1.6'}
+              text={formatPrice(eventData?.added_money ?? 0).toString()}
+              size={hp('1.6')}
               styles={styles.addedMoneyText}
             />
           </Touchable>
         </View>
+
         {images.length > 0 && (
           <View style={styles.carouselContainer}>
             <ScrollView
@@ -205,7 +230,7 @@ const EventsDetailScreen = ({navigation, route}) => {
         {Boolean(
           eventData?.tour_id == 7 ||
             eventData?.is_confirmed != 0 ||
-            eventData?.performances.length > 0,
+            eventData?.performances?.length > 0,
         ) && (
           <>
             <View style={styles.statusRow}>
@@ -235,7 +260,7 @@ const EventsDetailScreen = ({navigation, route}) => {
                 )}
               </View>
 
-              {eventData?.performances.length > 0 && (
+              {eventData?.performances?.length > 0 && (
                 <View style={styles.viewPerformances}>
                   <TextComponent text={'View Performances'} size={hp('1.3')} />
                   <Image

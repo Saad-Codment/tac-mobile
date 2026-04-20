@@ -8,6 +8,7 @@ import {
   Image,
   AppState,
   Platform,
+  BackHandler,
 } from 'react-native';
 import MainNavigator from './src/navigation/MainNavigator';
 import {logoScreen, splash, splash2} from './src/Assets';

@@ -1,8 +1,4 @@
-import {firebase} from '@react-native-firebase/auth';
-import {loadingFalse, loadingTrue} from '../../Redux/Action/isloadingAction';
-import {successMessage, errorMessage} from '../../Config/NotificationMessage';
 import useReduxStore from '../../Hooks/UseReduxStore';
-import auth from '@react-native-firebase/auth';
 import {forgotPasswordAction} from '../../Redux/Action/AuthAction';
 
 const {default: useFormHook} = require('../../Hooks/UseFormHooks');

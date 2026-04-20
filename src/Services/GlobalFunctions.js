@@ -11,6 +11,8 @@ import ImageCropPicker from 'react-native-image-crop-picker';
 // import Geolocation from '@react-native-community/geolocation';
 import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
 import {MapAPIKey} from '../Utils/Urls';
+import bcrypt from 'react-native-bcrypt';
+import AES from 'react-native-aes-crypto';
 import {randomBytes} from 'react-native-get-random-values';
 import {store} from '../Redux/Reducer';
 import {femaleImg, maleImg} from '../Assets';
@@ -21,6 +23,7 @@ import ImagePicker, {launchCamera} from 'react-native-image-picker';
 import ImageEditor, {ImageCropData} from '@react-native-community/image-editor';
 import Canvas, {Image as CanvasImage} from 'react-native-canvas';
 import {Video} from 'react-native-compressor';
+import {errorMessage} from '../Config/NotificationMessage';
 
 const MAX_VIDEO_SIZE_MB = 100;
 const MAX_VIDEO_SIZE_BYTES = MAX_VIDEO_SIZE_MB * 1024 * 1024; // 100 MB in bytes
@@ -719,10 +722,17 @@ const uploadFromGalary = async (
     multiple: isMulti,
     maxFiles,
     freeStyleCropEnabled: false,
-    avoidEmptySpaceAroundImage: true,
+    avoidEmptySpaceAroundImage: false,
     showCropFrame: false,
     enableRotationGesture: shouldCrop,
     mediaType: allowVideos ? 'any' : 'photo',
+    // compressImageMaxWidth: 0,
+    // compressImageMaxHeight: 0,
+    forceJpg: true, // Recommended - keeps consistent format
+    compressImageQuality: 0.95, // Optional, but helps quality
+    includeExif: true, // Optional
+    width: undefined, // Do NOT pass any width/height
+    height: undefined,
     // compressImageQuality: 0.92,          // optional - enable if you want
     // includeExif: true,
   };
@@ -755,13 +765,9 @@ const uploadFromGalary = async (
         if (originalSizeMB > TARGET_COMPRESSED_SIZE_MB * 1.5) {
           Alert.alert(
             'Compressing video...',
-            'This may take a few seconds...',
-            [],
-            {
-              cancelable: false,
-            },
+            'This may take a few seconds. Please be patient.',
+            [{text: 'Ok', style: 'cancel'}],
           );
-
           try {
             const compressedUri = await Video.compress(
               finalUri,
@@ -1052,11 +1058,8 @@ const takeMedia = async (mediaType, isMulti) => {
       if (originalSizeMB > TARGET_COMPRESSED_SIZE_MB * 1.5) {
         Alert.alert(
           'Compressing video...',
-          'This may take a few seconds...',
-          [],
-          {
-            cancelable: false,
-          },
+          'This may take a few seconds. Please be patient.',
+          [{text: 'Ok', style: 'cancel'}],
         );
 
         try {
@@ -1461,6 +1464,24 @@ function hashPassword(password) {
 //   }
 // };
 
+/**
+ * Verifies if the provided password matches the hashed password.
+ * @param {string} password - The plain text password.
+ * @param {string} hashed - The hashed password.
+ * @param {string} key - The original encryption key.
+ * @param {string} iv - The Initialization Vector used during encryption.
+ * @returns {Promise<boolean>} - True if the password matches, otherwise false.
+ */
+const verifyPassword = async (password, hashed, key, iv) => {
+  try {
+    const decrypted = await AES.decrypt(hashed, key, iv);
+    return decrypted === password;
+  } catch (error) {
+    console.error('Decryption Error:', error);
+    return false;
+  }
+};
+
 const checkMaleFemaleForImg = () => {
   const {Auth} = store.getState();
   if (Auth?.userData?.gender == 'male') return maleImg;
@@ -1804,6 +1825,7 @@ export {
   calculateAge,
   getFileNameFromURL,
   hashPassword,
+  verifyPassword,
   getLastNightDigit,
   checkMaleFemaleForImg,
   showFirstThreeAndCountRest,

@@ -32,7 +32,6 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
     marginHorizontal: isTrue ? wp('1') : 0,
     borderRadius: 10,
-    overflow: 'hidden',
   }),
   crossIcon: isTrue => ({
     width: wp('15'),

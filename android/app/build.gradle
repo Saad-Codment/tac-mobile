@@ -10,10 +10,8 @@ apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
  */
 react {
     autolinkLibrariesWithApp()
-    project.ext.react = [
-    enableHermes: true,
-    hermesEnabled: true   // ← THIS LINE FIXES THE ERROR 100%
-]
+ hermesEnabled = true
+    extraPackagerArgs = ["--minify=false"]
     /* Folders */
     //   The root of your project, i.e. where "package.json" lives. Default is '..'
     // root = file("../")
@@ -81,19 +79,33 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
+
+
 packagingOptions {
         jniLibs {
-            useLegacyPackaging = false
+            useLegacyPackaging = true
         }
+   
+   // Add this block — very helpful for excluding old 32-bit libraries
+    exclude 'lib/armeabi-v7a/**'
+    exclude 'lib/x86/**'
+    exclude 'lib/x86_64/**'     // optional, but safe
     }
+
 
     namespace "com.tac.codment"
     defaultConfig {
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "false"
         applicationId "com.tac.codment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 15
+        versionCode 24
         versionName "1.0"
+                externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+            }
+        }
     }
     signingConfigs {
 release {
@@ -129,6 +141,8 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 implementation platform('com.google.firebase:firebase-bom:33.5.1')
+implementation 'com.google.android.gms:play-services-location:21.0.1'
+implementation project(':react-native-google-signin_google-signin')
 implementation project(':react-native-vector-icons')
  implementation project(':react-native-contacts')
     implementation project(':react-native-fs')

@@ -172,7 +172,7 @@ const SelectFriendListScreem = ({navigation, route}) => {
             : 'Select All'
         }
         isThemeColor
-        size={'1.5'}
+        size={hp('1.5')}
         styles={{
           marginBottom: hp('1.5'),
           alignSelf: 'flex-end',
@@ -204,24 +204,6 @@ const SelectFriendListScreem = ({navigation, route}) => {
       <ScrollView
         contentContainerStyle={styles.btnsMain}
         showsVerticalScrollIndicator={false}>
-        {/* <MultiSelectButton
-          items={filterData.length >= 0 && text != '' ? filterData : data?.data}
-          onSelectVal={(objId, item) => toggleAllergy(item)}
-          objId={urlName}
-          selectedAlter={selectedList}
-          isMultipule={true}
-          leftChildComp={
-            <Image
-              source={crossWhite}
-              resizeMode="contain"
-              style={{
-                width: wp('3'),
-                height: hp('5'),
-                marginLeft: wp('3'),
-              }}
-            />
-          }
-        /> */}
         {(data?.data?.data || data?.data) != null &&
           (data?.data?.data?.length || data?.data.length) > 0 &&
           (Array.isArray(filterData) && filterData.length >= 0 && text != ''

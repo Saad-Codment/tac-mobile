@@ -231,6 +231,7 @@ const CommentModalComp = ({
         animationInTiming={100}
         animationOutTiming={100}
         avoidKeyboard
+        presentationStyle="pageSheet"
         animationType="fade"
         // hideModalContentWhileAnimating
         // useNativeDriver

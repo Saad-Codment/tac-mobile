@@ -1,5 +1,3 @@
-import socket from '../Services/SocketServices';
-
 const getCredentials = () => {
   if (__DEV__)
     return {

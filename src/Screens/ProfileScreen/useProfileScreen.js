@@ -30,6 +30,22 @@ import {
   getIdsFromArry,
   removeUndefined,
 } from '../../Services/GlobalFunctions';
+import {BackHandler} from 'react-native';
+
+// ====================== GLOBAL SAFE BACKHANDLER FIX ======================
+// This fixes HwBackHandler.removeEventListener / BackHandler.removeEventListener errors
+// caused by old libraries like react-native-awesome-alerts, react-native-modal, etc.
+const originalRemoveEventListener = BackHandler.removeEventListener;
+if (typeof originalRemoveEventListener === 'function') {
+  BackHandler.removeEventListener = function (eventName, handler) {
+    // Safely ignore calls where handler is undefined (old library behavior)
+    if (typeof handler !== 'function') {
+      return;
+    }
+    return originalRemoveEventListener.apply(this, arguments);
+  };
+}
+// =========================================================================
 
 const usePorfileScreen = ({navigate, goBack}) => {
   const {dispatch, getState, queryClient} = useReduxStore();
@@ -37,6 +53,7 @@ const usePorfileScreen = ({navigate, goBack}) => {
   const {isloading} = getState('isloading');
   const onPressKeyRef = useRef(null);
   console.log('userDatauserDatauserDatauserDatauserData', userData);
+
   const apiDataType = {
     event_association: {
       queryName: 'allAssociate',

@@ -19,6 +19,7 @@ import ThemeButton from '../../Components/ThemeButton';
 import {hp, isIOS, wp} from '../../Config/responsive';
 import {crossWhite, currentLoc, gpsImg, location} from '../../Assets';
 import Geolocation from '@react-native-community/geolocation';
+import GeolocationAndroid from 'react-native-geolocation-service';
 import {Colors} from '../../Theme/Variables';
 import {openSettings} from 'react-native-permissions';
 import {HeaderComponent} from '../../Components/HeaderComponent';
@@ -40,7 +41,7 @@ const LocationScreen = ({route, navigation}) => {
 
   const getCurrentLocation = () => {
     // Get current device location
-    Geolocation.getCurrentPosition(
+    GeolocationAndroid.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
         setCurrentLocation({latitude, longitude});

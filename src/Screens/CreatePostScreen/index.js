@@ -249,6 +249,7 @@ const CreatePostScreen = ({navigation, route}) => {
               <ImageBackground
                 key={index}
                 source={videoItem ? {} : {uri: displayUri}}
+                resizeMode="contain"
                 style={{
                   ...styles.bgImg(Boolean(postImgs.length > 1)),
                   ...(postImgs.length === 1

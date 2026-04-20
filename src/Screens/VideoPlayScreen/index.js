@@ -1,5 +1,5 @@
 import {View, FlatList} from 'react-native';
-import React, {memo, useCallback} from 'react';
+import React, {memo, useCallback, useRef} from 'react';
 import useViewPlayScreen from './useVideoPlayScreen';
 import {hp} from '../../Config/responsive';
 import VIdeoPlayComp from '../../Components/VIdeoPlayComp';
@@ -17,10 +17,11 @@ const VideoPlayScreen = ({navigation, route}) => {
     refectKeys,
   } = useViewPlayScreen(route);
 
+  const flatListRef = useRef(null);
+
   const renderItem = useCallback(
     ({item, index}) => {
       const isActive = index === currentIndex;
-
       return (
         <VIdeoPlayComp
           isActive={isActive}
@@ -36,30 +37,34 @@ const VideoPlayScreen = ({navigation, route}) => {
   );
 
   return (
-    <FlatList
-      data={videosArry}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      pagingEnabled
-      snapToInterval={SCREEN_HEIGHT}
-      snapToAlignment="start"
-      decelerationRate="fast"
-      showsVerticalScrollIndicator={false}
-      windowSize={3}
-      removeClippedSubviews={true}
-      initialNumToRender={2}
-      maxToRenderPerBatch={2}
-      getItemLayout={(data, index) => ({
-        length: SCREEN_HEIGHT,
-        offset: SCREEN_HEIGHT * index,
-        index,
-      })}
-      viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs}
-      onEndReached={() => {
-        // Your pagination logic here if needed
-      }}
-      onEndReachedThreshold={0.5}
-    />
+    <View style={{flex: 1}}>
+      {/* ← This wrapper prevents the error during removal transition */}
+      <FlatList
+        ref={flatListRef}
+        data={videosArry}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        pagingEnabled
+        snapToInterval={SCREEN_HEIGHT}
+        snapToAlignment="start"
+        decelerationRate="fast"
+        showsVerticalScrollIndicator={false}
+        windowSize={3}
+        removeClippedSubviews={false}
+        initialNumToRender={2}
+        maxToRenderPerBatch={2}
+        getItemLayout={(data, index) => ({
+          length: SCREEN_HEIGHT,
+          offset: SCREEN_HEIGHT * index,
+          index,
+        })}
+        viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs}
+        onEndReached={() => {
+          // Your pagination logic here if needed
+        }}
+        onEndReachedThreshold={0.5}
+      />
+    </View>
   );
 };
 

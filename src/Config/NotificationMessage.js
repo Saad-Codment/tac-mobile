@@ -1,11 +1,11 @@
 import {showMessage} from 'react-native-flash-message';
 import {Colors} from '../Theme/Variables';
 
-export const errorMessage = (description, continerStyle) => {
+export const errorMessage = (title, description, continerStyle) => {
   showMessage({
     type: 'danger',
     icon: 'auto',
-    message: 'Warning',
+    message: title ?? 'Warning',
     description: description,
     floating: true,
     backgroundColor: Colors.themeRed,

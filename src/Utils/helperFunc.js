@@ -375,6 +375,10 @@ const formDataFunc = async (url, body, imageKey, isArray, inewArryKey) => {
   try {
     const response = await fetch(baseURL + url, requestOptions);
     const data = await response.json();
+    console.log(
+      'response from formdatakjsfbvlsbklvbsdklvblksdbvsdklvbsd',
+      data,
+    );
     store.dispatch(loadingFalse());
     return {data, ok: !data?.errors};
   } catch (error) {

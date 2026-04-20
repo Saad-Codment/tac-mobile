@@ -5,6 +5,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
+import {sha256} from 'react-native-sha256';
 import {Platform} from 'react-native';
 import {hashPassword} from '../Services/GlobalFunctions';
 

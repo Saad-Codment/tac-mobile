@@ -10,6 +10,7 @@ import {useQuery} from '@tanstack/react-query';
 import API from '../Utils/helperFunc';
 import {mergeIds} from '../Services/GlobalFunctions';
 import {io} from 'socket.io-client';
+import {Platform} from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,15 @@ function MainNavigator() {
   const {isLogin, userData} = getState('Auth');
 
   console.log('rtyuiuytrtyuwertyuiertyuidfghjk', userData);
+
+  const afterPlatFormFilter =
+    Platform.OS == 'ios'
+      ? {
+          presentation: 'formSheet', // 👈 Makes it open as a modal
+          animation: 'slide_from_bottom', // Optional animation style
+          headerShown: false, // Optional, hides the header
+        }
+      : {};
 
   return (
     <NavigationContainer
@@ -112,11 +122,7 @@ function MainNavigator() {
             <Stack.Screen
               name="SubscriptionInfoScreen"
               component={Screens.SubscriptionInfoScreen}
-              options={{
-                presentation: 'modal', // 👈 Makes it open as a modal
-                animation: 'slide_from_bottom', // Optional animation style
-                headerShown: false, // Optional, hides the header
-              }}
+              options={afterPlatFormFilter}
             />
             <Stack.Screen
               name="UpdateHorseScreen"
@@ -137,11 +143,7 @@ function MainNavigator() {
             <Stack.Screen
               name="ListViewScreen"
               component={Screens.ListViewScreen}
-              options={{
-                presentation: 'formSheet', // 👈 Makes it open as a modal
-                animation: 'slide_from_bottom', // Optional animation style
-                headerShown: false, // Optional, hides the header
-              }}
+              options={afterPlatFormFilter}
             />
             <Stack.Screen
               name="BlockedUserScreen"
@@ -213,11 +215,7 @@ function MainNavigator() {
             <Stack.Screen
               name="SelectFriendListScreem"
               component={Screens.SelectFriendListScreem}
-              options={{
-                presentation: 'formSheet', // 👈 Makes it open as a modal
-                animation: 'slide_from_bottom', // Optional animation style
-                headerShown: false, // Optional, hides the header
-              }}
+              options={afterPlatFormFilter}
             />
             <Stack.Screen
               name="CreateEventsScreen"

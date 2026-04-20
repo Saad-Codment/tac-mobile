@@ -47,7 +47,7 @@ const prepareMedia = (images = [], videos = []) => {
     media.push({
       type: 'video',
       url: videoUrl(vid.thumbnail_path),
-      videoData: vid, // keep full object if needed later
+      videoData: vid,
     });
   });
 
@@ -55,7 +55,7 @@ const prepareMedia = (images = [], videos = []) => {
 };
 
 // ────────────────────────────────────────────────
-// Unified Media Renderer (images + videos)
+// Unified Media Renderer
 // ────────────────────────────────────────────────
 const RenderMedia = ({images = [], videos = [], onMediaPress}) => {
   const [orientation, setOrientation] = useState('landscape');
@@ -63,7 +63,6 @@ const RenderMedia = ({images = [], videos = [], onMediaPress}) => {
   const media = prepareMedia(images, videos);
   const count = media.length;
 
-  // Orientation check only for single item
   useEffect(() => {
     if (count !== 1) return;
 
@@ -80,7 +79,6 @@ const RenderMedia = ({images = [], videos = [], onMediaPress}) => {
 
   if (count === 0) return null;
 
-  // ─── 1 item ────────────────────────────────────────────
   if (count === 1) {
     const item = media[0];
     return (
@@ -103,7 +101,6 @@ const RenderMedia = ({images = [], videos = [], onMediaPress}) => {
     );
   }
 
-  // ─── 2 items ───────────────────────────────────────────
   if (count === 2) {
     return (
       <View style={styles.twoImagesContainer}>
@@ -128,11 +125,9 @@ const RenderMedia = ({images = [], videos = [], onMediaPress}) => {
     );
   }
 
-  // ─── 3 items ───────────────────────────────────────────
   if (count === 3) {
     return (
       <View style={styles.twoImagesContainer}>
-        {/* Left - big */}
         <Pressable
           style={{width: wp('46')}}
           onPress={() => onMediaPress?.(media[0], 0)}>
@@ -156,7 +151,6 @@ const RenderMedia = ({images = [], videos = [], onMediaPress}) => {
           </View>
         </Pressable>
 
-        {/* Right - two small */}
         <View style={{justifyContent: 'space-between', width: wp('42')}}>
           {media.slice(1).map((item, idx) => (
             <Pressable
@@ -187,7 +181,6 @@ const RenderMedia = ({images = [], videos = [], onMediaPress}) => {
     );
   }
 
-  // ─── 4+ items (grid) ───────────────────────────────────
   return (
     <View style={styles.gridContainer}>
       {media.slice(0, 4).map((item, index) => (
@@ -271,11 +264,10 @@ const PostViewComp = ({
       NavigationService.navigate('VideoPlayScreen', {
         videos: item.videos,
         userData: item,
-        startIndex: clickedIndex, // optional: tell player which video to start
+        startIndex: clickedIndex,
         refectKeys: refetechKeys ?? isRefectechForVideo ?? [],
       });
     } else {
-      // Open image gallery / viewer
       dispatch({
         payload: images,
         type: types.openModal,
@@ -312,7 +304,7 @@ const PostViewComp = ({
 
   return (
     <View style={{...styles.mainView, ...mainViewStyle}}>
-      {/* ─── Header ──────────────────────────────────────────── */}
+      {/* Header */}
       <Pressable
         style={styles.upperView}
         onPress={() => {
@@ -357,7 +349,11 @@ const PostViewComp = ({
                 style={{width: wp('6'), height: hp('4')}}
               />
             </MenuTrigger>
-            <MenuOptions>
+            <MenuOptions
+              customStyles={{
+                optionsContainer: {color: 'black'},
+                optionText: {color: 'black'},
+              }}>
               <MenuOption onSelect={onEditPost} text="Edit" />
               <MenuOption onSelect={onDeletePost} text="Delete" />
             </MenuOptions>
@@ -365,7 +361,7 @@ const PostViewComp = ({
         )}
       </Pressable>
 
-      {/* ─── Content ─────────────────────────────────────────── */}
+      {/* Content */}
       {hasMedia ? (
         <View style={styles.contentView}>
           {item?.title ? (
@@ -391,7 +387,7 @@ const PostViewComp = ({
 
       <View style={styles.divider} />
 
-      {/* ─── Footer ──────────────────────────────────────────── */}
+      {/* Footer */}
       <View style={styles.bottomView}>
         <Touchable
           style={styles.leftRightView}
