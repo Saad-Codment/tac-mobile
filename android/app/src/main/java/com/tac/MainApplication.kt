@@ -10,6 +10,7 @@ import com.facebook.react.defaults.DefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
+import io.branch.rnbranch.RNBranchModule
 
 class MainApplication : Application(), ReactApplication {
 
@@ -25,7 +26,7 @@ class MainApplication : Application(), ReactApplication {
             // Force disable New Architecture
             override val isNewArchEnabled: Boolean = false
 
-            // Keep Hermes as you had it (false)
+            // Keep Hermes as you had it
             override val isHermesEnabled: Boolean = BuildConfig.IS_HERMES_ENABLED
         }
 
@@ -37,6 +38,9 @@ class MainApplication : Application(), ReactApplication {
 
         // Safe SoLoader initialization for RN 0.75+
         SoLoader.init(this, OpenSourceMergedSoMapping)
+
+        // Initialize Branch.io
+        RNBranchModule.getAutoInstance(this)
 
         // IMPORTANT: Do NOT call DefaultNewArchitectureEntryPoint.load() here
         // We have disabled New Arch completely above

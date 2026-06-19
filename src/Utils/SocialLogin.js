@@ -75,9 +75,9 @@ export const googleLogin = async () => {
     showPlayServicesUpdateDialog: true,
   });
   if (!hasPlayService) throw new Error('play services not available');
-  const isSignIn = GoogleSignin.hasPreviousSignIn();
-  if (isSignIn && Platform.OS == 'android') await logOutWithGoogle();
-  console.log('isSIngIN ', isSignIn);
+  // const isSignIn = GoogleSignin.hasPreviousSignIn();
+  // if (isSignIn && Platform.OS == 'android') await logOutWithGoogle();
+  // console.log('isSIngIN ', isSignIn);
   // const {idToken, user} =
   //   Platform.OS == 'ios'
   //     ? await GoogleSignin.signIn()

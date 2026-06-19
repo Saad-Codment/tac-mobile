@@ -7,6 +7,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Pressable,
+  Vibration,
 } from 'react-native';
 import React, {memo, useCallback, useRef} from 'react';
 import {Colors} from '../../Theme/Variables';
@@ -43,6 +44,8 @@ import {
 } from '../../Services/GlobalFunctions';
 import NavigationService from '../../Services/NavigationService';
 import DividerLine from '../../Components/DividerLine';
+import Clipboard from '@react-native-clipboard/clipboard';
+import {successMessage} from '../../Config/NotificationMessage';
 
 const formatMessageDate = utcTimestamp => {
   const date = new Date(utcTimestamp);
@@ -266,9 +269,9 @@ const ChatScreen = ({navigation, route}) => {
             {isSender && (
               <TextComponent
                 text={
-                  convertToLocalTime(item?.created_at)?.time +
-                  ' ' +
-                  convertToLocalTime(item?.created_at)?.period
+                  convertToLocalTime(item?.created_at)?.time + ' '
+                  // +
+                  // convertToLocalTime(item?.created_at)?.period
                 }
                 fade={true}
                 styles={{fontSize: hp('1.1'), marginRight: wp('2')}}
@@ -293,6 +296,11 @@ const ChatScreen = ({navigation, route}) => {
                 />
               ) : item.type === 'text' ? (
                 <TextComponent
+                  onLongPress={() => {
+                    Clipboard.setString(item.text);
+                    Vibration.vibrate(100); // very short
+                    successMessage('Message copied to clipboard');
+                  }}
                   text={item.text}
                   styles={{
                     fontWeight: '400',
@@ -489,9 +497,9 @@ const ChatScreen = ({navigation, route}) => {
             {!isSender && (
               <TextComponent
                 text={
-                  convertToLocalTime(item?.created_at)?.time +
-                  ' ' +
-                  convertToLocalTime(item?.created_at)?.period
+                  convertToLocalTime(item?.created_at)?.time + ' '
+                  // +
+                  // convertToLocalTime(item?.created_at)?.period
                 }
                 fade={true}
                 styles={{fontSize: hp('1.1'), marginLeft: wp('2')}}

@@ -28,7 +28,6 @@ import {
   userEditWhite,
 } from '../Assets';
 import {Touchable} from '../Components/Touchable';
-import Lottie from 'lottie-react-native';
 import {CircleImage} from './CircleImage';
 import {editProfileUrl, imageUrl} from '../Utils/Urls';
 import ThemeButton from './ThemeButton';
@@ -114,28 +113,32 @@ const ProfileHeader = ({
                       text: 'Camera',
                       onPress: async () => {
                         const img = await uploadFromCamera(false, false);
-                        NavigationService.navigate('CropScreen', {
-                          image: img,
-                          afterCropImg: e =>
-                            mutateAsync({
-                              profile_image: {...img, uri: e},
-                              first_name: userData?.first_name,
-                            }),
-                        });
+                        if (img) {
+                          NavigationService.navigate('CropScreen', {
+                            image: img,
+                            afterCropImg: e =>
+                              mutateAsync({
+                                profile_image: {...img, uri: e},
+                                first_name: userData?.first_name,
+                              }),
+                          });
+                        }
                       },
                     },
                     {
                       text: 'Gallery', // Just a dismissal button
                       onPress: async () => {
                         const img = await uploadFromGalary(false, false);
-                        NavigationService.navigate('CropScreen', {
-                          image: img,
-                          afterCropImg: e =>
-                            mutateAsync({
-                              profile_image: {...img, uri: e},
-                              first_name: userData?.first_name,
-                            }),
-                        });
+                        if (img) {
+                          NavigationService.navigate('CropScreen', {
+                            image: img,
+                            afterCropImg: e =>
+                              mutateAsync({
+                                profile_image: {...img, uri: e},
+                                first_name: userData?.first_name,
+                              }),
+                          });
+                        }
                       },
                     },
                     {

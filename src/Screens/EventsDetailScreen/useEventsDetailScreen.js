@@ -2,6 +2,7 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   followEventsUrl,
   getEventDetailsUrl,
+  imageUrl,
   unFollowEventsUrl,
 } from '../../Utils/Urls';
 import API from '../../Utils/helperFunc';
@@ -10,6 +11,7 @@ import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import * as Calendar from '@shadahmad7/react-native-calendar';
 import {Alert} from 'react-native';
+import branch from 'react-native-branch';
 
 const useEventDetailScreen = ({navigate, goBack}, {params}) => {
   console.log('ksadbkjsbdkbkjsdbvjbsdkjbvkjsdbkjvbksbdvsdkjvbsd', params);

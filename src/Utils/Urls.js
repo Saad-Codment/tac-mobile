@@ -43,6 +43,8 @@ export const privacyUrl = 'https://theappforcowboys.com/privacy_policy';
 export const termsUrl = 'https://theappforcowboys.com/terms_and_conditions';
 export const aboutUrl = 'https://theappforcowboys.com/about_us';
 
+export const MAPBOX_TOKEN =
+  'pk.eyJ1IjoidGhlYXBwZm9yY293Ym95cyIsImEiOiJjbXE5dWFiN3IwMjgwMnNwdDJ6dWFtYWV3In0.U_w8NypcmoqcRib-MXrCog';
 export const MapAPIKey = 'AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY';
 
 export const registerUrl = '/signup';
@@ -59,6 +61,12 @@ export const getEventDetailsUrl = '/events/';
 export const getSuggestedFriendsUrl = '/friends/suggestions';
 export const getMyFriendsUrl = '/friends/list?';
 export const editProfileUrl = '/profile-update';
+
+export const addVehicleUrl = '/trucking/v1/vehicles';
+export const getVehicleUrl = '/trucking/v1/vehicles';
+export const getVehicleDetailsUrl = '/trucking/v1/vehicles/';
+export const deleteVehiclesUrl = '/trucking/v1/vehicles/';
+export const updateVehicleUrl = '/trucking/v1/vehicles/';
 
 export const createPostUrl = '/posts/store';
 export const createPostWithVideosUrl = '/v2/posts/store';

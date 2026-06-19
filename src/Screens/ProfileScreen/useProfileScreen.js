@@ -174,8 +174,7 @@ const usePorfileScreen = ({navigate, goBack}) => {
         first_name: modalUpdateData?.firstName ?? userData?.first_name,
         last_name:
           modalUpdateData?.lastName ??
-          (userData?.last_name == null ? '' : userData?.last_name) ??
-          '',
+          (userData?.last_name == null ? '' : userData?.last_name),
         state: modalUpdateData?.state?.name ?? userData?.state ?? '',
         city: modalUpdateData?.city?.name ?? userData?.city ?? '',
         age: modalUpdateData?.userAge

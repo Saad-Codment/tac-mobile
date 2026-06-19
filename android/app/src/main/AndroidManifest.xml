@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-> <!-- ← change if needed -->
+  xmlns:tools="http://schemas.android.com/tools">
 
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.WRITE_CALENDAR" />
@@ -13,11 +12,10 @@
   <uses-permission android:name="android.permission.READ_PROFILE" />
   <uses-permission android:name="com.android.vending.BILLING" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-  <!-- <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> -->
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SHORT_SERVICE" />
-  <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" /> -->
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
   <application
     android:name=".MainApplication"
@@ -28,6 +26,15 @@
     tools:replace="android:allowBackup"
     android:theme="@style/AppTheme">
 
+    <!-- Branch.io keys -->
+    <meta-data
+      android:name="io.branch.sdk.BranchKey"
+      android:value="key_live_gDsq5qVG69Tpe8V0D8q51dppxAeBQ2tp" />
+
+    <meta-data
+      android:name="io.branch.sdk.BranchKey.test"
+      android:value="key_test_nFCs5AGP48Kpe8N5x2GE2mpgrEmwSWAE" />
+
     <service
       android:name="app.notifee.core.ForegroundService"
       android:foregroundServiceType="shortService|dataSync"
@@ -36,6 +43,10 @@
     <meta-data
       android:name="com.google.android.geo.API_KEY"
       android:value="AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY" />
+
+    <meta-data
+      android:name="com.mapbox.token"
+      android:value="pk.eyJ1IjoidGhlYXBwZm9yY293Ym95cyIsImEiOiJjbXE5dWFiN3IwMjgwMnNwdDJ6dWFtYWV3In0.U_w8NypcmoqcRib-MXrCog" />
 
     <activity
       android:name="com.ahmedadeltito.photoeditor.PhotoEditorActivity"
@@ -52,10 +63,31 @@
       android:launchMode="singleTask"
       android:windowSoftInputMode="adjustResize"
       android:exported="true">
+
+      <!-- Launcher -->
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
+
+      <!-- Branch App Links (https) -->
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="https" android:host="tacapp.app.link" />
+        <data android:scheme="https" android:host="tacapp-alternate.app.link" />
+        <data android:scheme="https" android:host="tacapp.test-app.link" />
+      </intent-filter>
+
+      <!-- Branch URI Scheme -->
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="tacapp" android:host="open" />
+      </intent-filter>
+
     </activity>
 
   </application>

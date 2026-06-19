@@ -1,5 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import {Alert, Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  Clipboard,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {TextComponent} from './TextComponent';
 import {hp, wp} from '../Config/responsive';
 import {CircleImage} from './CircleImage';
@@ -11,6 +20,13 @@ import {
   heartTheme,
   shareTheme,
   playIcon,
+  tickfill,
+  tickemp,
+  whatapp,
+  isnta,
+  messageApp,
+  copyLink,
+  more,
 } from '../Assets';
 import {Colors} from '../Theme/Variables';
 import BlurImage from './BlurImage';
@@ -21,6 +37,12 @@ import {imageUrl, videoUrl} from '../Utils/Urls';
 import {
   checkImageOrientation,
   formatDateToCustomFormat,
+  generateBranchLink,
+  generateBranchLinkForPost,
+  onShareEvent,
+  onSharePost,
+  shareEventUsingBranch,
+  sharePostToSpecificApp,
 } from '../Services/GlobalFunctions';
 import {types} from '../Redux/types';
 import {
@@ -29,6 +51,9 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
+import BottomViewModal from './BottomViewModal';
+import ThemeButton from './ThemeButton';
+import {successMessage} from '../Config/NotificationMessage';
 
 // ────────────────────────────────────────────────
 // Helper: prepare unified media list
@@ -248,9 +273,13 @@ const PostViewComp = ({
   functionToUpdatePostOrEvent,
   setCommentModal,
   isRefectechForVideo,
+  DoNotShowFooter,
 }) => {
   const {likeAndDisLikeEvent, addLikeOnPost, sharePost, deletePost} =
     useFriendServices();
+
+  const [modal, setModal] = useState(false);
+  const [shareOnFeed, setShareOnFeed] = useState(true);
 
   const {getState, dispatch, queryClient} = useReduxStore();
 
@@ -303,165 +332,301 @@ const PostViewComp = ({
   const {userData} = getState('Auth');
 
   return (
-    <View style={{...styles.mainView, ...mainViewStyle}}>
-      {/* Header */}
-      <Pressable
-        style={styles.upperView}
-        onPress={() => {
-          if (userData?.id === item?.user_id) {
-            NavigationService.navigate('MyProfileScreen', {id: userData?.id});
-          } else {
-            NavigationService.navigate('FriendProfileScreen', {
-              id: item?.user_id,
-            });
-          }
-        }}>
-        <CircleImage
-          image={imageUrl(item?.profile_image ?? item?.user_image)}
-          uri
-        />
-        <View style={styles.userDetails}>
-          <TextComponent
-            text={
-              item?.first_name + ' ' + (item?.last_name ? item?.last_name : '')
-            }
-            styles={styles.userName}
-          />
-          <TextComponent
-            text={formatDateToCustomFormat(item?.created_at)}
-            styles={styles.postTime}
-          />
-        </View>
-
-        {userData?.id !== item?.user_id ? (
-          <TextComponent
-            text={'Report'}
-            fade
-            styles={styles.reportText}
-            onPress={() => openBottomSheet?.(item?.id)}
-          />
-        ) : (
-          <Menu>
-            <MenuTrigger>
-              <Image
-                source={dotsVertical}
-                resizeMode="contain"
-                style={{width: wp('6'), height: hp('4')}}
-              />
-            </MenuTrigger>
-            <MenuOptions
-              customStyles={{
-                optionsContainer: {color: 'black'},
-                optionText: {color: 'black'},
-              }}>
-              <MenuOption onSelect={onEditPost} text="Edit" />
-              <MenuOption onSelect={onDeletePost} text="Delete" />
-            </MenuOptions>
-          </Menu>
-        )}
-      </Pressable>
-
-      {/* Content */}
-      {hasMedia ? (
-        <View style={styles.contentView}>
-          {item?.title ? (
-            <TextComponent
-              text={item.title}
-              styles={styles.caption}
-              numberOfLines={100}
-            />
-          ) : null}
-
-          <RenderMedia
-            images={images}
-            videos={videos}
-            onMediaPress={handleMediaPress}
-          />
-        </View>
-      ) : (
-        <>
-          <View style={{...styles.divider, marginTop: hp('1')}} />
-          <JustTextRenderPost title={item?.title} />
-        </>
-      )}
-
-      <View style={styles.divider} />
-
-      {/* Footer */}
-      <View style={styles.bottomView}>
-        <Touchable
-          style={styles.leftRightView}
-          onPress={async () => {
-            functionToUpdateLike(index);
-            await addLikeOnPost.mutateAsync(item?.id);
-            if (refetch) refetch();
-            if (refetechKeys) {
-              refetechKeys.forEach(key => queryClient.invalidateQueries([key]));
-            }
-          }}>
-          <Image
-            source={item?.is_liked ? heartFilledLike : heartTheme}
-            resizeMode="contain"
-            tintColor={'rgba(255, 0, 55, 1)'}
-            style={{width: wp('4'), marginRight: wp('1')}}
-          />
-          <TextComponent
-            text={`${item?.likes_count} ${
-              item?.likes_count <= 1 ? 'Like' : 'Likes'
-            }`}
-            isThemeColor={true}
-            styles={{fontSize: hp('1.3')}}
-          />
-        </Touchable>
-
-        <Touchable
-          style={styles.leftRightView}
+    <>
+      <View style={{...styles.mainView, ...mainViewStyle}}>
+        {/* Header */}
+        <Pressable
+          style={styles.upperView}
           onPress={() => {
-            if (setCommentModal) {
-              setCommentModal(item?.id, item?.index);
+            if (userData?.id === item?.user_id) {
+              NavigationService.navigate('MyProfileScreen', {id: userData?.id});
             } else {
-              NavigationService.navigate('CommentScreen', {
-                id: item?.id,
-                refetechKeys,
-                isPost: true,
-                refetch,
-                functionToUpdateComment,
-                index,
+              NavigationService.navigate('FriendProfileScreen', {
+                id: item?.user_id,
               });
             }
           }}>
-          <Image
-            source={commentIcon}
-            resizeMode="contain"
-            tintColor={Colors.yellowTextColor}
-            style={{width: wp('4'), marginRight: wp('1')}}
+          <CircleImage
+            image={imageUrl(item?.profile_image ?? item?.user_image)}
+            uri
           />
-          <TextComponent
-            text={`${item?.comments_count} ${
-              item?.comments_count <= 1 ? 'Comment' : 'Comments'
-            }`}
-            isThemeColor={true}
-            styles={{fontSize: hp('1.3')}}
-          />
-        </Touchable>
+          <View style={styles.userDetails}>
+            <TextComponent
+              text={
+                item?.first_name +
+                ' ' +
+                (item?.last_name ? item?.last_name : '')
+              }
+              styles={styles.userName}
+            />
+            <TextComponent
+              text={formatDateToCustomFormat(item?.created_at)}
+              styles={styles.postTime}
+            />
+          </View>
 
-        <Touchable
-          style={styles.leftRightView}
-          onPress={() => sharePost.mutate({post_id: item?.id})}>
-          <Image
-            source={shareTheme}
-            resizeMode="contain"
-            tintColor={Colors.yellowTextColor}
-            style={{width: wp('4')}}
-          />
-          <TextComponent
-            text="Share"
-            isThemeColor={true}
-            styles={{marginLeft: wp('1'), fontSize: hp('1.3')}}
-          />
-        </Touchable>
+          {userData?.id !== item?.user_id ? (
+            <TextComponent
+              text={'Report'}
+              fade
+              styles={styles.reportText}
+              onPress={() => openBottomSheet?.(item?.id)}
+            />
+          ) : (
+            <Menu>
+              <MenuTrigger>
+                <Image
+                  source={dotsVertical}
+                  resizeMode="contain"
+                  style={{width: wp('6'), height: hp('4')}}
+                />
+              </MenuTrigger>
+              <MenuOptions
+                customStyles={{
+                  optionsContainer: {color: 'black'},
+                  optionText: {color: 'black'},
+                }}>
+                <MenuOption onSelect={onEditPost} text="Edit" />
+                <MenuOption onSelect={onDeletePost} text="Delete" />
+              </MenuOptions>
+            </Menu>
+          )}
+        </Pressable>
+
+        {/* Content */}
+        {hasMedia ? (
+          <View style={styles.contentView}>
+            {item?.title ? (
+              <TextComponent
+                text={item.title}
+                styles={styles.caption}
+                numberOfLines={100}
+              />
+            ) : null}
+
+            <RenderMedia
+              images={images}
+              videos={videos}
+              onMediaPress={handleMediaPress}
+            />
+          </View>
+        ) : (
+          <>
+            <View style={{...styles.divider, marginTop: hp('1')}} />
+            <JustTextRenderPost title={item?.title} />
+          </>
+        )}
+
+        <View style={styles.divider} />
+
+        {/* Footer */}
+        {!DoNotShowFooter && (
+          <View style={styles.bottomView}>
+            <Touchable
+              style={styles.leftRightView}
+              onPress={async () => {
+                functionToUpdateLike(index);
+                await addLikeOnPost.mutateAsync(item?.id);
+                if (refetch) refetch();
+                if (refetechKeys) {
+                  refetechKeys.forEach(key =>
+                    queryClient.invalidateQueries([key]),
+                  );
+                }
+              }}>
+              <Image
+                source={item?.is_liked ? heartFilledLike : heartTheme}
+                resizeMode="contain"
+                tintColor={'rgba(255, 0, 55, 1)'}
+                style={{width: wp('4'), marginRight: wp('1')}}
+              />
+              <TextComponent
+                text={`${item?.likes_count} ${
+                  item?.likes_count <= 1 ? 'Like' : 'Likes'
+                }`}
+                isThemeColor={true}
+                styles={{fontSize: hp('1.3')}}
+              />
+            </Touchable>
+
+            <Touchable
+              style={styles.leftRightView}
+              onPress={() => {
+                if (setCommentModal) {
+                  setCommentModal(item?.id, item?.index);
+                } else {
+                  NavigationService.navigate('CommentScreen', {
+                    id: item?.id,
+                    refetechKeys,
+                    isPost: true,
+                    refetch,
+                    functionToUpdateComment,
+                    index,
+                  });
+                }
+              }}>
+              <Image
+                source={commentIcon}
+                resizeMode="contain"
+                tintColor={Colors.yellowTextColor}
+                style={{width: wp('4'), marginRight: wp('1')}}
+              />
+              <TextComponent
+                text={`${item?.comments_count} ${
+                  item?.comments_count <= 1 ? 'Comment' : 'Comments'
+                }`}
+                isThemeColor={true}
+                styles={{fontSize: hp('1.3')}}
+              />
+            </Touchable>
+
+            <Touchable
+              style={styles.leftRightView}
+              onPress={() => {
+                setShareOnFeed(true);
+                setModal(true);
+              }}>
+              <Image
+                source={shareTheme}
+                resizeMode="contain"
+                tintColor={Colors.yellowTextColor}
+                style={{width: wp('4')}}
+              />
+              <TextComponent
+                text="Share"
+                isThemeColor={true}
+                styles={{marginLeft: wp('1'), fontSize: hp('1.3')}}
+              />
+            </Touchable>
+          </View>
+        )}
       </View>
-    </View>
+      {Boolean(modal) && (
+        <BottomViewModal
+          isModal={modal}
+          onBackPress={() => setModal(false)}
+          childrenComp={
+            <View style={{paddingHorizontal: wp('2')}}>
+              {/* New Direct Share Options */}
+              <TextComponent
+                text={'Share on the other Apps'}
+                size={hp('1.5')}
+                fontFamily={'bold'}
+                styles={{marginLeft: wp('1')}}
+              />
+
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  flexDirection: 'row',
+                  // marginVertical: hp('2.5'),
+                  paddingHorizontal: wp('2'),
+                  width: wp('85'),
+                  // backgroundColor: 'red',
+                  justifyContent: 'space-between',
+                  marginTop: hp('2'),
+                }}>
+                {/* WhatsApp */}
+                <Touchable
+                  // style={{marginRight: wp('2')}}
+                  onPress={() => {
+                    setModal(false);
+                    sharePostToSpecificApp('whatsapp', item);
+                  }}>
+                  <Image source={whatapp} style={{width: 55, height: 55}} />
+                </Touchable>
+
+                {/* Instagram */}
+                <Touchable
+                  // style={{marginRight: wp('2')}}
+                  onPress={() => {
+                    setModal(false);
+                    sharePostToSpecificApp('instagram', item);
+                  }}>
+                  <Image source={isnta} style={{width: 55, height: 55}} />
+                </Touchable>
+
+                {/* TikTok */}
+                <Touchable
+                  // style={{marginRight: wp('2')}}
+                  onPress={() => {
+                    setModal(false);
+                    sharePostToSpecificApp('message', item);
+                  }}>
+                  <Image source={messageApp} style={{width: 55, height: 55}} />
+                </Touchable>
+
+                {/* Copy Link */}
+                <Touchable
+                  // style={{marginRight: wp('2')}}
+                  onPress={async () => {
+                    setModal(false);
+                    const link = await generateBranchLinkForPost(item);
+                    if (link) {
+                      await Clipboard.setString(link); // Make sure you import Clipboard
+                      successMessage('Link copied successfully');
+                    } else {
+                      Alert.alert('Error', 'Failed to generate link');
+                    }
+                  }}>
+                  <Image source={copyLink} style={{width: 55, height: 55}} />
+                </Touchable>
+                <Touchable
+                  onPress={() => {
+                    // setModal(false);
+                    onSharePost(item);
+                  }}>
+                  <Image source={more} style={{width: 55, height: 55}} />
+                </Touchable>
+              </ScrollView>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: hp('2'),
+                }}>
+                <Touchable
+                  style={styles.checkContainer}
+                  onPress={() => {
+                    setShareOnFeed(!shareOnFeed);
+                  }}>
+                  <Image
+                    tintColor={Colors.primaryColor}
+                    source={shareOnFeed ? tickfill : tickemp}
+                    style={{
+                      resizeMode: 'contain',
+                      // tintColor: Colors.white,
+                      width: wp('6'),
+                      marginRight: wp('2'),
+                    }}
+                  />
+                </Touchable>
+                <TextComponent text={'Share on my TAC feed'} size={hp('1.5')} />
+              </View>
+              {shareOnFeed && (
+                <ThemeButton
+                  title={'Share'}
+                  style={{
+                    height: hp('4'),
+                    marginTop: hp('2'),
+                    width: wp('70'),
+                    alignSelf: 'center',
+                  }}
+                  textStyle={{fontSize: hp('1.5')}}
+                  onPress={() => {
+                    setModal(false);
+
+                    sharePost.mutate({post_id: item?.id});
+                  }}
+                />
+              )}
+            </View>
+          }
+        />
+      )}
+    </>
   );
 };
 
@@ -581,6 +746,14 @@ const styles = StyleSheet.create({
     top: hp('-0.5'),
     textAlign: 'right',
     right: wp('2'),
+  },
+  modalText: {
+    backgroundColor: Colors.bgGray,
+    paddingHorizontal: wp('3'),
+    paddingVertical: hp('1'),
+    width: wp('85'),
+    borderRadius: 10,
+    overflow: 'hidden',
   },
 });
 

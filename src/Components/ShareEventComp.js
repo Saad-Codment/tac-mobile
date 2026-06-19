@@ -5,6 +5,8 @@ import {
   StyleSheet,
   View,
   Platform,
+  ScrollView,
+  Clipboard,
 } from 'react-native';
 import {hp, wp} from '../Config/responsive';
 import {CircleImage} from './CircleImage';
@@ -19,6 +21,15 @@ import {
   locationGray,
   shareTheme,
   tickSquare,
+  threeDots,
+  tickemp,
+  tickfill,
+  google,
+  more,
+  messageApp,
+  isnta,
+  whatapp,
+  copyLink,
 } from '../Assets';
 import {Colors} from '../Theme/Variables';
 import {MultiSelectButton} from './MultiSelectButton';
@@ -29,6 +40,10 @@ import {
   formatDateToCustomFormat,
   getIdsFromArry,
   getDateMonthYear,
+  onShareEvent,
+  shareToSpecificApp,
+  generateBranchLink,
+  shareEventUsingBranch,
 } from '../Services/GlobalFunctions';
 import {Touchable} from './Touchable';
 import NavigationService from '../Services/NavigationService';
@@ -48,7 +63,7 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 import {useState} from 'react';
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {errorMessage, successMessage} from '../Config/NotificationMessage';
 import * as Calendar from '@shadahmad7/react-native-calendar';
 import BottomViewModal from './BottomViewModal';
@@ -72,6 +87,15 @@ const ShareEventComp = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [modal, setModal] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [selectedFriends, setSelectedFriends] = useState([]);
+  const [shareOnFeed, setShareOnFeed] = useState(true);
+
+  const {data} = useQuery({
+    queryKey: ['getlimitedfriendslist'],
+    queryFn: () => API.get(chatUserListUrl),
+    enabled: modal,
+    // Consider adding staleTime and cacheTime options
+  });
 
   const {mutateAsync} = useMutation({
     mutationFn: data => {
@@ -524,7 +548,11 @@ const ShareEventComp = ({
 
             <Touchable
               style={{...styles.leftRightView, marginLeft: hp('-10')}}
-              onPress={() => setModal(true)}>
+              onPress={() => {
+                setShareOnFeed(true);
+                setSelectedFriends([]);
+                setModal(true);
+              }}>
               <Image
                 source={shareTheme}
                 resizeMode="contain"
@@ -578,40 +606,241 @@ const ShareEventComp = ({
           onBackPress={() => setModal(false)}
           childrenComp={
             <View style={{paddingHorizontal: wp('2')}}>
+              {/* Share with TAC Friends - Kept as it was */}
               <TextComponent
-                text={'Share with friends'}
-                styles={styles.modalText}
+                text={'Share with TAC friends'}
                 size={hp('1.5')}
-                onPress={() => {
-                  setModal(false);
-                  NavigationService.navigate('SelectFriendListScreem', {
-                    onSelectValue: () => {},
-                    selectedValue: [],
-                    urlName: chatUserListUrl,
-                    isMultiSelect: true,
-                    title: 'Select Friends',
-                    btnTitle: 'Share',
-                    onBtnPress: selectedList => {
-                      shareEventInChat.mutateAsync({
-                        event_id: item?.id,
-                        conversation_ids: getIdsFromArry(
-                          selectedList,
-                          'conversation_id',
-                        ),
-                      });
-                    },
-                  });
-                }}
+                fontFamily={'bold'}
+                styles={{marginLeft: wp('1')}}
               />
+
+              <ScrollView
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                contentContainerStyle={{flexGrow: 1, marginTop: hp('1')}}>
+                {data?.data?.map(res => {
+                  return (
+                    <Pressable
+                      key={res?.id}
+                      style={{
+                        width: wp('15'),
+                        marginLeft: wp('2'),
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderColor: Boolean(
+                          selectedFriends.find(
+                            re =>
+                              re?.id ===
+                              (res?.other_user
+                                ? res?.other_user?.conversation_id
+                                : res?.id),
+                          ),
+                        )
+                          ? Colors.primaryColor
+                          : 'transparent',
+                        borderWidth: 1,
+                        padding: wp('1'),
+                        borderRadius: 10,
+                      }}
+                      onPress={() => {
+                        const onHitFriend = res?.other_user
+                          ? {
+                              ...res?.other_user,
+                              id: res?.other_user?.conversation_id,
+                            }
+                          : res;
+                        const foundAllergy = selectedFriends.find(
+                          item => item?.id === onHitFriend?.id,
+                        );
+
+                        if (foundAllergy) {
+                          setSelectedFriends(
+                            selectedFriends.filter(
+                              item => item?.id !== onHitFriend?.id,
+                            ),
+                          );
+                        } else {
+                          setSelectedFriends([...selectedFriends, onHitFriend]);
+                        }
+                      }}>
+                      <CircleImage
+                        image={imageUrl(res?.other_user?.profile_image)}
+                        uri
+                        size={0.12}
+                      />
+                      <TextComponent
+                        text={
+                          (res?.other_user?.first_name ?? '') +
+                          ' ' +
+                          (res?.other_user?.last_name ?? '')
+                        }
+                        styles={{textAlign: 'center', marginTop: hp('1')}}
+                        size={hp('1.5')}
+                      />
+                    </Pressable>
+                  );
+                })}
+
+                <Pressable
+                  style={{
+                    width: wp('20'),
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  onPress={() => {
+                    setModal(false);
+                    NavigationService.navigate('SelectFriendListScreem', {
+                      onSelectValue: () => {},
+                      selectedValue: selectedFriends,
+                      urlName: chatUserListUrl,
+                      isMultiSelect: true,
+                      title: 'Select Friends',
+                      btnTitle: 'Share',
+                      onBtnPress: selectedList => {
+                        shareEventInChat.mutateAsync({
+                          event_id: item?.id,
+                          conversation_ids: getIdsFromArry(
+                            selectedList,
+                            'conversation_id',
+                          ),
+                        });
+                      },
+                    });
+                  }}>
+                  <CircleImage
+                    image={more}
+                    uri={false}
+                    size={0.12}
+                    styles={{marginBottom: hp('2')}}
+                  />
+                  <TextComponent
+                    text={'More'}
+                    styles={{textAlign: 'center'}}
+                    size={hp('1.5')}
+                  />
+                </Pressable>
+              </ScrollView>
+
+              {/* New Direct Share Options */}
               <TextComponent
-                text={'Share on your feed'}
-                styles={{...styles.modalText, marginTop: hp('1.5')}}
+                text={'Share on the other Apps'}
                 size={hp('1.5')}
-                onPress={() => {
-                  setModal(false);
-                  shareEvent.mutateAsync({event_id: item?.id});
-                }}
+                fontFamily={'bold'}
+                styles={{marginLeft: wp('1'), marginTop: hp('2')}}
               />
+
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  flexDirection: 'row',
+                  // marginVertical: hp('2.5'),
+                  paddingHorizontal: wp('2'),
+                  width: wp('85'),
+                  // backgroundColor: 'red',
+                  justifyContent: 'space-between',
+                  marginTop: hp('2'),
+                }}>
+                {/* WhatsApp */}
+                <Touchable
+                  // style={{marginRight: wp('2')}}
+                  onPress={() => {
+                    setModal(false);
+                    shareToSpecificApp('whatsapp', item);
+                  }}>
+                  <Image source={whatapp} style={{width: 55, height: 55}} />
+                </Touchable>
+
+                {/* Instagram */}
+                <Touchable
+                  // style={{marginRight: wp('2')}}
+                  onPress={() => {
+                    setModal(false);
+                    shareToSpecificApp('instagram', item);
+                  }}>
+                  <Image source={isnta} style={{width: 55, height: 55}} />
+                </Touchable>
+
+                {/* TikTok */}
+                <Touchable
+                  // style={{marginRight: wp('2')}}
+                  onPress={() => {
+                    setModal(false);
+                    shareToSpecificApp('message', item);
+                  }}>
+                  <Image source={messageApp} style={{width: 55, height: 55}} />
+                </Touchable>
+
+                {/* Copy Link */}
+                <Touchable
+                  // style={{marginRight: wp('2')}}
+                  onPress={async () => {
+                    setModal(false);
+                    const link = await generateBranchLink(item);
+                    if (link) {
+                      await Clipboard.setString(link); // Make sure you import Clipboard
+                      successMessage('Link copied successfully');
+                    } else {
+                      Alert.alert('Error', 'Failed to generate link');
+                    }
+                  }}>
+                  <Image source={copyLink} style={{width: 55, height: 55}} />
+                </Touchable>
+                <Touchable
+                  onPress={() => {
+                    // setModal(false);
+                    shareEventUsingBranch(item);
+                  }}>
+                  <Image source={more} style={{width: 55, height: 55}} />
+                </Touchable>
+              </ScrollView>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: hp('2'),
+                }}>
+                <Touchable
+                  style={styles.checkContainer}
+                  onPress={() => {
+                    setShareOnFeed(!shareOnFeed);
+                  }}>
+                  <Image
+                    tintColor={Colors.primaryColor}
+                    source={shareOnFeed ? tickfill : tickemp}
+                    style={{
+                      resizeMode: 'contain',
+                      // tintColor: Colors.white,
+                      width: wp('6'),
+                      marginRight: wp('2'),
+                    }}
+                  />
+                </Touchable>
+                <TextComponent text={'Share on my TAC feed'} size={hp('1.5')} />
+              </View>
+              {(selectedFriends.length > 0 || shareOnFeed) && (
+                <ThemeButton
+                  title={'Share'}
+                  style={{
+                    height: hp('4'),
+                    marginTop: hp('2'),
+                    width: wp('70'),
+                    alignSelf: 'center',
+                  }}
+                  textStyle={{fontSize: hp('1.5')}}
+                  onPress={() => {
+                    setModal(false);
+                    shareEventInChat.mutateAsync({
+                      event_id: item?.id,
+                      conversation_ids: getIdsFromArry(
+                        selectedFriends,
+                        'conversation_id',
+                      ),
+                    });
+                  }}
+                />
+              )}
             </View>
           }
         />

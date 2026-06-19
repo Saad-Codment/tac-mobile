@@ -16,6 +16,7 @@ export const TextComponent = ({
   fontFamily,
   size,
   disable,
+  onLongPress,
 }) => {
   return (
     <Text
@@ -24,6 +25,7 @@ export const TextComponent = ({
       android_disableSound={true}
       suppressHighlighting={true} // This is specifically for iOS but might help
       disabled={disable}
+      onLongPress={onLongPress}
       style={{
         color: fade
           ? Colors.grayFaded

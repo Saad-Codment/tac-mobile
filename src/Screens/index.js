@@ -47,5 +47,9 @@ export {default as UpdateAppScreen} from './UpdateAppScreen';
 export {default as SelectCityScreen} from './SelectCityScreen';
 export {default as CancelSubScreen} from './CancelSubScreen';
 export {default as VideoPlayScreen} from './VideoPlayScreen';
+export {default as PostDetailScreen} from './PostDetailScreen';
+export {default as TruckAddScreen} from './TruckAddScreen';
+export {default as TruckListScreen} from './TruckListScreen';
+export {default as EventMapScreen} from './EventMapScreen';
 
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

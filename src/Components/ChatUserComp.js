@@ -79,9 +79,10 @@ const ChatUserComp = ({mainViewStyles, item, index, userDataProp}) => {
                 getDateMonthYear(item?.last_message?.created_at)?.day +
                 ' ' +
                 convertToLocalTime(item?.last_message?.created_at)?.time +
-                ' ' +
-                convertToLocalTime(item?.last_message?.created_at)?.period
-              : ''
+                ' '
+              : // +
+                // convertToLocalTime(item?.last_message?.created_at)?.period
+                ''
           }
           fade
           styles={styles.timeText}

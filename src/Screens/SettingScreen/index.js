@@ -160,6 +160,20 @@ const SettingScreen = ({navigation}) => {
           NavigationService.navigate('AfterLoginNumberEditScreen', true),
       },
       {
+        title: 'Truck Add Details',
+        leftIcon: callEmpty,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('TruckAddScreen'),
+      },
+      {
+        title: 'Truck list ',
+        leftIcon: callEmpty,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('TruckListScreen'),
+      },
+      {
         title: 'Are you willing to haul horses for others?',
         leftIcon: horseShoe,
         rightIcon: arrRight,

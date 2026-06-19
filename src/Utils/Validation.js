@@ -236,6 +236,52 @@ const eventCreateSchema = yup.object().shape({
   perfEventList: yup.array(),
 });
 
+const truckAddSchema = yup.object().shape({
+  vehicle_number: yup
+    .string()
+    .required('Please enter the vehicle number.')
+    .max(50, 'Name must be less than 50 characters.'),
+  truckImg: yup.mixed().required('Truck image is required'),
+
+  // ── New truck detail fields ──────────────────────────────
+  name: yup.string().required('Please enter the name.'),
+  horse_stalls: yup
+    .number()
+    .typeError('Horse stalls must be a number')
+    .required('Please enter the number of horse stalls.')
+    .min(0, 'Horse stalls cannot be negative'),
+  human_seats: yup
+    .number()
+    .typeError('Human seats must be a number')
+    .required('Please enter the number of human seats.')
+    .min(0, 'Human seats cannot be negative'),
+  height_cm: yup
+    .number()
+    .typeError('Height must be a number')
+    .required('Please enter the height (cm).')
+    .min(0, 'Height cannot be negative'),
+  weight_kg: yup
+    .number()
+    .typeError('Weight must be a number')
+    .required('Please enter the weight (kg).')
+    .min(0, 'Weight cannot be negative'),
+  axle_count: yup
+    .number()
+    .typeError('Axle count must be a number')
+    .required('Please enter the axle count.')
+    .min(0, 'Axle count cannot be negative'),
+  length_cm: yup
+    .number()
+    .typeError('Length must be a number')
+    .required('Please enter the length (cm).')
+    .min(0, 'Length cannot be negative'),
+  width_cm: yup
+    .number()
+    .typeError('Width must be a number')
+    .required('Please enter the width (cm).')
+    .min(0, 'Width cannot be negative'),
+  // ────────────────────────────────────────────────────────
+});
 const Schemas = {
   signUp: yupResolver(signUpschema),
   logIn: yupResolver(logInUpschema),
@@ -246,6 +292,7 @@ const Schemas = {
   editProfile: yupResolver(editProfileScheme),
   demoKit: yupResolver(demoKitSchema),
   eventCreate: yupResolver(eventCreateSchema),
+  truckAdd: yupResolver(truckAddSchema),
 };
 
 export default Schemas;

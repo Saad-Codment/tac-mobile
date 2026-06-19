@@ -24,7 +24,7 @@ import {
   settingWhite,
 } from '../Assets';
 import {Touchable} from '../Components/Touchable';
-import Lottie from 'lottie-react-native';
+// import Lottie from 'lottie-react-native';
 import {CircleImage} from './CircleImage';
 import {globalSearchEventsWithFilterUrl, imageUrl} from '../Utils/Urls';
 import ThemeButton from './ThemeButton';
@@ -92,13 +92,13 @@ const HomeHeader = ({
                 marginTop: hp('5.4'),
               }}>
               <TextComponent text={text} styles={styles.nameText} />
-              <Lottie
+              {/* <Lottie
                 source={handShakeLottie}
                 resizeMode="contain"
                 style={{width: wp('7'), height: hp('3')}}
                 loop
                 autoPlay
-              />
+              /> */}
             </View>
             <View
               style={{
@@ -137,8 +137,8 @@ const HomeHeader = ({
           style={{
             top: hp('1.5'),
           }}
+          // onPress={() => NavigationService.navigate('PostDetailScreen')}>
           onPress={() => NavigationService.navigate('GlobalSearchScreen')}>
-          {/* onPress={() => NavigationService.navigate('EventFilterScreen')}> */}
           <Image
             source={homeSearch}
             resizeMode="contain"

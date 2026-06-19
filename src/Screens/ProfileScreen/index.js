@@ -240,20 +240,23 @@ const ProfileScreen = ({navigation}) => {
                         text: 'Camera',
                         onPress: async () => {
                           const img = await uploadFromCamera(false, false);
-                          navigation.navigate('CropScreen', {
-                            image: img,
-                            afterCropImg: e => justUploadImg({...img, uri: e}),
-                          });
+                          if (img) {
+                            navigation.navigate('CropScreen', {
+                              image: img,
+                              afterCropImg: e => justUploadImg({...img, uri: e}),
+                            });
+                          }
                         },
                       },
                       {
                         text: 'Gallery', // Just a dismissal button
                         onPress: async () => {
                           const img = await uploadFromGalary(false, false);
+                                         if (img) {
                           navigation.navigate('CropScreen', {
                             image: img,
                             afterCropImg: e => justUploadImg({...img, uri: e}),
-                          });
+                          });}
                         },
                       },
                       {

@@ -2,14 +2,13 @@ def node_require(script)
   require Pod::Executable.execute_command('node', ['-p',
     "require.resolve('#{script}', {paths: [process.argv[1]]})", __dir__]).strip
 end
-
+ 
 node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
-
+ 
 platform :ios, '16.0'
 prepare_react_native_project!
 
-# Static linkage (good for Firebase)
 use_frameworks! :linkage => :static
 use_modular_headers!
 
@@ -25,25 +24,25 @@ target 'tac' do
 
   use_react_native!(
     :path => config[:reactNativePath],
-    :hermes_enabled => false,          # Keep as false (you had it disabled)
-    :fabric_enabled => false,          # Disable New Architecture for now
+    :hermes_enabled => true,
+    :fabric_enabled => false,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
   # Your custom pods
   pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
   pod 'RNFS', :path => '../node_modules/react-native-fs'
-  pod 'lottie-ios', :path => '../node_modules/lottie-ios'
   pod 'GoogleMaps'
   pod 'GooglePlaces'
   pod 'Google-Maps-iOS-Utils'
-  pod 'react-native-google-maps', :path => '../node_modules/react-native-maps'
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
   pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
   pod 'RNPurchases', :path => '../node_modules/react-native-purchases', :inhibit_warnings => true
   pod 'react-native-blurhash', :path => '../node_modules/react-native-blurhash', :modular_headers => true
   pod 'react-native-compressor', :path => '../node_modules/react-native-compressor', :modular_headers => true
   pod 'react-native-video', :path => '../node_modules/react-native-video', :modular_headers => true
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  pod 'react-native-branch', path: '../node_modules/react-native-branch'
 
   # Permissions
   setup_permissions([
@@ -55,7 +54,7 @@ target 'tac' do
     inherit! :complete
   end
 
-  # ====================== IMPORTANT FIX FOR DOUBLE-CONVERSION ======================
+  # ====================== POST INSTALL ======================
   post_install do |installer|
     react_native_post_install(
       installer,
@@ -63,8 +62,40 @@ target 'tac' do
       :mac_catalyst_enabled => false
     )
 
-    # Fix for RCT-Folly / DoubleConversion header not found
     installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++20'
+        config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
+        config.build_settings['GCC_C_LANGUAGE_STANDARD'] = 'gnu17'
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+        config.build_settings['OTHER_CPLUSPLUSFLAGS'] = '$(inherited) -DFMT_USE_NONTYPE_TEMPLATE_ARGS=0'
+      end
+
+      # fmt fix
+      if target.name == 'fmt'
+        target.build_configurations.each do |config|
+          config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+        end
+      end
+
+      # rnmapbox fix
+      if target.name.include?('rnmapbox') || target.name.include?('Mapbox')
+        target.build_configurations.each do |config|
+          config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++20'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'RCT_NEW_ARCH_ENABLED=1'
+        end
+      end
+
+      # sqlite fix
+      if target.name.include?('react-native-sqlite-storage') || target.name.include?('SQLite')
+        target.build_configurations.each do |config|
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'SQLITE_OMIT_LOAD_EXTENSION=1'
+        end
+      end
+
+      # Folly fix
       if target.name == 'RCT-Folly' || target.name == 'DoubleConversion'
         target.build_configurations.each do |config|
           config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
@@ -74,12 +105,64 @@ target 'tac' do
         end
       end
 
-      # Extra safety for all targets
+      # Inspector fix
       if target.name != 'Pods-tac'
         target.build_configurations.each do |config|
           config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
-          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'RCT_ENABLE_INSPECTOR=1'
+          if config.name == "Debug"
+            config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'RCT_ENABLE_INSPECTOR=1'
+          else
+            config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'RCT_ENABLE_INSPECTOR=0'
+          end
         end
+      end
+    end
+
+    # 🔥 CRITICAL: Nil-safe patch for RCTThirdPartyComponentsProvider (fixes rnmapbox crash)
+    puts "🔧 Applying nil-safe patch for Fabric components..."
+    file_path = "Pods/Development Pods/React-Codegen/RCTThirdPartyComponentsProvider.mm"
+    if File.exist?(file_path)
+      content = File.read(file_path)
+      
+      safe_patch = <<~'RUBY'
+        dispatch_once(&nativeComponentsToken, ^{
+          NSMutableDictionary<NSString *, Class<RCTComponentViewProtocol>> *components = [NSMutableDictionary new];
+          
+          void (^safeAdd)(NSString *, NSString *) = ^(NSString *key, NSString *className) {
+            Class cls = NSClassFromString(className);
+            if (cls) {
+              components[key] = cls;
+            } else {
+              NSLog(@"⚠️ Skipping nil Fabric component: %@ (%@)", key, className);
+            }
+          };
+
+          // Auto-register all components safely
+          safeAdd(@"RNCPicker", @"RNCPickerComponentView");
+          safeAdd(@"RNMBXAtmosphere", @"RNMBXAtmosphereComponentView");
+          safeAdd(@"RNMBXBackgroundLayer", @"RNMBXBackgroundLayerComponentView");
+          safeAdd(@"RNMBXCallout", @"RNMBXCalloutComponentView");
+          safeAdd(@"RNMBXCamera", @"RNMBXCameraComponentView");
+          safeAdd(@"RNMBXCameraGestureObserver", @"RNMBXCameraGestureObserverComponentView");
+          safeAdd(@"RNMBXCircleLayer", @"RNMBXCircleLayerComponentView");
+          safeAdd(@"RNMBXCustomLocationProvider", @"RNMBXCustomLocationProviderComponentView");
+          safeAdd(@"RNMBXFillExtrusionLayer", @"RNMBXFillExtrusionLayerComponentView");
+          safeAdd(@"RNMBXFillLayer", @"RNMBXFillLayerComponentView");
+          safeAdd(@"RNMBXHeatmapLayer", @"RNMBXHeatmapLayerComponentView");
+          safeAdd(@"RNMBXHillshadeLayer", @"RNMBXHillshadeLayerComponentView");
+          safeAdd(@"RNMBXImage", @"RNMBXImageComponentView");
+          safeAdd(@"RNMBXImageSource", @"RNMBXImageSourceComponentView");
+          safeAdd(@"RNMBXImages", @"RNMBXImagesComponentView");
+          // Add more if you see new RNMBX* in the file
+
+          thirdPartyComponents = components;
+        });
+      RUBY
+
+      if content.match(/thirdPartyComponents = @\{/)
+        content = content.gsub(/dispatch_once\(&nativeComponentsToken, \^\{.*?\}\);/m, safe_patch)
+        File.write(file_path, content)
+        puts "✅ Successfully applied nil-safe patch!"
       end
     end
   end

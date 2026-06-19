@@ -65,7 +65,7 @@ const SelectFriendListScreem = ({navigation, route}) => {
 
   console.log(
     'datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata',
-    data?.data,
+    selectedList,
   );
 
   const [selectedList, setSelectedList] = useState(selectedValue);

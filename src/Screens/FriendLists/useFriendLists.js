@@ -29,11 +29,8 @@ const useFriendLists = ({navigation, route}, {params}) => {
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
-      // Implement proper pagination logic here
-      // Example: return lastPage.data.nextPage ?? undefined;
       return (pages?.length ?? 0) + 1;
     },
-    // Consider adding staleTime and cacheTime options
   });
 
   // Clear specific query when component unmounts

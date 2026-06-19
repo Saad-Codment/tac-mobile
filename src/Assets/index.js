@@ -88,6 +88,12 @@ export {default as tacFilterIcon} from './Icons/tacFilterIcon.png';
 export {default as tickFrameYellow} from './Icons/tickFrameYellow.png';
 export {default as save25} from './Icons/save25.png';
 
+export {default as whatapp} from './Icons/whatapp.png';
+export {default as isnta} from './Icons/isnta.png';
+export {default as messageApp} from './Icons/messageApp.png';
+export {default as copyLink} from './Icons/copyLink.png';
+export {default as more} from './Icons/more.png';
+
 export {default as cameraBlack} from './Icons/cameraBlack.png';
 
 export {default as popular} from './Icons/popular.png';

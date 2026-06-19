@@ -34,6 +34,7 @@ import {
   formatDateToLong,
   formatPrice,
   getDateMonthYear,
+  onShareEvent,
 } from '../../Services/GlobalFunctions';
 import {imageUrl} from '../../Utils/Urls';
 import {CircleImage} from '../../Components/CircleImage';
@@ -109,10 +110,7 @@ const EventsDetailScreen = ({navigation, route}) => {
     }
   };
 
-  console.log(
-    'kjsdblkvsdbklvbsdklvblksdbvlksbdlkvsdvksdlvsbdv',
-    formatPrice(eventData?.added_money ?? 0).toString(),
-  );
+  console.log('kjsdblkvsdbklvbsdklvblksdbvlksbdlkvsdvksdlvsbdv', eventData);
 
   return (
     <View style={styles.mainView}>
@@ -501,6 +499,22 @@ const EventsDetailScreen = ({navigation, route}) => {
             imageStyle={styles.btnCalendarIcon}
           />
         )}
+        <ThemeButton
+          title={'Create Trip from this Event'}
+          style={styles.btnStyle}
+          textStyle={styles.btnText}
+          onPress={() => {
+            // From EventDetailScreen — single event:
+            navigation.navigate('EventMapScreen', {event: eventData});
+
+            // From anywhere — multiple events (existing trip):
+            // navigation.navigate('EventMapScreen', {events: [eventA, eventB, eventC]});
+          }}
+          // onPress={() => navigation.navigate('EventMapScreen', {eventData})}
+          image={calender}
+          isYellowTheme
+          imageStyle={styles.btnCalendarIcon}
+        />
       </ScrollView>
     </View>
   );

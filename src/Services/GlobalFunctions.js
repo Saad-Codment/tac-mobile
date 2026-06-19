@@ -4,13 +4,14 @@ import {
   Linking,
   PermissionsAndroid,
   Platform,
+  Clipboard,
 } from 'react-native';
 import Geolocationios from '@react-native-community/geolocation';
 import Geolocation from 'react-native-geolocation-service';
 import ImageCropPicker from 'react-native-image-crop-picker';
 // import Geolocation from '@react-native-community/geolocation';
 import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
-import {MapAPIKey} from '../Utils/Urls';
+import {imageUrl, MapAPIKey} from '../Utils/Urls';
 import bcrypt from 'react-native-bcrypt';
 import AES from 'react-native-aes-crypto';
 import {randomBytes} from 'react-native-get-random-values';
@@ -24,6 +25,8 @@ import ImageEditor, {ImageCropData} from '@react-native-community/image-editor';
 import Canvas, {Image as CanvasImage} from 'react-native-canvas';
 import {Video} from 'react-native-compressor';
 import {errorMessage} from '../Config/NotificationMessage';
+import branch from 'react-native-branch';
+import Share from 'react-native-share';
 
 const MAX_VIDEO_SIZE_MB = 100;
 const MAX_VIDEO_SIZE_BYTES = MAX_VIDEO_SIZE_MB * 1024 * 1024; // 100 MB in bytes
@@ -1785,6 +1788,357 @@ function findCommonById(arr1, arr2, key) {
   return arr1.filter(item => set.has(item[key]));
 }
 
+const shareEventUsingBranch = async eventData => {
+  try {
+    const {Auth} = store.getState();
+
+    const sanitizeTitle = str => {
+      if (!str) return '';
+      return str
+        .replace(/[\u2018\u2019\u201A\u201B]/g, "'")
+        .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+        .replace(/[^\x00-\x7F]/g, '');
+    };
+
+    const rawTitle = eventData?.title || '';
+    const safeTitle = sanitizeTitle(rawTitle);
+
+    const titleText = safeTitle
+      ? `${Auth.userData?.first_name} has shared an event on TAC: "${safeTitle}"`
+      : `${Auth.userData?.first_name} has shared an event on TAC`;
+
+    const contentImage = eventData?.images
+      ? imageUrl(JSON.parse(eventData?.images)[0])
+      : 'https://theappforcowboys.com/assets/img/logo/tac-logo-white02.png';
+
+    console.log('Sharing post:', contentImage);
+
+    const branchUniversalObject = await branch.createBranchUniversalObject(
+      `event/content/${eventData?.id}`,
+      {
+        locallyIndex: true,
+        title: titleText,
+        contentDescription: safeTitle,
+        contentImageUrl: contentImage,
+
+        contentMetadata: {
+          screen: 'EventDetail',
+          event_id: String(eventData?.id),
+          type: 'event',
+        },
+      },
+    );
+
+    const linkProperties = {
+      feature: 'share',
+      channel: 'app_share',
+    };
+
+    const controlParams = {
+      $desktop_url: 'https://theappforcowboys.com/',
+      $ios_url:
+        'https://apps.apple.com/us/app/tac-the-app-for-cowboys/id6738097899',
+      $android_url:
+        'https://play.google.com/store/apps/details?id=com.tac.codment',
+    };
+
+    const shareOptions = {
+      messageHeader: 'Check this event',
+      messageBody: 'Open this event in the app',
+    };
+
+    const result = await branchUniversalObject.showShareSheet(
+      shareOptions,
+      linkProperties,
+      controlParams,
+    );
+
+    console.log('Branch Share Result:', result);
+  } catch (e) {
+    console.log('Branch link generation failed', e);
+    return `https://theappforcowboys.com/event/${eventData?.id}`;
+  }
+};
+
+// ================== IMPROVED BRANCH + SHARE FUNCTIONS ==================
+const generateBranchLink = async eventData => {
+  try {
+    const {Auth} = store.getState();
+
+    const sanitizeTitle = str => {
+      if (!str) return '';
+      return str
+        .replace(/[\u2018\u2019\u201A\u201B]/g, "'")
+        .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+        .replace(/[^\x00-\x7F]/g, '');
+    };
+
+    const safeTitle = sanitizeTitle(eventData?.title || '');
+
+    const titleText = safeTitle
+      ? `${Auth.userData?.first_name} has shared an event on TAC: "${safeTitle}"`
+      : `${Auth.userData?.first_name} has shared an event on TAC`;
+
+    const contentImage = eventData?.images
+      ? imageUrl(JSON.parse(eventData?.images)[0])
+      : 'https://theappforcowboys.com/assets/img/logo/tac-logo-white02.png';
+
+    const branchUniversalObject = await branch.createBranchUniversalObject(
+      `event/content/${eventData?.id}`, // This is correct
+      {
+        locallyIndex: true,
+        title: titleText,
+        contentDescription: safeTitle || eventData?.description || '',
+        contentImageUrl: contentImage,
+
+        contentMetadata: {
+          screen: 'EventDetail', // Important
+          event_id: String(eventData?.id), // Very Important
+          type: 'event',
+          id: String(eventData?.id),
+        },
+
+        // Extra OG tags for better preview
+        $og_title: eventData?.title,
+        $og_description: eventData?.description || safeTitle,
+        $og_image_url: contentImage,
+      },
+    );
+
+    const {url} = await branchUniversalObject.generateShortUrl({
+      feature: 'share',
+      channel: 'event_share',
+      $ios_url:
+        'https://apps.apple.com/us/app/tac-the-app-for-cowboys/id6738097899',
+      $android_url:
+        'https://play.google.com/store/apps/details?id=com.tac.codment',
+      $fallback_url: `https://theappforcowboys.com/event/${eventData?.id}`,
+    });
+
+    console.log('✅ Branch Short Link Generated:', url);
+    return url;
+  } catch (e) {
+    console.log('Branch link generation failed', e);
+    return `https://theappforcowboys.com/event/${eventData?.id}`;
+  }
+};
+
+const shareToSpecificApp = async (socialType, eventData) => {
+  try {
+    const link = await generateBranchLink(eventData);
+    const message = `${eventData?.title}\n\n${
+      eventData?.description?.substring(0, 120) || ''
+    }\n\nCheck it out on TAC 👇`;
+
+    if (socialType === 'facebook') {
+      setModal(false);
+      onShareEvent(eventData);
+      return;
+    }
+
+    let options = {
+      message: message,
+      title: eventData?.title,
+      url: link, // Important for rich sharing
+    };
+
+    if (socialType === 'whatsapp') {
+      options.social = Share.Social.WHATSAPP;
+    } else if (socialType === 'instagram') {
+      options.social = Share.Social.INSTAGRAM;
+    } else if (socialType === 'message') {
+      options.social = Share.Social.SMS;
+    }
+
+    await Share.shareSingle(options);
+  } catch (error) {
+    console.log(`${socialType} Share Error:`, error);
+    if (error.message?.toLowerCase().includes('cancel')) return;
+    Alert.alert('Share Failed', `Could not open ${socialType}`);
+  }
+};
+const onShareEvent = async eventData => {
+  const link = await generateBranchLink(eventData);
+  const message = `${eventData?.title}\n${eventData?.address || ''}\n${link}`;
+
+  // You will call this from your modal
+  return {link, message};
+};
+
+//. for post share all functions
+
+const generateBranchLinkForPost = async postData => {
+  try {
+    const {Auth} = store.getState();
+
+    const sanitizeTitle = str => {
+      if (!str) return '';
+      return str
+        .replace(/[\u2018\u2019\u201A\u201B]/g, "'")
+        .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+        .replace(/[^\x00-\x7F]/g, '');
+    };
+
+    const safeTitle = sanitizeTitle(postData?.title || '');
+
+    const titleText = safeTitle
+      ? `${Auth.userData?.first_name} has shared a post on TAC: "${safeTitle}"`
+      : `${Auth.userData?.first_name} has shared a post on TAC`;
+
+    const imagesList = JSON.parse(postData?.images || '[]');
+    const contentImage =
+      imagesList.length > 0
+        ? imageUrl(imagesList[0])
+        : 'https://theappforcowboys.com/assets/img/logo/tac-logo-white02.png';
+
+    const branchUniversalObject = await branch.createBranchUniversalObject(
+      `post/content/${postData?.id}`,
+      {
+        locallyIndex: true,
+        title: titleText,
+        contentDescription: safeTitle || postData?.description || '',
+        contentImageUrl: contentImage,
+
+        contentMetadata: {
+          screen: 'PostDetail', // Important
+          post_id: String(postData?.id), // Very Important
+          type: 'post',
+          id: String(postData?.id),
+        },
+
+        // Extra OG tags for rich previews
+        $og_title: postData?.title,
+        $og_description: postData?.description || safeTitle,
+        $og_image_url: contentImage,
+      },
+    );
+
+    const {url} = await branchUniversalObject.generateShortUrl({
+      feature: 'share',
+      channel: 'post_share',
+      $ios_url:
+        'https://apps.apple.com/us/app/tac-the-app-for-cowboys/id6738097899',
+      $android_url:
+        'https://play.google.com/store/apps/details?id=com.tac.codment',
+      $fallback_url: `https://theappforcowboys.com/post/${postData?.id}`,
+    });
+
+    console.log('✅ Branch Short Link Generated for Post:', url);
+    return url;
+  } catch (e) {
+    console.log('Branch link generation failed', e);
+    return `https://theappforcowboys.com/post/${postData?.id}`;
+  }
+};
+
+const sharePostToSpecificApp = async (socialType, postData) => {
+  try {
+    const link = await generateBranchLinkForPost(postData);
+
+    const message = `${postData?.title}\n\n${
+      postData?.description?.substring(0, 120) || ''
+    }\n\nCheck it out on TAC 👇`;
+
+    if (socialType === 'facebook') {
+      // Handle Facebook separately if needed
+      setModal(false);
+      onSharePost(postData); // or your custom FB handler
+      return;
+    }
+
+    let options = {
+      message: message,
+      title: postData?.title,
+      url: link,
+    };
+
+    if (socialType === 'whatsapp') {
+      options.social = Share.Social.WHATSAPP;
+    } else if (socialType === 'instagram') {
+      options.social = Share.Social.INSTAGRAM;
+    } else if (socialType === 'message') {
+      options.social = Share.Social.SMS;
+    }
+
+    await Share.shareSingle(options);
+  } catch (error) {
+    console.log(`${socialType} Share Error:`, error);
+    if (error.message?.toLowerCase().includes('cancel')) return;
+    Alert.alert('Share Failed', `Could not open ${socialType}`);
+  }
+};
+
+const onSharePost = async postData => {
+  try {
+    const {Auth} = store.getState();
+
+    const sanitizeTitle = str => {
+      if (!str) return '';
+      return str
+        .replace(/[\u2018\u2019\u201A\u201B]/g, "'")
+        .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+        .replace(/[^\x00-\x7F]/g, '');
+    };
+
+    const safeTitle = sanitizeTitle(postData?.title || '');
+
+    const titleText = safeTitle
+      ? `${Auth.userData?.first_name} has shared a post on TAC: "${safeTitle}"`
+      : `${Auth.userData?.first_name} has shared a post on TAC`;
+
+    const imagesList = JSON.parse(postData?.images || '[]');
+    const contentImage =
+      imagesList.length > 0
+        ? imageUrl(imagesList[0])
+        : 'https://theappforcowboys.com/assets/img/logo/tac-logo-white02.png';
+
+    const branchUniversalObject = await branch.createBranchUniversalObject(
+      `post/content/${postData?.id}`,
+      {
+        locallyIndex: true,
+        title: titleText,
+        contentDescription: safeTitle,
+        contentImageUrl: contentImage,
+        contentMetadata: {
+          screen: 'PostDetail',
+          post_id: String(postData?.id),
+          type: 'post',
+        },
+      },
+    );
+
+    const linkProperties = {
+      feature: 'share',
+      channel: 'app_share',
+    };
+
+    const controlParams = {
+      $desktop_url: 'https://theappforcowboys.com/',
+      $ios_url:
+        'https://apps.apple.com/us/app/tac-the-app-for-cowboys/id6738097899',
+      $android_url:
+        'https://play.google.com/store/apps/details?id=com.tac.codment',
+    };
+
+    const shareOptions = {
+      messageHeader: 'Check this post',
+      messageBody: 'Open this post in TAC',
+    };
+
+    const result = await branchUniversalObject.showShareSheet(
+      shareOptions,
+      linkProperties,
+      controlParams,
+    );
+
+    console.log('Branch Post Share Result:', result);
+  } catch (error) {
+    console.log('Branch Post Share Error:', error);
+    // Fallback
+    const fallbackLink = `https://theappforcowboys.com/post/${postData?.id}`;
+    // You can show a simple share here if needed
+  }
+};
 export {
   getSingleCharacter,
   getProperLocation,
@@ -1852,4 +2206,11 @@ export {
   isImageCircle,
   isVideo,
   findCommonById,
+  onShareEvent,
+  onSharePost,
+  shareToSpecificApp,
+  generateBranchLink,
+  shareEventUsingBranch,
+  sharePostToSpecificApp,
+  generateBranchLinkForPost,
 };

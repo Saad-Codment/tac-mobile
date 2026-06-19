@@ -8,5 +8,11 @@
 	<array>
 		<string>Default</string>
 	</array>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:tacapp.app.link</string>
+		<string>applinks:tacapp-alternate.app.link</string>
+		<string>applinks:tacapp.test.app.link</string>
+	</array>
 </dict>
 </plist>

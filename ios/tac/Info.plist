@@ -20,8 +20,45 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb1254157088825041</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>io.Branch.Branchsters</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>branchsters</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>Tac</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.433413678709-2dkgedloqvurj77k6474e09slpatdfta</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>GIDClientID</key>
+	<string>433413678709-2dkgedloqvurj77k6474e09slpatdfta.apps.googleusercontent.com</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -40,10 +77,12 @@
 	<key>NSContactsUsageDescription</key>
 	<string>Get connected with your friends and family! Our app needs access to your contacts.
 			Contacts are securely uploaded on our server for you to see other users of the app.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>To track your location , you need to allow access to your location</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>To track your location , you need to allow access to your location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>To track your location , you need to allow access to your location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>To add profile picture , you need to allow access to your photo camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To add profile picture , you need to allow access to your photo gallery</string>
 	<key>NSRemindersUsageDescription</key>
@@ -120,38 +159,27 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CFBundleURLTypes</key>
+	<key>MBXAccessToken</key>
+	<string>pk.eyJ1IjoidGhlYXBwZm9yY293Ym95cyIsImEiOiJjbXE5dWFiN3IwMjgwMnNwdDJ6dWFtYWV3In0.U_w8NypcmoqcRib-MXrCog</string>
+	<key>branch_key</key>
+	<dict>
+		<key>live</key>
+		<string>key_live_gDsq5qVG69Tpe8V0D8q51dppxAeBQ2tp</string>
+		<key>test</key>
+		<string>key_test_nFCs5AGP48Kpe8N5x2GE2mpgrEmwSWAE</string>
+	</dict>
+	<key>branch_universal_link_domains</key>
 	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>fb1254157088825041</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-		</dict>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>Tac</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.433413678709-2dkgedloqvurj77k6474e09slpatdfta</string>
-			</array>
-		</dict>
+		<string>tacapp.app.link</string>
+		<string>tacapp.alternate.app.link</string>
+		<string>cqqsb.test.app.link</string>
 	</array>
-	<key>GIDClientID</key>
-	<string>433413678709-2dkgedloqvurj77k6474e09slpatdfta.apps.googleusercontent.com</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>To add profile picture , you need to allow access to your photo camera</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fb</string>
+		<string>instagram</string>
+		<string>whatsapp</string>
+		<string>tiktoksharesdk</string>
+	</array>
 </dict>
 </plist>

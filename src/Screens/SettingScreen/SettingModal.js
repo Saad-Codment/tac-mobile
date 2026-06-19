@@ -71,7 +71,7 @@ const SettingModal = ({
   const [modalState, setModalState] = useState(false);
 
   const [firstName, setFirstName] = useState(activeTags?.firstName);
-  const [lastName, setLastName] = useState(activeTags?.lastName ?? '');
+  const [lastName, setLastName] = useState(activeTags?.lastName ?? null);
 
   const [_, forceUpdate] = useState();
 

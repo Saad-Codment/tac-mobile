@@ -11,6 +11,7 @@ import API from '../Utils/helperFunc';
 import {mergeIds} from '../Services/GlobalFunctions';
 import {io} from 'socket.io-client';
 import {Platform} from 'react-native';
+import branch from 'react-native-branch';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,54 @@ function MainNavigator() {
           headerShown: false, // Optional, hides the header
         }
       : {};
+
+  useEffect(() => {
+    let timeoutRef = null;
+
+    const unsubscribe = branch.subscribe(({error, params}) => {
+      console.log('Branch params:', params);
+
+      if (error) {
+        console.log('Branch error:', error);
+        return;
+      }
+
+      // ignore if not actual branch link click
+      if (!params?.['+clicked_branch_link']) {
+        return;
+      }
+
+      // prevent crash if data missing
+      if (!params?.content_data) {
+        return;
+      }
+
+      let eventData = null;
+
+      try {
+        eventData = JSON.parse(params.content_data);
+      } catch (e) {
+        console.log('JSON parse error:', e);
+        return;
+      }
+
+      if (Platform.OS === 'android' && !NavigationService.ref) {
+        timeoutRef = setTimeout(() => {
+          NavigationService.navigate('EventsDetailScreen', eventData);
+        }, 1500);
+      } else {
+        NavigationService.navigate('EventsDetailScreen', eventData);
+      }
+    });
+
+    return () => {
+      if (timeoutRef) {
+        clearTimeout(timeoutRef);
+      }
+
+      unsubscribe();
+    };
+  }, [isLogin, NavigationService.ref]);
 
   return (
     <NavigationContainer
@@ -112,6 +161,19 @@ function MainNavigator() {
               component={Screens.CancelSubScreen}
             />
             <Stack.Screen
+              name="TruckAddScreen"
+              component={Screens.TruckAddScreen}
+            />
+            <Stack.Screen
+              name="EventMapScreen"
+              component={Screens.EventMapScreen}
+            />
+
+            <Stack.Screen
+              name="TruckListScreen"
+              component={Screens.TruckListScreen}
+            />
+            <Stack.Screen
               name="SubscriptionScreen"
               component={Screens.SubscribeScreen}
             />
@@ -127,6 +189,10 @@ function MainNavigator() {
             <Stack.Screen
               name="UpdateHorseScreen"
               component={Screens.UpdateHorseScreen}
+            />
+            <Stack.Screen
+              name="PostDetailScreen"
+              component={Screens.PostDetailScreen}
             />
             <Stack.Screen
               name="GlobalSearchScreen"
