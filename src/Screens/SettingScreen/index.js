@@ -174,6 +174,13 @@ const SettingScreen = ({navigation}) => {
         onPress: () => NavigationService.navigate('TruckListScreen'),
       },
       {
+        title: 'Trip list ',
+        leftIcon: callEmpty,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('TripListScreen'),
+      },
+      {
         title: 'Are you willing to haul horses for others?',
         leftIcon: horseShoe,
         rightIcon: arrRight,

@@ -2139,6 +2139,7 @@ const onSharePost = async postData => {
     // You can show a simple share here if needed
   }
 };
+
 export {
   getSingleCharacter,
   getProperLocation,

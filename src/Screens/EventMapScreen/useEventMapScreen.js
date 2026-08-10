@@ -1,8 +1,16 @@
 import {useState, useRef, useCallback, useEffect} from 'react';
 import {Alert, Platform, PermissionsAndroid} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import API from '../../Utils/helperFunc';
-import {MAPBOX_TOKEN} from '../../Utils/Urls';
+import {globalSearchEventsWithFilterUrl, MAPBOX_TOKEN} from '../../Utils/Urls';
+import {getVehicleUrl, nearbyEventsUrl, tripsUrl} from '../../Utils/Urls';
+import {
+  deviceTimeZone,
+  buildTripStopsPayload,
+  buildTripLegsPayload,
+} from '../../Utils/TripPlannerHelpers';
+import {successMessage, errorMessage} from '../../Config/NotificationMessage';
 
 const eventToStop = (event, isFirst = false) => ({
   id: event?.id,
@@ -15,9 +23,15 @@ const eventToStop = (event, isFirst = false) => ({
   start_time: event?.start_time,
   end_time: event?.end_time,
   images: event?.images,
-  isDeparture: isFirst,
+  isDeparture: isFirst, // UI label only — does not affect API payload, see useEventMapScreen notes
 });
 
+// NEW — safe date parser for defaulting planned arrival/departure times
+// from an event's own from_date/to_date/start_time/end_time fields.
+const parseDateSafe = str => (str ? new Date(str.replace(' ', 'T')) : null);
+
+// Full Mapbox route (kept as an object, not just geometry) so we can
+// pull per-leg distance/duration for the `legs` payload on Confirm Trip.
 const fetchMapboxRoute = async points => {
   if (!points || points.length < 2) return null;
   try {
@@ -34,8 +48,12 @@ const fetchMapboxRoute = async points => {
 
     return {
       geoJSON: {type: 'Feature', geometry: route.geometry},
-      totalDistance: (route.distance / 1000).toFixed(1),
-      totalDuration: Math.ceil(route.duration / 60),
+      totalDistanceKm: (route.distance / 1000).toFixed(1),
+      totalDurationMin: Math.ceil(route.duration / 60),
+      totalDistanceMeters: route.distance,
+      totalDurationSeconds: route.duration,
+      legs: route.legs, // [{distance, duration, ...}] — one per stop-to-stop hop
+      raw: route,
     };
   } catch (err) {
     console.log('Route error:', err);
@@ -45,6 +63,7 @@ const fetchMapboxRoute = async points => {
 
 const useEventMapScreen = (navigation, route) => {
   const {event, events} = route?.params ?? {};
+  const queryClient = useQueryClient();
 
   const cameraRef = useRef(null);
   const mapRef = useRef(null);
@@ -52,16 +71,63 @@ const useEventMapScreen = (navigation, route) => {
   const [stops, setStops] = useState([]);
   const [nearbyEvents, setNearbyEvents] = useState([]);
   const [routeGeoJSON, setRouteGeoJSON] = useState(null);
-  const [routeInfo, setRouteInfo] = useState(null);
+  const [routeInfo, setRouteInfo] = useState(null); // {totalDistance, totalDuration} in km/min for display
+  const [mapboxRoute, setMapboxRoute] = useState(null); // full route object, used to build payload
   const [isLoadingRoute, setIsLoadingRoute] = useState(false);
-  const [isLoadingNearby, setIsLoadingNearby] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [departureAddress, setDepartureAddress] = useState('Current Location');
   const [vehicle, setVehicle] = useState(null);
+  const [tripName, setTripName] = useState('');
   const [showNearbyOnMap, setShowNearbyOnMap] = useState(true);
   const [showListView, setShowListView] = useState(false);
   const [activeSheet, setActiveSheet] = useState('stops');
 
-  // Get Current Location
+  // ── NEW: which point should "Nearby Events" search around ─────────
+  // 'current' = user's live GPS location, 'event' = the trip's event stop
+  const [nearbySource, setNearbySource] = useState('current');
+  const [hasAskedNearbySource, setHasAskedNearbySource] = useState(false);
+
+  // ── NEW: planned schedule (etd_planned / eta_planned) ──────────────
+  // departureSchedule.etdPlanned -> the TRUE trip departure stop's
+  // etd_planned (seq_order 1, stop_type "departure" — your current GPS
+  // location). stopSchedules[eventId] -> {etaPlanned, etdPlanned} for
+  // each event stop (seq_order 2+). Defaults are auto-filled from the
+  // event's own from_date/start_time (arrival) and to_date/end_time
+  // (departure) the first time a stop appears, but the user can edit
+  // or clear them via the schedule modal at any time.
+  const [departureSchedule, setDepartureSchedule] = useState({
+    etdPlanned: null,
+  });
+  const [stopSchedules, setStopSchedules] = useState({});
+
+  useEffect(() => {
+    setStopSchedules(prev => {
+      let changed = false;
+      const next = {...prev};
+      stops.forEach(stop => {
+        if (!stop?.id || next[stop.id]) return;
+        next[stop.id] = {
+          etaPlanned: parseDateSafe(stop.start_time || stop.from_date),
+          etdPlanned: parseDateSafe(stop.end_time || stop.to_date),
+        };
+        changed = true;
+      });
+      return changed ? next : prev;
+    });
+  }, [stops]);
+
+  const updateDepartureSchedule = useCallback(patch => {
+    setDepartureSchedule(prev => ({...prev, ...patch}));
+  }, []);
+
+  const updateStopSchedule = useCallback((stopId, patch) => {
+    setStopSchedules(prev => ({
+      ...prev,
+      [stopId]: {...prev[stopId], ...patch},
+    }));
+  }, []);
+
+  // ── Current Location ──────────────────────────────────────────────
   const getCurrentLocation = useCallback(() => {
     Geolocation.getCurrentPosition(
       position => {
@@ -79,7 +145,6 @@ const useEventMapScreen = (navigation, route) => {
     );
   }, []);
 
-  // Request Location Permission
   useEffect(() => {
     if (Platform.OS === 'android') {
       PermissionsAndroid.request(
@@ -92,7 +157,7 @@ const useEventMapScreen = (navigation, route) => {
     }
   }, [getCurrentLocation]);
 
-  // Build Initial Stops
+  // ── Initial Stops (from navigation params) ─────────────────────────
   useEffect(() => {
     let initialStops = [];
     if (events && Array.isArray(events) && events.length > 0) {
@@ -105,7 +170,7 @@ const useEventMapScreen = (navigation, route) => {
     setStops(initialStops);
   }, [event, events]);
 
-  // Build Full Route from Current Location
+  // ── Build Full Route from Current Location (Mapbox, mobile-side) ──
   const buildRoute = async () => {
     if (!currentLocation || stops.length === 0) return;
 
@@ -122,9 +187,10 @@ const useEventMapScreen = (navigation, route) => {
     if (result) {
       setRouteGeoJSON(result.geoJSON);
       setRouteInfo({
-        totalDistance: result.totalDistance,
-        totalDuration: result.totalDuration,
+        totalDistance: result.totalDistanceKm,
+        totalDuration: result.totalDurationMin,
       });
+      setMapboxRoute(result);
       fitCamera();
     }
     setIsLoadingRoute(false);
@@ -135,9 +201,7 @@ const useEventMapScreen = (navigation, route) => {
   }, [currentLocation, stops]);
 
   const fitCamera = useCallback(() => {
-    if (!cameraRef.current) return;
-    if (stops.length === 0) return;
-
+    if (!cameraRef.current || stops.length === 0) return;
     const allPoints = [currentLocation, ...stops].filter(Boolean);
     const lngs = allPoints.map(p => parseFloat(p.longitude));
     const lats = allPoints.map(p => parseFloat(p.latitude));
@@ -150,42 +214,88 @@ const useEventMapScreen = (navigation, route) => {
     );
   }, [currentLocation, stops]);
 
-  // Fetch Nearby Events (Dummy)
+  // ── NEW: ask the user, the first time they open Nearby, which point
+  // to search around. They can still change it anytime via the toggle
+  // chips rendered in the Nearby tab (setNearbySource is returned below).
   useEffect(() => {
-    if (stops[0]) {
-      setIsLoadingNearby(true);
-      setTimeout(() => {
-        setNearbyEvents([
+    if (activeSheet === 'nearby' && !hasAskedNearbySource) {
+      setHasAskedNearbySource(true);
+      Alert.alert(
+        'Find Nearby Events',
+        "Search for nearby events around your current location, or around the event you're heading to?",
+        [
           {
-            id: 9001,
-            title: 'Tampa Horse Show',
-            address: 'Tampa, FL 33602',
-            latitude: 27.9506,
-            longitude: -82.4572,
-            from_date: '2026-04-18 09:00:00',
+            text: 'My Current Location',
+            onPress: () => setNearbySource('current'),
           },
-          {
-            id: 9002,
-            title: 'Orlando Rodeo Classic',
-            address: 'Orlando, FL 32801',
-            latitude: 28.5383,
-            longitude: -81.3792,
-            from_date: '2026-04-20 10:00:00',
-          },
-          {
-            id: 9003,
-            title: 'Kissimmee Livestock Fair',
-            address: 'Kissimmee, FL 34741',
-            latitude: 28.292,
-            longitude: -81.4076,
-            from_date: '2026-04-22 08:00:00',
-          },
-        ]);
-        setIsLoadingNearby(false);
-      }, 600);
+          {text: 'The Event Location', onPress: () => setNearbySource('event')},
+        ],
+      );
     }
-  }, [stops]);
+  }, [activeSheet, hasAskedNearbySource]);
 
+  // NEW: the actual lat/lng used for the nearby search, based on nearbySource.
+  // 'event' uses the trip's first stop (the event you're heading to).
+  const eventLocationStop = stops?.[0];
+  const nearbyReferenceLocation =
+    nearbySource === 'event' &&
+    eventLocationStop?.latitude &&
+    eventLocationStop?.longitude
+      ? {
+          lat: parseFloat(eventLocationStop.latitude),
+          lng: parseFloat(eventLocationStop.longitude),
+        }
+      : currentLocation
+      ? {lat: currentLocation.latitude, lng: currentLocation.longitude}
+      : null;
+
+  // ── Nearby Events (real API) ───────────────────────────────────────
+  // const nearbyEventsQuery = useQuery({
+  //   queryKey: [
+  //     'nearbyEvents',
+  //     currentLocation?.latitude,
+  //     currentLocation?.longitude,
+  //   ],
+  //   queryFn: () =>
+  //     API.get(
+  //       `${nearbyEventsUrl}?lat=${currentLocation.latitude}&lng=${currentLocation.longitude}&radius=100&per_page=10`,
+  //     ),
+  //   enabled: !!currentLocation,
+  // });
+
+  const nearbyEventsQuery = useQuery({
+    queryKey: [
+      'NearByEventsList',
+      nearbySource,
+      nearbyReferenceLocation?.lat,
+      nearbyReferenceLocation?.lng,
+    ],
+    queryFn: () =>
+      API.get(
+        `${globalSearchEventsWithFilterUrl}latitude=${nearbyReferenceLocation?.lat}&longitude=${nearbyReferenceLocation?.lng}`,
+      ),
+    enabled: !!nearbyReferenceLocation,
+  });
+
+  useEffect(() => {
+    if (nearbyEventsQuery?.data?.data?.data) {
+      setNearbyEvents(nearbyEventsQuery?.data?.data?.data);
+    }
+  }, [nearbyEventsQuery.data]);
+
+  const isLoadingNearby =
+    nearbyEventsQuery.isLoading || nearbyEventsQuery.isFetching;
+
+  // ── Vehicles (real API) ────────────────────────────────────────────
+  const vehiclesQuery = useQuery({
+    queryKey: ['vehiclesList'],
+    queryFn: () => API.get(`${getVehicleUrl}?per_page=15`),
+    enabled: activeSheet === 'vehicle',
+  });
+  const vehicles = vehiclesQuery.data?.data?.data ?? [];
+  const isLoadingVehicles = vehiclesQuery.isLoading;
+
+  // ── Stop Management ────────────────────────────────────────────────
   const addStop = useCallback(newEvent => {
     setStops(prev => {
       if (prev.find(s => s.id === newEvent.id)) {
@@ -221,11 +331,69 @@ const useEventMapScreen = (navigation, route) => {
   }, []);
 
   const selectVehicle = useCallback(v => setVehicle(v), []);
+
+  // ── Confirm Trip (POST /trucking/v1/trips) ─────────────────────────
+  const {mutate: confirmTripMutate, isLoading: isConfirmingTrip} = useMutation({
+    mutationFn: body => API.post(tripsUrl, body),
+    onSuccess: ({ok, data}) => {
+      if (ok) {
+        successMessage(data?.message || 'Trip confirmed successfully');
+        queryClient.invalidateQueries({queryKey: ['tripsList']});
+        navigation.goBack();
+      } else {
+        errorMessage(data?.message || 'Error confirming trip');
+      }
+    },
+    onError: e => {
+      console.log('Confirm trip error:', e);
+      errorMessage('Error confirming trip');
+    },
+  });
+
   const confirmTrip = useCallback(() => {
-    if (stops.length < 1)
+    if (stops.length < 1) {
       return Alert.alert('Add Stops', 'Please add at least one stop.');
-    Alert.alert('Trip Confirmed! ✅', 'Your trip has been saved.');
-  }, [stops]);
+    }
+    if (!currentLocation) {
+      return Alert.alert(
+        'Location Needed',
+        'Waiting for your current location. Please try again in a moment.',
+      );
+    }
+
+    const body = {
+      name: tripName || undefined, // backend defaults to "Trip {date}" if omitted
+      vehicle_id: vehicle?.id,
+      timezone: deviceTimeZone,
+      full_path: mapboxRoute?.geoJSON ?? undefined,
+      total_distance_planned: mapboxRoute?.totalDistanceMeters
+        ? Math.round(mapboxRoute.totalDistanceMeters)
+        : undefined,
+      total_duration_planned: mapboxRoute?.totalDurationSeconds
+        ? Math.round(mapboxRoute.totalDurationSeconds)
+        : undefined,
+      stops: buildTripStopsPayload(
+        currentLocation,
+        stops,
+        departureAddress,
+        departureSchedule,
+        stopSchedules,
+      ),
+      legs: buildTripLegsPayload(mapboxRoute),
+    };
+
+    confirmTripMutate(body);
+  }, [
+    stops,
+    currentLocation,
+    tripName,
+    vehicle,
+    mapboxRoute,
+    departureAddress,
+    departureSchedule,
+    stopSchedules,
+    confirmTripMutate,
+  ]);
 
   const continuePlanning = useCallback(() => {
     setActiveSheet('nearby');
@@ -238,9 +406,16 @@ const useEventMapScreen = (navigation, route) => {
     routeGeoJSON,
     isLoadingRoute,
     isLoadingNearby,
+    isLoadingVehicles,
+    isConfirmingTrip,
     routeInfo,
     vehicle,
+    vehicles,
     currentLocation,
+    tripName,
+    setTripName,
+    departureAddress,
+    setDepartureAddress,
     showNearbyOnMap,
     showListView,
     activeSheet,
@@ -255,6 +430,14 @@ const useEventMapScreen = (navigation, route) => {
     selectVehicle,
     confirmTrip,
     continuePlanning,
+    // NEW
+    nearbySource,
+    setNearbySource,
+    // NEW — planned schedule
+    departureSchedule,
+    updateDepartureSchedule,
+    stopSchedules,
+    updateStopSchedule,
   };
 };
 

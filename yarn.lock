@@ -2928,6 +2928,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/datetimepicker@npm:^9.1.0":
+  version: 9.1.0
+  resolution: "@react-native-community/datetimepicker@npm:9.1.0"
+  dependencies:
+    invariant: ^2.2.4
+  peerDependencies:
+    expo: ">=52.0.0"
+    react: "*"
+    react-native: "*"
+    react-native-windows: "*"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+    react-native-windows:
+      optional: true
+  checksum: 31b37df04613d299b4f107ee2325d4ea25a895bc358c080eca23ea06dc2278393950b632f67b5a27a8b2b801823f1febc201d3a555972c121e3a1f0b559180e3
+  languageName: node
+  linkType: hard
+
 "@react-native-community/geolocation@npm:^3.0.4, @react-native-community/geolocation@npm:^3.4.0":
   version: 3.4.0
   resolution: "@react-native-community/geolocation@npm:3.4.0"
@@ -10198,6 +10217,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-localize@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "react-native-localize@npm:3.7.0"
+  peerDependencies:
+    "@expo/config-plugins": "*"
+    react: "*"
+    react-native: "*"
+    react-native-macos: "*"
+  peerDependenciesMeta:
+    "@expo/config-plugins":
+      optional: true
+    react-native-macos:
+      optional: true
+  checksum: d153e691fdc92a16233391de91cf177a77f89b1cb55fb81ad301d44d915a2fbe3e4c98d135fa22a38ef55217a47413ced2b67292b5b924f606fd0c36462442ae
+  languageName: node
+  linkType: hard
+
 "react-native-maps-directions@npm:^1.9.0":
   version: 1.9.0
   resolution: "react-native-maps-directions@npm:1.9.0"
@@ -11582,6 +11618,7 @@ __metadata:
     "@react-native-clipboard/clipboard": ^1.16.3
     "@react-native-community/checkbox": ^0.5.17
     "@react-native-community/cli": latest
+    "@react-native-community/datetimepicker": ^9.1.0
     "@react-native-community/geolocation": ^3.4.0
     "@react-native-community/image-editor": ^4.3.0
     "@react-native-community/push-notification-ios": ^1.11.0
@@ -11659,6 +11696,7 @@ __metadata:
     react-native-image-picker: ^8.2.1
     react-native-infinite-scroll-view: ^0.4.5
     react-native-keyboard-aware-scroll-view: ^0.9.5
+    react-native-localize: ^3.7.0
     react-native-maps: ^1.27.2
     react-native-maps-directions: ^1.9.0
     react-native-markdown-display: ^7.0.2

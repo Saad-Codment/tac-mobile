@@ -1,0 +1,117 @@
+import {StyleSheet} from 'react-native';
+import {hp, wp} from '../../Config/responsive';
+
+export const styles = StyleSheet.create({
+  screenContainer: {flex: 1, backgroundColor: '#F8FAFC'},
+
+  filterRow: {
+    flexGrow: 0,
+    paddingVertical: hp('1'),
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
+    backgroundColor: 'white',
+  },
+  filterRowContent: {paddingHorizontal: wp('4'), gap: wp('2')},
+  filterChip: {
+    paddingHorizontal: wp('3.5'),
+    paddingVertical: hp('0.7'),
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    backgroundColor: '#F8FAFC',
+  },
+  filterChipActive: {borderColor: '#3B82F6', backgroundColor: '#EFF6FF'},
+  filterChipText: {fontSize: hp('1.2'), color: '#6B7280', fontWeight: '600'},
+  filterChipTextActive: {color: '#1E40AF', fontWeight: '700'},
+
+  listContent: {padding: wp('4')},
+  row: {
+    backgroundColor: 'white',
+    borderRadius: 14,
+    padding: wp('3.5'),
+    marginBottom: hp('1.2'),
+    borderWidth: 1,
+    borderColor: '#F1F5F9',
+  },
+  rowHeader: {flexDirection: 'row', alignItems: 'center', gap: wp('2.5')},
+  avatarWrapper: {borderRadius: 999, overflow: 'hidden'},
+  avatar: {width: wp('10'), height: wp('10'), borderRadius: wp('5')},
+  avatarPlaceholder: {backgroundColor: '#F1F5F9'},
+  userName: {fontSize: hp('1.4'), fontWeight: '700', color: '#111827'},
+  routeText: {fontSize: hp('1.15'), color: '#64748B', marginTop: hp('0.15')},
+  statusBadge: {
+    paddingHorizontal: wp('2.5'),
+    paddingVertical: hp('0.4'),
+    borderRadius: 999,
+  },
+  statusBadgeText: {fontSize: hp('1.05'), fontWeight: '700'},
+
+  countsText: {fontSize: hp('1.15'), color: '#64748B', marginTop: hp('0.8')},
+  declineText: {fontSize: hp('1.1'), color: '#B91C1C', marginTop: hp('0.5')},
+
+  actionsRow: {flexDirection: 'row', gap: wp('2.5'), marginTop: hp('1')},
+  rejectBtn: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: hp('0.9'),
+    borderRadius: 10,
+    backgroundColor: '#FEE2E2',
+  },
+  rejectBtnText: {fontSize: hp('1.25'), color: '#EF4444', fontWeight: '700'},
+  acceptBtn: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: hp('0.9'),
+    borderRadius: 10,
+    backgroundColor: '#DCFCE7',
+  },
+  acceptBtnText: {fontSize: hp('1.25'), color: '#16A34A', fontWeight: '700'},
+
+  emptyState: {marginTop: hp('8'), alignItems: 'center'},
+  emptyText: {fontSize: hp('1.5'), color: '#6B7280'},
+
+  // Reject reason modal
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1000,
+    elevation: 24,
+    backgroundColor: 'rgba(15, 23, 42, 0.45)',
+    justifyContent: 'center',
+    paddingHorizontal: wp('6'),
+  },
+  modalCard: {backgroundColor: 'white', borderRadius: 18, padding: wp('5')},
+  modalTitle: {fontSize: hp('1.8'), fontWeight: '700', color: '#111827'},
+  modalSubtitle: {fontSize: hp('1.2'), color: '#64748B', marginTop: hp('0.4')},
+  reasonInput: {
+    marginTop: hp('1.5'),
+    minHeight: hp('9'),
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    paddingHorizontal: wp('3.5'),
+    paddingTop: hp('1.2'),
+    fontSize: hp('1.35'),
+    color: '#111827',
+    textAlignVertical: 'top',
+  },
+  modalActions: {flexDirection: 'row', gap: wp('3'), marginTop: hp('2')},
+  modalCancelBtn: {
+    flex: 1,
+    height: hp('5.2'),
+    borderRadius: 12,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  modalCancelBtnText: {color: '#1F2937', fontWeight: '600'},
+  modalRejectBtn: {
+    flex: 1,
+    height: hp('5.2'),
+    borderRadius: 12,
+    backgroundColor: '#EF4444',
+  },
+});

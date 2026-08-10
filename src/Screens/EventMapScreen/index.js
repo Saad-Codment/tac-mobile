@@ -1,13 +1,17 @@
-import React, {memo} from 'react';
+import React, {memo, useState, useRef, useEffect} from 'react';
 import {
   View,
   Image,
   FlatList,
-  StyleSheet,
   ActivityIndicator,
   ScrollView,
   Switch,
-  Alert,
+  TextInput,
+  Animated,
+  PanResponder,
+  Keyboard,
+  Platform,
+  Dimensions,
 } from 'react-native';
 import MapboxGL from '@rnmapbox/maps';
 import {HeaderComponent} from '../../Components/HeaderComponent';
@@ -20,9 +24,16 @@ import ThemeButton from '../../Components/ThemeButton';
 import useEventMapScreen from './useEventMapScreen';
 import {imageUrl, MAPBOX_TOKEN} from '../../Utils/Urls';
 import {styles} from './styles';
+import StopScheduleModal from '../../Components/StopScheduleModal';
 
-// ── Mapbox Token ──
 MapboxGL.setAccessToken(MAPBOX_TOKEN);
+
+// ── Drag / snap constants — no library, just plain pixel math ──────────────
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+const SNAP_PEEK = SCREEN_HEIGHT * 0.12;
+const SNAP_DEFAULT = SCREEN_HEIGHT * 0.45;
+const SNAP_EXPANDED = SCREEN_HEIGHT * 0.92;
+const SNAP_POINTS = [SNAP_PEEK, SNAP_DEFAULT, SNAP_EXPANDED];
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 const parseDate = str => (str ? new Date(str.replace(' ', 'T')) : null);
@@ -43,7 +54,18 @@ const formatTime = str => {
   return d.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'});
 };
 
-// ── Marker Colors ──
+const formatScheduleDateTime = d => {
+  if (!d) return null;
+  const dt = d instanceof Date ? d : new Date(d);
+  if (isNaN(dt.getTime())) return null;
+  return dt.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
 const MARKER_COLORS = [
   '#22C55E',
   '#3B82F6',
@@ -86,7 +108,6 @@ const StopMarker = ({stop, index, total, onPress}) => {
   );
 };
 
-// Current Location Marker (Pulsing Effect)
 const CurrentLocationMarker = ({coordinate}) => (
   <MapboxGL.MarkerView coordinate={[coordinate.longitude, coordinate.latitude]}>
     <View style={styles.currentLocationContainer}>
@@ -97,9 +118,32 @@ const CurrentLocationMarker = ({coordinate}) => (
 );
 
 // ── Cards ───────────────────────────────────────────────────────────────────
-const StopCard = ({stop, index, total, onRemove, isEditing}) => {
+const StopCard = ({
+  stop,
+  index,
+  total,
+  onRemove,
+  isEditing,
+  schedule,
+  onEditSchedule,
+}) => {
   const color = getMarkerColor(index, total);
   const isFirst = index === 0;
+
+  const eta = schedule?.etaPlanned;
+  const etd = schedule?.etdPlanned;
+  let scheduleSummary;
+  if (eta && etd) {
+    scheduleSummary = `Arrive ${formatScheduleDateTime(
+      eta,
+    )} • Leave ${formatScheduleDateTime(etd)}`;
+  } else if (eta) {
+    scheduleSummary = `Arrive ${formatScheduleDateTime(eta)}`;
+  } else if (etd) {
+    scheduleSummary = `Leave ${formatScheduleDateTime(etd)}`;
+  } else {
+    scheduleSummary = 'Tap to set your planned time';
+  }
 
   return (
     <View style={styles.stopCard}>
@@ -154,6 +198,20 @@ const StopCard = ({stop, index, total, onRemove, isEditing}) => {
             />
           </View>
         )}
+
+        {onEditSchedule && (
+          <Touchable
+            onPress={() => onEditSchedule(stop)}
+            style={styles.stopScheduleRow}>
+            <TextComponent text={'🕒'} styles={styles.stopScheduleIcon} />
+            <TextComponent
+              text={scheduleSummary}
+              fade
+              styles={styles.stopScheduleText}
+            />
+            <TextComponent text={'Edit'} styles={styles.stopScheduleEditText} />
+          </Touchable>
+        )}
       </View>
     </View>
   );
@@ -190,11 +248,20 @@ const NearbyEventCard = ({item, onAdd}) => (
         styles={styles.nearbyCardAddress}
         numberOfLines={1}
       />
-      <TextComponent
-        text={`📅 ${formatDate(item?.from_date)}`}
-        fade
-        styles={styles.nearbyCardDate}
-      />
+      <View style={{flexDirection: 'row', alignItems: 'center', gap: wp('2')}}>
+        <TextComponent
+          text={`📅 ${formatDate(item?.from_date)}`}
+          fade
+          styles={styles.nearbyCardDate}
+        />
+        {item?.distance_miles != null && (
+          <TextComponent
+            text={`• ${item.distance_miles} mi`}
+            fade
+            styles={styles.nearbyCardDate}
+          />
+        )}
+      </View>
     </View>
     <Touchable onPress={() => onAdd(item)} style={styles.nearbyAddBtn}>
       <TextComponent text={'+ Add'} styles={styles.nearbyAddBtnText} />
@@ -202,9 +269,70 @@ const NearbyEventCard = ({item, onAdd}) => (
   </View>
 );
 
-const VehicleSheet = ({vehicle, onSelect, onClose}) => (
+const NearbySourceToggle = ({nearbySource, onChange}) => (
+  <View style={styles.nearbySourceRow}>
+    <Touchable
+      onPress={() => onChange('current')}
+      style={[
+        styles.nearbySourceChip,
+        nearbySource === 'current' && styles.nearbySourceChipActive,
+      ]}>
+      <TextComponent
+        text={'📍 Near Me'}
+        styles={[
+          styles.nearbySourceChipText,
+          nearbySource === 'current' && styles.nearbySourceChipTextActive,
+        ]}
+      />
+    </Touchable>
+    <Touchable
+      onPress={() => onChange('event')}
+      style={[
+        styles.nearbySourceChip,
+        nearbySource === 'event' && styles.nearbySourceChipActive,
+      ]}>
+      <TextComponent
+        text={'🎯 Near Event'}
+        styles={[
+          styles.nearbySourceChipText,
+          nearbySource === 'event' && styles.nearbySourceChipTextActive,
+        ]}
+      />
+    </Touchable>
+  </View>
+);
+
+const DepartureTimeRow = ({etdPlanned, onPress}) => (
+  <Touchable onPress={onPress} style={styles.departureTimeRow}>
+    <View style={styles.departureTimeLeft}>
+      <TextComponent
+        text={'🚗 Departure Time'}
+        styles={styles.departureTimeLabel}
+      />
+      <TextComponent
+        text={'When you plan to leave your current location'}
+        fade
+        styles={styles.departureTimeHint}
+      />
+    </View>
+    <TextComponent
+      text={formatScheduleDateTime(etdPlanned) ?? 'Set time'}
+      styles={styles.departureTimeValue}
+    />
+  </Touchable>
+);
+
+// Real vehicles from GET /trucking/v1/vehicles — field names match the
+// authoritative backend doc: vehicle_number, weight_kg (not weight_cm).
+const VehicleSheet = ({
+  vehicles,
+  isLoading,
+  vehicle,
+  onSelect,
+  onClose,
+  onAddNew,
+}) => (
   <ScrollView style={styles.vehicleSheet} showsVerticalScrollIndicator={false}>
-    <View style={styles.sheetHandle} />
     <TextComponent text={'Select Vehicle'} styles={styles.sheetTitle} />
     <TextComponent
       text={'Your vehicle specs affect the route optimization.'}
@@ -212,40 +340,46 @@ const VehicleSheet = ({vehicle, onSelect, onClose}) => (
       styles={styles.sheetSubtitle}
     />
 
-    {[
-      {
-        id: 1,
-        title: 'Big Red Hauler',
-        height_cm: 380,
-        weight_cm: 8500,
-        axle_count: 3,
-      },
-      {
-        id: 2,
-        title: 'Silver Stallion',
-        height_cm: 420,
-        weight_cm: 11000,
-        axle_count: 4,
-      },
-    ].map(v => (
-      <Touchable
-        key={v.id}
-        onPress={() => onSelect(v)}
-        style={[
-          styles.vehicleItem,
-          vehicle?.id === v.id && styles.vehicleItemSelected,
-        ]}>
-        <View style={styles.vehicleItemLeft}>
-          <TextComponent text={v.title} styles={styles.vehicleItemTitle} />
-          <TextComponent
-            text={`H: ${v.height_cm}cm • W: ${v.weight_cm}cm • Axles: ${v.axle_count}`}
-            fade
-            styles={styles.vehicleItemMeta}
-          />
-        </View>
-        {vehicle?.id === v.id && <View style={styles.vehicleSelectedDot} />}
-      </Touchable>
-    ))}
+    {isLoading ? (
+      <ActivityIndicator
+        size="small"
+        color={Colors.primaryColor}
+        style={{marginVertical: hp('2')}}
+      />
+    ) : vehicles.length === 0 ? (
+      <TextComponent
+        text={'No vehicles saved yet.'}
+        fade
+        styles={styles.sheetEmpty}
+      />
+    ) : (
+      vehicles.map(v => (
+        <Touchable
+          key={v.id}
+          onPress={() => onSelect(v)}
+          style={[
+            styles.vehicleItem,
+            vehicle?.id === v.id && styles.vehicleItemSelected,
+          ]}>
+          <View style={styles.vehicleItemLeft}>
+            <TextComponent text={v.title} styles={styles.vehicleItemTitle} />
+            <TextComponent
+              text={`#${v.vehicle_number} • H: ${v.height_cm}cm • W: ${v.weight_kg}kg • Axles: ${v.axle_count}`}
+              fade
+              styles={styles.vehicleItemMeta}
+            />
+          </View>
+          {vehicle?.id === v.id && <View style={styles.vehicleSelectedDot} />}
+        </Touchable>
+      ))
+    )}
+
+    <Touchable onPress={onAddNew} style={styles.addVehicleBtn}>
+      <TextComponent
+        text={'+ Add New Vehicle'}
+        styles={styles.addVehicleBtnText}
+      />
+    </Touchable>
 
     <Touchable onPress={onClose} style={styles.sheetCloseBtn}>
       <TextComponent text={'Done'} styles={styles.sheetCloseBtnText} />
@@ -261,9 +395,14 @@ const EventMapScreen = ({navigation, route}) => {
     routeGeoJSON,
     isLoadingRoute,
     isLoadingNearby,
+    isLoadingVehicles,
+    isConfirmingTrip,
     routeInfo,
     vehicle,
+    vehicles,
     currentLocation,
+    tripName,
+    setTripName,
     showNearbyOnMap,
     showListView,
     activeSheet,
@@ -278,7 +417,107 @@ const EventMapScreen = ({navigation, route}) => {
     selectVehicle,
     confirmTrip,
     continuePlanning,
+    nearbySource,
+    setNearbySource,
+    departureSchedule,
+    updateDepartureSchedule,
+    stopSchedules,
+    updateStopSchedule,
   } = useEventMapScreen(navigation, route);
+
+  // ── NEW: draggable sheet, built with core RN Animated + PanResponder
+  // (no reanimated, no gesture-handler, no @gorhom/bottom-sheet) ─────────
+  const sheetHeight = useRef(new Animated.Value(SNAP_DEFAULT)).current;
+  const keyboardOffset = useRef(new Animated.Value(0)).current;
+  const currentSnapRef = useRef(SNAP_DEFAULT);
+
+  const snapTo = value => {
+    currentSnapRef.current = value;
+    Animated.spring(sheetHeight, {
+      toValue: value,
+      useNativeDriver: false, // height isn't supported by the native driver
+      bounciness: 4,
+    }).start();
+  };
+
+  const findClosestSnap = value =>
+    SNAP_POINTS.reduce((prev, curr) =>
+      Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev,
+    );
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: (_, gesture) => Math.abs(gesture.dy) > 4,
+      onPanResponderGrant: () => {
+        // capture the exact current value in case a spring was still settling
+        sheetHeight.stopAnimation(value => {
+          currentSnapRef.current = value;
+        });
+      },
+      onPanResponderMove: (_, gesture) => {
+        const next = currentSnapRef.current - gesture.dy;
+        const clamped = Math.max(SNAP_PEEK, Math.min(SNAP_EXPANDED, next));
+        sheetHeight.setValue(clamped);
+      },
+      onPanResponderRelease: (_, gesture) => {
+        // small velocity bias so a quick flick jumps a snap point even on
+        // a short drag, not just a slow deliberate one
+        const projected = currentSnapRef.current - gesture.dy - gesture.vy * 60;
+        snapTo(findClosestSnap(projected));
+      },
+    }),
+  ).current;
+
+  // Keyboard-aware lift — shifts the WHOLE sheet up above the keyboard by
+  // its exact height, then restores it. Built with the core RN Keyboard
+  // API, doing by hand what a library's "keyboardBehavior" prop would do.
+  useEffect(() => {
+    const showEvent =
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvent =
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+    const showSub = Keyboard.addListener(showEvent, e => {
+      const kbHeight = e?.endCoordinates?.height ?? 0;
+      Animated.timing(keyboardOffset, {
+        toValue: kbHeight,
+        duration: Platform.OS === 'ios' ? e?.duration ?? 250 : 200,
+        useNativeDriver: false,
+      }).start();
+    });
+
+    const hideSub = Keyboard.addListener(hideEvent, e => {
+      Animated.timing(keyboardOffset, {
+        toValue: 0,
+        duration: Platform.OS === 'ios' ? e?.duration ?? 250 : 200,
+        useNativeDriver: false,
+      }).start();
+    });
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, [keyboardOffset]);
+
+  const [editingScheduleFor, setEditingScheduleFor] = useState(null);
+  const editingIsDeparture = editingScheduleFor === 'departure';
+  const editingStop = editingIsDeparture ? null : editingScheduleFor;
+  const editingStopSchedule = editingStop
+    ? stopSchedules?.[editingStop.id] ?? {}
+    : {};
+
+  const closeScheduleModal = () => setEditingScheduleFor(null);
+
+  const saveSchedule = ({eta, etd}) => {
+    if (editingIsDeparture) {
+      updateDepartureSchedule({etdPlanned: etd});
+    } else if (editingStop) {
+      updateStopSchedule(editingStop.id, {etaPlanned: eta, etdPlanned: etd});
+    }
+    closeScheduleModal();
+  };
 
   const SheetTabs = () => (
     <View style={styles.sheetTabs}>
@@ -310,7 +549,6 @@ const EventMapScreen = ({navigation, route}) => {
         goBack={() => navigation.goBack()}
       />
 
-      {/* Map */}
       <MapboxGL.MapView
         ref={mapRef}
         style={styles.map}
@@ -319,7 +557,6 @@ const EventMapScreen = ({navigation, route}) => {
         attributionEnabled={false}>
         <MapboxGL.Camera ref={cameraRef} zoomLevel={8} />
 
-        {/* Navigation Route: Current Location → Stops */}
         {routeGeoJSON && (
           <MapboxGL.ShapeSource id="routeSource" shape={routeGeoJSON}>
             <MapboxGL.LineLayer
@@ -334,12 +571,10 @@ const EventMapScreen = ({navigation, route}) => {
           </MapboxGL.ShapeSource>
         )}
 
-        {/* Current Location */}
         {currentLocation && (
           <CurrentLocationMarker coordinate={currentLocation} />
         )}
 
-        {/* Stop Markers */}
         {stops.map((stop, index) => (
           <StopMarker
             key={`stop-${index}`}
@@ -350,7 +585,6 @@ const EventMapScreen = ({navigation, route}) => {
           />
         ))}
 
-        {/* Nearby Event Pins */}
         {showNearbyOnMap &&
           nearbyEvents.map(event => (
             <NearbyPin
@@ -361,7 +595,6 @@ const EventMapScreen = ({navigation, route}) => {
           ))}
       </MapboxGL.MapView>
 
-      {/* Loading */}
       {isLoadingRoute && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="small" color={Colors.primaryColor} />
@@ -372,7 +605,6 @@ const EventMapScreen = ({navigation, route}) => {
         </View>
       )}
 
-      {/* Top Controls */}
       <View style={styles.topControls}>
         <View style={styles.topControlChip}>
           <TextComponent
@@ -397,7 +629,6 @@ const EventMapScreen = ({navigation, route}) => {
         </Touchable>
       </View>
 
-      {/* Route Info */}
       {routeInfo && (
         <View style={styles.routeInfoStrip}>
           <TextComponent
@@ -417,7 +648,6 @@ const EventMapScreen = ({navigation, route}) => {
         </View>
       )}
 
-      {/* List View Overlay */}
       {showListView && (
         <View style={styles.listViewOverlay}>
           <ScrollView
@@ -432,6 +662,8 @@ const EventMapScreen = ({navigation, route}) => {
                 total={stops.length}
                 onRemove={removeStop}
                 isEditing={true}
+                schedule={stopSchedules?.[stop?.id]}
+                onEditSchedule={setEditingScheduleFor}
               />
             ))}
             {nearbyEvents.length > 0 && (
@@ -453,57 +685,88 @@ const EventMapScreen = ({navigation, route}) => {
         </View>
       )}
 
-      {/* Bottom Sheet */}
-      <View style={styles.bottomSheet}>
-        <SheetTabs />
+      <Animated.View
+        style={[
+          styles.bottomSheet,
+          {height: sheetHeight, bottom: keyboardOffset},
+        ]}>
+        <View {...panResponder.panHandlers}>
+          <View style={styles.sheetHandle} />
+          <SheetTabs />
+        </View>
 
         {activeSheet === 'stops' && (
-          <FlatList
-            data={stops}
-            keyExtractor={(item, i) => `sheet-stop-${i}`}
-            style={styles.sheetList}
-            renderItem={({item, index}) => (
-              <StopCard
-                stop={item}
-                index={index}
-                total={stops.length}
-                onRemove={removeStop}
-                isEditing={true}
-              />
-            )}
-          />
-        )}
-
-        {activeSheet === 'nearby' &&
-          (isLoadingNearby ? (
-            <ActivityIndicator
-              size="large"
-              color={Colors.primaryColor}
-              style={styles.sheetLoader}
+          <>
+            <TextInput
+              style={styles.tripNameInput}
+              placeholder="Trip name"
+              placeholderTextColor="#9CA3AF"
+              value={tripName}
+              onChangeText={setTripName}
             />
-          ) : (
+            <DepartureTimeRow
+              etdPlanned={departureSchedule?.etdPlanned}
+              onPress={() => setEditingScheduleFor('departure')}
+            />
             <FlatList
-              data={nearbyEvents}
-              keyExtractor={item => `nearby-${item?.id}`}
+              data={stops}
+              keyExtractor={(item, i) => `sheet-stop-${i}`}
               style={styles.sheetList}
-              ListEmptyComponent={
-                <TextComponent
-                  text={'No nearby events found.'}
-                  fade
-                  styles={styles.sheetEmpty}
+              renderItem={({item, index}) => (
+                <StopCard
+                  stop={item}
+                  index={index}
+                  total={stops.length}
+                  onRemove={removeStop}
+                  isEditing={true}
+                  schedule={stopSchedules?.[item?.id]}
+                  onEditSchedule={setEditingScheduleFor}
                 />
-              }
-              renderItem={({item}) => (
-                <NearbyEventCard item={item} onAdd={addStop} />
               )}
             />
-          ))}
+          </>
+        )}
+
+        {activeSheet === 'nearby' && (
+          <>
+            <NearbySourceToggle
+              nearbySource={nearbySource}
+              onChange={setNearbySource}
+            />
+            {isLoadingNearby ? (
+              <ActivityIndicator
+                size="large"
+                color={Colors.primaryColor}
+                style={styles.sheetLoader}
+              />
+            ) : (
+              <FlatList
+                data={nearbyEvents}
+                keyExtractor={item => `nearby-${item?.id}`}
+                style={styles.sheetList}
+                ListEmptyComponent={
+                  <TextComponent
+                    text={'No nearby events found.'}
+                    fade
+                    styles={styles.sheetEmpty}
+                  />
+                }
+                renderItem={({item}) => (
+                  <NearbyEventCard item={item} onAdd={addStop} />
+                )}
+              />
+            )}
+          </>
+        )}
 
         {activeSheet === 'vehicle' && (
           <VehicleSheet
+            vehicles={vehicles}
+            isLoading={isLoadingVehicles}
             vehicle={vehicle}
             onSelect={selectVehicle}
             onClose={() => setActiveSheet(null)}
+            onAddNew={() => navigation.navigate('VehicleFormScreen')}
           />
         )}
 
@@ -515,14 +778,39 @@ const EventMapScreen = ({navigation, route}) => {
             onPress={continuePlanning}
           />
           <ThemeButton
-            title={'Confirm Trip'}
+            title={isConfirmingTrip ? 'Confirming...' : 'Confirm Trip'}
             isYellowTheme
+            disabled={isConfirmingTrip}
             style={styles.actionBtnPrimary}
             textStyle={styles.actionBtnPrimaryText}
             onPress={confirmTrip}
           />
         </View>
-      </View>
+      </Animated.View>
+
+      <StopScheduleModal
+        visible={!!editingScheduleFor}
+        title={
+          editingIsDeparture
+            ? 'Departure Time'
+            : editingStop?.title ?? 'Stop Schedule'
+        }
+        subtitle={
+          editingIsDeparture
+            ? 'When do you plan to leave your current location?'
+            : undefined
+        }
+        showEta={!editingIsDeparture}
+        showEtd={true}
+        initialEta={editingIsDeparture ? null : editingStopSchedule?.etaPlanned}
+        initialEtd={
+          editingIsDeparture
+            ? departureSchedule?.etdPlanned
+            : editingStopSchedule?.etdPlanned
+        }
+        onSave={saveSchedule}
+        onClose={closeScheduleModal}
+      />
     </View>
   );
 };

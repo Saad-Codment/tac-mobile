@@ -52,4 +52,14 @@ export {default as TruckAddScreen} from './TruckAddScreen';
 export {default as TruckListScreen} from './TruckListScreen';
 export {default as EventMapScreen} from './EventMapScreen';
 
+export {default as VehicleListScreen} from './VehicleListScreen';
+export {default as VehicleFormScreen} from './VehicleFormScreen';
+export {default as TripListScreen} from './TripListScreen';
+export {default as TripDetailScreen} from './TripDetailScreen';
+
+export {default as RequestToJoinScreen} from './RequestToJoinScreen';
+export {default as MyRequestsScreen} from './MyRequestsScreen';
+export {default as ManageRequestsScreen} from './ManageRequestsScreen';
+export {default as TripsForEventListScreen} from './TripsForEventListScreen';
+
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

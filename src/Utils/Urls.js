@@ -71,6 +71,22 @@ export const updateVehicleUrl = '/trucking/v1/vehicles/';
 export const createPostUrl = '/posts/store';
 export const createPostWithVideosUrl = '/v2/posts/store';
 
+// ---- Vehicle types (for vehicle_type dropdown) ----
+export const vehicleTypesUrl = '/trucking/v1/vehicles/types';
+
+// ---- Discovery (joiner) ----
+export const eventTripsUrl = eventId => `/trucking/v1/events/${eventId}/trips`;
+
+// ---- Join requests ----
+export const tripJoinUrl = tripId => `/trucking/v1/trips/${tripId}/join`;
+export const myRequestsUrl = '/trucking/v1/my-requests';
+export const requestDecisionUrl = (tripId, participantId) =>
+  `/trucking/v1/trips/${tripId}/requests/${participantId}`; // PATCH (accept/reject) + DELETE (cancel)
+
+// ---- Organizer: manage requests ----
+export const tripRequestsUrl = tripId =>
+  `/trucking/v1/trips/${tripId}/requests`; // GET, optional ?status=
+
 export const sendFriendReqUrl = '/friend-request/send/';
 export const acceptFriendReqUrl = '/friend-request/accept-request/';
 export const rejectFriendReqUrl = '/friend-request/reject-request/';
@@ -81,6 +97,17 @@ export const allUpComingEventsUrl = '/home/upcoming-events';
 export const allFriendEventsUrl = '/home/friends-events';
 export const allSuggestedEventsUrl = '/home/suggested-events';
 export const likeUnlikeUrl = '/react/like/';
+
+export const nearbyEventsUrl = '/trucking/v1/events/nearby'; // + ?lat&lng&radius&per_page
+// ---- Trips ----
+export const tripsUrl = '/trucking/v1/trips';
+export const tripDetailsUrl = '/trucking/v1/trips/'; // + {id}   (GET / PUT)
+export const tripStopsAppendUrl = tripId =>
+  `/trucking/v1/trips/${tripId}/stops`; // POST
+export const tripStatusUrl = tripId => `/trucking/v1/trips/${tripId}/status`; // PATCH
+export const tripStopUpdateUrl = (tripId, stopId) =>
+  `/trucking/v1/trips/${tripId}/stops/${stopId}`; // PATCH
+export const tripCancelUrl = tripId => `/trucking/v1/trips/${tripId}`; // DELETE
 
 export const getSinglePostUrl = '/v2/posts/get-single-post/';
 

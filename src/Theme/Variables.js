@@ -1,6 +1,13 @@
 import {Dimensions, PixelRatio, Platform} from 'react-native';
 const {width, height} = Dimensions.get('window');
 
+const TRIP_STATUS_META = {
+  confirmed: {label: 'Confirmed', color: '#3B82F6'},
+  in_progress: {label: 'In Progress', color: '#F59E0B'},
+  completed: {label: 'Completed', color: '#22C55E'},
+  cancelled: {label: 'Cancelled', color: '#EF4444'},
+};
+
 const Colors = {
   primaryColor: 'rgba(203, 149, 49, 1)',
   secondryColor: 'rgba(255, 238, 207, 1)',
@@ -137,4 +144,13 @@ const FontFamily = {
   bold: 'ProximaNova-Bold',
 };
 
-export {Colors, FontSize, Sizes, isIOS, scaleFont, BASE_WIDTH, FontFamily};
+export {
+  Colors,
+  FontSize,
+  Sizes,
+  isIOS,
+  scaleFont,
+  BASE_WIDTH,
+  FontFamily,
+  TRIP_STATUS_META,
+};

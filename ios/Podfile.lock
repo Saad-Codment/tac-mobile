@@ -2380,6 +2380,30 @@ PODS:
     - Yoga
   - RNCPushNotificationIOS (1.12.0):
     - React-Core
+  - RNDateTimePicker (9.1.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNDeviceInfo (15.0.2):
     - React-Core
   - RNFastImage (8.6.3):
@@ -2480,6 +2504,30 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - TOCropViewController (~> 2.8.0)
+    - Yoga
+  - RNLocalize (3.7.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
     - Yoga
   - rnmapbox-maps (10.3.1):
     - MapboxMaps (~> 11.20.1)
@@ -2810,6 +2858,7 @@ DEPENDENCIES:
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
@@ -2819,6 +2868,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
+  - RNLocalize (from `../node_modules/react-native-localize`)
   - "rnmapbox-maps (from `../node_modules/@rnmapbox/maps`)"
   - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -3065,6 +3115,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-picker/picker"
   RNCPushNotificationIOS:
     :path: "../node_modules/@react-native-community/push-notification-ios"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNFastImage:
@@ -3083,6 +3135,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-google-signin/google-signin"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
+  RNLocalize:
+    :path: "../node_modules/react-native-localize"
   rnmapbox-maps:
     :path: "../node_modules/@rnmapbox/maps"
   RNNotifee:
@@ -3233,6 +3287,7 @@ SPEC CHECKSUMS:
   RNCClipboard: 45b13251c8938aabfc25b9ecc35b5d42ab4eb0b0
   RNCPicker: d957426e631657b70d391c4193db87c91c8406b3
   RNCPushNotificationIOS: 85957a0534fd1309b4c028ccbe5b1baf9ab5cf57
+  RNDateTimePicker: 67cbe98fd9fac84a7ef1b7d480639273093eda97
   RNDeviceInfo: 4c852998208b60dc192ae3529e5867817719ad1e
   RNFastImage: 462a183c4b0b6b26fdfd639e1ed6ba37536c3b87
   RNFBApp: 4097f75673f8b42a7cd1ba17e6ea85a94b45e4d1
@@ -3242,6 +3297,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 68ba7ecad10103554bbc46f72ab46713c665005e
   RNGoogleSignin: b75fe0693bbc63da4f7c6588104c05dc571f7ba5
   RNImageCropPicker: 2889fd7ef4b4bb7aeef8a0b598661f934f01f5e1
+  RNLocalize: bb5d6b59fc1fa71e1fd3594ab93d3bc5921673c6
   rnmapbox-maps: d943e76e5aa3f4a1147e966d8af96973ab134d95
   RNNotifee: 5e3b271e8ea7456a36eec994085543c9adca9168
   RNPermissions: 58e92a14c3eb5f452fc66264cd6ea2093a9a2ceb

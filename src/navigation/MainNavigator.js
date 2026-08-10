@@ -170,6 +170,38 @@ function MainNavigator() {
             />
 
             <Stack.Screen
+              name="VehicleListScreen"
+              component={Screens.VehicleListScreen}
+            />
+            <Stack.Screen
+              name="VehicleFormScreen"
+              component={Screens.VehicleFormScreen}
+            />
+            <Stack.Screen
+              name="TripListScreen"
+              component={Screens.TripListScreen}
+            />
+            <Stack.Screen
+              name="RequestToJoinScreen"
+              component={Screens.RequestToJoinScreen}
+            />
+            <Stack.Screen
+              name="MyRequestsScreen"
+              component={Screens.MyRequestsScreen}
+            />
+            <Stack.Screen
+              name="ManageRequestsScreen"
+              component={Screens.ManageRequestsScreen}
+            />
+            <Stack.Screen
+              name="TripsForEventListScreen"
+              component={Screens.TripsForEventListScreen}
+            />
+            <Stack.Screen
+              name="TripDetailScreen"
+              component={Screens.TripDetailScreen}
+            />
+            <Stack.Screen
               name="TruckListScreen"
               component={Screens.TruckListScreen}
             />

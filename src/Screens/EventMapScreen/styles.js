@@ -97,7 +97,6 @@ export const styles = StyleSheet.create({
     marginTop: hp('1'),
   },
 
-  // Current Location Marker
   currentLocationContainer: {alignItems: 'center', justifyContent: 'center'},
   currentLocationDot: {
     width: wp('4'),
@@ -152,17 +151,23 @@ export const styles = StyleSheet.create({
   },
   nearbyPinText: {fontSize: hp('2.1'), color: 'white'},
 
+  // ── Bottom sheet — no library, plain Animated.View driven from the
+  // screen (see EventMapScreen.js). position:'absolute' with left/right
+  // pinned is required so `height` and `bottom` can be animated
+  // independently of the map's own layout.
   bottomSheet: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
     backgroundColor: 'white',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    maxHeight: hp('45'),
-    paddingBottom: hp('1.5'),
     shadowColor: '#000',
     shadowOffset: {width: 0, height: -6},
     shadowOpacity: 0.16,
     shadowRadius: 16,
     elevation: 12,
+    overflow: 'hidden',
   },
   sheetHandle: {
     width: wp('11'),
@@ -184,13 +189,90 @@ export const styles = StyleSheet.create({
   sheetTabActive: {borderBottomWidth: 3, borderBottomColor: '#3B82F6'},
   sheetTabText: {fontSize: hp('1.35'), color: '#6B7280', fontWeight: '600'},
   sheetTabTextActive: {color: '#1E40AF', fontWeight: '700'},
-  sheetList: {maxHeight: hp('19'), paddingHorizontal: wp('4')},
+  // flex:1 so the list fills whatever height the sheet is currently
+  // dragged to (peek / default / expanded)
+  sheetList: {flex: 1, paddingHorizontal: wp('4')},
   sheetLoader: {marginVertical: hp('4')},
   sheetEmpty: {
     textAlign: 'center',
     marginTop: hp('4'),
     fontSize: hp('1.4'),
     color: '#6B7280',
+  },
+
+  // trip name input (Stops tab, above the stop list)
+  tripNameInput: {
+    marginHorizontal: wp('4'),
+    marginBottom: hp('1'),
+    height: hp('4.6'),
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    paddingHorizontal: wp('3.5'),
+    fontSize: hp('1.4'),
+    color: '#111827',
+    backgroundColor: '#F8FAFC',
+  },
+
+  // "Near Me" / "Near Event" toggle chips (Nearby tab)
+  nearbySourceRow: {
+    flexDirection: 'row',
+    gap: wp('2.5'),
+    marginHorizontal: wp('4'),
+    marginBottom: hp('1'),
+  },
+  nearbySourceChip: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: hp('0.9'),
+    borderRadius: 999,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    backgroundColor: '#F8FAFC',
+  },
+  nearbySourceChipActive: {
+    borderColor: '#3B82F6',
+    backgroundColor: '#EFF6FF',
+  },
+  nearbySourceChipText: {
+    fontSize: hp('1.25'),
+    color: '#6B7280',
+    fontWeight: '600',
+  },
+  nearbySourceChipTextActive: {
+    color: '#1E40AF',
+    fontWeight: '700',
+  },
+
+  // "Departure Time" row (Stops tab, above the stop list)
+  departureTimeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: wp('4'),
+    marginBottom: hp('1'),
+    paddingHorizontal: wp('3.5'),
+    paddingVertical: hp('1'),
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    backgroundColor: '#F8FAFC',
+  },
+  departureTimeLeft: {flex: 1, marginRight: wp('2')},
+  departureTimeLabel: {
+    fontSize: hp('1.3'),
+    fontWeight: '700',
+    color: '#111827',
+  },
+  departureTimeHint: {
+    fontSize: hp('1.05'),
+    color: '#94A3B8',
+    marginTop: hp('0.15'),
+  },
+  departureTimeValue: {
+    fontSize: hp('1.25'),
+    fontWeight: '700',
+    color: '#3B82F6',
   },
 
   stopCard: {
@@ -243,6 +325,23 @@ export const styles = StyleSheet.create({
   },
   stopMetaText: {fontSize: hp('1.15'), color: '#64748B'},
 
+  stopScheduleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: hp('1'),
+    paddingTop: hp('0.8'),
+    borderTopWidth: 1,
+    borderTopColor: '#F1F5F9',
+    gap: wp('1.5'),
+  },
+  stopScheduleIcon: {fontSize: hp('1.2')},
+  stopScheduleText: {flex: 1, fontSize: hp('1.15'), color: '#64748B'},
+  stopScheduleEditText: {
+    fontSize: hp('1.15'),
+    color: '#3B82F6',
+    fontWeight: '700',
+  },
+
   nearbyCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -280,12 +379,14 @@ export const styles = StyleSheet.create({
   },
   nearbyAddBtnText: {fontSize: hp('1.25'), color: 'white', fontWeight: '600'},
 
-  vehicleSheet: {maxHeight: hp('28'), paddingHorizontal: wp('4')},
+  // flex:1 for the same reason as sheetList above
+  vehicleSheet: {flex: 1, paddingHorizontal: wp('4')},
   sheetTitle: {
     fontSize: hp('1.85'),
     fontWeight: '700',
     color: '#111827',
     marginBottom: hp('0.4'),
+    marginTop: hp('1'),
   },
   sheetSubtitle: {
     fontSize: hp('1.25'),
@@ -316,10 +417,23 @@ export const styles = StyleSheet.create({
     borderRadius: wp('1.75'),
     backgroundColor: '#3B82F6',
   },
+
+  addVehicleBtn: {
+    alignSelf: 'center',
+    marginTop: hp('0.5'),
+    paddingVertical: hp('1'),
+    paddingHorizontal: wp('4'),
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: '#3B82F6',
+  },
+  addVehicleBtnText: {fontSize: hp('1.3'), color: '#3B82F6', fontWeight: '700'},
+
   sheetCloseBtn: {
     alignSelf: 'center',
     marginTop: hp('1'),
     paddingVertical: hp('1'),
+    marginBottom: hp('1'),
   },
   sheetCloseBtnText: {fontSize: hp('1.4'), color: '#3B82F6', fontWeight: '700'},
 
@@ -345,4 +459,80 @@ export const styles = StyleSheet.create({
   },
   actionBtnPrimary: {flex: 1, height: hp('5.2'), borderRadius: 12},
   actionBtnPrimaryText: {fontSize: hp('1.45'), fontWeight: '700'},
+
+  // StopScheduleModal styles
+  scheduleModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.45)',
+    justifyContent: 'center',
+    paddingHorizontal: wp('6'),
+  },
+  scheduleModalCard: {
+    backgroundColor: 'white',
+    borderRadius: 18,
+    padding: wp('5'),
+  },
+  scheduleModalTitle: {
+    fontSize: hp('1.8'),
+    fontWeight: '700',
+    color: '#111827',
+  },
+  scheduleModalSubtitle: {
+    fontSize: hp('1.2'),
+    color: '#64748B',
+    marginTop: hp('0.4'),
+  },
+
+  scheduleRow: {marginTop: hp('2')},
+  scheduleRowHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  scheduleRowLabel: {fontSize: hp('1.3'), fontWeight: '700', color: '#111827'},
+  scheduleClearBtn: {paddingHorizontal: wp('2'), paddingVertical: hp('0.3')},
+  scheduleClearBtnText: {
+    fontSize: hp('1.15'),
+    color: '#EF4444',
+    fontWeight: '700',
+  },
+  scheduleRowFields: {
+    flexDirection: 'row',
+    gap: wp('2.5'),
+    marginTop: hp('0.8'),
+  },
+  scheduleFieldBtn: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: hp('1'),
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    backgroundColor: '#F8FAFC',
+  },
+  scheduleFieldBtnText: {
+    fontSize: hp('1.3'),
+    color: '#111827',
+    fontWeight: '600',
+  },
+
+  scheduleModalActions: {
+    flexDirection: 'row',
+    gap: wp('3'),
+    marginTop: hp('2.5'),
+  },
+  scheduleModalCancelBtn: {
+    flex: 1,
+    height: hp('5.2'),
+    borderRadius: 12,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  scheduleModalCancelBtnText: {
+    fontSize: hp('1.4'),
+    color: '#1F2937',
+    fontWeight: '600',
+  },
+  scheduleModalSaveBtn: {flex: 1, height: hp('5.2'), borderRadius: 12},
 });
