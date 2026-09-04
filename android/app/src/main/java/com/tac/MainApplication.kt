@@ -11,13 +11,16 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
 import io.branch.rnbranch.RNBranchModule
+import com.tac.codment.navigation.TacNavigationPackage
 
 class MainApplication : Application(), ReactApplication {
 
     override val reactNativeHost: ReactNativeHost =
         object : DefaultReactNativeHost(this) {
             override fun getPackages(): List<ReactPackage> =
-                PackageList(this).packages
+                // NEW — TacNavigationPackage is the only manually-registered
+                // native module in this app; everything else is autolinked.
+                PackageList(this).packages.apply { add(TacNavigationPackage()) }
 
             override fun getJSMainModuleName(): String = "index"
 

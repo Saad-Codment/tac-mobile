@@ -24,7 +24,7 @@ const TripCard = ({trip, onPress, onManageRequests}) => {
     label: trip.status,
     color: '#6B7280',
   };
-  const stopCount = trip?.stops?.length ?? 0;
+  const stopCount = trip?.stops_count ?? trip?.stops?.length ?? 0;
   const distanceKm = trip?.total_distance_planned
     ? (trip.total_distance_planned / 1000).toFixed(1)
     : null;
@@ -46,6 +46,7 @@ const TripCard = ({trip, onPress, onManageRequests}) => {
           <TextComponent
             text={statusMeta.label}
             styles={[styles.statusBadgeText, {color: statusMeta.color}]}
+            size={hp('1.5')}
           />
         </View>
       </View>

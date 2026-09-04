@@ -7,13 +7,18 @@ import {
 } from '@tanstack/react-query';
 import API from '../../Utils/helperFunc';
 import {successMessage, errorMessage} from '../../Utils/helperFunc'; // adjust path if these live elsewhere
-import {vehiclesUrl, deleteVehicleUrl} from '../../Utils/Urls';
+import {getVehicleUrl, deleteVehicleUrl} from '../../Utils/Urls';
 
 const PER_PAGE = 15;
 
-const useVehicleListScreen = navigation => {
+const useVehicleListScreen = (navigation, route) => {
   const queryClient = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
+
+  // NEW — when opened from the trip planner's "See More Vehicles," tapping
+  // a vehicle selects it and returns to EventMapScreen instead of opening
+  // it for editing. Default (no param) behaves exactly as before.
+  const selectMode = route?.params?.selectMode === true;
 
   const {
     data,
@@ -25,14 +30,23 @@ const useVehicleListScreen = navigation => {
   } = useInfiniteQuery({
     queryKey: ['vehiclesList'],
     queryFn: ({pageParam = 1}) =>
-      API.get(`${vehiclesUrl}?per_page=${PER_PAGE}&page=${pageParam}`),
+      API.get(`${getVehicleUrl}?per_page=${PER_PAGE}&page=${pageParam}`),
     getNextPageParam: (lastPage, allPages) => {
-      const items = lastPage?.data ?? [];
+      // FIXED — was lastPage?.data (the {message,data,total_pages}
+      // envelope, not the array). Same collection-endpoint bug found on
+      // the other list screens.
+      const items = lastPage?.data?.data ?? [];
       return items.length >= PER_PAGE ? allPages.length + 1 : undefined;
     },
   });
 
-  const vehicles = (data?.pages ?? []).flatMap(page => page?.data ?? []);
+  // FIXED — same one-level-short bug as above.
+  const vehicles = (data?.pages ?? []).flatMap(page => page?.data?.data ?? []);
+
+  console.log(
+    'vehiclesvehiclesvehiclesvehiclesvehiclesvehiclesvehiclesvehiclesvehicles',
+    vehicles,
+  );
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -79,9 +93,23 @@ const useVehicleListScreen = navigation => {
     () => navigation.navigate('VehicleFormScreen'),
     [navigation],
   );
+
+  // CHANGED — branches on selectMode. Default behavior (edit) is
+  // completely unchanged; selectMode is new.
   const goToEditVehicle = useCallback(
-    vehicle => navigation.navigate('VehicleFormScreen', {vehicle}),
-    [navigation],
+    vehicle => {
+      if (selectMode) {
+        // Return the picked vehicle to EventMapScreen and pop back to it.
+        navigation.navigate({
+          name: 'EventMapScreen',
+          params: {selectedVehicle: vehicle},
+          merge: true,
+        });
+      } else {
+        navigation.navigate('VehicleFormScreen', {vehicle});
+      }
+    },
+    [navigation, selectMode],
   );
 
   return {
@@ -94,6 +122,8 @@ const useVehicleListScreen = navigation => {
     confirmDeleteVehicle,
     goToAddVehicle,
     goToEditVehicle,
+    // NEW
+    selectMode,
   };
 };
 

@@ -3487,9 +3487,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rnmapbox/maps@npm:^10.3.1":
-  version: 10.3.1
-  resolution: "@rnmapbox/maps@npm:10.3.1"
+"@rnmapbox/maps@npm:10.3.5":
+  version: 10.3.5
+  resolution: "@rnmapbox/maps@npm:10.3.5"
   dependencies:
     "@turf/along": 6.5.0
     "@turf/distance": 6.5.0
@@ -3511,7 +3511,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 513cc1502c740386f33a98570421cec23b9534d3d22fc1fae6a33ff8f7f3e159b7bed942ebe7ac4c41ddf0fb84ef76d542b4274559111dd2953c2020ecb96cf7
+  checksum: 7a6a2a2a12139fe58eafffab3fa973ba8ca73e0a130ac9333ac61653f27e4cfcc548496a5a2804b1cc9efe2117aea859877d3b08f231afb357d85fd8bc689f64
   languageName: node
   linkType: hard
 
@@ -9922,12 +9922,12 @@ __metadata:
   linkType: hard
 
 "react-native-compressor@npm:^1.16.0":
-  version: 1.19.2
-  resolution: "react-native-compressor@npm:1.19.2"
+  version: 1.19.4
+  resolution: "react-native-compressor@npm:1.19.4"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 65e00d822f1bb94bf266b7ae175134d716fa90746befe4fa67d3ca93ea9af5107d868c7883827c9c5a16bbe5e76009ad558d570af2dfc80085a7bb4c6f1aa65d
+  checksum: ffd18296080825aaced99d98057bd97a58e370aad1855442fb23422640baeb74a3380e9b747cb3a70d7b467001e81f727292ea8c914b4afd9583383a68ee52ab
   languageName: node
   linkType: hard
 
@@ -10489,6 +10489,13 @@ __metadata:
     react-native: "*"
     react-native-pager-view: "*"
   checksum: bd287e5543881aa662ee55418a3bd5dacb25033425a9fcb0fff21c3a3b96f956af1a77cd9bab4e7a8e94590080a5d8e3cb99cfa8613b19bf6da24bfc9b4942d4
+  languageName: node
+  linkType: hard
+
+"react-native-tts@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "react-native-tts@npm:4.1.1"
+  checksum: 16508a701ce446341aa2e6d0107d214d53f80ee09f0ac967f79757e5e44bfa3e797caf5847de23265524b983a58bafb6a0f98c6cf970cbb40f1f6f88783b092e
   languageName: node
   linkType: hard
 
@@ -11637,7 +11644,7 @@ __metadata:
     "@react-navigation/native-stack": ^6.9.26
     "@react-navigation/stack": ^6.3.29
     "@reduxjs/toolkit": ^2.8.2
-    "@rnmapbox/maps": ^10.3.1
+    "@rnmapbox/maps": 10.3.5
     "@shadahmad7/react-native-calendar": ^0.0.7
     "@tanstack/react-query": ^5.51.1
     "@types/react": ^19.0.0
@@ -11716,6 +11723,7 @@ __metadata:
     react-native-svg: ^15.11.2
     react-native-swipe-list-view: ^3.2.9
     react-native-tab-view: ^3.5.2
+    react-native-tts: ^4.1.1
     react-native-vector-icons: ^10.2.0
     react-native-video: ^6.16.1
     react-native-view-shot: ^4.0.3

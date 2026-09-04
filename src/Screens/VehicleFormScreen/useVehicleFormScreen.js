@@ -3,7 +3,7 @@ import {Alert} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker'; // swap for your actual picker if different
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import API, {formDataFunc} from '../../Utils/helperFunc';
-import {successMessage, errorMessage} from '../../Utils/helperFunc'; // adjust path if these live elsewhere
+import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 import {updateVehicleUrl, addVehicleUrl} from '../../Utils/Urls';
 import {vehicleTypesUrl} from '../../Utils/Urls';
 

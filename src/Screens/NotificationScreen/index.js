@@ -11,8 +11,15 @@ import {boldDivider, divider} from '../../Assets';
 import {Colors} from '../../Theme/Variables';
 
 const NotificationScreen = ({navigation}) => {
-  const {notificationsList, onRefresh, acceptReq, declineReq, isLoading} =
-    useNotificationScreen(navigation);
+  const {
+    notificationsList,
+    onRefresh,
+    acceptReq,
+    declineReq,
+    isLoading,
+    // NEW
+    handleNotificationPress,
+  } = useNotificationScreen(navigation);
   return (
     <>
       <HeaderComponent
@@ -47,6 +54,7 @@ const NotificationScreen = ({navigation}) => {
               index={index}
               acceptReq={() => acceptReq(item?.data)}
               declineReq={() => declineReq(item?.data)}
+              onPress={handleNotificationPress}
             />
           )}
         />

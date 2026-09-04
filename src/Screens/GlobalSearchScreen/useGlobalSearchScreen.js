@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import useReduxStore from '../../Hooks/UseReduxStore';
 import {
   getMinMaxPriceUrl,
@@ -13,11 +13,33 @@ import API from '../../Utils/helperFunc';
 import {loadingFalse} from '../../Redux/Action/isloadingAction';
 import {formatDateToYMD} from '../../Services/GlobalFunctions';
 
+// Removes duplicate records (matched by id) before they ever reach the UI —
+// a safety net in case a refetch race ever slips duplicate pages through.
+const dedupeById = arr => {
+  if (!Array.isArray(arr)) return [];
+  const seen = new Set();
+  const result = [];
+  for (const item of arr) {
+    if (item == null) continue;
+    const key = item?.id ?? item?._id ?? JSON.stringify(item);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    result.push(item);
+  }
+  return result;
+};
+
 const useGloabalSearchScreen = () => {
   const {getState, dispatch, queryClient} = useReduxStore();
 
   const {userData} = getState('Auth');
-  const [searchVal, setSearchVal] = useState(null);
+  const [searchVal, setSearchVal] = useState(null); // raw, live-typed value — drives the input only
+  // FIX: the value actually used for fetching/caching. Only updates when a
+  // search is explicitly submitted, so a distinct search term always gets
+  // its own cache slot instead of sharing one with "no search"/other terms
+  // — that sharing was why old search results would flash back on return
+  // to this screen before silently being replaced.
+  const [committedSearchVal, setCommittedSearchVal] = useState(null);
   const [modal, setModal] = useState(null); // Flag to check if more data exists
   const [selectedVal, setSelectedVal] = useState({
     name: 'Events',
@@ -26,6 +48,10 @@ const useGloabalSearchScreen = () => {
   const [pages, setPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false); // Combined list of events
   var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const commitSearch = () => {
+    setCommittedSearchVal(searchVal);
+  };
 
   const {data: maxPriceVal} = useQuery({
     queryKey: ['getMinMaxPriceUrl'],
@@ -59,6 +85,15 @@ const useGloabalSearchScreen = () => {
     toDate,
   } = filterVal;
 
+  // Keeps refetchWhenParams reading the *current* isParams value even
+  // though the function reference it's called through can be captured
+  // once (handed to another screen via navigation params) and invoked
+  // much later.
+  const isParamsRef = useRef(isParams);
+  useEffect(() => {
+    isParamsRef.current = isParams;
+  }, [isParams]);
+
   const selectUrl = {
     Users: globalSearchUsersUrl,
     Posts: globalSearchPostsUrl,
@@ -66,8 +101,11 @@ const useGloabalSearchScreen = () => {
   };
 
   const {data, refetch} = useQuery({
-    queryKey: ['globalSearchUrlForAllData'],
-    queryFn: async () => API.get(globalSearchUrl + (searchVal ?? '')),
+    // FIX: cache key now includes the committed search term, so returning to
+    // this screen with a reset search never shows a previous search's
+    // leftover cached results.
+    queryKey: ['globalSearchUrlForAllData', committedSearchVal],
+    queryFn: async () => API.get(globalSearchUrl + (committedSearchVal ?? '')),
     enabled: false,
     cacheTime: 0, // 👈 Don't cache the data
   });
@@ -86,8 +124,16 @@ const useGloabalSearchScreen = () => {
       isParams
         ? `${selectUrl[selectedVal?.id]}onlyEvnts`
         : selectUrl[selectedVal?.id],
+      // FIX: same reasoning as above — scope the cache by the committed
+      // search term so a fresh/reset search never inherits an old one's
+      // cached page(s).
+      committedSearchVal,
     ],
     queryFn: async ({pageParam = 1}) => {
+      setTimeout(() => {
+        dispatch(loadingFalse());
+      }, 100);
+
       // Helper to convert array of objects to repeated query params
       const buildArrayParams = (array, key, paramName) => {
         if (!array || array.length === 0) return '';
@@ -136,8 +182,9 @@ const useGloabalSearchScreen = () => {
 
       // Other params
       const priceParams = `min_price=${minPrice}&max_price=${maxPrice}`;
-      const pageParams = `page=${pages}`;
-      const searchKeyword = searchVal != null ? `keyword=${searchVal}` : '';
+      const pageParams = `page=${pageParam}`;
+      const searchKeyword =
+        committedSearchVal != null ? `keyword=${committedSearchVal}` : '';
       const locationParams = buildLocationParams(location);
       const fromDateParams =
         fromDate != null ? `from_date=${formatDateToYMD(fromDate)}` : '';
@@ -164,118 +211,28 @@ const useGloabalSearchScreen = () => {
       const url = isParams
         ? `${globalSearchEventsWithFilterUrl}${queryParams}`
         : `${selectUrl[selectedVal?.id]}${
-            searchVal ?? ''
-          }&per_page=10&page=${pages}`;
-      console.log('dsvjksdbvjbsdjkbvdsbvjksdbvkjsdbvkjksdbjvsdkjvsbd', url);
+            committedSearchVal ?? ''
+          }&per_page=10&page=${pageParam}`;
       return API.get(url);
     },
     initialPageParam: 1,
-    getNextPageParam: (lastPage, pages) => (pages?.length ?? 0) + 1,
-    // cacheTime: 0, // 👈 Don't cache the data
+    getNextPageParam: (lastPage, allPages) => {
+      const totalPages = Number(lastPage?.data?.total_pages) || undefined;
+      const nextPage = (allPages?.length ?? 0) + 1;
+      if (totalPages && nextPage > totalPages) return undefined;
+      return nextPage;
+    },
     enabled: true,
-    // staleTime: 1000,
-  });
-  const {
-    data: allDataEvents,
-    isFetchingNextPage: isFetchingNextPageEvents,
-    fetchNextPage: fetchNextPageEvents,
-    hasNextPage: hasNextPageEvents,
-    isPending: isPendingEvents,
-    isFetching: isFetchingEvents,
-    isRefetching: isRefetchingEvnts,
-    refetch: allDataRefetchEvents,
-  } = useInfiniteQuery({
-    queryKey: [`${selectUrl[selectedVal?.id]}onlyEvnts`],
-    queryFn: async ({pageParam = 1}) => {
-      setTimeout(() => {
-        dispatch(loadingFalse());
-      }, 100);
-      // Helper to convert array of objects to repeated query params
-      const buildArrayParams = (array, key, paramName) => {
-        if (!array || array.length === 0) return '';
-        return array
-          .map(
-            (item, index) =>
-              `${paramName}[${index}]=${encodeURIComponent(item[key])}`,
-          )
-          .join('&');
-      };
-
-      /* ------------------------------------------------------------------ */
-      /*  Helper: latitude / longitude – one param per coordinate           */
-      /* ------------------------------------------------------------------ */
-      const buildLocationParams = locArray => {
-        if (!locArray || locArray.length === 0) return '';
-
-        return locArray
-          .flatMap((item, idx) => {
-            const {latitude, longitude} = item.coords ?? {}; // note: you wrote "longitute"
-            return [
-              `locations[${idx}][latitude]=${encodeURIComponent(
-                latitude ?? '',
-              )}`,
-              `locations[${idx}][longitude]=${encodeURIComponent(
-                longitude ?? '',
-              )}`,
-            ];
-          })
-          .join('&');
-      };
-
-      // Build query params
-      const associationParams = buildArrayParams(
-        assocations,
-        'id',
-        'association_ids',
-      );
-      const eventTypeParams = buildArrayParams(
-        eventTypes,
-        'id',
-        'event_type_ids',
-      );
-      const userParams = buildArrayParams(intersetedFriends, 'id', 'user_ids');
-      const circuitParams = buildArrayParams(circuits, 'id', 'circuit_ids');
-
-      // Other params
-      const priceParams = `min_price=${minPrice}&max_price=${maxPrice}`;
-      const pageParams = `page=${pages}`;
-      const searchKeyword = searchVal != null ? `keyword=${searchVal}` : '';
-      const locationParams = buildLocationParams(location);
-
-      // Combine all
-      const queryParams = [
-        associationParams,
-        eventTypeParams,
-        userParams,
-        circuitParams,
-        priceParams,
-        locationParams,
-        searchKeyword,
-        pageParams,
-      ]
-        .filter(Boolean)
-        .join('&'); // Remove empty strings and join with &
-
-      const url = `${globalSearchEventsWithFilterUrl}${queryParams}`;
-      console.log('dsvjksdbvjbsdjkbvdsbvjksdbvkjsdbvkjksdbjvsdkjvsbd', url);
-      return API.get(url);
-    },
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, pages) => (pages?.length ?? 0) + 1,
-    cacheTime: 0, // 👈 Don't cache the data
-    // staleTime: 1000,
   });
 
   const refetchWhenParams = async () => {
-    if (isParams) {
+    if (isParamsRef.current) {
       setIsLoading(true);
-
       await allDataRefetch();
       setTimeout(() => {
         setIsLoading(false);
       }, 2000);
 
-      // queryClient.invalidateQueries([`${selectUrl[selectedVal?.id]}onlyEvnts`]);
       setTimeout(() => {
         setSelectedVal({name: '', id: ''});
         setSelectedVal({name: 'Events', id: 'Events'});
@@ -290,23 +247,10 @@ const useGloabalSearchScreen = () => {
         maxPrice: Math.floor(Number(maxPriceVal?.data?.max_price))?.toString(),
       }));
     }
-    // return () => {
-    //   queryClient.removeQueries({
-    //     queryKey: ['globalSearchUrlForAllData'],
-    //     exact: true,
-    //   });
-    // };
   }, [maxPriceVal?.data]);
 
-  const list =
-    allData?.pages?.flatMap(page => {
-      return page.data?.data;
-    }) || [];
-
-  console.log(
-    'kjsdbvksjdbvksjdbvksjdbvkjsdbvkjlksdnfklsdnflksdnflnsdklfnklsdnfklnsdklfnlsdnfksndfnlsnkdsdbvkjsdbvkjsdbv',
-    JSON.stringify(allData?.pages[0]?.data?.total_pages),
-    pages,
+  const list = dedupeById(
+    allData?.pages?.flatMap(page => page?.data?.data ?? []) ?? [],
   );
 
   return {
@@ -314,14 +258,22 @@ const useGloabalSearchScreen = () => {
     setSelectedVal,
     searchVal,
     setSearchVal,
+    commitSearch,
     onSearch: refetch,
-    allSearchData: data?.data,
+    allSearchData: data?.data
+      ? {
+          ...data.data,
+          users: dedupeById(data.data.users),
+          posts: dedupeById(data.data.posts),
+          events: dedupeById(data.data.events),
+        }
+      : data?.data,
     isFetching,
     isPending,
     refetch,
     modal,
     setModal,
-    selectTabAllData: list.filter(res => res != undefined) ?? [],
+    selectTabAllData: list,
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
@@ -333,19 +285,11 @@ const useGloabalSearchScreen = () => {
     queryClient,
     selectUrl,
     isParams,
-    allDataEvents,
-    isFetchingNextPageEvents,
-    fetchNextPageEvents,
-    hasNextPageEvents,
-    isPendingEvents,
-    isFetchingEvents,
-    isRefetchingEvnts,
-    allDataRefetchEvents,
     setPages,
     refetchWhenParams,
     isLoading,
     setIsLoading,
-    totalPages: allData?.pages[0]?.data?.total_pages,
+    totalPages: allData?.pages?.[0]?.data?.total_pages,
     pages,
   };
 };

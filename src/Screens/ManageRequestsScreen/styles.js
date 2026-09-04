@@ -13,8 +13,8 @@ export const styles = StyleSheet.create({
   },
   filterRowContent: {paddingHorizontal: wp('4'), gap: wp('2')},
   filterChip: {
-    paddingHorizontal: wp('3.5'),
-    paddingVertical: hp('0.7'),
+    paddingHorizontal: wp('3'),
+    paddingVertical: hp('0.5'),
     borderRadius: 999,
     borderWidth: 1,
     borderColor: '#E2E8F0',

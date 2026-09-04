@@ -99,7 +99,7 @@ packagingOptions {
         applicationId "com.tac.codment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 24
+        versionCode 25
         versionName "1.0"
                 externalNativeBuild {
             cmake {
@@ -152,6 +152,17 @@ implementation project(':react-native-vector-icons')
 //  implementation 'androidx.core:core-ktx:1.12.0'
 
 implementation 'com.google.firebase:firebase-analytics'
+
+    // NEW — Mapbox Navigation SDK v3 (core routing/session engine only,
+    // no drop-in UI — TAC keeps its own LegNavigationScreen). Pinned to
+    // 3.23.1, the exact release whose documented Maps SDK requirement is
+    // v11.23.1 — matching @rnmapbox/maps 10.3.5's Maps SDK version
+    // exactly, so this coexists with the existing map rendering rather
+    // than pulling in a second, conflicting Maps SDK version. Resolved
+    // from the same Mapbox Maven repo already configured in the root
+    // build.gradle (MAPBOX_DOWNLOADS_TOKEN).
+    implementation("com.mapbox.navigationcore:navigation:3.23.1")
+
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {

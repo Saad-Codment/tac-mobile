@@ -182,6 +182,14 @@ function MainNavigator() {
               component={Screens.TripListScreen}
             />
             <Stack.Screen
+              name="LegNavigationScreen"
+              component={Screens.LegNavigationScreen}
+            />
+            <Stack.Screen
+              name="LiveTrackingScreen"
+              component={Screens.LiveTrackingScreen}
+            />
+            <Stack.Screen
               name="RequestToJoinScreen"
               component={Screens.RequestToJoinScreen}
             />

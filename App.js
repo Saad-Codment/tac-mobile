@@ -29,6 +29,7 @@ import Purchases, {LOG_LEVEL} from 'react-native-purchases';
 import {io} from 'socket.io-client';
 import MessageShowComp from './src/Components/MessageShowComp';
 import {mergeIds} from './src/Services/GlobalFunctions';
+import {reconcileOfflineRegions} from './src/Utils/OfflineMapManager';
 import API from './src/Utils/helperFunc';
 import {
   changeUserChatStatusUrl,
@@ -111,6 +112,18 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
     });
     return () => sub.remove();
   }, [isLogin]);
+
+  // NEW — offline map pack reconciliation, once per app launch. Sweeps
+  // every trip's downloaded map region and removes only the ones that
+  // are actually broken (see OfflineMapManager.reconcileOfflineRegions);
+  // a healthy download is never touched. Runs unconditionally (doesn't
+  // need login) since it's local Mapbox pack housekeeping, not
+  // account-specific.
+  useEffect(() => {
+    reconcileOfflineRegions().catch(err =>
+      console.log('reconcileOfflineRegions error (non-fatal):', err),
+    );
+  }, []);
 
   useEffect(() => {
     if (isLogin) {

@@ -324,6 +324,12 @@ const DepartureTimeRow = ({etdPlanned, onPress}) => (
 
 // Real vehicles from GET /trucking/v1/vehicles — field names match the
 // authoritative backend doc: vehicle_number, weight_kg (not weight_cm).
+// CHANGED — restores the See More Vehicles action. hasMoreVehicles and
+// onSeeMore were already being returned by useEventMapScreen.js and the
+// styles already existed in styles.js — neither was ever wired into
+// this component, which is exactly why vehicles beyond the first 10
+// became unreachable. Two additions only: the two new props, and the
+// button rendered right after the vehicle list.
 const VehicleSheet = ({
   vehicles,
   isLoading,
@@ -331,6 +337,8 @@ const VehicleSheet = ({
   onSelect,
   onClose,
   onAddNew,
+  hasMoreVehicles,
+  onSeeMore,
 }) => (
   <ScrollView style={styles.vehicleSheet} showsVerticalScrollIndicator={false}>
     <TextComponent text={'Select Vehicle'} styles={styles.sheetTitle} />
@@ -374,6 +382,16 @@ const VehicleSheet = ({
       ))
     )}
 
+    {hasMoreVehicles && (
+      <Touchable onPress={onSeeMore} style={styles.seeMoreVehiclesBtn}>
+        <TextComponent
+          text={'See More Vehicles'}
+          styles={styles.seeMoreVehiclesBtnText}
+        />
+        <TextComponent text={'→'} styles={styles.seeMoreVehiclesBtnArrow} />
+      </Touchable>
+    )}
+
     <Touchable onPress={onAddNew} style={styles.addVehicleBtn}>
       <TextComponent
         text={'+ Add New Vehicle'}
@@ -398,6 +416,7 @@ const EventMapScreen = ({navigation, route}) => {
     isLoadingVehicles,
     isConfirmingTrip,
     routeInfo,
+    usedRestrictions,
     vehicle,
     vehicles,
     currentLocation,
@@ -423,9 +442,12 @@ const EventMapScreen = ({navigation, route}) => {
     updateDepartureSchedule,
     stopSchedules,
     updateStopSchedule,
+    // NEW — was already returned by the hook, just never consumed here
+    hasMoreVehicles,
+    goToAllVehicles,
   } = useEventMapScreen(navigation, route);
 
-  // ── NEW: draggable sheet, built with core RN Animated + PanResponder
+  // ── draggable sheet, built with core RN Animated + PanResponder
   // (no reanimated, no gesture-handler, no @gorhom/bottom-sheet) ─────────
   const sheetHeight = useRef(new Animated.Value(SNAP_DEFAULT)).current;
   const keyboardOffset = useRef(new Animated.Value(0)).current;
@@ -469,20 +491,24 @@ const EventMapScreen = ({navigation, route}) => {
     }),
   ).current;
 
-  // Keyboard-aware lift — shifts the WHOLE sheet up above the keyboard by
-  // its exact height, then restores it. Built with the core RN Keyboard
-  // API, doing by hand what a library's "keyboardBehavior" prop would do.
+  // CHANGED — Android-only early return added. Android's own
+  // android:windowSoftInputMode="adjustResize" (set on MainActivity)
+  // already shrinks the window when the keyboard opens, which means
+  // anything anchored to the bottom (like this sheet) already rises
+  // above the keyboard automatically — for free, at the OS level. Adding
+  // our own manual shift on top of that double-counts it on Android.
+  // iOS has no equivalent automatic behavior, so it still needs this.
   useEffect(() => {
-    const showEvent =
-      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-    const hideEvent =
-      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+    if (Platform.OS === 'android') return undefined;
+
+    const showEvent = 'keyboardWillShow';
+    const hideEvent = 'keyboardWillHide';
 
     const showSub = Keyboard.addListener(showEvent, e => {
       const kbHeight = e?.endCoordinates?.height ?? 0;
       Animated.timing(keyboardOffset, {
         toValue: kbHeight,
-        duration: Platform.OS === 'ios' ? e?.duration ?? 250 : 200,
+        duration: e?.duration ?? 250,
         useNativeDriver: false,
       }).start();
     });
@@ -490,7 +516,7 @@ const EventMapScreen = ({navigation, route}) => {
     const hideSub = Keyboard.addListener(hideEvent, e => {
       Animated.timing(keyboardOffset, {
         toValue: 0,
-        duration: Platform.OS === 'ios' ? e?.duration ?? 250 : 200,
+        duration: e?.duration ?? 250,
         useNativeDriver: false,
       }).start();
     });
@@ -648,6 +674,21 @@ const EventMapScreen = ({navigation, route}) => {
         </View>
       )}
 
+      {/* NEW — mirrors the "trailer-aware routing applied" badge already
+          shown on LegNavigationScreen, so the planner discloses the same
+          thing before the trip is even confirmed. Deliberately doesn't
+          claim guaranteed safety/compliance — just that the dimensions
+          were sent to the router. */}
+      {routeInfo && usedRestrictions && (
+        <View style={styles.restrictionsBadge}>
+          <TextComponent text={'🛡️'} styles={styles.restrictionsBadgeIcon} />
+          <TextComponent
+            text={'Trailer-aware routing applied to this preview'}
+            styles={styles.restrictionsBadgeText}
+          />
+        </View>
+      )}
+
       {showListView && (
         <View style={styles.listViewOverlay}>
           <ScrollView
@@ -767,6 +808,8 @@ const EventMapScreen = ({navigation, route}) => {
             onSelect={selectVehicle}
             onClose={() => setActiveSheet(null)}
             onAddNew={() => navigation.navigate('VehicleFormScreen')}
+            hasMoreVehicles={hasMoreVehicles}
+            onSeeMore={goToAllVehicles}
           />
         )}
 

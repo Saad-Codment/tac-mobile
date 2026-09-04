@@ -10,7 +10,13 @@ import useReduxStore from '../Hooks/UseReduxStore';
 import {types} from '../Redux/types';
 import {imageUrl} from '../Utils/Urls';
 
-const NotificationComp = ({item, index, acceptReq, declineReq}) => {
+// CHANGED — added `onPress` prop, and the outer <View> became a
+// <Pressable> so tapping the row (anywhere except the avatar or the
+// Accept/Remove buttons, which each capture their own touch as before)
+// fires it. Everything else — every child, every style, the avatar's
+// own onImagePress, the notification_type_id === 1 button block — is
+// completely unchanged.
+const NotificationComp = ({item, index, acceptReq, declineReq, onPress}) => {
   console.log('itemitemitemitem', item);
   const {dispatch} = useReduxStore();
 
@@ -22,7 +28,7 @@ const NotificationComp = ({item, index, acceptReq, declineReq}) => {
   };
 
   return (
-    <View style={styles.reqMainView}>
+    <Pressable style={styles.reqMainView} onPress={() => onPress?.(item)}>
       <Pressable onPress={onImagePress}>
         <CircleImage
           image={imageUrl(item?.profile_image)}
@@ -74,7 +80,7 @@ const NotificationComp = ({item, index, acceptReq, declineReq}) => {
           </View>
         )}
       </View>
-    </View>
+    </Pressable>
   );
 };
 

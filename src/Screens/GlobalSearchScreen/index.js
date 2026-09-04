@@ -30,6 +30,14 @@ import ShareEventComp from '../../Components/ShareEventComp';
 import {Touchable} from '../../Components/Touchable';
 import Overlay from '../../Components/Overlay';
 
+// FIX: FlatLists had no keyExtractor, so React Native fell back to
+// index-based keys. When the underlying array changed after a refetch
+// (items shifting position), that could make rows appear to repeat/duplicate
+// visually even when the data itself was fine. Keying by the item's real id
+// fixes reconciliation.
+const searchItemKeyExtractor = (item, index) =>
+  item?.id != null ? String(item.id) : `search-item-${index}`;
+
 const GlobalSearchScreen = ({navigation}) => {
   const {
     selectedVal,
@@ -55,26 +63,14 @@ const GlobalSearchScreen = ({navigation}) => {
     queryClient,
     selectUrl,
     isParams,
-    allDataEvents,
-    isFetchingNextPageEvents,
-    fetchNextPageEvents,
-    hasNextPageEvents,
-    isPendingEvents,
-    isFetchingEvents,
-    isRefetchingEvnts,
-    allDataRefetchEvents,
     setPages,
     refetchWhenParams,
     isLoading,
     setIsLoading,
     totalPages,
     pages,
+    commitSearch, // ← new
   } = useGloabalSearchScreen(navigation);
-
-  console.log(
-    'allSearchDataallSearchsdDataallSearchDataallSearchDataallSsdsdsearchDataslkdnvlksdn',
-    Boolean(totalPages != pages),
-  );
 
   const DynamicViewForSearch = useCallback(
     ({array, title, isSeeAll, flatViewStyle, isNotRefreshing}) => {
@@ -105,6 +101,7 @@ const GlobalSearchScreen = ({navigation}) => {
             data={array ?? []}
             style={{...styles.upComingFlatlistView, ...flatViewStyle}}
             numColumns={1}
+            keyExtractor={searchItemKeyExtractor}
             renderItem={({item, index}) => (
               <>
                 {title === 'Users' && (
@@ -237,6 +234,7 @@ const GlobalSearchScreen = ({navigation}) => {
                 searchVal == null || searchVal == '' || searchVal == undefined,
               );
               if (!isSearch) {
+                commitSearch(); // ← new: locks in this search term as the cache identity
                 setSelectedVal({name: 'Events', id: 'Events'});
                 setIsLoading(true);
                 await allDataRefetch();
@@ -321,34 +319,6 @@ const GlobalSearchScreen = ({navigation}) => {
                 isSeeAll={true}
                 flatViewStyle={{marginTop: hp('1')}}
               />
-              {/* {
-                    selectTabAllData.length >= 9 &&
-              isSeeAll != true &&
-              (isFetchingNextPage ? (
-                <ActivityIndicator size="small" color="gray" />
-              ) : (
-                Boolean(totalPages != pages) && (
-                  <ThemeButton
-                    title={'Load More'}
-                    style={{
-                      marginTop: hp('2'),
-                      width: wp('30'),
-                      height: hp('4'),
-                      alignSelf: 'center',
-                      marginBottom: hp('5'),
-                    }}
-                    textStyle={{fontSize: hp('1.5')}}
-                    onPress={async () => {
-                      setPages(prev => prev + 1);
-                      setTimeout(async () => {
-                        await fetchNextPage();
-                      }, 100);
-                      // afterFetchNextPage();
-                    }}
-                  />
-                )
-              ))
-              } */}
             </>
           )}
           {allSearchData?.posts?.length > 0 && (
@@ -399,42 +369,12 @@ const GlobalSearchScreen = ({navigation}) => {
                       setTimeout(async () => {
                         await fetchNextPage();
                       }, 100);
-                      // afterFetchNextPage();
                     }}
                   />
                 )
               ))}
           </ScrollView>
         )}
-      {/* <View style={styles.sectionContainer}>
-        <View style={styles.titleView}>
-          <TextComponent text={'Peoples'} styles={styles.titleText} />
-          <TextComponent text={'See all'} styles={styles.seeAllText} />
-        </View>
-        <AniFlatOneByOne
-          data={allSearchData?.users ?? []}
-          flatViewStyle={styles.upComingFlatlistView}
-          //   onRefresh={refetch}
-          flatListProps={{
-            numColumns: 1,
-            ListEmptyComponent: (
-              <DataNotFound
-                btnStyles={styles.dataNotFoundBtn}
-                imgStyles={styles.dataNotFoundImg}
-                mainViewStyles={styles.dataNotFoundContainer}
-              />
-            ),
-          }}
-          InnerCompnonet={(item, index) => (
-            <MyFriendComp
-              item={item}
-              index={index}
-              refetch={refetch}
-              mainViewStyles={styles.friendCompContainer}
-            />
-          )}
-        />
-      </View> */}
       {Boolean(isLoading) && <Overlay />}
       {Boolean(modal != null) && (
         <BottomModalComponent

@@ -62,4 +62,7 @@ export {default as MyRequestsScreen} from './MyRequestsScreen';
 export {default as ManageRequestsScreen} from './ManageRequestsScreen';
 export {default as TripsForEventListScreen} from './TripsForEventListScreen';
 
+export {default as LegNavigationScreen} from './LegNavigationScreen';
+export {default as LiveTrackingScreen} from './LiveTrackingScreen';
+
 export {default as ListViewScreen} from './OnStepScreen/ListViewScreen';

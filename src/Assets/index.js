@@ -88,6 +88,11 @@ export {default as tacFilterIcon} from './Icons/tacFilterIcon.png';
 export {default as tickFrameYellow} from './Icons/tickFrameYellow.png';
 export {default as save25} from './Icons/save25.png';
 
+export {default as tripList} from './Icons/tripList.png';
+export {default as tripReq} from './Icons/tripReq.png';
+export {default as truckReq} from './Icons/truckReq.png';
+export {default as truckList} from './Icons/truckList.png';
+
 export {default as whatapp} from './Icons/whatapp.png';
 export {default as isnta} from './Icons/isnta.png';
 export {default as messageApp} from './Icons/messageApp.png';

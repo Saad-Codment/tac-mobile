@@ -2214,4 +2214,5 @@ export {
   shareEventUsingBranch,
   sharePostToSpecificApp,
   generateBranchLinkForPost,
+  getLocationName,
 };

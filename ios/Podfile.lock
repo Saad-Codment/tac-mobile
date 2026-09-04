@@ -175,13 +175,13 @@ PODS:
   - libwebp/sharpyuv (1.5.0)
   - libwebp/webp (1.5.0):
     - libwebp/sharpyuv
-  - MapboxCommon (24.20.3):
+  - MapboxCommon (24.23.1):
     - Turf (= 4.0.0)
-  - MapboxCoreMaps (11.20.3):
-    - MapboxCommon (= 24.20.3)
-  - MapboxMaps (11.20.3):
-    - MapboxCommon (= 24.20.3)
-    - MapboxCoreMaps (= 11.20.3)
+  - MapboxCoreMaps (11.23.1):
+    - MapboxCommon (= 24.23.1)
+  - MapboxMaps (11.23.1):
+    - MapboxCommon (= 24.23.1)
+    - MapboxCoreMaps (= 11.23.1)
     - Turf (= 4.0.0)
   - nanopb (2.30910.0):
     - nanopb/decode (= 2.30910.0)
@@ -1549,7 +1549,7 @@ PODS:
     - React-Core
   - react-native-calendar (0.0.7):
     - React-Core
-  - react-native-compressor (1.19.2):
+  - react-native-compressor (1.19.4):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2529,16 +2529,16 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - rnmapbox-maps (10.3.1):
-    - MapboxMaps (~> 11.20.1)
+  - rnmapbox-maps (10.3.5):
+    - MapboxMaps (~> 11.23.1)
     - React
     - React-Core
-    - rnmapbox-maps/DynamicLibrary (= 10.3.1)
+    - rnmapbox-maps/DynamicLibrary (= 10.3.5)
     - Turf
-  - rnmapbox-maps/DynamicLibrary (10.3.1):
+  - rnmapbox-maps/DynamicLibrary (10.3.5):
     - DoubleConversion
     - hermes-engine
-    - MapboxMaps (~> 11.20.1)
+    - MapboxMaps (~> 11.23.1)
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -2746,6 +2746,8 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.7.1)
+  - TextToSpeech (4.1.1):
+    - React-Core
   - TOCropViewController (2.8.0)
   - Turf (4.0.0)
   - Yoga (0.0.0)
@@ -2878,6 +2880,7 @@ DEPENDENCIES:
   - RNShare (from `../node_modules/react-native-share`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - TextToSpeech (from `../node_modules/react-native-tts`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -3155,6 +3158,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  TextToSpeech:
+    :path: "../node_modules/react-native-tts"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -3188,9 +3193,9 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   hermes-engine: c32f2e405098bc1ebe30630a051ddce6f21d3c2e
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
-  MapboxCommon: bd1554a0c6e66ac04c9ecd3611f3b7d772eeac7e
-  MapboxCoreMaps: 821019cdd87447ecd895872f4095232723961627
-  MapboxMaps: 6191d857abe0da0f3bdfb5a71349c532d55d7d9d
+  MapboxCommon: d006256c4643860a7b3046af45d1671569b6c5ac
+  MapboxCoreMaps: de1a4461d0ab5d65d907f06e8d82fdbe06bb3213
+  MapboxMaps: 22340ae0e0d47b2e4761019b1d6c569ab04e088d
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
   PurchasesHybridCommon: 7f0944cc5411bdcd1ea5d69affa6a6f9aaf87b13
@@ -3231,7 +3236,7 @@ SPEC CHECKSUMS:
   react-native-blurhash: cb8299dec396f56943b44fa0275dede7fdd7eb2e
   react-native-branch: 00581e914b19ce167c8ff7a2085f3a73913b2195
   react-native-calendar: e8c8b9e7c76199ff366b8e88faa3ec04684f9b37
-  react-native-compressor: 1069cea5d094720cd18932d64513b003d284303b
+  react-native-compressor: 3a1d356f25de043427d62a32f42ec5248ef32969
   react-native-contacts: f551920b74ebfc5f7f6df307495f085e504a4369
   react-native-date-picker: f32731b68a859d91282cdf77f4c74f4d0105730d
   react-native-geolocation: fcd6daeef13402b1cbb3aadc7711b4e6ed9d89e0
@@ -3298,7 +3303,7 @@ SPEC CHECKSUMS:
   RNGoogleSignin: b75fe0693bbc63da4f7c6588104c05dc571f7ba5
   RNImageCropPicker: 2889fd7ef4b4bb7aeef8a0b598661f934f01f5e1
   RNLocalize: bb5d6b59fc1fa71e1fd3594ab93d3bc5921673c6
-  rnmapbox-maps: d943e76e5aa3f4a1147e966d8af96973ab134d95
+  rnmapbox-maps: d9ca7e39adb94c668d8b7b358fafc330abb7eb4b
   RNNotifee: 5e3b271e8ea7456a36eec994085543c9adca9168
   RNPermissions: 58e92a14c3eb5f452fc66264cd6ea2093a9a2ceb
   RNPurchases: 6070b60f5d8f525a58905df50773f7a3252f0cfa
@@ -3310,10 +3315,11 @@ SPEC CHECKSUMS:
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
+  TextToSpeech: 89b239221ec378d213af422d14789a729705360b
   TOCropViewController: 797deaf39c90e6e9ddd848d88817f6b9a8a09888
   Turf: c9eb11a65d96af58cac523460fd40fec5061b081
   Yoga: 0f6757ba6d7d652f42bba3423f925dbf23d51aab
 
-PODFILE CHECKSUM: b742c2fb011493877a3200f7d17be0e7ff638153
+PODFILE CHECKSUM: 60496ec7e12db989d2da058a574f14ed98c9d3eb
 
 COCOAPODS: 1.16.2

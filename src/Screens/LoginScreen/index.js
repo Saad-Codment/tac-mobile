@@ -43,6 +43,7 @@ const LoginScreen = ({navigation}) => {
     rememberValue,
     remember,
     socialLoginFun,
+    onInvalid, // add this
   } = useLogin(navigation);
   return (
     <ImageBackground source={LoginBg} style={styles.ImgBg}>
@@ -115,7 +116,7 @@ const LoginScreen = ({navigation}) => {
               onPress={() => navigation.navigate('ForgotPasswordScreen')}
             />
             <ThemeButton
-              onPress={handleSubmit(loginUser)}
+              onPress={handleSubmit(loginUser, onInvalid)}
               title={'Log In'}
               isYellowTheme={true}
               style={styles.buttonStyle}

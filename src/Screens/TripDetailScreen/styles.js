@@ -30,6 +30,71 @@ export const styles = StyleSheet.create({
   },
   mapMarkerText: {fontSize: hp('1.2'), color: 'white', fontWeight: '700'},
 
+  // NEW — participant "Track Live" banner
+  trackLiveBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp('2.5'),
+    backgroundColor: '#FEF3C7',
+    borderRadius: 12,
+    paddingHorizontal: wp('4'),
+    paddingVertical: hp('1.2'),
+    marginBottom: hp('2'),
+  },
+  trackLivePulseDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#F59E0B',
+  },
+  trackLiveText: {
+    flex: 1,
+    fontSize: hp('1.3'),
+    fontWeight: '700',
+    color: '#92400E',
+  },
+  trackLiveArrow: {fontSize: hp('1.4'), color: '#92400E', fontWeight: '700'},
+
+  // NEW — organizer "Next Leg" banner: identifies which leg is next
+  // (or already underway) and lets them jump straight into it, instead
+  // of having to work out which connector in the itinerary to tap.
+  nextLegBanner: {
+    backgroundColor: '#EFF6FF',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#BFDBFE',
+    padding: wp('4'),
+    marginBottom: hp('2'),
+  },
+  nextLegBannerLabel: {
+    fontSize: hp('1.15'),
+    fontWeight: '700',
+    color: '#2563EB',
+    marginBottom: hp('0.5'),
+  },
+  nextLegBannerRoute: {
+    fontSize: hp('1.55'),
+    fontWeight: '700',
+    color: '#0F172A',
+    marginBottom: hp('0.3'),
+  },
+  nextLegBannerMeta: {
+    fontSize: hp('1.2'),
+    color: '#475569',
+    marginBottom: hp('1.2'),
+  },
+  nextLegBannerBtn: {
+    backgroundColor: '#2563EB',
+    borderRadius: 10,
+    paddingVertical: hp('1.2'),
+    alignItems: 'center',
+  },
+  nextLegBannerBtnText: {
+    fontSize: hp('1.35'),
+    fontWeight: '700',
+    color: 'white',
+  },
+
   headerCard: {
     backgroundColor: 'white',
     borderRadius: 16,
@@ -59,7 +124,6 @@ export const styles = StyleSheet.create({
   },
   statText: {fontSize: hp('1.3'), fontWeight: '600', color: '#1F2937'},
 
-  // NEW — capacity (seats/hauls left), visible to every viewer
   capacityRow: {
     marginTop: hp('1'),
     paddingHorizontal: wp('3'),
@@ -77,7 +141,6 @@ export const styles = StyleSheet.create({
   },
   tripSpanText: {fontSize: hp('1.25'), color: '#3B82F6', fontWeight: '600'},
 
-  // NEW — organizer participants summary row
   participantsRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -95,6 +158,13 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#111827',
     marginTop: hp('2.2'),
+    marginBottom: hp('1'),
+  },
+  // NEW — small hint shown to organizer above the itinerary during an active trip
+  legsHint: {
+    fontSize: hp('1.1'),
+    color: '#94A3B8',
+    marginTop: hp('-0.6'),
     marginBottom: hp('1'),
   },
 
@@ -172,6 +242,15 @@ export const styles = StyleSheet.create({
   legConnectorLine: {width: 2, height: hp('1.5'), backgroundColor: '#E2E8F0'},
   legConnectorText: {fontSize: hp('1.1'), color: '#94A3B8'},
 
+  // NEW — leg status badge shown inline on the connector (organizer only)
+  legStatusBadge: {
+    paddingHorizontal: wp('2'),
+    paddingVertical: hp('0.2'),
+    borderRadius: 999,
+    marginLeft: wp('1'),
+  },
+  legStatusBadgeText: {fontSize: hp('1'), fontWeight: '700'},
+
   bottomBar: {
     position: 'absolute',
     bottom: 0,
@@ -187,20 +266,17 @@ export const styles = StyleSheet.create({
   },
   actionBtnSecondary: {
     flex: 1,
-    height: hp('5.4'),
+    height: hp('4.5'),
     borderRadius: 12,
     backgroundColor: '#F8FAFC',
     borderWidth: 1,
     borderColor: '#E2E8F0',
   },
   actionBtnSecondaryText: {
-    fontSize: hp('1.45'),
+    fontSize: hp('1.5'),
     color: '#1F2937',
     fontWeight: '600',
   },
-  actionBtnPrimary: {flex: 1, height: hp('5.4'), borderRadius: 12},
-
-  // NEW — full-width primary button (Request to Join has no secondary
-  // action alongside it, unlike the organizer's Cancel+Start/Complete pair)
-  actionBtnPrimaryFull: {flex: 1, height: hp('5.4'), borderRadius: 12},
+  actionBtnPrimary: {flex: 1, height: hp('4.5'), borderRadius: 12},
+  actionBtnPrimaryFull: {flex: 1, height: hp('4.5'), borderRadius: 12},
 });

@@ -41,11 +41,19 @@ export const InputComponent = ({
   )
     ? 'phone-pad'
     : 'default';
+
+  const hasError = Boolean(errors?.[name]?.message);
+
   return (
     <>
       <Controller
-        render={({field: {onChange, value}}) => (
-          <View style={{...styles.textfield, ...viewStyle}}>
+        render={({field: {onChange, value, ref}}) => (
+          <View
+            style={{
+              ...styles.textfield,
+              ...viewStyle,
+              ...(hasError ? styles.textfieldError : null),
+            }}>
             {isImage && (
               <Image
                 tintColor={Colors.primaryColor}
@@ -58,6 +66,7 @@ export const InputComponent = ({
               />
             )}
             <TextInput
+              ref={ref}
               type={type}
               maxLength={maxLength}
               style={{...forPasswordStyle}}
@@ -107,13 +116,7 @@ export const InputComponent = ({
         }}
       />
       {errors[name]?.message && (
-        <View
-          style={
-            {
-              // width: Platform.OS == 'ios' ? width * 0.875 : Sizes.width * 0.9,
-              // width: Sizes.width * 0.9,
-            }
-          }>
+        <View>
           <Text style={{...styles.error, ...errorStyle}}>
             {errors[name]?.message}
           </Text>
@@ -129,7 +132,6 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 50,
     height: hp('7'),
-    // borderRadius: 15,
     marginVertical: hp('1'),
     alignItems: 'center',
     flexDirection: 'row',
@@ -137,6 +139,10 @@ const styles = StyleSheet.create({
     marginTop: hp('1'),
     backgroundColor: '#00000080',
     paddingHorizontal: wp('4'),
+  },
+  textfieldError: {
+    borderColor: '#ff4d4d',
+    borderWidth: 1.5,
   },
   input: isSecure => ({
     height: '100%',

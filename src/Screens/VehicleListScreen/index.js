@@ -18,14 +18,16 @@ import useVehicleListScreen from './useVehicleListScreen';
 import {styles} from './styles';
 
 // Fixed enum per the API doc (§14) — formatted for display without an
-// extra network call. If the backend ever adds a new type, this still
-// degrades gracefully (falls through to the raw-value formatter below).
+// extra network call.
 const formatVehicleType = type => {
   if (!type) return null;
   return type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 };
 
-const VehicleCard = ({vehicle, onEdit, onDelete}) => {
+// CHANGED — accepts selectMode to hide the delete button when this
+// screen is being used to pick a vehicle for a trip rather than manage
+// your saved vehicles.
+const VehicleCard = ({vehicle, onEdit, onDelete, selectMode}) => {
   const firstImage = vehicle?.images?.[0];
   const typeLabel = formatVehicleType(vehicle?.vehicle_type);
   const hasPricing =
@@ -87,14 +89,16 @@ const VehicleCard = ({vehicle, onEdit, onDelete}) => {
           />
         )}
       </View>
-      <Touchable onPress={() => onDelete(vehicle)} style={styles.deleteBtn}>
-        <TextComponent text={'🗑'} styles={styles.deleteBtnText} />
-      </Touchable>
+      {!selectMode && (
+        <Touchable onPress={() => onDelete(vehicle)} style={styles.deleteBtn}>
+          <TextComponent text={'🗑'} styles={styles.deleteBtnText} />
+        </Touchable>
+      )}
     </Touchable>
   );
 };
 
-const VehicleListScreen = ({navigation}) => {
+const VehicleListScreen = ({navigation, route}) => {
   const {
     vehicles,
     isLoading,
@@ -105,12 +109,13 @@ const VehicleListScreen = ({navigation}) => {
     confirmDeleteVehicle,
     goToAddVehicle,
     goToEditVehicle,
-  } = useVehicleListScreen(navigation);
+    selectMode,
+  } = useVehicleListScreen(navigation, route);
 
   return (
     <View style={styles.screenContainer}>
       <HeaderComponent
-        headerTitle={'My Vehicles'}
+        headerTitle={selectMode ? 'Select a Vehicle' : 'My Vehicles'}
         isBack
         goBack={() => navigation.goBack()}
       />
@@ -154,6 +159,7 @@ const VehicleListScreen = ({navigation}) => {
               vehicle={item}
               onEdit={goToEditVehicle}
               onDelete={confirmDeleteVehicle}
+              selectMode={selectMode}
             />
           )}
         />

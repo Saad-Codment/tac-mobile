@@ -6,8 +6,8 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import API from '../../Utils/helperFunc';
-import {successMessage, errorMessage} from '../../Utils/helperFunc'; // adjust path if these live elsewhere
 import {myRequestsUrl, requestDecisionUrl} from '../../Utils/Urls';
+import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 
 const PER_PAGE = 15;
 
@@ -32,7 +32,7 @@ const useMyRequestsScreen = navigation => {
     },
   });
 
-  const requests = (data?.pages ?? []).flatMap(page => page?.data ?? []);
+  const requests = (data?.pages ?? []).flatMap(page => page?.data?.data ?? []);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);

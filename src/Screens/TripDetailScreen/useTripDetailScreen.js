@@ -1,8 +1,9 @@
 import {useCallback, useMemo} from 'react';
 import {Alert} from 'react-native';
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {useFocusEffect} from '@react-navigation/native';
+import useReduxStore from '../../Hooks/UseReduxStore';
 import API from '../../Utils/helperFunc';
-import {successMessage, errorMessage} from '../../Utils/helperFunc'; // adjust path if these live elsewhere
 import {
   tripDetailsUrl,
   tripStatusUrl,
@@ -13,11 +14,11 @@ import {
   deviceTimeZone,
   toWallClockString,
 } from '../../Utils/TripPlannerHelpers';
-import useReduxStore from '../../Hooks/UseReduxStore';
+import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 
 const useTripDetailScreen = (navigation, route) => {
   const {tripId} = route?.params ?? {};
-  const {dispatch, getState, queryClient} = useReduxStore();
+  const queryClient = useQueryClient();
 
   const {data, isLoading, refetch} = useQuery({
     queryKey: ['tripDetail', tripId],
@@ -27,18 +28,22 @@ const useTripDetailScreen = (navigation, route) => {
 
   const trip = data?.data?.data;
 
-  // NEW — organizer vs joiner/viewer detection. Trip Detail is now a
-  // shared screen: the organizer sees trip-management actions +
-  // participants; anyone else sees "Request to Join" instead.
-  // ⚠️ Verify the exact shape once you send it — assuming
-  // getState('Auth').userData.id is the logged-in user's id.
+  // NEW — LEG_TRACKING_API §2 explicitly calls this out: leg statuses
+  // change over time as the organizer executes the trip (pending ->
+  // active -> paused -> ... -> completed), so this screen needs to
+  // refetch whenever it regains focus, not just on first mount (e.g.
+  // navigating back from Leg Navigation or Live Tracking).
+  useFocusEffect(
+    useCallback(() => {
+      if (tripId) refetch();
+    }, [tripId, refetch]),
+  );
+
+  const {getState} = useReduxStore();
   const {userData} = getState('Auth');
   const currentUserId = userData?.id;
   const isOrganizer = !!trip && trip.organizer_id === currentUserId;
 
-  // NEW — compact participants summary for the organizer, e.g.
-  // "4 participants · 2 pending". participants[] is only present in the
-  // response at all when the viewer is the organizer (per the API doc).
   const participantsSummary = useMemo(() => {
     const list = trip?.participants;
     if (!isOrganizer || !list) return null;
@@ -47,52 +52,22 @@ const useTripDetailScreen = (navigation, route) => {
     return {total, pending};
   }, [trip, isOrganizer]);
 
-  const invalidateAll = () => {
-    queryClient.invalidateQueries({queryKey: ['tripDetail', tripId]});
-    queryClient.invalidateQueries({queryKey: ['tripsList']});
-  };
-
-  const applyTripUpdate = useCallback(
-    patch => {
-      if (!patch) return;
-      queryClient.setQueryData(['tripDetail', tripId], old => {
-        if (!old?.data) return old;
-        return {...old, data: {...old.data, ...patch}};
-      });
-      queryClient.setQueryData(['tripsList'], old => {
-        if (!old?.pages) return old;
-        return {
-          ...old,
-          pages: old.pages.map(page => ({
-            ...page,
-            data: (page?.data ?? []).map(t =>
-              t.id === tripId ? {...t, ...patch} : t,
-            ),
-          })),
-        };
-      });
-    },
-    [tripId, queryClient],
+  // NEW — whether there's a leg currently active/paused, used to show
+  // the participant-facing "Track Live" banner.
+  const hasActiveLeg = useMemo(
+    () =>
+      (trip?.legs ?? []).some(
+        l => l.status === 'active' || l.status === 'paused',
+      ),
+    [trip],
   );
 
-  const applyStopUpdate = useCallback(
-    (stopId, patch) => {
-      if (!patch) return;
-      queryClient.setQueryData(['tripDetail', tripId], old => {
-        if (!old?.data) return old;
-        return {
-          ...old,
-          data: {
-            ...old.data,
-            stops: (old.data.stops ?? []).map(s =>
-              s.id === stopId ? {...s, ...patch} : s,
-            ),
-          },
-        };
-      });
-    },
-    [tripId, queryClient],
-  );
+  const syncAfterChange = useCallback(async () => {
+    await Promise.all([
+      refetch(),
+      queryClient.invalidateQueries({queryKey: ['tripsList']}),
+    ]);
+  }, [refetch, queryClient]);
 
   const routeGeoJSON = trip?.full_path ?? null;
 
@@ -123,19 +98,48 @@ const useTripDetailScreen = (navigation, route) => {
     return map;
   }, [trip]);
 
+  // NEW — "which leg comes next" for the Next Leg banner. There's no
+  // explicit sequence field on a leg; order is implied by the stops
+  // array (a leg's start_stop_id lines up with a stop). We rebuild that
+  // order here rather than trusting `trip.legs`' own array order, then
+  // prefer an already-started leg (active/paused — the organizer needs
+  // to get back into that one) over the next not-yet-started one. This
+  // reads entirely off the backend-fetched trip/leg data — no local
+  // "current leg" state of our own — so it stays correct across
+  // refetches (e.g. right after Complete Leg navigates back here).
+  const orderedLegs = useMemo(() => {
+    const stops = trip?.stops ?? [];
+    const legs = trip?.legs ?? [];
+    return stops
+      .map(stop => legs.find(l => l.start_stop_id === stop.id))
+      .filter(Boolean);
+  }, [trip]);
+
+  const nextLeg = useMemo(() => {
+    if (!orderedLegs.length) return null;
+    return (
+      orderedLegs.find(l => l.status === 'active' || l.status === 'paused') ??
+      orderedLegs.find(l => l.status === 'pending') ??
+      null
+    );
+  }, [orderedLegs]);
+
+  const nextLegStops = useMemo(() => {
+    if (!nextLeg) return null;
+    const stops = trip?.stops ?? [];
+    return {
+      startStop: stops.find(s => s.id === nextLeg.start_stop_id) ?? null,
+      endStop: stops.find(s => s.id === nextLeg.end_stop_id) ?? null,
+    };
+  }, [nextLeg, trip]);
+
   const {mutate: updateStatusMutate, isLoading: isUpdatingStatus} = useMutation(
     {
       mutationFn: body => API.patch(tripStatusUrl(tripId), body),
-      onSuccess: ({ok, data: resData}, variables) => {
+      onSuccess: async ({ok, data: resData}) => {
         if (ok) {
-          console.log(
-            'sldvblskdbvlksdbvklbsdlkvbklsdblvslkdbvlskdv',
-            ok,
-            resData,
-          );
           successMessage(resData?.message || 'Trip updated');
-          applyTripUpdate(resData?.data ?? {status: resData?.data?.status});
-          invalidateAll();
+          await syncAfterChange();
         } else {
           errorMessage(resData?.message || 'Error updating trip status');
         }
@@ -166,33 +170,27 @@ const useTripDetailScreen = (navigation, route) => {
       {
         text: 'Yes, Cancel',
         style: 'destructive',
-        onPress: () => {
-          API.delete(tripCancelUrl(tripId)).then(({ok, data: resData}) => {
-            if (ok) {
-              successMessage(resData?.message || 'Trip cancelled');
-              applyTripUpdate({status: 'cancelled'});
-              invalidateAll();
-              navigation.goBack();
-            } else {
-              errorMessage(resData?.message || 'Error cancelling trip');
-            }
-          });
+        onPress: async () => {
+          const {ok, data: resData} = await API.delete(tripCancelUrl(tripId));
+          if (ok) {
+            successMessage(resData?.message || 'Trip cancelled');
+            await syncAfterChange();
+            navigation.goBack();
+          } else {
+            errorMessage(resData?.message || 'Error cancelling trip');
+          }
         },
       },
     ]);
-  }, [tripId, navigation, applyTripUpdate]);
+  }, [tripId, navigation, syncAfterChange]);
 
   const {mutate: updateStopMutate, isLoading: isUpdatingStop} = useMutation({
     mutationFn: ({stopId, body}) =>
       API.patch(tripStopUpdateUrl(tripId, stopId), body),
-    onSuccess: ({ok, data: resData}, variables) => {
+    onSuccess: async ({ok, data: resData}) => {
       if (ok) {
         successMessage(resData?.message || 'Stop updated');
-        applyStopUpdate(
-          variables.stopId,
-          resData?.data ?? variables.fallbackPatch,
-        );
-        invalidateAll();
+        await syncAfterChange();
       } else {
         errorMessage(resData?.message || 'Error updating stop');
       }
@@ -202,11 +200,12 @@ const useTripDetailScreen = (navigation, route) => {
 
   const markStopArrived = useCallback(
     stopId => {
-      const now = new Date();
       updateStopMutate({
         stopId,
-        body: {ata_actual: toWallClockString(now), timezone: deviceTimeZone},
-        fallbackPatch: {ata_actual: now.toISOString()},
+        body: {
+          ata_actual: toWallClockString(new Date()),
+          timezone: deviceTimeZone,
+        },
       });
     },
     [updateStopMutate],
@@ -214,11 +213,12 @@ const useTripDetailScreen = (navigation, route) => {
 
   const markStopDeparted = useCallback(
     stopId => {
-      const now = new Date();
       updateStopMutate({
         stopId,
-        body: {atd_actual: toWallClockString(now), timezone: deviceTimeZone},
-        fallbackPatch: {atd_actual: now.toISOString()},
+        body: {
+          atd_actual: toWallClockString(new Date()),
+          timezone: deviceTimeZone,
+        },
       });
     },
     [updateStopMutate],
@@ -235,13 +235,27 @@ const useTripDetailScreen = (navigation, route) => {
     });
   }, [navigation, tripId, trip]);
 
+  // NEW — organizer taps a leg to open Leg Navigation
+  const goToLegNavigation = useCallback(
+    leg => {
+      navigation.navigate('LegNavigationScreen', {tripId, legId: leg.id});
+    },
+    [navigation, tripId],
+  );
+
+  // NEW — participant/viewer taps "Track Live"
+  const goToLiveTracking = useCallback(() => {
+    navigation.navigate('LiveTrackingScreen', {tripId});
+  }, [navigation, tripId]);
+
   return {
     trip,
     isLoading,
-    refetch,
     routeGeoJSON,
     mapBounds,
     legByStartStopId,
+    nextLeg,
+    nextLegStops,
     startTrip,
     completeTrip,
     confirmCancelTrip,
@@ -249,11 +263,13 @@ const useTripDetailScreen = (navigation, route) => {
     markStopDeparted,
     isUpdatingStatus,
     isUpdatingStop,
-    // NEW
     isOrganizer,
     participantsSummary,
+    hasActiveLeg,
     goToManageRequests,
     goToRequestToJoin,
+    goToLegNavigation,
+    goToLiveTracking,
   };
 };
 

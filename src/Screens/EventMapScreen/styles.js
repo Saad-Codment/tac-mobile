@@ -73,6 +73,32 @@ export const styles = StyleSheet.create({
   routeInfoText: {fontSize: hp('1.35'), fontWeight: '600', color: '#1F2937'},
   routeInfoSep: {width: 1, height: hp('2.2'), backgroundColor: '#E5E7EB'},
 
+  // NEW — trailer-aware routing disclosure badge, mirrors
+  // LegNavigationScreen's restrictionsBadge styling.
+  restrictionsBadge: {
+    position: 'absolute',
+    bottom: hp('35.5'),
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp('1.5'),
+    backgroundColor: 'white',
+    borderRadius: 999,
+    paddingHorizontal: wp('3.5'),
+    paddingVertical: hp('0.6'),
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  restrictionsBadgeIcon: {fontSize: hp('1.1')},
+  restrictionsBadgeText: {
+    fontSize: hp('1.05'),
+    color: '#166534',
+    fontWeight: '600',
+  },
+
   listViewOverlay: {
     position: 'absolute',
     top: hp('9'),

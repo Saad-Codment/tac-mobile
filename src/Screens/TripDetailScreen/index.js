@@ -10,8 +10,23 @@ import {hp, wp} from '../../Config/responsive';
 import {imageUrl, MAPBOX_TOKEN} from '../../Utils/Urls';
 import useTripDetailScreen from './useTripDetailScreen';
 import {styles} from './styles';
+// NEW — offline map region download/status/removal for this trip.
+// Self-contained component; only these two lines touch this file.
+import OfflineMapButton from '../../Components/OfflineMapButton';
+// NEW — weather at the next upcoming stop. WeatherCard/useStopWeather
+// handle their own loading/unavailable states; this screen only decides
+// *which* stop to ask about.
+import WeatherCard from '../../Components/WeatherCard';
+import {useStopWeather} from '../../Services/Weather/useStopWeather';
 
 MapboxGL.setAccessToken(MAPBOX_TOKEN);
+
+const LEG_STATUS_META = {
+  pending: {label: 'Not Started', color: '#6B7280'},
+  active: {label: 'In Progress', color: '#F59E0B'},
+  paused: {label: 'Paused', color: '#3B82F6'},
+  completed: {label: 'Completed', color: '#22C55E'},
+};
 
 const formatDateTime = str => {
   if (!str) return '—';
@@ -162,10 +177,18 @@ const VehicleCard = ({vehicle}) => {
   );
 };
 
-const LegConnector = ({leg}) => {
+// CHANGED — leg connector is now tappable for the organizer, opening
+// Leg Navigation, and shows the leg's live status (Not Started / In
+// Progress / Paused / Completed) alongside its distance/duration.
+const LegConnector = ({leg, isOrganizer, onPress}) => {
   if (!leg) return null;
   const km = (leg.distance_planned_meters / 1000).toFixed(1);
-  return (
+  const statusMeta = LEG_STATUS_META[leg.status] ?? {
+    label: leg.status,
+    color: '#6B7280',
+  };
+
+  const content = (
     <View style={styles.legConnector}>
       <View style={styles.legConnectorLine} />
       <TextComponent
@@ -173,8 +196,25 @@ const LegConnector = ({leg}) => {
         fade
         styles={styles.legConnectorText}
       />
+      {isOrganizer && (
+        <View
+          style={[
+            styles.legStatusBadge,
+            {backgroundColor: statusMeta.color + '18'},
+          ]}>
+          <TextComponent
+            text={statusMeta.label + ' →'}
+            styles={[styles.legStatusBadgeText, {color: statusMeta.color}]}
+            size={hp('1.5')}
+          />
+        </View>
+      )}
     </View>
   );
+
+  if (!isOrganizer) return content;
+
+  return <Touchable onPress={() => onPress(leg)}>{content}</Touchable>;
 };
 
 const StopRow = ({
@@ -185,6 +225,7 @@ const StopRow = ({
   tripStatus,
   leg,
   canManage,
+  onLegPress,
 }) => {
   const isDeparture = stop.stop_type === 'departure';
   return (
@@ -278,8 +319,65 @@ const StopRow = ({
           )}
         </View>
       </View>
-      {!isLast && <LegConnector leg={leg} />}
+      {!isLast && (
+        <LegConnector leg={leg} isOrganizer={canManage} onPress={onLegPress} />
+      )}
     </>
+  );
+};
+
+// NEW — participant/viewer banner shown when a leg is currently active
+// or paused, entry point to the read-only Live Tracking screen.
+const TrackLiveBanner = ({onPress}) => (
+  <Touchable onPress={onPress} style={styles.trackLiveBanner}>
+    <View style={styles.trackLivePulseDot} />
+    <TextComponent
+      text={'Trip is on the move — Track Live'}
+      styles={styles.trackLiveText}
+    />
+    <TextComponent text={'→'} styles={styles.trackLiveArrow} />
+  </Touchable>
+);
+
+// NEW — organizer-only "what's next" callout. Reads entirely off the
+// backend-fetched trip/leg data (no local nav state): once a leg is
+// completed and this screen refetches, this banner and its target leg
+// update on their own. Distinguishes "already underway, jump back in"
+// from "not started yet, start it" purely from the leg's own status.
+const NextLegBanner = ({leg, startStop, endStop, onPress}) => {
+  if (!leg) return null;
+  const isResumable = leg.status === 'active' || leg.status === 'paused';
+  const label = isResumable ? 'Leg In Progress' : 'Next Leg';
+  const buttonTitle = isResumable ? 'Resume Navigation' : 'Start Next Leg';
+  const km = leg.distance_planned_meters
+    ? (leg.distance_planned_meters / 1000).toFixed(1)
+    : null;
+
+  return (
+    <View style={styles.nextLegBanner}>
+      <TextComponent text={label} styles={styles.nextLegBannerLabel} />
+      <TextComponent
+        text={`${startStop?.name ?? 'Departure'} → ${endStop?.name ?? 'Stop'}`}
+        styles={styles.nextLegBannerRoute}
+        numberOfLines={1}
+      />
+      {km && (
+        <TextComponent
+          text={`🛣 ${km} km • ⏱ ${formatDuration(
+            leg.duration_planned_seconds,
+          )}`}
+          styles={styles.nextLegBannerMeta}
+        />
+      )}
+      <Touchable
+        onPress={() => onPress(leg)}
+        style={styles.nextLegBannerBtn}>
+        <TextComponent
+          text={buttonTitle}
+          styles={styles.nextLegBannerBtnText}
+        />
+      </Touchable>
+    </View>
   );
 };
 
@@ -290,6 +388,8 @@ const TripDetailScreen = ({navigation, route}) => {
     routeGeoJSON,
     mapBounds,
     legByStartStopId,
+    nextLeg,
+    nextLegStops,
     startTrip,
     completeTrip,
     confirmCancelTrip,
@@ -298,9 +398,23 @@ const TripDetailScreen = ({navigation, route}) => {
     isUpdatingStatus,
     isOrganizer,
     participantsSummary,
+    hasActiveLeg,
     goToManageRequests,
     goToRequestToJoin,
+    goToLegNavigation,
+    goToLiveTracking,
   } = useTripDetailScreen(navigation, route);
+
+  // NEW — weather at the next upcoming stop (the next leg's destination,
+  // or the first stop nobody has arrived at yet if no leg is underway).
+  // Called unconditionally, before the loading early-return below, so
+  // hook order stays stable across renders; useStopWeather itself is a
+  // no-op (enabled: false) until it has real coordinates.
+  const upcomingStop =
+    nextLegStops?.endStop ??
+    (trip?.stops ?? []).find(s => !s?.ata_actual) ??
+    null;
+  const stopWeather = useStopWeather(upcomingStop);
 
   if (isLoading || !trip) {
     return (
@@ -319,7 +433,7 @@ const TripDetailScreen = ({navigation, route}) => {
     );
   }
 
-  const statusMeta = TRIP_STATUS_META[trip.status] ?? {
+  const statusMeta = TRIP_STATUS_META[trip?.status] ?? {
     label: trip.status,
     color: '#6B7280',
   };
@@ -341,7 +455,7 @@ const TripDetailScreen = ({navigation, route}) => {
   return (
     <View style={styles.screenContainer}>
       <HeaderComponent
-        headerTitle={trip.name}
+        headerTitle={'Trip Detail'}
         isBack
         goBack={() => navigation.goBack()}
       />
@@ -354,6 +468,34 @@ const TripDetailScreen = ({navigation, route}) => {
           mapBounds={mapBounds}
           stops={stops}
         />
+
+        {/* NEW — offline map download/status for this trip's region.
+            Placed right after the map, ahead of everything else, since
+            it's most useful decided early, before setting off. */}
+        <View style={{marginBottom: hp('2')}}>
+          <OfflineMapButton
+            tripId={trip.id}
+            stops={stops}
+            routeGeoJSON={routeGeoJSON}
+          />
+        </View>
+
+        {/* NEW — participant "Track Live" entry point */}
+        {!isOrganizer && hasActiveLeg && (
+          <TrackLiveBanner onPress={goToLiveTracking} />
+        )}
+
+        {/* NEW — organizer "what's next" callout. Only while the trip is
+            actually underway — before that, Start Trip below is the next
+            action, not any individual leg. */}
+        {isOrganizer && trip.status === 'in_progress' && nextLeg && (
+          <NextLegBanner
+            leg={nextLeg}
+            startStop={nextLegStops?.startStop}
+            endStop={nextLegStops?.endStop}
+            onPress={goToLegNavigation}
+          />
+        )}
 
         <View style={styles.headerCard}>
           <View style={styles.headerRow}>
@@ -370,6 +512,7 @@ const TripDetailScreen = ({navigation, route}) => {
               <TextComponent
                 text={statusMeta.label}
                 styles={[styles.statusBadgeText, {color: statusMeta.color}]}
+                size={hp('1.5')}
               />
             </View>
           </View>
@@ -400,7 +543,6 @@ const TripDetailScreen = ({navigation, route}) => {
             />
           </View>
 
-          {/* NEW — capacity, visible to everyone */}
           {(trip.seats_left != null || trip.hauls_left != null) && (
             <View style={styles.capacityRow}>
               <TextComponent
@@ -427,7 +569,6 @@ const TripDetailScreen = ({navigation, route}) => {
             </View>
           )}
 
-          {/* NEW — organizer-only participants summary */}
           {isOrganizer && participantsSummary && (
             <Touchable
               onPress={goToManageRequests}
@@ -452,7 +593,28 @@ const TripDetailScreen = ({navigation, route}) => {
 
         <VehicleCard vehicle={trip.vehicle} />
 
+        {/* NEW — weather at the next upcoming stop. Shown to organizer
+            and participants alike; WeatherCard renders its own
+            loading/unavailable states rather than hiding when there's
+            nothing to show, since "unavailable" is itself real info. */}
+        {upcomingStop && (
+          <WeatherCard
+            title={`Weather at ${upcomingStop.name ?? 'next stop'}`}
+            isConfigured={stopWeather.isConfigured}
+            isLoading={stopWeather.isLoading}
+            current={stopWeather.current}
+            forecast={stopWeather.forecast}
+          />
+        )}
+
         <TextComponent text={'Itinerary'} styles={styles.sectionLabel} />
+        {isOrganizer && trip.status === 'in_progress' && (
+          <TextComponent
+            text={'Tap a leg below to navigate it'}
+            fade
+            styles={styles.legsHint}
+          />
+        )}
         <View style={styles.stopsCard}>
           {stops.map((stop, idx) => (
             <StopRow
@@ -464,12 +626,12 @@ const TripDetailScreen = ({navigation, route}) => {
               tripStatus={trip.status}
               leg={legByStartStopId[stop.id]}
               canManage={isOrganizer}
+              onLegPress={goToLegNavigation}
             />
           ))}
         </View>
       </ScrollView>
 
-      {/* Organizer: trip-management actions (unchanged from before) */}
       {isOrganizer && trip.status === 'confirmed' && (
         <View style={styles.bottomBar}>
           <ThemeButton
@@ -484,6 +646,7 @@ const TripDetailScreen = ({navigation, route}) => {
             disabled={isUpdatingStatus}
             style={styles.actionBtnPrimary}
             onPress={startTrip}
+            textStyle={{fontSize: hp('1.5')}}
           />
         </View>
       )}
@@ -501,11 +664,11 @@ const TripDetailScreen = ({navigation, route}) => {
             disabled={isUpdatingStatus}
             style={styles.actionBtnPrimary}
             onPress={completeTrip}
+            textStyle={{fontSize: hp('1.5')}}
           />
         </View>
       )}
 
-      {/* NEW — joiner: Request to Join */}
       {!isOrganizer && isJoinable && (
         <View style={styles.bottomBar}>
           <ThemeButton

@@ -2,8 +2,8 @@ import {useState, useMemo, useCallback} from 'react';
 import {Alert} from 'react-native';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import API from '../../Utils/helperFunc';
-import {successMessage, errorMessage} from '../../Utils/helperFunc'; // adjust path if these live elsewhere
 import {tripJoinUrl} from '../../Utils/Urls';
+import {errorMessage, successMessage} from '../../Config/NotificationMessage';
 
 const useRequestToJoinScreen = (navigation, route) => {
   const {tripId, stops = []} = route?.params ?? {};
@@ -59,13 +59,22 @@ const useRequestToJoinScreen = (navigation, route) => {
 
   const {mutate: submitMutate, isLoading: isSubmitting} = useMutation({
     mutationFn: body => API.post(tripJoinUrl(tripId), body),
-    onSuccess: ({ok, data}) => {
+    onSuccess: async ({ok, data}) => {
       if (ok) {
         successMessage(
           data?.message || 'Request sent — the organizer will review it',
         );
-        queryClient.invalidateQueries({queryKey: ['myRequests']});
-        queryClient.invalidateQueries({queryKey: ['tripDetail', tripId]});
+        // CHANGED — was firing invalidateQueries and immediately calling
+        // navigation.replace() without waiting, same class of bug as the
+        // Trip Detail cancel fix. Now we wait for both invalidations to
+        // actually resolve (i.e. the real API responses to land) before
+        // navigating, so My Requests — and Trip Detail, if the user goes
+        // back to it later — are already showing current server state
+        // rather than whatever was cached before this request existed.
+        await Promise.all([
+          queryClient.invalidateQueries({queryKey: ['myRequests']}),
+          queryClient.invalidateQueries({queryKey: ['tripDetail', tripId]}),
+        ]);
         navigation.replace('MyRequestsScreen');
       } else {
         errorMessage(data?.message || 'Error submitting request');

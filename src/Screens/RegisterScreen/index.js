@@ -56,6 +56,7 @@ const RegisterScreen = ({navigation}) => {
     PolicyValue,
     policy,
     socialLoginFun,
+    onInvalid, // add this
   } = useRegister(navigation);
 
   const [isChecked, setIsChecked] = useState(false);
@@ -182,7 +183,7 @@ const RegisterScreen = ({navigation}) => {
             <ThemeButton
               title={'Register'}
               onPress={() => {
-                if (isChecked) handleSubmit(signUpButton)();
+                if (isChecked) handleSubmit(signUpButton, onInvalid)();
                 else Alert.alert('Please accept the terms and policy');
               }}
               style={styles.buttonStyle}

@@ -464,6 +464,79 @@ const EventsDetailScreen = ({navigation, route}) => {
           </View>
         </View>
 
+        {/* ══════════ NEW — Active Trips (see doc §3.2 / §4) ══════════
+            trips_count / trips_preview arrive on this same eventData
+            object already — no new fetch. Styled after the existing
+            "View Performances" row above (same chevron pattern), and
+            reuses icons already imported at the top of this file. */}
+        {eventData?.trips_count > 0 && (
+          <>
+            <DividerLine DividerLineStyle={styles.dividerFullWidth} />
+
+            <Touchable
+              style={styles.activeTripsHeader}
+              onPress={() =>
+                navigation.navigate('TripsForEventListScreen', {
+                  eventId: eventData?.id,
+                })
+              }>
+              <TextComponent
+                text={`See Active Trips (${eventData?.trips_count})`}
+                styles={styles.activeTripsTitle}
+              />
+              <Image
+                source={arrRight}
+                resizeMode="contain"
+                style={styles.arrRightIcon}
+                tintColor={Colors.primaryColor}
+              />
+            </Touchable>
+
+            {eventData?.trips_preview?.length > 0 && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.tripPreviewScroll}
+                contentContainerStyle={styles.tripPreviewScrollContent}>
+                {eventData.trips_preview.map(trip => (
+                  <Touchable
+                    key={trip.id}
+                    style={styles.tripPreviewCard}
+                    onPress={() =>
+                      navigation.navigate('TripDetailScreen', {tripId: trip.id})
+                    }>
+                    <TextComponent
+                      text={trip.name}
+                      styles={styles.tripPreviewCardTitle}
+                      numberOfLines={1}
+                    />
+                    <View style={styles.tripPreviewCardRow}>
+                      <Image
+                        source={locationGray}
+                        tintColor={Colors.primaryColor}
+                        style={styles.tripPreviewCardIcon}
+                      />
+                      <TextComponent
+                        text={trip.departure_address}
+                        fade
+                        styles={styles.tripPreviewCardAddress}
+                        numberOfLines={1}
+                      />
+                    </View>
+                    <TextComponent
+                      text={`👤 ${trip.seats_left ?? 0}  •  🐴 ${
+                        trip.hauls_left ?? 0
+                      }`}
+                      styles={styles.tripPreviewCardCapacity}
+                    />
+                  </Touchable>
+                ))}
+              </ScrollView>
+            )}
+          </>
+        )}
+        {/* ══════════ END NEW ══════════ */}
+
         <CustomModalComp
           visible={modalVisible}
           onCancel={() => setModalVisible(false)}

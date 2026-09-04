@@ -56,6 +56,10 @@ import {
   horseShoe,
   callEmpty,
   manageSub,
+  truckList,
+  tripList,
+  tripReq,
+  truckReq,
 } from '../../Assets';
 import {TextComponent} from '../../Components/TextComponent';
 import {CircleImage} from '../../Components/CircleImage';
@@ -160,25 +164,32 @@ const SettingScreen = ({navigation}) => {
           NavigationService.navigate('AfterLoginNumberEditScreen', true),
       },
       {
-        title: 'Truck Add Details',
-        leftIcon: callEmpty,
+        title: 'Add Vehicle',
+        leftIcon: truckReq,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
-        onPress: () => NavigationService.navigate('TruckAddScreen'),
+        onPress: () => NavigationService.navigate('VehicleFormScreen'),
       },
       {
-        title: 'Truck list ',
-        leftIcon: callEmpty,
+        title: 'Vehicle list ',
+        leftIcon: truckList,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
-        onPress: () => NavigationService.navigate('TruckListScreen'),
+        onPress: () => NavigationService.navigate('VehicleListScreen'),
       },
       {
         title: 'Trip list ',
-        leftIcon: callEmpty,
+        leftIcon: tripList,
         rightIcon: arrRight,
         rightIconColor: Colors.black,
         onPress: () => NavigationService.navigate('TripListScreen'),
+      },
+      {
+        title: 'My Trip Requests',
+        leftIcon: tripReq,
+        rightIcon: arrRight,
+        rightIconColor: Colors.black,
+        onPress: () => NavigationService.navigate('MyRequestsScreen'),
       },
       {
         title: 'Are you willing to haul horses for others?',

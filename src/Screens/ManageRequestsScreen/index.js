@@ -79,6 +79,7 @@ const RequestRow = ({request, onAccept, onReject, isDeciding}) => {
           <TextComponent
             text={statusMeta.label}
             styles={[styles.statusBadgeText, {color: statusMeta.color}]}
+            size={hp('1.5')}
           />
         </View>
       </View>
@@ -201,6 +202,7 @@ const ManageRequestsScreen = ({navigation, route}) => {
                 styles.filterChipText,
                 statusFilter === f && styles.filterChipTextActive,
               ]}
+              size={hp('1.5')}
             />
           </Touchable>
         ))}

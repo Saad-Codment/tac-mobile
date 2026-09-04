@@ -242,4 +242,58 @@ export const styles = StyleSheet.create({
     width: wp('61'),
     marginLeft: wp('-5'),
   },
+
+  // ══════════ NEW — Active Trips section ══════════
+  activeTripsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: wp('95'),
+    alignSelf: 'center',
+    paddingVertical: hp('1'),
+  },
+  activeTripsTitle: {
+    fontSize: hp('1.4'),
+    fontWeight: '600',
+    color: Colors.primaryColor,
+  },
+  tripPreviewScroll: {
+    marginBottom: hp('1'),
+  },
+  tripPreviewScrollContent: {
+    paddingHorizontal: wp('2.5'),
+    gap: wp('3'),
+  },
+  tripPreviewCard: {
+    width: wp('55'),
+    borderWidth: 1,
+    borderColor: Colors.thridColor,
+    borderRadius: 12,
+    padding: wp('3'),
+  },
+  tripPreviewCardTitle: {
+    fontSize: hp('1.35'),
+    fontWeight: '700',
+    color: 'black',
+  },
+  tripPreviewCardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: hp('0.5'),
+  },
+  tripPreviewCardIcon: {
+    width: wp('3'),
+    height: hp('1.6'),
+    marginRight: wp('1.5'),
+  },
+  tripPreviewCardAddress: {
+    fontSize: hp('1.1'),
+    flex: 1,
+  },
+  tripPreviewCardCapacity: {
+    fontSize: hp('1.1'),
+    marginTop: hp('0.6'),
+    color: '#166534',
+    fontWeight: '600',
+  },
 });
