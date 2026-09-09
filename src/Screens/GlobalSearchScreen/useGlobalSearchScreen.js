@@ -253,6 +253,13 @@ const useGloabalSearchScreen = () => {
     allData?.pages?.flatMap(page => page?.data?.data ?? []) ?? [],
   );
 
+  console.log(
+    'datadatadatadatadatadata',
+    list,
+    'datadatadatadatadatadatadatakjsdbvjksdbjkvbskdvbklsdbv',
+    allData,
+  );
+
   return {
     selectedVal,
     setSelectedVal,

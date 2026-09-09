@@ -7,6 +7,11 @@
 //   {unavailable: true, reason}   — never fabricated; reason is one of
 //                                    'not_configured' | 'network' | 'http_xxx'
 //   {unavailable: false, ...data}
+//
+// Units: TAC serves US rodeo/trailer users, so every value here is
+// already in US-customary units (°F, mph, inches) — WeatherProvider asks
+// OpenWeatherMap for `units=imperial` directly, so nothing here does its
+// own C→F/kph→mph conversion.
 import * as Provider from './WeatherProvider';
 
 export const isWeatherConfigured = Provider.isConfigured;
@@ -26,8 +31,50 @@ export const describeUnavailable = reason => {
   }
 };
 
+// ── Severe-condition assessment — shared by a single point (WeatherCard,
+// "next stop" weather) and by the route-level advisory below. Based on
+// OpenWeatherMap's own condition group (`weather[0].main`) rather than
+// fragile description substring matching, plus simple, explicit
+// wind/temperature thresholds. Never invents a condition: if the provider
+// didn't report it, this returns null. ─────────────────────────────────
+const HIGH_WIND_MPH = 25; // NWS "Wind Advisory" territory
+const SEVERE_HEAT_F = 100;
+const FREEZING_F = 32;
+
+export const assessSevereCondition = current => {
+  if (!current || current.unavailable) return null;
+  const main = current.conditionMain;
+  const id = current.conditionId;
+
+  if (main === 'Thunderstorm') {
+    return {type: 'thunderstorm', message: 'Thunderstorms in the area'};
+  }
+  if (id != null && [502, 503, 504, 522, 531].includes(id)) {
+    return {type: 'heavy_rain', message: 'Heavy rain in the area'};
+  }
+  if (main === 'Snow' || (id != null && id >= 611 && id <= 616)) {
+    return {
+      type: 'snow_ice',
+      message:
+        current.temp != null && current.temp <= FREEZING_F
+          ? 'Snow/ice with freezing temperatures'
+          : 'Snow in the area',
+    };
+  }
+  if (current.temp != null && current.temp <= FREEZING_F && main === 'Rain') {
+    return {type: 'snow_ice', message: 'Freezing rain possible'};
+  }
+  if ((current.windSpeed ?? 0) > HIGH_WIND_MPH) {
+    return {type: 'wind', message: 'Strong winds in the area'};
+  }
+  if (current.temp != null && current.temp >= SEVERE_HEAT_F) {
+    return {type: 'heat', message: 'Severe heat in the area'};
+  }
+  return null;
+};
+
 // ── Current conditions at a single point (e.g. a stop) ──────────────────
-export const getCurrentWeather = async ({lat, lon, unit = 'metric'}) => {
+export const getCurrentWeather = async ({lat, lon, unit = 'imperial'}) => {
   if (lat == null || lon == null) {
     return {unavailable: true, reason: 'not_configured'};
   }
@@ -35,14 +82,24 @@ export const getCurrentWeather = async ({lat, lon, unit = 'metric'}) => {
   if (result.unavailable) return result;
 
   const raw = result.raw;
+  // Precipitation volume fields (`rain`/`snow`) are always in mm from
+  // OpenWeatherMap regardless of the `units` param — converted to inches
+  // here since every other value in this response is already imperial.
+  const rainMm = raw?.rain?.['1h'] ?? raw?.rain?.['3h'] ?? null;
+  const snowMm = raw?.snow?.['1h'] ?? raw?.snow?.['3h'] ?? null;
+
   return {
     unavailable: false,
     temp: raw?.main?.temp ?? null,
     feelsLike: raw?.main?.feels_like ?? null,
     humidity: raw?.main?.humidity ?? null,
-    windSpeed: raw?.wind?.speed ?? null,
+    windSpeed: raw?.wind?.speed ?? null, // mph
+    conditionMain: raw?.weather?.[0]?.main ?? null,
+    conditionId: raw?.weather?.[0]?.id ?? null,
     description: raw?.weather?.[0]?.description ?? null,
     icon: raw?.weather?.[0]?.icon ?? null,
+    rainIn: rainMm != null ? +(rainMm / 25.4).toFixed(2) : null,
+    snowIn: snowMm != null ? +(snowMm / 25.4).toFixed(2) : null,
     unit,
     fetchedAt: Date.now(),
   };
@@ -53,7 +110,7 @@ export const getCurrentWeather = async ({lat, lon, unit = 'metric'}) => {
 // the next few entries only — this is meant for "what's it doing when I
 // get there", not a full 5-day browsing UI.
 export const getUpcomingForecast = async (
-  {lat, lon, unit = 'metric'},
+  {lat, lon, unit = 'imperial'},
   {count = 4} = {},
 ) => {
   if (lat == null || lon == null) {
@@ -62,21 +119,29 @@ export const getUpcomingForecast = async (
   const result = await Provider.fetchForecast({lat, lon, unit});
   if (result.unavailable) return result;
 
-  const entries = (result.raw?.list ?? []).slice(0, count).map(entry => ({
-    time: entry.dt ? entry.dt * 1000 : null,
-    temp: entry.main?.temp ?? null,
-    description: entry.weather?.[0]?.description ?? null,
-    icon: entry.weather?.[0]?.icon ?? null,
-    precipChance: entry.pop != null ? Math.round(entry.pop * 100) : null,
-  }));
+  const entries = (result.raw?.list ?? []).slice(0, count).map(entry => {
+    const rainMm = entry.rain?.['3h'] ?? null;
+    const snowMm = entry.snow?.['3h'] ?? null;
+    return {
+      time: entry.dt ? entry.dt * 1000 : null,
+      temp: entry.main?.temp ?? null,
+      conditionMain: entry.weather?.[0]?.main ?? null,
+      description: entry.weather?.[0]?.description ?? null,
+      icon: entry.weather?.[0]?.icon ?? null,
+      precipChance: entry.pop != null ? Math.round(entry.pop * 100) : null,
+      rainIn: rainMm != null ? +(rainMm / 25.4).toFixed(2) : null,
+      snowIn: snowMm != null ? +(snowMm / 25.4).toFixed(2) : null,
+    };
+  });
 
   return {unavailable: false, unit, entries};
 };
 
-// ── Real hazard/alert data — requires the separate One Call 3.0
-// subscription (see WeatherProvider.fetchAlerts). Never invents a hazard;
-// an empty `hazards` array means the provider reported none, not that we
-// don't know. ────────────────────────────────────────────────────────────
+// ── Official alerts — requires the separate One Call 3.0 subscription
+// (see WeatherProvider.fetchAlerts). Never invents a hazard; an empty
+// `hazards` array means the provider reported none, not that we don't
+// know. Callers must label these as official alerts (e.g. "Weather
+// Alert"), distinct from the derived Weather Advisory below. ───────────
 export const getHazards = async ({lat, lon}) => {
   if (lat == null || lon == null) {
     return {unavailable: true, reason: 'not_configured'};
@@ -95,43 +160,65 @@ export const getHazards = async ({lat, lon}) => {
   return {unavailable: false, hazards};
 };
 
-// ── Route weather — samples a handful of points along the route geometry
-// (same sampling shape as fetchPOIsAlongRoute in LegTrackingHelpers.js) and
-// reports current conditions at each, plus a simple derived "possible
-// hazard" flag from the conditions themselves (high wind / heavy
-// precipitation keywords) since alert data needs the separate
-// subscription above. This derived flag is explicitly NOT the same thing
-// as an authoritative weather-alert feed — callers must not present it as
-// one. ────────────────────────────────────────────────────────────────────
-const SEVERE_KEYWORDS = ['thunderstorm', 'heavy', 'snow', 'blizzard', 'tornado', 'hail'];
-const HIGH_WIND_MS = 15; // ~54 km/h
-
-export const getRouteWeather = async (routeCoordinates, unit = 'metric') => {
-  if (!routeCoordinates?.length) return {unavailable: true, reason: 'not_configured'};
-  if (!isWeatherConfigured()) return {unavailable: true, reason: 'not_configured'};
+// ── Route weather advisory — samples a handful of points along the route
+// geometry (same sampling shape as fetchPOIsAlongRoute in
+// LegTrackingHelpers.js). Prefers OFFICIAL alerts (getHazards) wherever
+// the account/key supports them; only when that's unavailable for every
+// sampled point does this fall back to a derived, forecast-based
+// assessment (assessSevereCondition) of current conditions at those same
+// points. The two are never blended into one unlabeled bucket — every
+// item this returns carries `source: 'official' | 'advisory'` so callers
+// can title official items "Weather Alert" and derived ones
+// "Weather Advisory", never implying the latter is an official
+// government/provider alert. ────────────────────────────────────────────
+export const getRouteWeatherAdvisory = async routeCoordinates => {
+  if (!routeCoordinates?.length || !isWeatherConfigured()) {
+    return {unavailable: true, reason: 'not_configured'};
+  }
 
   const sampleIndices = [
     0,
     Math.floor(routeCoordinates.length / 2),
     routeCoordinates.length - 1,
   ];
-  const samplePoints = [...new Set(sampleIndices)].map(i => routeCoordinates[i]);
+  const samplePoints = [...new Set(sampleIndices)].map(
+    i => routeCoordinates[i],
+  );
 
+  const officialResults = await Promise.all(
+    samplePoints.map(([lng, lat]) => getHazards({lat, lon: lng})),
+  );
+  const officialSupported = officialResults.some(r => !r.unavailable);
+
+  if (officialSupported) {
+    const items = officialResults
+      .filter(r => !r.unavailable)
+      .flatMap(r => r.hazards)
+      .filter(h => h.event)
+      .map(h => ({source: 'official', event: h.event, description: h.description}));
+    return {unavailable: false, source: 'official', items};
+  }
+
+  // Fallback: derived Weather Advisory from real current-conditions data
+  // at the same sample points — never fabricated, just not an official
+  // alert feed (that needs the separate One Call 3.0 subscription).
   const samples = await Promise.all(
     samplePoints.map(async ([lng, lat]) => {
-      const current = await getCurrentWeather({lat, lon: lng, unit});
+      const current = await getCurrentWeather({lat, lon: lng});
       return {lat, lon: lng, current};
     }),
   );
 
-  const possibleHazards = samples
-    .filter(s => !s.current.unavailable)
-    .filter(
-      s =>
-        SEVERE_KEYWORDS.some(kw => s.current.description?.includes(kw)) ||
-        (s.current.windSpeed ?? 0) > HIGH_WIND_MS,
-    )
-    .map(s => ({lat: s.lat, lon: s.lon, description: s.current.description}));
+  const items = samples
+    .map(s => ({s, severe: assessSevereCondition(s.current)}))
+    .filter(({severe}) => !!severe)
+    .map(({s, severe}) => ({
+      source: 'advisory',
+      event: severe.message,
+      description: s.current.description ?? null,
+      lat: s.lat,
+      lon: s.lon,
+    }));
 
-  return {unavailable: false, samples, possibleHazards};
+  return {unavailable: false, source: 'advisory', items};
 };

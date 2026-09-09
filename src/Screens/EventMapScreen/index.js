@@ -23,6 +23,10 @@ import {editProfileBlack} from '../../Assets';
 import ThemeButton from '../../Components/ThemeButton';
 import useEventMapScreen from './useEventMapScreen';
 import {imageUrl, MAPBOX_TOKEN} from '../../Utils/Urls';
+import {
+  getRigLengthInfo,
+  LENGTH_ROUTING_ADVISORY_TEXT,
+} from '../../Utils/RouteRestrictions';
 import {styles} from './styles';
 import StopScheduleModal from '../../Components/StopScheduleModal';
 
@@ -283,6 +287,7 @@ const NearbySourceToggle = ({nearbySource, onChange}) => (
           styles.nearbySourceChipText,
           nearbySource === 'current' && styles.nearbySourceChipTextActive,
         ]}
+        size={hp('1.25')}
       />
     </Touchable>
     <Touchable
@@ -290,13 +295,15 @@ const NearbySourceToggle = ({nearbySource, onChange}) => (
       style={[
         styles.nearbySourceChip,
         nearbySource === 'event' && styles.nearbySourceChipActive,
-      ]}>
+      ]}
+      size={hp('1.25')}>
       <TextComponent
         text={'🎯 Near Event'}
         styles={[
           styles.nearbySourceChipText,
           nearbySource === 'event' && styles.nearbySourceChipTextActive,
         ]}
+        size={hp('1.25')}
       />
     </Touchable>
   </View>
@@ -561,6 +568,7 @@ const EventMapScreen = ({navigation, route}) => {
               styles.sheetTabText,
               activeSheet === tab && styles.sheetTabTextActive,
             ]}
+            size={hp('1.8')}
           />
         </Touchable>
       ))}
@@ -681,11 +689,27 @@ const EventMapScreen = ({navigation, route}) => {
           were sent to the router. */}
       {routeInfo && usedRestrictions && (
         <View style={styles.restrictionsBadge}>
-          <TextComponent text={'🛡️'} styles={styles.restrictionsBadgeIcon} />
+          <View style={styles.restrictionsBadgeRow}>
+            <TextComponent text={'🛡️'} styles={styles.restrictionsBadgeIcon} />
+            <TextComponent
+              text={'Trailer-aware route'}
+              styles={styles.restrictionsBadgeText}
+            />
+          </View>
           <TextComponent
-            text={'Trailer-aware routing applied to this preview'}
-            styles={styles.restrictionsBadgeText}
+            text={'Height • Width • Weight considered'}
+            fade
+            styles={styles.restrictionsBadgeSubtext}
           />
+          {getRigLengthInfo(vehicle).hasLength && (
+            <TextComponent
+              text={`Rig length: ${
+                getRigLengthInfo(vehicle).lengthLabel
+              } · ${LENGTH_ROUTING_ADVISORY_TEXT}`}
+              fade
+              styles={styles.restrictionsBadgeSubtext}
+            />
+          )}
         </View>
       )}
 

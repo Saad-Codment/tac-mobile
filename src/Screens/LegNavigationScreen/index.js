@@ -15,6 +15,11 @@ import {Colors} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
 import {MAPBOX_TOKEN} from '../../Utils/Urls';
 import {POI_CATEGORIES, maneuverIcon} from '../../Utils/LegTrackingHelpers';
+import {
+  getRigLengthInfo,
+  LENGTH_ROUTE_CONTEXT_TEXT,
+  LENGTH_PLACE_SUITABILITY_TEXT,
+} from '../../Utils/RouteRestrictions';
 import useLegNavigationScreen from './useLegNavigationScreen';
 import {describeFuelPriceUnavailable} from '../../Services/FuelPriceService';
 import {describeWeighStationStatusUnavailable} from '../../Services/WeighStationService';
@@ -163,10 +168,15 @@ const POIDetailSheet = ({
   isLoading,
   fuelPrice,
   weighStatus,
+  vehicle,
   onClose,
 }) => {
   if (!poi) return null;
   const category = POI_CATEGORIES.find(c => c.key === poi.category);
+  const rigLength = getRigLengthInfo(vehicle);
+  const showRigContext =
+    rigLength.hasLength &&
+    (category?.key === 'parking' || category?.key === 'horse');
 
   return (
     <View style={S.poiSheetOverlay}>
@@ -201,8 +211,12 @@ const POIDetailSheet = ({
         {category?.key === 'parking' && (
           <View style={S.poiSheetCaveat}>
             <TextComponent
+              text={'Trailer-accessible potential'}
+              styles={S.poiSheetCaveatTitle}
+            />
+            <TextComponent
               text={
-                'Likely truck/RV accessible, based on how this location is listed — not independently verified for your specific rig\u2019s size.'
+                'Parking and maneuvering space can vary — check ahead for your rig.'
               }
               styles={S.poiSheetCaveatText}
             />
@@ -212,10 +226,28 @@ const POIDetailSheet = ({
         {category?.key === 'horse' && (
           <View style={S.poiSheetCaveat}>
             <TextComponent
+              text={'Equine-related location'}
+              styles={S.poiSheetCaveatTitle}
+            />
+            <TextComponent
               text={
-                'Likely relevant based on how this location is listed (equestrian/boarding/veterinary) — accommodations and trailer suitability are not verified. Call ahead to confirm before relying on it.'
+                'Amenities and trailer access may vary — calling ahead is recommended.'
               }
               styles={S.poiSheetCaveatText}
+            />
+          </View>
+        )}
+
+        {showRigContext && (
+          <View style={S.poiSheetRigRow}>
+            <TextComponent
+              text={`Your rig: ${rigLength.lengthLabel}`}
+              styles={S.poiSheetRigText}
+            />
+            <TextComponent
+              text={LENGTH_PLACE_SUITABILITY_TEXT}
+              fade
+              styles={S.poiSheetRigNote}
             />
           </View>
         )}
@@ -252,7 +284,11 @@ const POIDetailSheet = ({
                 WeighStationService.js. */}
             {details?.openNow != null && category?.key !== 'weigh' && (
               <TextComponent
-                text={details.openNow ? '\ud83d\udfe2 Open now' : '\ud83d\udd34 Closed now'}
+                text={
+                  details.openNow
+                    ? '\ud83d\udfe2 Open now'
+                    : '\ud83d\udd34 Closed now'
+                }
                 styles={S.poiSheetRow}
               />
             )}
@@ -279,33 +315,62 @@ const POIDetailSheet = ({
                     ))}
                   </View>
                 )}
-                <TextComponent
-                  text={
-                    fuelPrice?.unavailable
-                      ? describeFuelPriceUnavailable(fuelPrice.reason)
-                      : fuelPrice
-                      ? `\u26fd ${fuelPrice.price} ${fuelPrice.currency}/${fuelPrice.unit}`
-                      : describeFuelPriceUnavailable('not_configured')
-                  }
-                  fade
-                  styles={S.poiSheetUnavailable}
-                />
+                {fuelPrice?.unavailable || !fuelPrice?.prices?.length ? (
+                  <TextComponent
+                    text={describeFuelPriceUnavailable(fuelPrice?.reason)}
+                    fade
+                    styles={S.poiSheetUnavailable}
+                  />
+                ) : (
+                  <View style={S.fuelPricesBlock}>
+                    {fuelPrice.prices.map(p => (
+                      <View key={p.fuelType} style={S.fuelPriceRow}>
+                        <TextComponent
+                          text={p.label}
+                          styles={S.fuelPriceLabel}
+                        />
+                        <TextComponent
+                          text={p.formatted ?? '—'}
+                          styles={S.fuelPriceValue}
+                        />
+                      </View>
+                    ))}
+                    {fuelPrice.freshnessLabel && (
+                      <TextComponent
+                        text={fuelPrice.freshnessLabel}
+                        fade
+                        styles={S.fuelPriceFreshness}
+                      />
+                    )}
+                  </View>
+                )}
               </>
             )}
             {category?.key === 'weigh' && (
-              <TextComponent
-                text={
-                  weighStatus?.unavailable
-                    ? describeWeighStationStatusUnavailable(weighStatus.reason)
-                    : weighStatus
-                    ? weighStatus.isOpen
-                      ? '\ud83d\udfe2 Open (reported)'
-                      : '\ud83d\udd34 Closed (reported)'
-                    : describeWeighStationStatusUnavailable('not_configured')
-                }
-                fade
-                styles={S.poiSheetUnavailable}
-              />
+              <View>
+                <TextComponent
+                  text={
+                    weighStatus?.unavailable || !weighStatus
+                      ? describeWeighStationStatusUnavailable(
+                          weighStatus?.reason,
+                        )
+                      : `Location Status: ${weighStatus.statusLabel}`
+                  }
+                  styles={
+                    weighStatus?.unavailable || !weighStatus
+                      ? [S.poiSheetUnavailable]
+                      : [S.poiSheetRow, {fontWeight: '600'}]
+                  }
+                  fade={weighStatus?.unavailable || !weighStatus}
+                />
+                {!weighStatus?.unavailable && weighStatus?.note && (
+                  <TextComponent
+                    text={weighStatus.note}
+                    fade
+                    styles={S.poiSheetUnavailable}
+                  />
+                )}
+              </View>
             )}
             {!details && !isLoading && (
               <TextComponent
@@ -373,6 +438,7 @@ const CompleteLegModal = ({
 
 const LegNavigationScreen = ({navigation, route}) => {
   const {
+    vehicle,
     leg,
     startStop,
     endStop,
@@ -635,11 +701,27 @@ const LegNavigationScreen = ({navigation, route}) => {
 
           {!isCompleted && usedRestrictions && (
             <View style={S.restrictionsBadge}>
-              <TextComponent text={'🛡️'} styles={S.restrictionsBadgeIcon} />
+              <View style={S.restrictionsBadgeRow}>
+                <TextComponent text={'🛡️'} styles={S.restrictionsBadgeIcon} />
+                <TextComponent
+                  text={'Trailer-aware route'}
+                  styles={S.restrictionsBadgeText}
+                />
+              </View>
               <TextComponent
-                text={'Trailer-aware routing applied to this leg'}
-                styles={S.restrictionsBadgeText}
+                text={'Height • Width • Weight considered'}
+                fade
+                styles={S.restrictionsBadgeSubtext}
               />
+              {getRigLengthInfo(vehicle).hasLength && (
+                <TextComponent
+                  text={`Rig length: ${
+                    getRigLengthInfo(vehicle).lengthLabel
+                  } · ${LENGTH_ROUTE_CONTEXT_TEXT}`}
+                  fade
+                  styles={S.restrictionsBadgeSubtext}
+                />
+              )}
             </View>
           )}
 
@@ -750,6 +832,7 @@ const LegNavigationScreen = ({navigation, route}) => {
         isLoading={isLoadingPOIDetails}
         fuelPrice={poiFuelPrice}
         weighStatus={poiWeighStatus}
+        vehicle={vehicle}
         onClose={closePOIDetails}
       />
 
@@ -971,10 +1054,32 @@ const S = StyleSheet.create({
     borderRadius: 10,
     padding: wp('3'),
   },
+  poiSheetCaveatTitle: {
+    fontSize: hp('1.25'),
+    fontWeight: '700',
+    color: '#1E3A8A',
+    marginBottom: hp('0.2'),
+  },
   poiSheetCaveatText: {
     fontSize: hp('1.15'),
     color: '#1E40AF',
     lineHeight: hp('1.7'),
+  },
+  poiSheetRigRow: {
+    marginTop: hp('1'),
+    backgroundColor: '#F8FAFC',
+    borderRadius: 10,
+    padding: wp('3'),
+  },
+  poiSheetRigText: {
+    fontSize: hp('1.2'),
+    fontWeight: '700',
+    color: '#334155',
+  },
+  poiSheetRigNote: {
+    fontSize: hp('1.05'),
+    color: '#64748B',
+    marginTop: hp('0.2'),
   },
   poiSheetBody: {marginTop: hp('1.6'), gap: hp('1')},
   poiSheetRow: {fontSize: hp('1.35'), color: '#334155'},
@@ -984,8 +1089,8 @@ const S = StyleSheet.create({
     color: '#94A3B8',
     marginTop: hp('0.4'),
   },
-  // NEW — fuel-stop amenity chips, sourced from Places' own `types`
-  // (FUEL_AMENITY_TYPE_LABELS in LegTrackingHelpers.js), never fabricated.
+  // Fuel-stop amenity chips, sourced from Places' own `types`
+  // (AMENITY_TYPE_LABELS in PlacesDetailsService.js), never fabricated.
   poiAmenitiesRow: {flexDirection: 'row', flexWrap: 'wrap', gap: wp('1.5')},
   poiAmenityChip: {
     backgroundColor: '#F1F5F9',
@@ -994,6 +1099,21 @@ const S = StyleSheet.create({
     paddingVertical: hp('0.4'),
   },
   poiAmenityChipText: {fontSize: hp('1.05'), color: '#334155'},
+  // NEW — real Google fuel prices (Places API New `fuelOptions`),
+  // prioritized by fuel type; only types Google actually returned.
+  fuelPricesBlock: {marginTop: hp('0.4')},
+  fuelPriceRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: hp('0.3'),
+  },
+  fuelPriceLabel: {fontSize: hp('1.2'), color: '#334155'},
+  fuelPriceValue: {fontSize: hp('1.2'), fontWeight: '700', color: '#0F172A'},
+  fuelPriceFreshness: {
+    fontSize: hp('1.05'),
+    color: '#94A3B8',
+    marginTop: hp('0.4'),
+  },
 
   bottomPanel: {
     position: 'absolute',
@@ -1023,16 +1143,23 @@ const S = StyleSheet.create({
   statusLabel: {fontSize: hp('1.15'), fontWeight: '700'},
 
   restrictionsBadge: {
+    marginTop: hp('0.8'),
+  },
+  restrictionsBadgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: wp('1.5'),
-    marginTop: hp('0.8'),
   },
   restrictionsBadgeIcon: {fontSize: hp('1.1')},
   restrictionsBadgeText: {
     fontSize: hp('1.05'),
     color: '#166534',
     fontWeight: '600',
+  },
+  restrictionsBadgeSubtext: {
+    fontSize: hp('1'),
+    color: '#64748B',
+    marginTop: hp('0.2'),
   },
 
   heroRow: {flexDirection: 'row', alignItems: 'flex-end', marginTop: hp('1.2')},

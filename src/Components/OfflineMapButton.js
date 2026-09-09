@@ -4,10 +4,11 @@ import {TextComponent} from '../Components/TextComponent';
 import {Touchable} from '../Components/Touchable';
 import {hp, wp} from '../Config/responsive';
 import {
-  boundsForTripStops,
+  boundsForTripOrRoute,
   downloadTripRegion,
   getTripRegionStatus,
   deleteTripRegion,
+  describeOfflineMapError,
 } from '../Utils/OfflineMapManager';
 import {getNativeNavigationEngine} from '../Services/Navigation/NavigationEngine';
 
@@ -61,7 +62,9 @@ const OfflineMapButton = ({tripId, stops, routeGeoJSON}) => {
       routeGeoJSON,
       onProgress: p => {
         const required = p?.requiredResourceCount || 1;
-        setNavProgress(Math.round(((p?.completedResourceCount || 0) / required) * 100));
+        setNavProgress(
+          Math.round(((p?.completedResourceCount || 0) / required) * 100),
+        );
       },
     });
     setIsDownloadingNav(false);
@@ -83,7 +86,11 @@ const OfflineMapButton = ({tripId, stops, routeGeoJSON}) => {
   };
 
   const handleDownload = () => {
-    const bounds = boundsForTripStops(stops);
+    // Route-focused first: a bounding box derived from the trip's actual
+    // route path (tighter, doesn't balloon for a long trip with widely
+    // spaced stops) \u2014 falls back to a box over the stops only when the
+    // trip has no route geometry yet. See OfflineMapManager.boundsForTripOrRoute.
+    const bounds = boundsForTripOrRoute(routeGeoJSON, stops);
     if (!bounds) return;
 
     setIsDownloading(true);
@@ -100,16 +107,26 @@ const OfflineMapButton = ({tripId, stops, routeGeoJSON}) => {
         );
       },
       onProgress: s => setProgress(Math.round(s?.percentage ?? 0)),
-      onComplete: () => {
+      onComplete: (region, {wasOptimizedRetry} = {}) => {
         setIsDownloading(false);
+        // CHANGED \u2014 Mapbox actually rejected the first attempt (the real
+        // 750-tile-pack cap, not just the local heuristic) and TAC
+        // automatically retried with the optimized profile, which
+        // succeeded. Shown as a subtle, non-blocking notice \u2014 the
+        // download itself already completed successfully.
+        if (wasOptimizedRetry) {
+          setZoomNotice('Offline map optimized for this trip');
+        }
         refreshStatus();
       },
-      onError: err => {
+      onError: (err, meta) => {
         setIsDownloading(false);
-        setDownloadError(
-          err?.message ||
-            'Could not download this map region. Try again, or check your connection.',
-        );
+        // CHANGED \u2014 never show the raw Mapbox error (tile IDs, 750/800
+        // counts) to the user. This only fires after TAC has already
+        // tried the automatic optimized retry (see downloadTripRegion) \u2014
+        // meta.wasOptimized tells the translated message whether to
+        // mention that.
+        setDownloadError(describeOfflineMapError(err, meta));
       },
     });
   };
@@ -132,14 +149,27 @@ const OfflineMapButton = ({tripId, stops, routeGeoJSON}) => {
       </View>
     );
   } else if (downloadError) {
+    // CHANGED — downloadError is now the translated {title, message}
+    // shape from describeOfflineMapError, never a raw Mapbox string.
     mapSection = (
-      <View style={[S.container, S.errorContainer]}>
-        <TextComponent text={'⚠️'} styles={S.icon} />
-        <TextComponent
-          text={downloadError}
-          styles={[S.text, S.errorText]}
-          numberOfLines={3}
-        />
+      <View style={[S.container, S.errorContainer, S.errorColumn]}>
+        <View style={S.errorTextWrap}>
+          <TextComponent
+            text={downloadError.title}
+            styles={[S.text, S.errorText, S.errorTitle]}
+          />
+          <TextComponent
+            text={downloadError.message}
+            fade
+            styles={S.errorMessage}
+            numberOfLines={4}
+          />
+        </View>
+        {downloadError.canRetry && (
+          <Touchable onPress={handleDownload} style={S.retryBtn}>
+            <TextComponent text={'Retry'} styles={S.retryBtnText} />
+          </Touchable>
+        )}
       </View>
     );
   } else if (status.exists && status.complete) {
@@ -205,10 +235,7 @@ const OfflineMapButton = ({tripId, stops, routeGeoJSON}) => {
           onPress={handleRemoveNav}
           style={[S.container, S.navContainer, S.downloaded]}>
           <TextComponent text={'✓'} styles={S.checkIcon} />
-          <TextComponent
-            text={'Offline Navigation Ready'}
-            styles={S.text}
-          />
+          <TextComponent text={'Offline Navigation Ready'} styles={S.text} />
           <TextComponent text={'Remove'} styles={S.removeText} />
         </Touchable>
       );
@@ -258,8 +285,32 @@ const S = StyleSheet.create({
   errorContainer: {backgroundColor: '#FEF2F2', borderColor: '#FECACA'},
   icon: {fontSize: hp('1.4')},
   checkIcon: {fontSize: hp('1.4'), color: '#16A34A', fontWeight: '700'},
-  text: {flex: 1, fontSize: hp('1.3'), color: '#334155', fontWeight: '600'},
+  text: {
+    flex: 1,
+    fontSize: hp('1.3'),
+    color: '#334155',
+    fontWeight: '600',
+  },
   errorText: {color: '#B91C1C', fontWeight: '500'},
+  errorColumn: {alignItems: 'flex-start', flexDirection: 'column'},
+  errorTextWrap: {width: '100%'},
+  errorTitle: {flex: 0},
+  errorMessage: {
+    fontSize: hp('1.15'),
+    color: '#B91C1C',
+    marginTop: hp('0.3'),
+    lineHeight: hp('1.6'),
+  },
+  retryBtn: {
+    marginTop: hp('1'),
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: '#FECACA',
+    borderRadius: 8,
+    paddingHorizontal: wp('3'),
+    paddingVertical: hp('0.5'),
+  },
+  retryBtnText: {fontSize: hp('1.15'), color: '#B91C1C', fontWeight: '700'},
   removeText: {fontSize: hp('1.2'), color: '#EF4444', fontWeight: '700'},
   // NEW
   zoomNotice: {

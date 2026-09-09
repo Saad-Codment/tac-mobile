@@ -2,12 +2,17 @@
 // not-configured / provider-error / data), nothing fabricated. Provider
 // specifics (OpenWeatherMap, its field names, its endpoints) never appear
 // in this file; it only knows the normalized shape WeatherService returns.
+// Units are US-customary (°F, mph, inches) throughout, matching what
+// WeatherService already returns for TAC's US rodeo/trailer audience.
 import React from 'react';
 import {View, ActivityIndicator, StyleSheet} from 'react-native';
 import {TextComponent} from './TextComponent';
 import {Colors} from '../Theme/Variables';
 import {hp, wp} from '../Config/responsive';
-import {describeUnavailable} from '../Services/Weather/WeatherService';
+import {
+  describeUnavailable,
+  assessSevereCondition,
+} from '../Services/Weather/WeatherService';
 
 const formatHour = ms => {
   if (!ms) return '—';
@@ -26,6 +31,9 @@ const WeatherCard = ({
     : current?.unavailable
     ? current.reason
     : null;
+
+  const severe = !unavailableReason ? assessSevereCondition(current) : null;
+  const precipIn = current?.rainIn ?? current?.snowIn ?? null;
 
   return (
     <View style={styles.card}>
@@ -48,7 +56,7 @@ const WeatherCard = ({
           <View style={styles.currentRow}>
             <TextComponent
               text={
-                current?.temp != null ? `${Math.round(current.temp)}°C` : '—'
+                current?.temp != null ? `${Math.round(current.temp)}°F` : '—'
               }
               styles={styles.temp}
             />
@@ -60,6 +68,30 @@ const WeatherCard = ({
               />
             )}
           </View>
+
+          <View style={styles.conditionsRow}>
+            {current?.windSpeed != null && (
+              <TextComponent
+                text={`💨 ${Math.round(current.windSpeed)} mph`}
+                fade
+                styles={styles.conditionsItem}
+              />
+            )}
+            {precipIn != null && precipIn > 0 && (
+              <TextComponent
+                text={`💧 ${precipIn}" `}
+                fade
+                styles={styles.conditionsItem}
+              />
+            )}
+          </View>
+
+          {severe && (
+            <View style={styles.severeRow}>
+              <TextComponent text={'⚠️'} styles={styles.severeIcon} />
+              <TextComponent text={severe.message} styles={styles.severeText} />
+            </View>
+          )}
 
           {forecast?.entries?.length > 0 && (
             <View style={styles.forecastRow}>
@@ -115,6 +147,24 @@ const styles = StyleSheet.create({
     color: '#475569',
     textTransform: 'capitalize',
   },
+  conditionsRow: {
+    flexDirection: 'row',
+    gap: wp('3.5'),
+    marginTop: hp('0.6'),
+  },
+  conditionsItem: {fontSize: hp('1.2'), color: '#475569'},
+  severeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp('1.5'),
+    marginTop: hp('0.8'),
+    backgroundColor: '#FEF3C7',
+    borderRadius: 10,
+    paddingHorizontal: wp('2.5'),
+    paddingVertical: hp('0.6'),
+  },
+  severeIcon: {fontSize: hp('1.2')},
+  severeText: {fontSize: hp('1.15'), color: '#92400E', fontWeight: '600'},
   forecastRow: {flexDirection: 'row', marginTop: hp('1.2'), gap: wp('4')},
   forecastEntry: {alignItems: 'center'},
   forecastTime: {fontSize: hp('1.05')},

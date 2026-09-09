@@ -62,6 +62,10 @@ yarn-error.log
 # testing
 /coverage
 
+# Local-only secrets (never commit real API keys here) — see
+# src/Config/localSecrets.example.js for the committed placeholder.
+src/Config/localSecrets.js
+
 # Yarn
 .yarn/*
 !.yarn/patches

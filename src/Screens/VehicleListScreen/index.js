@@ -16,6 +16,7 @@ import {hp, wp} from '../../Config/responsive';
 import {imageUrl} from '../../Utils/Urls';
 import useVehicleListScreen from './useVehicleListScreen';
 import {styles} from './styles';
+import {getRigLengthInfo} from '../../Utils/RouteRestrictions';
 
 // Fixed enum per the API doc (§14) — formatted for display without an
 // extra network call.
@@ -76,7 +77,13 @@ const VehicleCard = ({vehicle, onEdit, onDelete, selectMode}) => {
           styles={styles.cardMeta}
         />
         <TextComponent
-          text={`H ${vehicle?.height_cm}cm • W ${vehicle?.width_cm}cm • L ${vehicle?.length_cm}cm • ${vehicle?.weight_kg}kg`}
+          text={`H ${vehicle?.height_cm}cm • W ${vehicle?.width_cm}cm • L ${
+            vehicle?.length_cm
+          }cm${
+            getRigLengthInfo(vehicle).hasLength
+              ? ` (${getRigLengthInfo(vehicle).lengthLabel})`
+              : ''
+          } • ${vehicle?.weight_kg}kg`}
           fade
           styles={styles.cardMeta}
         />

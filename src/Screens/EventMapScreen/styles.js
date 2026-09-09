@@ -73,30 +73,41 @@ export const styles = StyleSheet.create({
   routeInfoText: {fontSize: hp('1.35'), fontWeight: '600', color: '#1F2937'},
   routeInfoSep: {width: 1, height: hp('2.2'), backgroundColor: '#E5E7EB'},
 
-  // NEW — trailer-aware routing disclosure badge, mirrors
-  // LegNavigationScreen's restrictionsBadge styling.
+  // Trailer-aware routing disclosure badge, mirrors LegNavigationScreen's
+  // restrictionsBadge styling/concept (routing profile: applied vs
+  // advisory). A rounded card rather than a pill so it can hold the
+  // "Height • Width • Weight considered" line and, when the vehicle has a
+  // stored length, a subtle rig-length advisory line underneath.
   restrictionsBadge: {
     position: 'absolute',
     bottom: hp('35.5'),
     alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: wp('1.5'),
+    maxWidth: wp('88'),
     backgroundColor: 'white',
-    borderRadius: 999,
+    borderRadius: 14,
     paddingHorizontal: wp('3.5'),
-    paddingVertical: hp('0.6'),
+    paddingVertical: hp('0.8'),
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 5,
   },
+  restrictionsBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp('1.5'),
+  },
   restrictionsBadgeIcon: {fontSize: hp('1.1')},
   restrictionsBadgeText: {
     fontSize: hp('1.05'),
     color: '#166534',
     fontWeight: '600',
+  },
+  restrictionsBadgeSubtext: {
+    fontSize: hp('1'),
+    color: '#64748B',
+    marginTop: hp('0.2'),
   },
 
   listViewOverlay: {
@@ -211,9 +222,9 @@ export const styles = StyleSheet.create({
     borderBottomColor: '#E5E7EB',
     marginHorizontal: wp('4'),
   },
-  sheetTab: {flex: 1, alignItems: 'center', paddingVertical: hp('1.4')},
+  sheetTab: {flex: 1, alignItems: 'center', paddingVertical: hp('1')},
   sheetTabActive: {borderBottomWidth: 3, borderBottomColor: '#3B82F6'},
-  sheetTabText: {fontSize: hp('1.35'), color: '#6B7280', fontWeight: '600'},
+  sheetTabText: {fontSize: hp('1.2'), color: '#6B7280', fontWeight: '600'},
   sheetTabTextActive: {color: '#1E40AF', fontWeight: '700'},
   // flex:1 so the list fills whatever height the sheet is currently
   // dragged to (peek / default / expanded)
@@ -238,6 +249,7 @@ export const styles = StyleSheet.create({
     fontSize: hp('1.4'),
     color: '#111827',
     backgroundColor: '#F8FAFC',
+    marginTop: hp('1'),
   },
 
   // "Near Me" / "Near Event" toggle chips (Nearby tab)
@@ -246,6 +258,7 @@ export const styles = StyleSheet.create({
     gap: wp('2.5'),
     marginHorizontal: wp('4'),
     marginBottom: hp('1'),
+    marginTop: hp('1'),
   },
   nearbySourceChip: {
     flex: 1,
@@ -472,19 +485,19 @@ export const styles = StyleSheet.create({
   },
   actionBtnSecondary: {
     flex: 1,
-    height: hp('5.2'),
-    borderRadius: 12,
+    height: hp('4.5'),
+    borderRadius: 14,
     backgroundColor: '#F8FAFC',
     borderWidth: 1,
     borderColor: '#E2E8F0',
   },
   actionBtnSecondaryText: {
-    fontSize: hp('1.45'),
+    fontSize: hp('1.55'),
     color: '#1F2937',
     fontWeight: '600',
   },
-  actionBtnPrimary: {flex: 1, height: hp('5.2'), borderRadius: 12},
-  actionBtnPrimaryText: {fontSize: hp('1.45'), fontWeight: '700'},
+  actionBtnPrimary: {flex: 1, height: hp('4.5'), borderRadius: 14},
+  actionBtnPrimaryText: {fontSize: hp('1.55'), fontWeight: '700'},
 
   // StopScheduleModal styles
   scheduleModalOverlay: {

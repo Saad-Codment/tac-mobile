@@ -1,31 +1,50 @@
-// Integration point for authoritative weigh-station open/closed status —
-// kept out of the POI UI so a real provider can be wired in here later.
-// No provider is selected yet (this needs a state DOT feed, PrePass, or
-// similar authoritative source, evaluated and chosen by the team), so
-// this always resolves to an honest "not configured" state. Google
-// Places' generic `opening_hours.open_now` (used elsewhere in this file
-// for other categories) is deliberately NOT reused here as a stand-in —
-// a business's Places hours are not the same thing as a scale being
-// open for weigh-in, and presenting one as the other would be exactly
-// the kind of fabricated-status claim this project is trying to avoid.
-export const isWeighStationStatusConfigured = () => false;
+// Weigh-station "Location Status" via Google Places API (New) — the same
+// Google Maps/Places key TAC already uses, through the consolidated
+// PlacesDetailsService. This is deliberately NOT presented as an
+// authoritative live-scale-status feed: Google's `businessStatus` /
+// `currentOpeningHours` describe the LOCATION (is this business listing
+// open), not whether the scale itself is actively weighing trucks right
+// now. TAC doesn't have a DOT/state live-scale feed for this build, so
+// this is the accepted, honestly-labeled weigh-station status experience
+// — never call this "Live Scale Status: Open".
+import {fetchPlaceDetails} from './Places/PlacesDetailsService';
 
-// `place` is the POI object (has `.id`/lat/lon) — kept as the input
-// shape a real provider integration would also need.
+export const isWeighStationStatusConfigured = () => true; // same Google key as Places search — always available once that key works
+
 export const getWeighStationStatus = async place => {
-  if (!isWeighStationStatusConfigured()) {
-    return {unavailable: true, reason: 'not_configured'};
+  const result = await fetchPlaceDetails(place?.id, 'weigh');
+  if (result.unavailable) return result;
+
+  const businessStatus = result.raw?.businessStatus ?? null;
+  const openNow = result.raw?.currentOpeningHours?.openNow ?? null;
+
+  let statusLabel = null;
+  if (businessStatus === 'CLOSED_TEMPORARILY') {
+    statusLabel = 'Temporarily closed';
+  } else if (businessStatus === 'CLOSED_PERMANENTLY') {
+    statusLabel = 'Permanently closed';
+  } else if (openNow === true) {
+    statusLabel = 'Open now';
+  } else if (openNow === false) {
+    statusLabel = 'Closed now';
+  } else if (businessStatus === 'OPERATIONAL') {
+    statusLabel = 'Operational';
   }
-  // Real implementation goes here once a provider is selected — call
-  // it, normalize {isOpen, updatedAt, source}, return.
-  return {unavailable: true, reason: 'not_configured'};
+
+  if (!statusLabel) return {unavailable: true, reason: 'no_data'};
+
+  return {
+    unavailable: false,
+    statusLabel,
+    note: 'Scale operations can vary — please follow posted signs.',
+  };
 };
 
 export const describeWeighStationStatusUnavailable = reason => {
   switch (reason) {
-    case 'not_configured':
-      return 'Open/closed status isn’t available — this needs a DOT/state data feed this project doesn’t currently have.';
+    case 'network':
+      return 'Could not check location status — check your connection and try again.';
     default:
-      return 'Weigh station status is temporarily unavailable.';
+      return 'Current hours aren’t listed for this location.';
   }
 };

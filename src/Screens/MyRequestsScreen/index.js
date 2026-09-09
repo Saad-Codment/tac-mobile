@@ -52,6 +52,7 @@ const RequestCard = ({request, onPress, onCancel}) => {
           <TextComponent
             text={statusMeta.label}
             styles={[styles.statusBadgeText, {color: statusMeta.color}]}
+            size={hp('1.5')}
           />
         </View>
       </View>

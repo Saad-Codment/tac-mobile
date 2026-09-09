@@ -1,3 +1,5 @@
+import {OPENWEATHER_API_KEY} from '../Config/localSecrets';
+
 const getCredentials = () => {
   if (__DEV__)
     return {
@@ -5,6 +7,10 @@ const getCredentials = () => {
       imageURL: 'https://tac-staging.s3.us-east-2.amazonaws.com/',
       socketURL: 'https://messaging.theappforcowboys.com/',
       cloudFareURL: 'https://pub-4c9968fb2fce4c0eb0bd4e18ceb01f05.r2.dev/',
+      // baseURL: 'https://theappforcowboys.com/tac-backend/api',
+      // imageURL: 'https://tac-app-bucket.s3.us-east-2.amazonaws.com/',
+      // socketURL: 'https://messaging.theappforcowboys.com/',
+      // cloudFareURL: 'https://pub-f793bae7e632416691bfd14b5c709d03.r2.dev/',
     };
   else {
     console.log = () => {};
@@ -47,13 +53,12 @@ export const MAPBOX_TOKEN =
   'pk.eyJ1IjoidGhlYXBwZm9yY293Ym95cyIsImEiOiJjbXE5dWFiN3IwMjgwMnNwdDJ6dWFtYWV3In0.U_w8NypcmoqcRib-MXrCog';
 export const MapAPIKey = 'AIzaSyD3C_yNoWPJmiN95CFI2brf72kJ2iOmRHY';
 
-// NEW — OpenWeatherMap key for WeatherService (src/Services/Weather/*).
-// Intentionally left blank: no weather provider key exists in this repo
-// today. WeatherService treats an empty string as "not configured" and
-// returns an honest unavailable state everywhere — it never fabricates
-// weather data. Supply a real OpenWeatherMap API key here (or wire it
-// through whatever config mechanism the team prefers) to turn it on.
-export const WEATHER_API_KEY = '';
+// OpenWeatherMap key for WeatherService (src/Services/Weather/*), read
+// from the local, gitignored config file rather than hardcoded here — see
+// src/Config/localSecrets.example.js for how to set it up locally. An
+// empty value there keeps WeatherService in its honest "not configured"
+// state; it never fabricates weather data.
+export const WEATHER_API_KEY = OPENWEATHER_API_KEY;
 
 export const registerUrl = '/signup';
 export const loginUrl = '/login';

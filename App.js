@@ -232,7 +232,16 @@ POST request to the `sendFriendReqUrl` endpoint with the provided data. */
     });
   }, []);
 
-  useEffect(async () => {
+  // CHANGED — this was `useEffect(async () => {...}, [])`. An async
+  // function always returns a Promise, and React treats whatever a
+  // useEffect callback returns as its cleanup function if defined —
+  // handing it a Promise object produces exactly
+  // `TypeError: destroy is not a function (it is Object)` the next time
+  // this effect's cleanup would run. A React effect callback must return
+  // only undefined or a real cleanup function, so this is no longer
+  // declared async; the one genuinely async step below already runs in
+  // its own self-invoked async function without being returned.
+  useEffect(() => {
     GoogleSignin.configure({
       // offlineAccess: true,
       iosClientId:

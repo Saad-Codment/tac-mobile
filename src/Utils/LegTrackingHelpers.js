@@ -194,26 +194,25 @@ export const fetchLegRoute = async (startStop, endStop, vehicle) => {
 
 // ── POI overlay (fuel, hotels, rest stops, weigh stations, parking,
 // horse/equine locations) ────────────────────────────────────────────
-// CHANGED — added `parking`, a rule-based "trailer-friendly" category.
-// Google Places has no such attribute directly, so this searches with
-// keywords specific to truck/RV-capable parking ("truck stop", "RV
-// parking") rather than generic "parking" — a real filter, not a
-// relabeling of ordinary parking. Every result is still described in
-// the UI as "likely truck/RV accessible" (see LegNavigationScreen.js),
-// never asserted as verified.
+// `parking` is a rule-based "trailer-friendly" category. Google Places
+// has no such attribute directly, so this searches with keywords specific
+// to truck/RV-capable parking ("truck stop", "RV parking") rather than
+// generic "parking" — a real filter, not a relabeling of ordinary
+// parking. The UI describes results as "Trailer-accessible potential"
+// (see POIDetailSheet in LegNavigationScreen/index.js), never asserted as
+// verified or dimension-checked.
 //
-// NEW — `horse`, the committed horse-related-location layer. Google
-// Places has no "horse-friendly" attribute either, so this runs the same
+// `horse` is the committed horse-related-location layer. Google Places
+// has no "horse-friendly" attribute either, so this runs the same
 // keyword-search approach as `parking`: targeted terms for equestrian
-// centers, horse boarding, and equine veterinary care, rather than one
-// generic search. Results carry the same "verify before relying on it"
-// caveat as parking (see POIDetailSheet in LegNavigationScreen/index.js)
-// — nothing here claims a location is a verified horse-friendly
-// facility. `verifiedSource: null` is a deliberate placeholder: if TAC
-// later curates its own verified horse-facility list, or lets
-// organizers submit verified entries, that data can be merged in and
-// this field flipped to identify it, without changing the POI shape
-// consumers already rely on.
+// centers, horse boarding, equine veterinary care, and horse
+// motels/lodging, rather than one generic search. The UI labels these
+// "Equine-related location" — nothing here claims a location is a
+// verified horse-friendly facility. `verifiedSource: null` is a
+// deliberate placeholder: if TAC later curates its own verified
+// horse-facility list, or lets organizers submit verified entries, that
+// data can be merged in and this field flipped to identify it, without
+// changing the POI shape consumers already rely on.
 export const POI_CATEGORIES = [
   {
     key: 'fuel',
@@ -260,7 +259,12 @@ export const POI_CATEGORIES = [
     label: 'Horse/Equine',
     icon: '🐴',
     color: '#A855F7',
-    keywords: ['equestrian center', 'horse boarding', 'equine veterinarian'],
+    keywords: [
+      'equestrian center',
+      'horse boarding',
+      'equine veterinarian',
+      'horse motel',
+    ],
   },
 ];
 
@@ -337,70 +341,15 @@ export const fetchPOIsAlongRoute = async routeCoordinates => {
   return resultsByCategory;
 };
 
-// Google Place `types` this app knows how to show as a fuel-stop
-// amenity, with real, non-fabricated icon/label. Anything else Places
-// returns for a station is simply not shown — never mapped to a guess.
-export const FUEL_AMENITY_TYPE_LABELS = {
-  convenience_store: {icon: '🏪', label: 'Convenience Store'},
-  atm: {icon: '🏧', label: 'ATM'},
-  restaurant: {icon: '🍔', label: 'Food'},
-  meal_takeaway: {icon: '🥡', label: 'Food'},
-  cafe: {icon: '☕', label: 'Coffee'},
-  car_wash: {icon: '🚿', label: 'Car Wash'},
-  car_repair: {icon: '🔧', label: 'Repair'},
-};
-
-// NEW — Google Places Details API, called when a marker is tapped.
-// Uses the SAME MapAPIKey already in use for search/geocoding — no new
-// provider or key needed for this part. Returns only fields that are
-// genuinely available; nothing here is fabricated. Live fuel pricing
-// and weigh-station open/closed status are NOT part of this response —
-// Google Places doesn't carry either, which is why they're handled by
-// their own service stubs (FuelPriceService.js, WeighStationService.js)
-// as genuine external-provider dependencies, not silently left blank.
-export const fetchPOIDetails = async placeId => {
-  if (!placeId) return null;
-  try {
-    const fields = [
-      'name',
-      'formatted_address',
-      'formatted_phone_number',
-      'opening_hours',
-      'website',
-      'rating',
-      'user_ratings_total',
-      'types',
-      'business_status',
-    ].join(',');
-    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=${fields}&key=${MapAPIKey}`;
-    const res = await fetch(url);
-    const json = await res.json();
-    const result = json?.result;
-    if (!result) return null;
-
-    // Real amenity signal, not fabricated: Places' own `types` tags for
-    // this business, filtered to the ones we can label meaningfully.
-    const amenities = (result.types ?? [])
-      .filter(type => FUEL_AMENITY_TYPE_LABELS[type])
-      .map(type => ({type, ...FUEL_AMENITY_TYPE_LABELS[type]}));
-
-    return {
-      name: result.name,
-      address: result.formatted_address,
-      phone: result.formatted_phone_number,
-      website: result.website,
-      rating: result.rating,
-      ratingCount: result.user_ratings_total,
-      openNow: result.opening_hours?.open_now,
-      weekdayHours: result.opening_hours?.weekday_text ?? null,
-      businessStatus: result.business_status ?? null,
-      amenities,
-    };
-  } catch (err) {
-    console.log('POI details error:', err);
-    return null;
-  }
-};
+// Place Details (name/address/phone/hours/rating/amenities/fuel prices)
+// are now fetched through the consolidated PlacesDetailsService
+// (src/Services/Places/PlacesDetailsService.js), which uses Places API
+// (New) with category-aware FieldMasks — see that file and
+// FuelPriceService.js/WeighStationService.js, which build on it. This
+// file previously had its own separate `fetchPOIDetails` calling the
+// legacy Places Details endpoint; it's been consolidated there so fuel,
+// weigh, parking, and horse/equine detail sheets all go through one
+// implementation instead of four independent ones.
 
 // ── Staleness display ────────────────────────────────────────────────
 export const formatStaleness = updatedAt => {

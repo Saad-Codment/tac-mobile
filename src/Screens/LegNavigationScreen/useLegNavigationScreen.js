@@ -15,16 +15,16 @@ import {
 import {
   haversineDistanceMeters,
   fetchPOIsAlongRoute,
-  fetchPOIDetails,
   isOffRoute,
   advanceStepIndex,
   computeRemaining,
 } from '../../Utils/LegTrackingHelpers';
+import {getPlaceDetails} from '../../Services/Places/PlacesDetailsService';
 import {successMessage, errorMessage} from '../../Config/NotificationMessage';
 import {getFuelPrice} from '../../Services/FuelPriceService';
 import {getWeighStationStatus} from '../../Services/WeighStationService';
 import {
-  getRouteWeather,
+  getRouteWeatherAdvisory,
   isWeatherConfigured,
 } from '../../Services/Weather/WeatherService';
 // NEW — routes calls through the engine seam (currently the same
@@ -98,7 +98,7 @@ const useLegNavigationScreen = (navigation, route) => {
   const [routeWarning, setRouteWarning] = useState(null);
   // NEW — route-level weather hazard indicator (Step 7). Derived from
   // current conditions at a few sampled points along the route (see
-  // WeatherService.getRouteWeather) — a real signal, but explicitly NOT
+  // WeatherService.getRouteWeatherAdvisory) — a real signal, but explicitly NOT
   // an authoritative weather-alert feed (that needs the separate One
   // Call 3.0 subscription — see WeatherProvider.fetchAlerts). Only
   // populated when a weather provider key is actually configured, so
@@ -143,26 +143,44 @@ const useLegNavigationScreen = (navigation, route) => {
   const lastRerouteAtRef = useRef(0);
 
   useEffect(() => {
+    // CHANGED — every TTS call here is a native promise (stop/setDefaultRate/
+    // setDucking all resolve or reject on the native side); each one now has
+    // its own .catch so a rejection (e.g. the native BOOL-argument defect in
+    // react-native-tts 4.1.1, now patched — see patches/react-native-tts+
+    // 4.1.1.patch) can never surface as an unhandled promise rejection.
     Tts.getInitStatus()
       .then(() => {
-        Tts.setDefaultRate(0.5);
-        Tts.setDucking?.(true);
+        Tts.setDefaultRate(0.5).catch(err =>
+          console.log('TTS setDefaultRate error (non-fatal):', err),
+        );
+        Tts.setDucking?.(true)?.catch?.(err =>
+          console.log('TTS setDucking error (non-fatal):', err),
+        );
       })
       .catch(err => console.log('TTS init error (non-fatal):', err));
+
+    // Stop any in-flight speech the moment this screen goes away
+    // (back-out mid-navigation, or a remount) — this runs unconditionally
+    // on unmount, independent of leg status, so speech can never keep
+    // playing after the screen is gone.
+    return () => {
+      Tts.stop().catch(() => {});
+    };
   }, []);
 
   const speak = useCallback(
     text => {
       if (!voiceEnabled || !text) return;
-      Tts.stop();
-      Tts.speak(text);
+      Tts.stop()
+        .then(() => Tts.speak(text))
+        .catch(err => console.log('TTS speak error (non-fatal):', err));
     },
     [voiceEnabled],
   );
 
   const toggleVoice = useCallback(() => {
     setVoiceEnabled(prev => {
-      if (prev) Tts.stop();
+      if (prev) Tts.stop().catch(() => {});
       return !prev;
     });
   }, []);
@@ -275,12 +293,19 @@ const useLegNavigationScreen = (navigation, route) => {
   useEffect(() => {
     const coords = routeGeoJSON?.geometry?.coordinates;
     if (!coords?.length || !isWeatherConfigured()) return;
-    getRouteWeather(coords).then(result => {
+    getRouteWeatherAdvisory(coords).then(result => {
       if (result?.unavailable) return;
-      const hazard = result.possibleHazards?.[0];
-      setWeatherHazardWarning(
-        hazard ? `Weather along route: ${hazard.description}.` : null,
-      );
+      const item = result.items?.[0];
+      if (!item) {
+        setWeatherHazardWarning(null);
+        return;
+      }
+      // Official alerts are labeled "Weather Alert"; the forecast-derived
+      // fallback is always labeled "Weather Advisory" — never implying
+      // it's an official government/provider alert (see
+      // WeatherService.getRouteWeatherAdvisory).
+      const label = item.source === 'official' ? 'Weather Alert' : 'Weather Advisory';
+      setWeatherHazardWarning(`${label}: ${item.event}`);
     });
   }, [routeGeoJSON]);
 
@@ -306,8 +331,11 @@ const useLegNavigationScreen = (navigation, route) => {
     setPoiFuelPrice(null);
     setPoiWeighStatus(null);
     setIsLoadingPOIDetails(true);
-    fetchPOIDetails(poi?.id)
-      .then(setPoiDetails)
+    // Consolidated Place Details call — one implementation for every
+    // category, with a category-aware FieldMask (fuelOptions only ever
+    // requested for `fuel`). See PlacesDetailsService.js.
+    getPlaceDetails(poi?.id, poi?.category)
+      .then(result => setPoiDetails(result?.unavailable ? null : result))
       .finally(() => setIsLoadingPOIDetails(false));
 
     if (poi?.category === 'fuel') {
@@ -609,7 +637,7 @@ const useLegNavigationScreen = (navigation, route) => {
       if (ok) {
         successMessage(resData?.message || 'Leg completed');
         setShowCompleteModal(false);
-        Tts.stop();
+        Tts.stop().catch(() => {});
         await invalidateTripDetail();
         navigation.goBack();
       } else {
@@ -638,6 +666,7 @@ const useLegNavigationScreen = (navigation, route) => {
 
   return {
     trip,
+    vehicle: trip?.vehicle,
     leg,
     startStop,
     endStop,

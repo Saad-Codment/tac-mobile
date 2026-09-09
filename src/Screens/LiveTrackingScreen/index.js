@@ -1,9 +1,8 @@
-import React, {memo} from 'react';
-import {View, ScrollView, StyleSheet} from 'react-native';
+import React, {memo, useEffect, useRef} from 'react';
+import {View, ScrollView, Animated, StyleSheet} from 'react-native';
 import MapboxGL from '@rnmapbox/maps';
 import {HeaderComponent} from '../../Components/HeaderComponent';
 import {TextComponent} from '../../Components/TextComponent';
-import {Colors} from '../../Theme/Variables';
 import {hp, wp} from '../../Config/responsive';
 import {MAPBOX_TOKEN} from '../../Utils/Urls';
 import useLiveTrackingScreen from './useLiveTrackingScreen';
@@ -40,6 +39,46 @@ const LegStatusRow = ({leg, stops}) => {
   );
 };
 
+// Visual-only: a looping radar-style halo behind the organizer's dot, so
+// a live/updating position reads as "live" on the map rather than a
+// static pin. Purely presentational — no data/props from the hook are
+// involved, just an Animated loop local to this component.
+const OrganizerMarker = ({stale}) => {
+  const pulse = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.timing(pulse, {
+        toValue: 1,
+        duration: 1600,
+        useNativeDriver: true,
+      }),
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [pulse]);
+
+  const haloScale = pulse.interpolate({inputRange: [0, 1], outputRange: [1, 2.4]});
+  const haloOpacity = pulse.interpolate({inputRange: [0, 1], outputRange: [0.45, 0]});
+  const haloColor = stale ? '#9CA3AF' : '#3B82F6';
+
+  return (
+    <View style={S.organizerMarkerWrap}>
+      <Animated.View
+        style={[
+          S.organizerHalo,
+          {
+            backgroundColor: haloColor,
+            opacity: haloOpacity,
+            transform: [{scale: haloScale}],
+          },
+        ]}
+      />
+      <View style={[S.organizerDot, stale && S.organizerDotStale]} />
+    </View>
+  );
+};
+
 const LiveTrackingScreen = ({navigation, route}) => {
   const {
     trip,
@@ -64,7 +103,7 @@ const LiveTrackingScreen = ({navigation, route}) => {
     <View style={S.screenContainer}>
       <HeaderComponent headerTitle={'Live Tracking'} isBack goBack={goBack} />
 
-      <View style={S.mapCard}>
+      <View style={S.mapArea}>
         <MapboxGL.MapView
           style={S.map}
           styleURL={MapboxGL.StyleURL.Street}
@@ -105,38 +144,38 @@ const LiveTrackingScreen = ({navigation, route}) => {
                 organizerLocation.longitude,
                 organizerLocation.latitude,
               ]}>
-              <View style={S.organizerMarkerWrap}>
-                <View
-                  style={[
-                    S.organizerDot,
-                    positionIsStale && S.organizerDotStale,
-                  ]}
-                />
-              </View>
+              <OrganizerMarker stale={positionIsStale} />
             </MapboxGL.MarkerView>
           )}
         </MapboxGL.MapView>
-      </View>
 
-      <ScrollView
-        contentContainerStyle={S.scrollContent}
-        showsVerticalScrollIndicator={false}>
-        <View style={S.statusCard}>
+        {/* Reuses the same warning-banner visual language as
+            LegNavigationScreen's routeWarningBanner — a stale position is
+            a meaningful state and deserves more than a small colored
+            text line. */}
+        {positionIsStale && (
+          <View style={S.staleBanner}>
+            <TextComponent text={'⚠️'} styles={S.staleBannerIcon} />
+            <TextComponent
+              text={`Last updated ${stalenessLabel} — position may be outdated`}
+              styles={S.staleBannerText}
+              numberOfLines={2}
+            />
+          </View>
+        )}
+
+        <View style={S.bottomPanel}>
           {organizerLocation ? (
-            <>
-              <TextComponent
-                text={'🚚 Organizer Location'}
-                styles={S.statusTitle}
-              />
-              <TextComponent
-                text={
-                  positionIsStale
-                    ? `⚠️ Last updated ${stalenessLabel} — position may be outdated`
-                    : `Updated ${stalenessLabel}`
-                }
-                styles={positionIsStale ? S.staleText : S.freshText}
-              />
-            </>
+            <View style={S.statusRow}>
+              <TextComponent text={'🚚 Organizer Location'} styles={S.statusTitle} />
+              {!positionIsStale && (
+                <TextComponent
+                  text={`Updated ${stalenessLabel}`}
+                  fade
+                  styles={S.freshText}
+                />
+              )}
+            </View>
           ) : (
             <TextComponent
               text={"Waiting for the organizer's location..."}
@@ -144,23 +183,25 @@ const LiveTrackingScreen = ({navigation, route}) => {
               styles={S.statusTitle}
             />
           )}
-        </View>
 
-        <TextComponent text={'Trip Legs'} styles={S.sectionLabel} />
-        <View style={S.legsCard}>
-          {legs.map(leg => (
-            <LegStatusRow key={leg.id} leg={leg} stops={trip?.stops ?? []} />
-          ))}
+          <TextComponent text={'Trip Legs'} styles={S.sectionLabel} />
+          <ScrollView
+            style={S.legsScroll}
+            showsVerticalScrollIndicator={false}>
+            {legs.map(leg => (
+              <LegStatusRow key={leg.id} leg={leg} stops={trip?.stops ?? []} />
+            ))}
+          </ScrollView>
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 };
 
 const S = StyleSheet.create({
   screenContainer: {flex: 1, backgroundColor: '#F8FAFC'},
-  mapCard: {height: hp('38')},
-  map: {flex: 1},
+  mapArea: {flex: 1},
+  map: {...StyleSheet.absoluteFillObject},
 
   endpointMarker: {
     width: 30,
@@ -173,7 +214,18 @@ const S = StyleSheet.create({
   },
   endpointMarkerText: {fontSize: hp('1.3')},
 
-  organizerMarkerWrap: {alignItems: 'center', justifyContent: 'center'},
+  organizerMarkerWrap: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  organizerHalo: {
+    position: 'absolute',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+  },
   organizerDot: {
     width: 20,
     height: 20,
@@ -184,38 +236,68 @@ const S = StyleSheet.create({
   },
   organizerDotStale: {backgroundColor: '#9CA3AF'},
 
-  scrollContent: {padding: wp('4'), paddingBottom: hp('4')},
-
-  statusCard: {
-    backgroundColor: 'white',
-    borderRadius: 16,
-    padding: wp('4'),
+  staleBanner: {
+    position: 'absolute',
+    top: hp('1.5'),
+    left: wp('3'),
+    right: wp('3'),
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp('2'),
+    backgroundColor: '#FEF3C7',
     borderWidth: 1,
-    borderColor: '#F1F5F9',
+    borderColor: '#F59E0B',
+    borderRadius: 14,
+    paddingHorizontal: wp('3.5'),
+    paddingVertical: hp('1'),
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
   },
-  statusTitle: {fontSize: hp('1.5'), fontWeight: '700', color: '#111827'},
-  freshText: {fontSize: hp('1.2'), color: '#64748B', marginTop: hp('0.4')},
-  staleText: {
+  staleBannerIcon: {fontSize: hp('1.6')},
+  staleBannerText: {
+    flex: 1,
     fontSize: hp('1.2'),
-    color: '#B45309',
-    marginTop: hp('0.4'),
+    color: '#92400E',
     fontWeight: '600',
   },
 
-  sectionLabel: {
-    fontSize: hp('1.5'),
-    fontWeight: '700',
-    color: '#111827',
-    marginTop: hp('2'),
-    marginBottom: hp('1'),
-  },
-  legsCard: {
+  bottomPanel: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    maxHeight: hp('42'),
     backgroundColor: 'white',
-    borderRadius: 16,
-    padding: wp('4'),
-    borderWidth: 1,
-    borderColor: '#F1F5F9',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: wp('5'),
+    paddingTop: hp('2'),
+    paddingBottom: hp('3'),
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: -6},
+    shadowOpacity: 0.12,
+    shadowRadius: 20,
+    elevation: 14,
   },
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  statusTitle: {fontSize: hp('1.5'), fontWeight: '700', color: '#111827'},
+  freshText: {fontSize: hp('1.15'), color: '#64748B'},
+
+  sectionLabel: {
+    fontSize: hp('1.35'),
+    fontWeight: '700',
+    color: '#64748B',
+    marginTop: hp('1.6'),
+    marginBottom: hp('0.6'),
+  },
+  legsScroll: {flexGrow: 0},
   legRow: {
     flexDirection: 'row',
     alignItems: 'center',

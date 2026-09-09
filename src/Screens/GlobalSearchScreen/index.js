@@ -72,6 +72,11 @@ const GlobalSearchScreen = ({navigation}) => {
     commitSearch, // ← new
   } = useGloabalSearchScreen(navigation);
 
+  console.log(
+    'allSearchDataallSearchDataallSearchDataallSearchDataallSearchData',
+    allSearchData,
+  );
+
   const DynamicViewForSearch = useCallback(
     ({array, title, isSeeAll, flatViewStyle, isNotRefreshing}) => {
       return (

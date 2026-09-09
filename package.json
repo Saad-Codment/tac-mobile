@@ -32,7 +32,7 @@
     "stop": "cd android && ./gradlew --stop && cd ..",
     "checkApk16KB": "bundletool dump config --bundle android/app/build/outputs/assemble/release/app-release.apk | grep -i alignment",
     "checkAab16KB": "bundletool dump config --bundle android/app/build/outputs/bundle/release/app-release.aab | grep -i alignment",
-    "postinstall": "node scripts/patch-codegen.js"
+    "postinstall": "patch-package && node scripts/patch-codegen.js"
   },
   "dependencies": {
     "@bam.tech/react-native-image-resizer": "^3.0.11",
